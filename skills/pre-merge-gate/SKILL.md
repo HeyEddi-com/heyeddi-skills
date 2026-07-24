@@ -30,9 +30,10 @@ Run gate via **Task** `shell` subagent: `pre_merge_gate.py`. Main chat triages F
 - verify build
 - vue-tsc (if available)
 - duplicate UI scan (`no-duplicate-ui` when installed)
+- prose audit on Vue/locale copy (`heyeddi-design` `verify_prose.py` when installed)
 - visual audit on product routes (`visual-auditor` when installed; skips if Playwright missing)
 
-Use `--skip-duplicate-ui` or `--skip-visual-audit` to omit optional UI gates.
+Use `--skip-duplicate-ui`, `--skip-prose-audit`, or `--skip-visual-audit` to omit optional UI gates.
 ## When the task is complete: suggest next skills
 
 When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:

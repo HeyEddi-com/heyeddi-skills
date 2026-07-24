@@ -53,6 +53,7 @@ mockup text.
 8. Run `python scripts/verify_handoff.py --route <route> --phase shell --check`.
 9. Build route content (e.g. `SettingsView`): override PrimeVue Card padding per spec.
 10. Run `python scripts/verify_handoff.py --route <route> --phase full --check`.
+10b. Run `python .agents/skills/heyeddi-design/scripts/verify_prose.py --check` (or project-installed path): no em/en dashes or AI filler in route copy.
 11. Run `python scripts/verify_theme.py --check`: light/dark + PrimeVue surfaces (`reference/theme-coherence.md`).
 12. Read `reference/mockup-contract.md` when needed.
 13. Chain `@primevue-openprops-architect` → `@visual-auditor` when available.

@@ -679,3 +679,27 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 **Decision:** `.github/workflows/release.yml` on push to `main` reads `skills-registry.json` version and creates `vX.Y.Z` GitHub Release if the tag is missing. Version bumps stay in PRs. No full eval gate on release (PR CI is the gate).
 
 **Maintainer:** bump version in PR → merge → auto-tag.
+
+## 2026-07-18: Always post GitHub PR review after heyeddi-pr-review
+
+**Context:** After `@heyeddi-pr-review`, default was report-only in `.heyeddi/docs/` unless the user asked to post.
+
+**Decision:** Always post the review to GitHub via `gh pr review` when the submission review completes (Approve / Request changes / Block mapped to `--approve` / `--request-changes` / comment+block rationale). Keep the full report in `.heyeddi/docs/pr-<N>-review.md`.
+
+**Exception:** GitHub forbids approving your own PR — post `--comment` with the same verdict text and note that a second reviewer must click Approve if branch rules require it.
+
+**Process:** After `verify_pr_review --check` passes, run `gh pr review <N>` with the verdict; do not wait for a separate "post it" ask.
+
+## 2026-07-24 — Prose hard gate (`verify_prose.py`)
+
+**Context:** User still saw em dashes in website copy despite July 2026 advisory `PROSE_ANTI_SLOP` rules. Agents skipped optional checklist items.
+
+**Decision:**
+- New `@heyeddi-design` tool `verify_prose.py --check` scans `src/**/*.vue`, `src/**/*.json`, locale paths, `.heyeddi/product.md`, `.heyeddi/design.md` for em/en dashes (U+2014/U+2013) and high-signal AI filler words/phrases.
+- `@pre-merge-gate` runs prose audit by default (`--skip-prose-audit` to omit).
+- `@heyeddi-design` setup step **3g** + `craft.md` step 11 require `verify_prose --check` before done.
+- `@heyeddi-handoff` Pass 2 step 10b requires same before route complete.
+
+**Process:** Fix reported file:line; replace dash with period/comma/colon or ASCII ` - `; rewrite filler per `context/PROSE_ANTI_SLOP.md`.
+
+**Verify:** `uv run pytest tests/test_verify_prose.py`; `python3 scripts/test-skills.py heyeddi-design`.

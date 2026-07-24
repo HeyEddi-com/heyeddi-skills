@@ -64,6 +64,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Pre-merge gate")
     parser.add_argument("--project-root", default=None)
     parser.add_argument("--skip-duplicate-ui", action="store_true")
+    parser.add_argument("--skip-prose-audit", action="store_true")
     parser.add_argument("--skip-visual-audit", action="store_true")
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
@@ -90,6 +91,15 @@ def main() -> None:
     if not args.skip_duplicate_ui:
         out = run_skill_script(root, "no-duplicate-ui", "scripts/find_duplicate_ui.py", [])
         rows.append(("duplicate-ui", status_from_output(out), out[:200]))
+
+    if not args.skip_prose_audit:
+        out = run_skill_script(root, "heyeddi-design", "scripts/verify_prose.py", ["--check"])
+        st = status_from_output(out)
+        if st == "PASS" and '"ok": false' in out:
+            st = "FAIL"
+        rows.append(("prose-audit", st, out[:200]))
+    else:
+        rows.append(("prose-audit", "SKIP", "skipped via --skip-prose-audit"))
 
     if not args.skip_visual_audit:
         contrast_script = find_skill_script(root, "visual-auditor", "scripts/audit_contrast.py")
