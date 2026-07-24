@@ -703,3 +703,16 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 **Process:** Fix reported file:line; replace dash with period/comma/colon or ASCII ` - `; rewrite filler per `context/PROSE_ANTI_SLOP.md`.
 
 **Verify:** `uv run pytest tests/test_verify_prose.py`; `python3 scripts/test-skills.py heyeddi-design`.
+
+## 2026-07-24 — skills.sh official listing hygiene
+
+**Context:** User wants HeyEddi skills listed as official on skills.sh (beyond telemetry indexing).
+
+**Decision:**
+- Playbook: `docs/skills-sh-official-listing.md` (installs → topics → frontmatter → security → vercel-labs/skills review).
+- `scripts/sync-skill-frontmatter.py` sets `version` (manifest), `product-version` (hub registry), `author: HeyEddi-com` on all 22 `SKILL.md` files.
+- GitHub topics on hub repo: `agent-skills`, `skills-sh`, `ai-agents` (+ existing `cursor`, `claude-code`).
+- Template `templates/skill/SKILL.md` includes the three metadata fields for new skills.
+
+**Process:** Run frontmatter sync on every hub version bump; drive installs via pinned `npx skills add` URLs; open vercel-labs/skills PR after traction.
+

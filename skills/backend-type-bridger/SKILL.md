@@ -1,6 +1,9 @@
 ---
 name: backend-type-bridger
 description: Syncs a local FastAPI OpenAPI file to TypeScript types and reads Firestore schema hints. Use when writing Vue composables against FastAPI or Firebase backends.
+version: 1.0.0
+product-version: 3.0.5
+author: HeyEddi-com
 paths:
   - "**/composables/**"
   - "**/api/**"

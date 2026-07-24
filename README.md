@@ -4,7 +4,7 @@
 
 Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi product workflows — intake, design, engineering, QA, and merge. **All 22 skills ship as one package** from this repo; install the full set into your app or Cursor global skills with a single command.
 
-**Status:** **v3.0.4** · 22 skills · [Release v3.0.4](https://github.com/HeyEddi-com/skills/releases/tag/v3.0.4)
+**Status:** **v3.0.5** · 22 skills · [Release v3.0.5](https://github.com/HeyEddi-com/skills/releases/tag/v3.0.5)
 
 ## About HeyEddi
 
@@ -51,7 +51,7 @@ List names in [skills-registry.json](skills-registry.json) or the catalog below.
 ### Pin a release tag
 
 ```bash
-npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.4 -a cursor -y --skill '*'
+npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.5 -a cursor -y --skill '*'
 ```
 
 ### Cursor Team Marketplace (teams / enterprise)
@@ -69,6 +69,8 @@ Invoke skills in chat with `@skill-name` (e.g. `@heyeddi-intake`, `@heyeddi-hand
 ### skills.sh listing
 
 Browse the bundle at [skills.sh/heyeddi-com/skills](https://www.skills.sh/heyeddi-com/skills). Install counts on the leaderboard come from the Vercel CLI's own [install telemetry](https://www.skills.sh/privacy) — nothing is collected by this repo.
+
+**Official listing playbook:** see [docs/skills-sh-official-listing.md](docs/skills-sh-official-listing.md) (topics, frontmatter, security score, Vercel core review).
 
 ## Skills catalog
 
@@ -161,6 +163,7 @@ Evals give the agent a **goal**, not a script. Each skill must run its real work
 |-----|--------|
 | [docs/skills-roadmap.md](docs/skills-roadmap.md) | Build plan |
 | [docs/distribution.md](docs/distribution.md) | Single-package install + marketplaces |
+| [docs/skills-sh-official-listing.md](docs/skills-sh-official-listing.md) | skills.sh index + official listing playbook |
 | [docs/v2-skill-naming.md](docs/v2-skill-naming.md) | Historical ADR — v2 `heyeddi-*` spine renames (aliases removed in v3.0.0) |
 | [docs/pr-workflows.md](docs/pr-workflows.md) | Two PR workflows — submission review vs respond |
 | [docs/team-cheat-sheet.md](docs/team-cheat-sheet.md) | Designer + QA reference |

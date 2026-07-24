@@ -1,6 +1,9 @@
 ---
 name: design-system-generalizer
 description: Scans token and component usage patterns from a golden reference page and diffs violations on other routes. Use when spreading a well-built page's patterns across the app in PR-sized chunks.
+version: 1.0.0
+product-version: 3.0.5
+author: HeyEddi-com
 disable-model-invocation: true
 ---
 

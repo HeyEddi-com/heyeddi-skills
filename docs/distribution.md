@@ -1,6 +1,6 @@
 # Skill distribution
 
-**Date:** 2026-07-24 · **Release:** v3.0.4
+**Date:** 2026-07-24 · **Release:** v3.0.5
 
 ## Vercel ecosystem (skills.sh + `npx skills`)
 
@@ -10,7 +10,7 @@ There is **no deploy step** and **no submission form**. Distribution is GitHub +
 |---------|--------------------------|-------------------|
 | **CLI** (`npx skills`) | `npx skills add HeyEddi-com/skills -a cursor -y --skill '*'` | Keep repo public; tag releases |
 | **skills.sh** | Same install command; leaderboard from [install telemetry](https://www.skills.sh/privacy) | `skills.sh.json` at repo root; share repo page URL |
-| **Pinned version** | `npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.4 -a cursor -y --skill '*'` | Tag releases on GitHub |
+| **Pinned version** | `npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.5 -a cursor -y --skill '*'` | Tag releases on GitHub |
 
 ### Automated releases
 
@@ -20,7 +20,7 @@ On every push to `main` (and via **Actions → Release → Run workflow**), [`.g
 2. If tag `vX.Y.Z` is **missing**, creates a GitHub Release for that tag at the push SHA
 3. If the tag **already exists**, no-ops (idempotent)
 
-**Maintainer flow:** bump version in the PR (`skills-registry.json`, README, plugin `plugin.json`, orchestrator when needed) → merge to `main` → release workflow tags. CI on the PR is the quality gate; release does **not** re-run the full eval suite.
+**Maintainer flow:** bump version in the PR (`skills-registry.json`, README, plugin `plugin.json`, orchestrator when needed) → `python3 scripts/sync-skill-frontmatter.py` → merge to `main` → release workflow tags. CI on the PR is the quality gate; release does **not** re-run the full eval suite.
 
 **CLI flag trap:** `--all` = all skills **and all agents** (creates `agent/skills/` for Eve, etc.). For Cursor-only, use `-a cursor --skill '*'`, not `--all`.
 
@@ -34,6 +34,10 @@ On every push to `main` (and via **Actions → Release → Run workflow**), [`.g
 - **Org page:** [skills.sh/heyeddi-com](https://www.skills.sh/heyeddi-com) — GitHub button goes to the org profile only (platform limitation).
 - **Customize layout:** root [`skills.sh.json`](../skills.sh.json) groups Pipeline / Engineering / Design & QA ([docs](https://skills.sh/docs/customize)).
 - **Install counts** on the leaderboard come from the Vercel CLI's own [install telemetry](https://www.skills.sh/privacy); this repo collects nothing.
+
+### Official listing (beyond index)
+
+Indexed ≠ official. See [docs/skills-sh-official-listing.md](skills-sh-official-listing.md) for GitHub topics, frontmatter sync (`scripts/sync-skill-frontmatter.py`), security score hygiene, and when to open a [vercel-labs/skills](https://github.com/vercel-labs/skills) review request.
 
 ## Cursor Marketplace (separate from Vercel)
 
