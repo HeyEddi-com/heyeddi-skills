@@ -123,6 +123,7 @@ stakeholders (say who), bandwidth (say time), circle back, move the needle, low-
 
 ## Related
 
+- Hard gate: `@heyeddi-design` `verify_prose.py --check` (Vue, locale JSON, `.heyeddi/product.md`, `.heyeddi/design.md`)
 - UI craft anti-slop: `@heyeddi-design` `reference/modern-reference.md` (when installed)
 - Hub canonical: repo `docs/prose-anti-slop.md`
 - Code slop (comments / `any` / nesting): Cursor team-kit `deslop` skill

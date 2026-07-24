@@ -102,6 +102,7 @@ Before calling a screen done:
 - [ ] Does dark mode look intentional (not inverted gray mush)?
 - [ ] Decision log entry cites which reference pattern you borrowed **and this project's memorable detail** (`design-ambition.md`)
 - [ ] UI **copy** follows `context/PROSE_ANTI_SLOP.md` (no em dashes, no AI filler)
+- [ ] `verify_prose.py --check` passes on Vue/locale files
 - [ ] Smell test: would this copy survive Slack without an eye-roll?
 - [ ] Smell test: would this copy survive Slack without an eye-roll?
 

@@ -1,6 +1,6 @@
 # Skill distribution
 
-**Date:** 2026-07-16 · **Release:** v3.0.3
+**Date:** 2026-07-24 · **Release:** v3.0.4
 
 ## Vercel ecosystem (skills.sh + `npx skills`)
 
@@ -10,7 +10,7 @@ There is **no deploy step** and **no submission form**. Distribution is GitHub +
 |---------|--------------------------|-------------------|
 | **CLI** (`npx skills`) | `npx skills add HeyEddi-com/skills -a cursor -y --skill '*'` | Keep repo public; tag releases |
 | **skills.sh** | Same install command; leaderboard from [install telemetry](https://www.skills.sh/privacy) | `skills.sh.json` at repo root; share repo page URL |
-| **Pinned version** | `npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.3 -a cursor -y --skill '*'` | Tag releases on GitHub |
+| **Pinned version** | `npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.4 -a cursor -y --skill '*'` | Tag releases on GitHub |
 
 ### Automated releases
 

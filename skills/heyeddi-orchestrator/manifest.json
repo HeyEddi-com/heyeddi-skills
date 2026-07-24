@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-orchestrator",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "tools": [
     {
       "name": "sync",

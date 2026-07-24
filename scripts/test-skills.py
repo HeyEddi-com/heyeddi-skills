@@ -195,6 +195,7 @@ def default_args_for_tool(tool_name: str, skill_name: str, fixture_root: Path) -
         "verify_handoff",
         "verify_tokens",
         "verify_theme",
+        "verify_prose",
         "scan_patterns",
         "init_engineering_docs",
         "audit_engineering",

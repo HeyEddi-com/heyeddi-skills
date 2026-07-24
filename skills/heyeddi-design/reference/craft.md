@@ -27,6 +27,7 @@ If user invokes craft with only a vague prompt and no brief, **stop and run `sha
 8. **Append** to **Decision log** in `.heyeddi/design.md`: persona + pattern borrowed (`reference/design-talk.md`).
 9. Run `reference/audience-fit.md` rubric: append to critique doc or chat summary.
 10. Run **ambition checklist** in `reference/design-ambition.md`: revise or `polish` if any item fails.
+11. Run `python scripts/verify_prose.py --check` (or `.agents/skills/heyeddi-design/scripts/verify_prose.py`): fix em/en dashes and banned filler in Vue/locale copy before calling done.
 
 ## Quality
 

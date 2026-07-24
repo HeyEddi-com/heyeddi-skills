@@ -4,7 +4,7 @@
 
 Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi product workflows — intake, design, engineering, QA, and merge. **All 22 skills ship as one package** from this repo; install the full set into your app or Cursor global skills with a single command.
 
-**Status:** **v3.0.3** · 22 skills · [Release v3.0.3](https://github.com/HeyEddi-com/skills/releases/tag/v3.0.3)
+**Status:** **v3.0.4** · 22 skills · [Release v3.0.4](https://github.com/HeyEddi-com/skills/releases/tag/v3.0.4)
 
 ## About HeyEddi
 
@@ -51,7 +51,7 @@ List names in [skills-registry.json](skills-registry.json) or the catalog below.
 ### Pin a release tag
 
 ```bash
-npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.3 -a cursor -y --skill '*'
+npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.4 -a cursor -y --skill '*'
 ```
 
 ### Cursor Team Marketplace (teams / enterprise)
@@ -176,4 +176,4 @@ Evals give the agent a **goal**, not a script. Each skill must run its real work
 
 ---
 
-**HeyEddi-com** · MIT License · Last updated: 2026-07-08
+**Last updated:** 2026-07-24
