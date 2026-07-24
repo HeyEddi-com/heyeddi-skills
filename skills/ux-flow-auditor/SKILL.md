@@ -2,6 +2,8 @@
 name: ux-flow-auditor
 description: "Traces user task flows with Playwright: click depth, step success, friction: and writes reports to .heyeddi/docs/ux-flows/. Use when measuring ease of use, clicks to complete a task, or onboarding friction. Not for static visual critique (use heyeddi-design critique) or layout screenshots (use visual-auditor)."
 version: 1.0.0
+product-version: 3.0.5
+author: HeyEddi-com
 disable-model-invocation: true
 ---
 

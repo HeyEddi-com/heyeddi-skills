@@ -1,6 +1,9 @@
 ---
 name: primevue-openprops-architect
 description: Enforces PrimeVue + project design tokens when editing Vue or CSS. OpenProps rules apply only when the project already uses open-props. Runs vue-tsc and stylelint when available.
+version: 1.0.0
+product-version: 3.0.5
+author: HeyEddi-com
 paths:
   - "**/*.vue"
   - "**/*.css"

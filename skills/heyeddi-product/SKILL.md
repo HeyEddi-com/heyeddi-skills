@@ -2,6 +2,8 @@
 name: heyeddi-product
 description: "Product leadership: user stories, acceptance criteria, backlog, holistic reviews. Verifies the product works and is useful; delegates UX flow, design critique, visual contrast, and engineering audits; synthesizes plans and change recommendations. Use after @heyeddi-intake, before ship, or when the user asks for PM review, user stories, acceptance criteria, or \"is this feature good enough?\""
 version: 1.0.0
+product-version: 3.0.5
+author: HeyEddi-com
 ---
 
 # HeyEddi Product

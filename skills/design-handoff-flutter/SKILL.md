@@ -1,6 +1,9 @@
 ---
 name: design-handoff-flutter
 description: "Implements Flutter screens from designer screenshots and handoff notes using Material 3. Two-pass workflow: mockup-brief with Implementation spec, then AppShell + route screens. Use when approved mockups exist for a HeyEddi Flutter app."
+version: 1.1.0
+product-version: 3.0.5
+author: HeyEddi-com
 disable-model-invocation: true
 paths:
   - "lib/**"

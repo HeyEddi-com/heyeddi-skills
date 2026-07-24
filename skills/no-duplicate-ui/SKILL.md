@@ -1,6 +1,9 @@
 ---
 name: no-duplicate-ui
 description: Scans Vue files for duplicate component names and similar template overlap. Use during PR review or when refactoring UI to enforce DRY architecture.
+version: 1.0.0
+product-version: 3.0.5
+author: HeyEddi-com
 paths:
   - "**/*.vue"
 ---

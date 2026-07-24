@@ -1,6 +1,9 @@
 ---
 name: skill-name
 description: Replace with what this skill does and when the agent should use it. Write in third person; include trigger terms.
+version: 1.0.0
+product-version: 0.0.0
+author: HeyEddi-com
 ---
 
 # Skill Name
