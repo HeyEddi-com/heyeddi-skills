@@ -1,8 +1,8 @@
 {
   "name": "heyeddi-skills",
   "displayName": "HeyEddi Skills",
-  "version": "3.0.5",
-  "description": "HeyEddi agent skills for collaborative agents and humans — product intake, design, engineering, QA, and merge workflows.",
+  "version": "3.0.6",
+  "description": "HeyEddi agent skills for collaborative agents and humans — product intake, design, engineering, QA, CI config, and merge workflows.",
   "author": {
     "name": "HeyEddi",
     "email": "eddi@heyeddi.com"

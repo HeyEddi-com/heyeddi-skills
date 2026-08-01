@@ -26,6 +26,7 @@
         "composable-patterns",
         "flutter-patterns",
         "engineering-excellence",
+        "heyeddi-ci-config",
         "verify-build",
         "pre-merge-gate",
         "no-duplicate-ui"

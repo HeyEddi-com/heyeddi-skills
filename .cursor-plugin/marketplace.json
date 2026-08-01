@@ -5,15 +5,15 @@
     "email": "eddi@heyeddi.com"
   },
   "metadata": {
-    "description": "22 agent skills for product intake, design, engineering, and QA",
-    "version": "2.0.3",
+    "description": "23 agent skills for product intake, design, engineering, CI config, and QA",
+    "version": "3.0.6",
     "pluginRoot": "plugins"
   },
   "plugins": [
     {
       "name": "heyeddi-skills",
       "source": "heyeddi-skills",
-      "description": "Full HeyEddi skill bundle — install all 22 skills for Cursor"
+      "description": "Full HeyEddi skill bundle — install all 23 skills for Cursor"
     }
   ]
 }

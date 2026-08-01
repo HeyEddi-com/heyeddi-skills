@@ -2,9 +2,9 @@
 
 [![skills.sh](https://skills.sh/b/HeyEddi-com/skills)](https://skills.sh/HeyEddi-com/skills)
 
-Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi product workflows — intake, design, engineering, QA, and merge. **All 22 skills ship as one package** from this repo; install the full set into your app or Cursor global skills with a single command.
+Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi product workflows — intake, design, engineering, CI config, QA, and merge. **All 23 skills ship as one package** from this repo; install the full set into your app or Cursor global skills with a single command.
 
-**Status:** **v3.0.5** · 22 skills · [Release v3.0.5](https://github.com/HeyEddi-com/skills/releases/tag/v3.0.5)
+**Status:** **v3.0.6** · 23 skills · [Release v3.0.6](https://github.com/HeyEddi-com/skills/releases/tag/v3.0.6)
 
 ## About HeyEddi
 
@@ -51,7 +51,7 @@ List names in [skills-registry.json](skills-registry.json) or the catalog below.
 ### Pin a release tag
 
 ```bash
-npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.5 -a cursor -y --skill '*'
+npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.6 -a cursor -y --skill '*'
 ```
 
 ### Cursor Team Marketplace (teams / enterprise)
@@ -90,6 +90,7 @@ Browse the bundle at [skills.sh/heyeddi-com/skills](https://www.skills.sh/heyedd
 | `composable-patterns` | Vue composables for FastAPI / Firebase access |
 | `flutter-patterns` | Riverpod repositories — Dio + Firebase patterns |
 | `engineering-excellence` | KISS/YAGNI/DRY/SOLID audits + `.heyeddi/docs/engineering/` |
+| `heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract (Reviewer + optional runners) |
 | `ux-flow-auditor` | Task-flow traces — friction, click depth — `.heyeddi/docs/ux-flows/` |
 | `visual-auditor` | Review screenshots vs spec, fix visual issues, document fixes |
 | `verify-build` | Vite static build validator |
