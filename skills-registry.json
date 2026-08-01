@@ -1,5 +1,5 @@
 {
-  "version": "3.0.5",
+  "version": "3.0.6",
   "repository": "https://github.com/HeyEddi-com/skills",
   "install": "npx skills add HeyEddi-com/skills -a cursor -y --skill '*'",
   "skills": [
@@ -24,6 +24,7 @@
     { "name": "composable-patterns", "description": "FastAPI JWT + Firebase composables (Vue)" },
     { "name": "heyeddi-design", "description": "Design from scratch (replaces impeccable)" },
     { "name": "engineering-excellence", "description": "KISS/YAGNI/DRY/SOLID audits + .heyeddi/docs/engineering/" },
-    { "name": "ux-flow-auditor", "description": "Task flow traces — click depth, friction — .heyeddi/docs/ux-flows/" }
+    { "name": "ux-flow-auditor", "description": "Task flow traces — click depth, friction — .heyeddi/docs/ux-flows/" },
+    { "name": "heyeddi-ci-config", "description": "Author eddi-ci.yaml from the live policy contract; Reviewer + optional runners" }
   ]
 }

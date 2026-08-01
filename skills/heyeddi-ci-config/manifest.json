@@ -1,0 +1,40 @@
+{
+  "skill": "heyeddi-ci-config",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "load_policy_contract",
+      "description": "Load the living eddi-ci.yaml contract (knobs, rules, guide, minimal_example). Prefer production API; fall back to local heyeddi-ci checkout or docs.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "heyeddi_ci_root": {
+            "type": "string",
+            "description": "Optional path to a heyeddi-ci checkout for local SSOT import"
+          },
+          "url": {
+            "type": "string",
+            "description": "Override contract URL (default production cihook endpoint)"
+          }
+        },
+        "required": []
+      },
+      "script": "scripts/load_policy_contract.py",
+      "readonly": true
+    },
+    {
+      "name": "inspect_repo",
+      "description": "Read-only scan of languages and likely test commands to ground pipeline jobs.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/inspect_repo.py",
+      "readonly": true
+    }
+  ]
+}
