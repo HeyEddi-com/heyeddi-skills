@@ -2,7 +2,7 @@
 name: heyeddi-orchestrator
 description: Discover HeyEddi skills, auto-sync .heyeddi/ (skills index), detect hub updates (ask before install), cross-pillar opinions, and suggest @skills. Use at session start, after reinstalling skills, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route.
 version: 3.1.0
-product-version: 3.1.0
+product-version: 3.1.1
 author: HeyEddi-com
 ---
 

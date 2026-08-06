@@ -187,7 +187,12 @@ def main() -> None:
                     continue
                 cid = item.get("comment_id")
                 status = (item.get("status") or "").lower()
-                if cid is not None and status in {"posted", "dry-run", "already-replied"}:
+                if cid is not None and status in {
+                    "posted",
+                    "dry-run",
+                    "already-replied",
+                    "skipped_review_body",
+                }:
                     posted_ids.add(str(cid))
             for comment_id in tracked_ids:
                 if comment_id not in posted_ids:

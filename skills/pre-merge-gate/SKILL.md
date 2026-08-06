@@ -2,7 +2,7 @@
 name: pre-merge-gate
 description: Runs pre-merge checks (tests, build, types, optional UI audit) and returns a markdown pass/fail report. Use when QA approves a PR or before merge to main.
 version: 1.0.0
-product-version: 3.1.0
+product-version: 3.1.1
 author: HeyEddi-com
 disable-model-invocation: true
 ---

@@ -1,15 +1,22 @@
 ---
 name: heyeddi-pr-respond
-description: "Addresses PR review feedback: fetch all comment types, fix-vs-decline decisions, apply fixes, re-run pre-merge gate, post every threaded reply via post_thread_replies, verify_response hard gate. Use when responding to human review comments as the PR author. For reviewing a submitted PR use heyeddi-pr-review."
-version: 1.2.0
-product-version: 3.1.0
+description: "Addresses PR review feedback: fetch comments, fix-vs-decline, apply fixes, re-gate, reply IN EACH review thread via post_thread_replies (/replies only; never top-level acknowledgement spam), verify_response hard gate. Use when responding as the PR author. For reviewing a submitted PR use heyeddi-pr-review."
+version: 1.2.1
+product-version: 3.1.1
 author: HeyEddi-com
 disable-model-invocation: true
 ---
 
 # HeyEddi PR Respond
 
-**PR author response workflow**: fetch every review comment, decide fix vs decline, apply fixes, re-run pre-merge gate, and **post a reply in every comment thread** before any summary.
+**PR author response workflow**: fetch every review comment, decide fix vs decline, apply fixes, re-run pre-merge gate, and **reply in the same GitHub thread as each reviewer comment** before any summary.
+
+## Critical: in-thread replies only
+
+- **Do** `gh api repos/<owner>/<repo>/pulls/<N>/comments/<COMMENT_ID>/replies -X POST -f body="..."`
+- **Do not** `gh pr comment` for each reply (that floods the Conversation tab with new top-level comments)
+- **Do not** post "Acknowledged review attachment PRR_…"
+- Review submission bodies are not threads: answer the inline comments; optional one Summary at the end
 
 ## Subagents (default)
 
