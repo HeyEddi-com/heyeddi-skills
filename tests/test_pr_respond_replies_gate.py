@@ -127,7 +127,7 @@ def test_verify_requires_posted_log_without_fixture(tmp_path: Path) -> None:
     assert any("posted log" in m for m in data["missing"])
 
 
-def test_post_dry_run_then_verify(tmp_path: Path) -> None:
+def test_post_dry_run_skips_review_bodies_no_top_level(tmp_path: Path) -> None:
     _write_docs(
         tmp_path,
         tracking=TRACKING_COMPLETE.replace("RESPONDED", "PENDING"),
@@ -136,8 +136,11 @@ def test_post_dry_run_then_verify(tmp_path: Path) -> None:
     post = _run("post_thread_replies.py", tmp_path, "--pr", "42", "--dry-run")
     assert post.returncode == 0, post.stdout + post.stderr
     post_data = json.loads(post.stdout)
+    by_id = {p["comment_id"]: p for p in post_data["posted"]}
+    assert by_id["9001001"]["status"] == "dry-run"
+    assert by_id["8001"]["status"] == "skipped_review_body"
+    assert by_id["8002"]["status"] == "skipped_review_body"
     assert post_data["posted_count"] == 5
-    assert (tmp_path / ".heyeddi" / "docs" / "pr-42-posted.json").is_file()
 
     tracking = (tmp_path / ".heyeddi" / "docs" / "pr-42-tracking.md").read_text(encoding="utf-8")
     assert "RESPONDED" in tracking
@@ -146,6 +149,21 @@ def test_post_dry_run_then_verify(tmp_path: Path) -> None:
     verify = _run("verify_response.py", tmp_path, "--pr", "42", "--check")
     assert verify.returncode == 0, verify.stdout + verify.stderr
     assert json.loads(verify.stdout)["status"] == "ok"
+
+
+def test_banned_acknowledgement_body(tmp_path: Path) -> None:
+    bad = REPLIES_COMPLETE.replace(
+        "Fixed - Pagination is 1-based.",
+        "Acknowledged review attachment PRR_kWD0Tefbwc8AAAABI1ELng — inline threads carry the detailed responses.",
+    )
+    _write_docs(tmp_path, tracking=TRACKING_COMPLETE, replies=bad)
+    post = _run("post_thread_replies.py", tmp_path, "--pr", "42", "--dry-run")
+    # dry-run still rejects banned bodies before marking success
+    assert post.returncode == 1
+    data = json.loads(post.stdout)
+    assert data["error_count"] >= 1
+    assert any("banned" in e.lower() for e in data["errors"])
+
 
 
 def test_parse_helpers_unit() -> None:

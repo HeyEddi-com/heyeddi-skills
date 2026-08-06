@@ -744,3 +744,15 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 **Process:** `check_skills_update` → ask → on yes install; on skip `--dismiss --latest`.
 
 **Notes:** Orchestrator skill **3.1.0**. See `reference/skills-update.md`.
+
+## 2026-08-05 — PR respond: ban top-level acknowledgement spam
+
+**Context:** Agents posted Conversation-tab spam like "Acknowledged review attachment PRR_…" instead of replying in the reviewer's thread.
+
+**Decision:**
+- Individual replies MUST use `…/pulls/<N>/comments/<ID>/replies` only
+- `gh pr comment` allowed at most once for final Summary
+- Review submission bodies are not threads (skip top-level post)
+- Ban acknowledgement body patterns in `post_thread_replies`
+
+**Notes:** Skill **1.2.1**. Parent `pr-review-handler.mdc` updated.

@@ -24,13 +24,15 @@ Fixed - Removed redundant Depends() wrapper
 Responded to 2/2 comments. Ready for re-review.
 ```
 
-## Post every thread (do not skip)
+## Post every thread (in-thread only)
 
 ```bash
 python scripts/post_thread_replies.py --pr 42 --project-root .
 # evals:
 python scripts/post_thread_replies.py --pr 42 --dry-run --project-root .
 ```
+
+Uses `.../pulls/<N>/comments/<ID>/replies`. Does **not** call `gh pr comment` per reply.
 
 ## Verify hard gate
 

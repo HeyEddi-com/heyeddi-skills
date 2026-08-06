@@ -2,7 +2,7 @@
 name: flutter-patterns
 description: "Provides FastAPI Dio and Firebase client patterns for Flutter: repositories, Riverpod providers, auth. Context-first skill; use when writing or reviewing Dart data layers for HeyEddi Flutter apps."
 version: 1.0.0
-product-version: 3.1.0
+product-version: 3.1.1
 author: HeyEddi-com
 paths:
   - "lib/**"

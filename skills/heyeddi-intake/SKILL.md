@@ -2,7 +2,7 @@
 name: heyeddi-intake
 description: "Translates vague user prompts into HeyEddi product docs (personas, route intent, voice), route-specific handoff artifacts (wireframes, user mockups, or briefs), and skill-routing under .heyeddi/. Use first on new projects before @heyeddi-design, @heyeddi-handoff, or @flutter-engineering. Never hand-write product.md: use write_product."
 version: 1.3.0
-product-version: 3.1.0
+product-version: 3.1.1
 author: HeyEddi-com
 paths:
   - ".heyeddi/**"

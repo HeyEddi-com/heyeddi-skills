@@ -80,12 +80,17 @@ Responded to 4/4 comments. All fixes pushed; pre-merge gate OK. Ready for re-rev
 python scripts/post_thread_replies.py --pr <N> --project-root <root>
 ```
 
-- Inline IDs → `gh api repos/.../pulls/comments/<ID>/replies`
-- Discussion / review → `gh pr comment`
+**In-thread only:**
+
+- Inline / review-thread comment IDs → `gh api repos/.../pulls/<N>/comments/<ID>/replies`
+- Review *submission* bodies (type=review) → **do not** post a GitHub message; covered by inline replies + optional Summary
+- Discussion issue comments → thread reply API when resolvable; **never** `gh pr comment` per item
 - Writes `.heyeddi/docs/pr-<N>-posted.json` (required by verify)
 - Evals / no `gh`: add `--dry-run`
 
-Optional: `--post-summary` only after all individual posts succeed. Prefer posting summary yourself after verify.
+**Forbidden:** top-level spam such as `Acknowledged review attachment PRR_…`.
+
+Optional: `--post-summary` posts **one** Summary via `gh pr comment` only after all threads succeed.
 
 ## Phase 7: Verify (hard gate) then summarize
 
