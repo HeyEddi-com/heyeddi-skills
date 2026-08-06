@@ -70,9 +70,10 @@ Check product fit, doc drift, engineering quality, and run pre-merge gate.
 3. Per comment: fix | decline | partial | out-of-scope
 4. Apply fixes in code/docs
 5. `@pre-merge-gate` after fixes
-6. Threaded replies (`gh api .../comments/ID/replies`)
-7. `verify_response --check`
-8. Summary comment on PR (after all individual replies)
+6. Draft `.heyeddi/docs/pr-<N>-replies.md` — one `## Comment <id>` per thread, `## Summary` last
+7. `post_thread_replies` — posts every individual reply; writes `pr-<N>-posted.json`
+8. `verify_response --check` (add `--live` to confirm GitHub threaded replies)
+9. Summary comment on PR **only after** verify passes
 
 ### vs `/babysit`
 
@@ -105,7 +106,8 @@ Reply to every comment; fix what's correct; re-run pre-merge gate.
 | `pr-<N>-review.md` | Submission review report |
 | `pr-<N>-context.json` | Cached fetch_pr_context (optional) |
 | `pr-<N>-tracking.md` | Comment tracking table |
-| `pr-<N>-replies.md` | Drafted replies (eval / offline) |
+| `pr-<N>-replies.md` | Drafted replies (`## Comment <id>` per thread) |
+| `pr-<N>-posted.json` | Post log from `post_thread_replies` (live hard gate) |
 
 ## Eval cases
 

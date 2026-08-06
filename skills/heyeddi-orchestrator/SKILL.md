@@ -1,8 +1,8 @@
 ---
 name: heyeddi-orchestrator
-description: Discover HeyEddi skills, auto-sync .heyeddi/ (skills index), cross-pillar opinions, and suggest @skills. Use at session start, after reinstalling skills, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route.
-version: 3.0.5
-product-version: 3.0.5
+description: Discover HeyEddi skills, auto-sync .heyeddi/ (skills index), detect hub updates (ask before install), cross-pillar opinions, and suggest @skills. Use at session start, after reinstalling skills, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route.
+version: 3.1.0
+product-version: 3.1.0
 author: HeyEddi-com
 ---
 
@@ -26,7 +26,27 @@ author: HeyEddi-com
 
 Reinstall skills (`npx skills add`) and keep working: the next `@heyeddi-intake`, `@heyeddi-product`, or orchestrator tool updates `.heyeddi/` automatically.
 
-Optional explicit full sync (includes workflow scaffold): `sync --project-root .`
+Optional explicit full sync (includes workflow scaffold + update check): `sync --project-root .`
+
+## Skills update check (detect and ask)
+
+**Never silent self-update.** `sync` and `check_skills_update` compare the installed hub `product-version` to the latest GitHub release (`gh`), then ask the user.
+
+```
+check_skills_update --project-root .
+# or: sync --project-root .   (includes the check unless --skip-update-check)
+```
+
+If `update_available` / `ask_user` is true:
+
+1. Show the tool's `user_block` to the user.
+2. Wait for explicit approval (`update` / `yes` / `proceed`).
+3. Only then run the install command from the payload.
+4. On `skip` / `no`: `check_skills_update --dismiss --latest <ver> --project-root .`
+
+**Kill switch:** `check_skills_update --disable` or `.heyeddi/sync-state.json` → `"skills_update_check": false`, or env `HEYEDDI_SKILLS_UPDATE_CHECK=off`.
+
+Checks are throttled to once per 24h (`--force` to bypass). No network on every skill invoke.
 
 ## Cross-pillar sync (mandatory for product · UX · design)
 
@@ -53,7 +73,8 @@ If `.heyeddi/docs/intake/skill-routing.json` exists, **follow route order**.
 | Script | Purpose |
 |--------|---------|
 | *(auto)* | Every tool: refresh index when missing |
-| `sync.py` | Optional full sync + workflow scaffold |
+| `sync.py` | Optional full sync + workflow scaffold + update check |
+| `check_skills_update.py` | Detect hub updates; ask before `npx skills add` |
 | `write_skills_index.py` | Scan → `.heyeddi/skills-index.*` |
 | `load_catalog.py` | Read cached index |
 | `suggest_skills.py` | Rank skills for a prompt |

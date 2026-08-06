@@ -1,6 +1,6 @@
 # Skill distribution
 
-**Date:** 2026-07-24 · **Release:** v3.0.5
+**Date:** 2026-08-05 · **Release:** v3.1.0
 
 ## Vercel ecosystem (skills.sh + `npx skills`)
 
@@ -10,7 +10,7 @@ There is **no deploy step** and **no submission form**. Distribution is GitHub +
 |---------|--------------------------|-------------------|
 | **CLI** (`npx skills`) | `npx skills add HeyEddi-com/skills -a cursor -y --skill '*'` | Keep repo public; tag releases |
 | **skills.sh** | Same install command; leaderboard from [install telemetry](https://www.skills.sh/privacy) | `skills.sh.json` at repo root; share repo page URL |
-| **Pinned version** | `npx skills add https://github.com/HeyEddi-com/skills/tree/v3.0.5 -a cursor -y --skill '*'` | Tag releases on GitHub |
+| **Pinned version** | `npx skills add https://github.com/HeyEddi-com/skills/tree/v3.1.0 -a cursor -y --skill '*'` | Tag releases on GitHub |
 
 ### Automated releases
 
@@ -26,7 +26,7 @@ On every push to `main` (and via **Actions → Release → Run workflow**), [`.g
 
 **Repo requirements (v1.0.0):** public GitHub repo, `skills/<name>/SKILL.md` layout, `LICENSE`, README with install commands. No Vercel project or hosting needed.
 
-**Updates:** consumers run `npx skills update` or re-run `npx skills add`.
+**Updates:** consumers run `npx skills update` or re-run `npx skills add` **after approving** an agent prompt. `@heyeddi-orchestrator` `check_skills_update` (also via `sync`) detects a newer hub release and asks; it never silent-installs. Kill switch: `check_skills_update --disable` or `HEYEDDI_SKILLS_UPDATE_CHECK=off`.
 
 ### skills.sh listing
 

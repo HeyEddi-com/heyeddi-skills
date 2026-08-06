@@ -2,7 +2,7 @@
 name: verify-build
 description: Runs npm run build to catch Vite/Rollup failures before merge. Use when validating frontend changes or in CI pre-merge loops.
 version: 1.0.0
-product-version: 3.0.5
+product-version: 3.1.0
 author: HeyEddi-com
 paths:
   - "package.json"

@@ -18,6 +18,7 @@ Every skill follows this order when information is missing:
 - Missing handoff (no mockup, no brief, no mobile)
 - Irreversible stack choice (Flutter vs Vue, Firebase vs API-only)
 - User message conflicts with `product.md`
+- Skills hub update available: ask before `npx skills add` (`@heyeddi-orchestrator` `check_skills_update`)
 
 ## When not to ask
 

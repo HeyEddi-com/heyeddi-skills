@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-pr-respond",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "tools": [
     {
       "name": "fetch_pr_comments",
@@ -30,8 +30,39 @@
       "readonly": true
     },
     {
+      "name": "post_thread_replies",
+      "description": "Post every drafted ## Comment <id> reply to its GitHub thread; write posted.json for verify_response.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pr": {
+            "type": "integer",
+            "description": "Pull request number"
+          },
+          "project_root": {
+            "type": "string",
+            "description": "Workspace root path"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "description": "Write posted.json without calling gh"
+          },
+          "post_summary": {
+            "type": "boolean",
+            "description": "Also post ## Summary after all threads succeed"
+          }
+        },
+        "required": [
+          "pr",
+          "project_root"
+        ]
+      },
+      "script": "scripts/post_thread_replies.py",
+      "readonly": false
+    },
+    {
       "name": "verify_response",
-      "description": "Verify tracking table and replies are complete before PR summary.",
+      "description": "Hard-fail unless every tracked comment has a reply draft and posted.json entry (optional --live GitHub check).",
       "parameters": {
         "type": "object",
         "properties": {
@@ -50,6 +81,14 @@
           "require_gate": {
             "type": "boolean",
             "description": "Fail when pre-merge gate is BLOCKED"
+          },
+          "live": {
+            "type": "boolean",
+            "description": "Require GitHub threaded replies for each inline comment"
+          },
+          "allow_draft_only": {
+            "type": "boolean",
+            "description": "Skip posted.json requirement (offline)"
           },
           "check": {
             "type": "boolean",

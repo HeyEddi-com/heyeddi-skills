@@ -18,6 +18,7 @@ Every skill follows this order when information is missing:
 - Missing handoff (no mockup, no brief, no mobile)
 - Irreversible stack choice (Flutter vs Vue, Firebase vs API-only)
 - User message conflicts with `product.md`
+- **Skills hub update available** (`check_skills_update` / `sync` reports `ask_user`): ask before `npx skills add`
 
 ## When not to ask
 
@@ -30,3 +31,4 @@ Every skill follows this order when information is missing:
 - Guessing API field names → sync OpenAPI instead
 - Dumping 10 questions at once → 2–3 per round
 - Skipping `product.md` personas on design work → run `@heyeddi-intake` or `@heyeddi-design discover`
+- Auto-updating installed skills without approval → detect with `@heyeddi-orchestrator` `check_skills_update`, then ask

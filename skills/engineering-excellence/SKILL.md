@@ -2,7 +2,7 @@
 name: engineering-excellence
 description: "Audits code for KISS, YAGNI, DRY, SOLID, and testability; maintains living engineering notes under .heyeddi/docs/engineering/. Use when refactoring, before merge, or when the user asks for simple scalable design, architecture notes, reuse catalog, or engineering ADRs: not for visual UX (use ux-flow-auditor) or CI gates (use pre-merge-gate)."
 version: 1.0.0
-product-version: 3.0.5
+product-version: 3.1.0
 author: HeyEddi-com
 ---
 
