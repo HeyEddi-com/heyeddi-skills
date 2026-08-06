@@ -1,21 +1,43 @@
 {
   "skill": "heyeddi-orchestrator",
-  "version": "3.0.5",
+  "version": "3.1.0",
   "tools": [
     {
       "name": "sync",
-      "description": "Full .heyeddi/ sync: refresh skills index, init workflow if missing.",
+      "description": "Full .heyeddi/ sync: refresh skills index, init workflow if missing, detect hub updates (ask before install).",
       "parameters": {
         "type": "object",
         "properties": {
           "project_root": { "type": "string" },
           "hub_root": { "type": "string" },
           "skip_workflow": { "type": "boolean" },
+          "skip_update_check": { "type": "boolean" },
+          "force_update_check": { "type": "boolean" },
           "dry_run": { "type": "boolean" }
         },
         "required": ["project_root"]
       },
       "script": "scripts/sync.py",
+      "readonly": false
+    },
+    {
+      "name": "check_skills_update",
+      "description": "Compare installed hub version to latest release. Never auto-installs; ask user to approve npx skills add.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "hub_root": { "type": "string" },
+          "repo": { "type": "string" },
+          "latest": { "type": "string", "description": "Override latest version (offline/evals)" },
+          "force": { "type": "boolean" },
+          "dismiss": { "type": "boolean" },
+          "disable": { "type": "boolean", "description": "Kill switch: stop update checks" },
+          "enable": { "type": "boolean" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/check_skills_update.py",
       "readonly": false
     },
     {

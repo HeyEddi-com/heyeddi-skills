@@ -716,3 +716,31 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Process:** Run frontmatter sync on every hub version bump; drive installs via pinned `npx skills add` URLs; open vercel-labs/skills PR after traction.
 
+
+## 2026-08-05 — PR respond: hard-gate individual thread replies
+
+**Context:** `@heyeddi-pr-respond` (and the PR review handler rule) often posted a summary or marked tracking RESPONDED without posting a reply in each GitHub comment thread.
+
+**Decision:**
+- Replies draft must use `## Comment <id>` sections with `## Summary` last.
+- New `post_thread_replies.py` posts every drafted reply and writes `pr-<N>-posted.json`.
+- `verify_response --check` fails if any tracked ID lacks a draft or posted log; `--live` also checks GitHub `in_reply_to_id` for inline comments.
+- Fixture/eval path still uses `--fixture` (drafts only; optional `--dry-run` for posted.json).
+
+**Process:** draft replies → `post_thread_replies` → `verify_response --check [--live]` → summary last.
+
+**Notes:** Skill version **1.2.0**. Parent `pr-review-handler.mdc` got a hard-gate callout pointing at this flow.
+
+## 2026-08-05 — Skills update: detect and ask (no silent self-update)
+
+**Context:** User asked whether skills should auto-self-update when newer versions exist, or ask first.
+
+**Decision:** Detect + ask. Never silent install.
+- Hub-wide check (max installed `product-version` vs GitHub latest release via `gh`)
+- Runs on `@heyeddi-orchestrator` `sync` and `check_skills_update` (not every skill invoke)
+- 24h throttle; kill switch via `--disable`, sync-state, or `HEYEDDI_SKILLS_UPDATE_CHECK=off`
+- Agent must show `user_block` and wait for approval before `npx skills add`
+
+**Process:** `check_skills_update` → ask → on yes install; on skip `--dismiss --latest`.
+
+**Notes:** Orchestrator skill **3.1.0**. See `reference/skills-update.md`.

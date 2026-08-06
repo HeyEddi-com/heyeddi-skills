@@ -2,7 +2,7 @@
 name: heyeddi-pr-review
 description: "Reviews submitted PRs using only committed changes: product fit, docs drift, engineering quality, test coverage, and pre-merge gate. Use when approving a PR, doing reviewer QA, or self-checking before requesting review. Not for replying to review comments (use heyeddi-pr-respond)."
 version: 1.0.0
-product-version: 3.0.5
+product-version: 3.1.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---

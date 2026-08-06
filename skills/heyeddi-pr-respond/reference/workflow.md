@@ -1,6 +1,6 @@
 # PR review response workflow
 
-**Date:** 2026-07-07
+**Date:** 2026-08-05
 
 **Role:** PR **author** addressing human reviewer feedback.
 
@@ -49,26 +49,65 @@ python scripts/pre_merge_gate.py --project-root <root>
 
 All required checks must pass before posting "ready for re-review". Use `--skip-visual-audit` only when harness captures visuals separately.
 
-## Phase 5: Reply in thread
+## Phase 5: Draft every individual reply (hard requirement)
 
-**Inline comments** (mandatory threading):
+Write `.heyeddi/docs/pr-<N>-replies.md` with **one section per comment ID**, then Summary last:
 
-```bash
-gh api repos/<owner>/<repo>/pulls/<N>/comments/<COMMENT_ID>/replies \
-  -X POST -f body="✅ Fixed - <description>"
+```markdown
+# PR #<N> replies
+
+## Comment 9001001 (inline)
+Fixed - Pagination is now 1-based.
+
+## Comment 9001002 (inline)
+Fixed - Removed redundant Depends().
+
+## Comment DC_10001 (discussion)
+@product-owner Added a loading skeleton on the dashboard.
+
+## Comment 8001 (review)
+@backend-lead Addressed the inline notes on pagination and Depends.
+
+## Summary
+Responded to 4/4 comments. All fixes pushed; pre-merge gate OK. Ready for re-review.
 ```
 
-**Discussion / review comments:** `gh pr comment <N> --body "@author ..."`
+**Hard rule:** Do not post a PR summary until every `## Comment <id>` section exists and has been posted.
 
-Draft replies in `.heyeddi/docs/pr-<N>-replies.md` when `gh` unavailable (eval mode).
-
-## Phase 6: Verify and summarize
+## Phase 6: Post every thread reply (do not skip)
 
 ```bash
+python scripts/post_thread_replies.py --pr <N> --project-root <root>
+```
+
+- Inline IDs → `gh api repos/.../pulls/comments/<ID>/replies`
+- Discussion / review → `gh pr comment`
+- Writes `.heyeddi/docs/pr-<N>-posted.json` (required by verify)
+- Evals / no `gh`: add `--dry-run`
+
+Optional: `--post-summary` only after all individual posts succeed. Prefer posting summary yourself after verify.
+
+## Phase 7: Verify (hard gate) then summarize
+
+```bash
+# Live PR (default): requires posted.json for every tracked ID
 python scripts/verify_response.py --pr <N> --check --project-root <root>
+
+# Stronger: also confirm GitHub has threaded replies for inline comments
+python scripts/verify_response.py --pr <N> --check --live --project-root <root>
+
+# Eval / fixture only
+python scripts/verify_response.py --pr <N> --check --fixture <path> --project-root <root>
 ```
 
-Post PR summary **only after** every individual reply is sent:
+`verify_response --check` **fails** when:
+- Any tracking row is still PENDING
+- Any tracked ID lacks a `## Comment <id>` draft
+- Summary is missing or not last
+- Any tracked ID is missing from `posted.json` (unless `--fixture` / `--allow-draft-only`)
+- `--live`: any inline comment has no GitHub reply (`in_reply_to_id`)
+
+Post PR summary **only after** verify passes:
 
 > Responded to X/X comments. All fixes pushed; pre-merge gate OK. Ready for re-review.
 
@@ -76,7 +115,7 @@ Post PR summary **only after** every individual reply is sent:
 
 **Fixed:**
 ```
-✅ Fixed - <what changed>
+Fixed - <what changed>
 ```
 
 **Declined:**
@@ -86,7 +125,7 @@ Thanks for the feedback! However, <reason tied to PR goals>.
 
 **Partial:**
 ```
-✅ Fixed <valid part> - <what changed>
+Fixed <valid part> - <what changed>
 
 Regarding <other part>: <explanation>
 ```

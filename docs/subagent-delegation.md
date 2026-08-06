@@ -47,7 +47,7 @@ Return: brief path + Implementation spec summary
 | **visual-auditor** | *(often invoked as subagent)* | Playwright/layout scripts → `shell` |
 | **project-engineering** | Stack choice, audit interpretation | `audit_scaffold`, `scaffold_stack`, tests → `shell` |
 | **pre-merge-gate** | Report triage | `pre_merge_gate.py` → `shell` |
-| **heyeddi-pr-respond** | Tracking table, fix vs decline, re-gate | `fetch_pr_comments` + `verify_response` → `shell`; comment analysis → `generalPurpose` |
+| **heyeddi-pr-respond** | Tracking table, fix vs decline, re-gate | `fetch_pr_comments` + `post_thread_replies` + `verify_response` → `shell`; comment analysis → `generalPurpose` |
 | **heyeddi-pr-review** | Verdict on committed diff | `fetch_pr_context` + drift/audit → `shell`; PM delegates → `shell` |
 | **primevue-openprops-architect** | — | `validate_vue.py` → `shell` |
 | **verify-build** | — | build script → `shell` |

@@ -228,6 +228,11 @@ def default_args_for_tool(tool_name: str, skill_name: str, fixture_root: Path) -
     if tool_name == "diff_violations":
         args["golden"] = "/settings"
         args["target"] = "/settings"
+    if tool_name == "sync" and skill_name == "heyeddi-orchestrator":
+        args["skip_update_check"] = True
+    if tool_name == "check_skills_update":
+        args["latest"] = "99.0.0"
+        args["force"] = True
     if tool_name == "fetch_pr_comments":
         args["pr"] = 42
         fixture = REPO_ROOT / "skills" / skill_name / "fixtures" / "sample-pr-comments.json"
@@ -256,6 +261,11 @@ def default_args_for_tool(tool_name: str, skill_name: str, fixture_root: Path) -
         fixture = REPO_ROOT / "skills" / "heyeddi-pr-respond" / "fixtures" / "sample-pr-comments.json"
         if fixture.is_file():
             args["fixture"] = str(fixture)
+        _seed_pr_respond_docs(fixture_root)
+    if tool_name == "post_thread_replies":
+        args["pr"] = 42
+        args["dry_run"] = True
+        _seed_pr_respond_docs(fixture_root)
     if tool_name == "validate_composable":
         args["path"] = "src/composables/useApi.ts"
     if tool_name == "write_test_stub":
@@ -371,6 +381,52 @@ def default_args_for_tool(tool_name: str, skill_name: str, fixture_root: Path) -
     return args
 
 
+def _seed_pr_respond_docs(fixture_root: Path) -> None:
+    """Minimal tracking + replies so verify/post smoke tools can run offline."""
+    docs = fixture_root / ".heyeddi" / "docs"
+    docs.mkdir(parents=True, exist_ok=True)
+    tracking = docs / "pr-42-tracking.md"
+    replies = docs / "pr-42-replies.md"
+    if not tracking.is_file():
+        tracking.write_text(
+            """# PR 42 tracking
+
+| Comment ID | Type | Author | Summary | Action | Status |
+|------------|------|--------|---------|--------|--------|
+| 9001001 | inline | qa-reviewer | Pagination | fix | RESPONDED |
+| 9001002 | inline | backend-lead | Depends | fix | RESPONDED |
+| DC_10001 | discussion | product-owner | Loading | fix | RESPONDED |
+| 8001 | review | backend-lead | Address notes | partial | RESPONDED |
+| 8002 | review | qa-reviewer | LGTM | decline | RESPONDED |
+""",
+            encoding="utf-8",
+        )
+    if not replies.is_file():
+        replies.write_text(
+            """# PR #42 replies
+
+## Comment 9001001 (inline)
+Fixed - Pagination is 1-based.
+
+## Comment 9001002 (inline)
+Fixed - Removed redundant Depends.
+
+## Comment DC_10001 (discussion)
+@product-owner Added loading skeleton.
+
+## Comment 8001 (review)
+@backend-lead Addressed inline notes.
+
+## Comment 8002 (review)
+@qa-reviewer Thanks.
+
+## Summary
+Responded to 5/5 comments. Ready for re-review.
+""",
+            encoding="utf-8",
+        )
+
+
 def is_acceptable_output(output: str) -> bool:
     if not output.strip():
         return False
@@ -389,6 +445,10 @@ def run_direct(skill_dir: Path, script: str, args: dict[str, Any]) -> str:
         cmd = [sys.executable, str(script_path)]
     for key, value in args.items():
         flag = f"--{key.replace('_', '-')}"
+        if isinstance(value, bool):
+            if value:
+                cmd.append(flag)
+            continue
         if isinstance(value, list):
             for item in value:
                 cmd.extend([flag, str(item)])
