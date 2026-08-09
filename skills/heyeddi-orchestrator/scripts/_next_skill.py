@@ -73,6 +73,31 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "prompt": "@pre-merge-gate re-run gates after addressing review feedback",
         "why": "Confirm merge readiness before requesting re-review.",
     },
+    "heyeddi-ci-config": {
+        "skill": "heyeddi-ci-guide",
+        "prompt": "@heyeddi-ci-guide summarize commands, authorize-merge rules, and feedback paths",
+        "why": "Config is set: orient on CI commands and safety before respond/fails.",
+    },
+    "heyeddi-ci-guide": {
+        "skill": "heyeddi-ci-respond",
+        "prompt": "@heyeddi-ci-respond address HeyEddi CI findings on PR #<number>",
+        "why": "Guide done: respond to CI findings when a PR has HeyEddi markers.",
+    },
+    "heyeddi-ci-respond": {
+        "skill": "heyeddi-ci-fails",
+        "prompt": "@heyeddi-ci-fails diagnose failing Checks on PR #<number>",
+        "why": "After CI findings: diagnose any remaining red Checks.",
+    },
+    "heyeddi-ci-fails": {
+        "skill": "heyeddi-ci-config",
+        "prompt": "@heyeddi-ci-config review eddi-ci.yaml against the live policy contract",
+        "why": "Fails diagnosed: confirm policy/runners config if needed.",
+    },
+    "heyeddi-ci-runners": {
+        "skill": "heyeddi-ci-guide",
+        "prompt": "@heyeddi-ci-guide confirm runners are placeholder/fail-closed and list next CI skills",
+        "why": "Pipeline YAML authored: restate fail-closed status and safety.",
+    },
 }
 
 # Overrides when the finishing skill used a specific sub-command (e.g. design shape → craft).

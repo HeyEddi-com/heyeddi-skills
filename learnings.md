@@ -756,3 +756,65 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 - Ban acknowledgement body patterns in `post_thread_replies`
 
 **Notes:** Skill **1.2.1**. Parent `pr-review-handler.mdc` updated.
+
+## 2026-08-07 — PR respond: discussion quote-reply (no bare main-node)
+
+**Context:** Agents still answered `@heyeddi-ci` Conversation comments as bare top-level `gh pr comment` posts (main Conversation node), not nested under the parent and without quoting it.
+
+**Decision:**
+- Inline / review-thread: `/pulls/<N>/comments/<ID>/replies` only
+- Discussion IssueComments: no public nest API → **quote-reply** (`> parent snippet` + answer); refuse bare `@bot` posts
+- If inline `/replies` fails → same quote-reply fallback
+- Fix routing: tracking `type=discussion` wins even when the id is numeric (IssueComment databaseId)
+- `post_thread_replies` injects the quote from `pr-<N>-comments.json` when the draft omits it
+- Live verify only requires `in_reply_to_id` for explicit `inline` rows
+
+**Process:** draft → `post_thread_replies` → `verify_response --check [--live]` → optional Summary last.
+
+**Notes:** Skill **1.3.0**. Parent `pr-review-handler.mdc` hard gate updated.
+
+## 2026-08-09 — Recreated HeyEddi CI skill pack (symlink-safe)
+
+**Context:** `heyeddi-ci-guide`, `heyeddi-ci-respond`, `heyeddi-ci-fails`, `heyeddi-ci-runners` were wiped by a checkout. `plugins/heyeddi-skills/skills` is a symlink to `../../skills`.
+
+**Process:** Write only under `skills/<name>/`. Copy into `plugins/heyeddi-ci-skills/skills/` with `cp -a` (real dirs). Never `rm -rf` via the heyeddi-skills symlink path. CI respond uses `pr-{n}-ci-*` artifact names; ephemeral PR scratch is gitignored via project-engineering scaffold snippet.
+
+
+## 2026-08-09 — HeyEddi CI skill pack + ephemeral PR scratch
+
+**Context:** CI-only agent skills for config, responding to HeyEddi findings, Check failures, runners placeholder, and guide. Orphan `.heyeddi/docs/pr-*` files after merge.
+
+**Decision:**
+- Ship `@heyeddi-ci-config|guide|respond|fails|runners` in hub + marketplace plugin `heyeddi-ci-skills`
+- Runners skill is PLACEHOLDER (fail-closed; never claim jobs ran)
+- Feedback: debate + support@ only (no FP API)
+- PR artifacts (`pr-*-{tracking,replies,posted,comments,context,review,ci-*}`) are ephemeral — never commit; gitignore via project-engineering scaffold
+- `plugins/heyeddi-skills/skills` is a symlink to `../../skills` — never `rm -rf` through it
+
+**Process:** Author under `skills/<name>/`; `cp -a` into `plugins/heyeddi-ci-skills/skills/`. Living contract via `load_policy_contract`. Merge only with **authorize merge**.
+
+**Notes:** Hub **v3.2.0**. Docs: `docs/ci-skills.md`.
+
+## 2026-08-09 — Packs: heyeddi-skills + heyeddi-ci-skills from one hub
+
+**Context:** Brand the hub as **heyeddi-skills**; ship CI as a separate pack/plugin without a second skill monorepo. Legacy `plugins/heyeddi-skills/skills → ../../skills` whole-dir symlink made `rm -rf` delete SSOT.
+
+**Decision:**
+- SSOT: `skills/<name>/` only
+- Packs: `packs/heyeddi-skills.json` (full), `packs/heyeddi-ci-skills.json` (CI subset)
+- Sync: `./scripts/sync-plugins.sh` → per-skill symlinks (default) or `--copy`
+- Marketplace lists both plugins; landing `heyeddi-ci-skills/` is install docs only
+- Optional later: rename GitHub repo `skills` → `heyeddi-skills`
+
+**Process:** Edit pack JSON when adding skills → `sync-plugins.sh` → commit plugin link/copy updates as needed.
+
+## 2026-08-09 — GitHub CI releases both packs (no repo rename)
+
+**Context:** Keep GitHub repo `HeyEddi-com/skills`. Publish **heyeddi-skills** + **heyeddi-ci-skills** on each hub version tag.
+
+**Decision:**
+- `ci.yml`: sync-plugins + registry↔pack consistency before pytest
+- `release.yml`: sync-plugins; require full pack version == registry; create `vX.Y.Z` with notes from `write-release-notes.py` and attach both pack JSON assets
+- No GitHub rename
+
+**Process:** Bump `skills-registry.json` + `packs/heyeddi-skills.json` (and CI pack version when needed) in PR → merge main → Release workflow.

@@ -27,6 +27,10 @@
         "flutter-patterns",
         "engineering-excellence",
         "heyeddi-ci-config",
+        "heyeddi-ci-guide",
+        "heyeddi-ci-respond",
+        "heyeddi-ci-fails",
+        "heyeddi-ci-runners",
         "verify-build",
         "pre-merge-gate",
         "no-duplicate-ui"

@@ -1,0 +1,48 @@
+{
+  "pr": 42,
+  "dry_run": true,
+  "posted": [
+    {
+      "comment_id": "9001001",
+      "type": "inline",
+      "status": "dry-run",
+      "reply_ref": null,
+      "note": "Would POST .../comments/ID/replies in-thread"
+    },
+    {
+      "comment_id": "9001002",
+      "type": "inline",
+      "status": "dry-run",
+      "reply_ref": null,
+      "note": "Would POST .../comments/ID/replies in-thread"
+    },
+    {
+      "comment_id": "DC_10001",
+      "type": "discussion",
+      "status": "dry-run_quote_reply",
+      "reply_ref": null,
+      "note": "Would POST quote-reply via gh pr comment (no nest API for IssueComment)",
+      "body_preview": "> Can we add a loading state on the dashboard while users fetch?"
+    },
+    {
+      "comment_id": "8001",
+      "type": "review",
+      "status": "skipped_review_body",
+      "reply_ref": null,
+      "note": "Review bodies are not posted as top-level comments"
+    },
+    {
+      "comment_id": "8002",
+      "type": "review",
+      "status": "skipped_review_body",
+      "reply_ref": null,
+      "note": "Review bodies are not posted as top-level comments"
+    }
+  ],
+  "posted_count": 5,
+  "error_count": 0,
+  "errors": [],
+  "summary": null,
+  "rule": "Inline \u2192 /replies. Discussion \u2192 quote-reply only. Never bare gh pr comment per comment.",
+  "hint": "Run verify_response.py --pr <N> --check before considering the workflow done."
+}

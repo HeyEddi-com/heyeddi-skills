@@ -1,6 +1,15 @@
 # Anti-patterns: HeyEddi CI config
 
+## Shared CI safety
+
+- NEVER `gh pr merge` / merge the PR without the user saying **authorize merge** in the **current turn**
+- NEVER enable or invent `auto_merge` (schema rejects unknown keys; product law forbids agent merge)
+- NEVER enable billable knobs (`ai_review.on_ci_failure`, Spot `pipeline` jobs) without explicit opt-in
 - NEVER invent knobs from memory — always run `load_policy_contract` first
+- NEVER claim Spot runners executed jobs — runners are fail-closed / placeholder until the product ships them (`@heyeddi-ci-runners`)
+
+## Config-specific
+
 - NEVER create `eddi-ci.yaml` only because the file is missing **unless** `inspect_repo` shows HeyEddi product markers (or the user opts in) — see SKILL.md decision gate
 - NEVER treat a PR CTA mention of `@heyeddi-ci-config` as automatic permission to write the file — confirm if intent is unclear
 - NEVER skip `inspect_repo` before deciding add vs skip — product detection lives there

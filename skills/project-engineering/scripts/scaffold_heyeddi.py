@@ -10,6 +10,9 @@ from _heyeddi_paths import heyeddi_dir
 from _skill_cli import emit, resolve_project_root
 
 SCAFFOLD_ROOT = Path(__file__).resolve().parent.parent / "scaffold" / "heyeddi"
+GITIGNORE_SNIPPET = (
+    Path(__file__).resolve().parent.parent / "scaffold" / "gitignore-heyeddi-pr-scratch.snippet"
+)
 
 FILE_MAP = {
     "README.md": "README.md",
@@ -17,6 +20,27 @@ FILE_MAP = {
     "product.md": "product.md",
     "design.md": "design.md",
 }
+
+
+def _append_gitignore_snippet(root: Path, *, dry_run: bool) -> str | None:
+    """Ensure consumer .gitignore ignores ephemeral pr-* scratch files."""
+    if not GITIGNORE_SNIPPET.is_file():
+        return None
+    snippet = GITIGNORE_SNIPPET.read_text(encoding="utf-8")
+    marker = "HeyEddi PR / CI skill scratch"
+    gitignore = root / ".gitignore"
+    if gitignore.is_file():
+        existing = gitignore.read_text(encoding="utf-8")
+        if marker in existing or "pr-*-tracking.md" in existing:
+            return None
+        if dry_run:
+            return ".gitignore (append pr-* scratch rules)"
+        gitignore.write_text(existing.rstrip() + "\n\n" + snippet.lstrip(), encoding="utf-8")
+        return ".gitignore (appended pr-* scratch rules)"
+    if dry_run:
+        return ".gitignore (create with pr-* scratch rules)"
+    gitignore.write_text(snippet.lstrip(), encoding="utf-8")
+    return ".gitignore (created with pr-* scratch rules)"
 
 
 def main() -> None:
@@ -64,6 +88,10 @@ def main() -> None:
                 d.mkdir(parents=True, exist_ok=True)
             created.append(f".heyeddi/{sub}/")
 
+    gi = _append_gitignore_snippet(root, dry_run=args.dry_run)
+    if gi:
+        created.append(gi)
+
     emit(
         json.dumps(
             {
@@ -71,7 +99,10 @@ def main() -> None:
                 "dry_run": args.dry_run,
                 "created": created,
                 "skipped": skipped,
-                "hint": "Save skill-generated docs under .heyeddi/docs/",
+                "hint": (
+                    "Save durable docs under .heyeddi/docs/; "
+                    "never commit ephemeral pr-* scratch (gitignored)."
+                ),
             },
             indent=2,
         )

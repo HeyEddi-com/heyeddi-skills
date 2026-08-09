@@ -1,11 +1,10 @@
 # Create a GitHub Release when main advances and the hub version is untagged.
 #
-# Version source of truth: skills-registry.json → .version
-# Example: "3.0.3" → tag/release v3.0.3
+# Version SSOT: skills-registry.json → .version  (e.g. 3.2.0 → tag v3.2.0)
+# Packs: packs/heyeddi-skills.json + packs/heyeddi-ci-skills.json (attached as assets)
 #
-# Does NOT bump the version for you. Bump in the PR (README, registry, plugin),
-# merge to main; this workflow tags if the tag is missing.
-# Idempotent: no-op when vX.Y.Z already exists.
+# Does NOT bump the version. Bump in the PR, merge to main; this tags if missing.
+# Idempotent when the tag already exists.
 name: Release
 
 on:
@@ -24,11 +23,14 @@ jobs:
   release:
     name: Tag and publish GitHub Release
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Sync plugins from packs
+        run: ./scripts/sync-plugins.sh --link
 
       - name: Read hub version
         id: ver
@@ -40,9 +42,16 @@ jobs:
             exit 1
           fi
           TAG="v${VERSION}"
+          FULL_PACK_VER="$(python3 -c "import json; print(json.load(open('packs/heyeddi-skills.json'))['version'])")"
+          CI_PACK_VER="$(python3 -c "import json; print(json.load(open('packs/heyeddi-ci-skills.json'))['version'])")"
+          if [[ "$FULL_PACK_VER" != "$VERSION" ]]; then
+            echo "packs/heyeddi-skills.json version ($FULL_PACK_VER) must match registry ($VERSION)" >&2
+            exit 1
+          fi
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-          echo "Hub version ${VERSION} -> tag ${TAG}"
+          echo "ci_pack_version=${CI_PACK_VER}" >> "$GITHUB_OUTPUT"
+          echo "Hub ${VERSION} -> ${TAG} (CI pack ${CI_PACK_VER})"
 
       - name: Check whether tag exists
         id: tag
@@ -58,33 +67,46 @@ jobs:
             echo "Tag ${TAG} does not exist yet"
           fi
 
-      - name: Create GitHub Release
+      - name: Write release notes
         if: steps.tag.outputs.exists == 'false'
         env:
-          GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.ver.outputs.tag }}
           VERSION: ${{ steps.ver.outputs.version }}
         run: |
           set -euo pipefail
-          NOTES_FILE="$(mktemp)"
-          cat > "$NOTES_FILE" <<EOF
-          ## Install
+          python3 scripts/write-release-notes.py \
+            --tag "$TAG" \
+            --version "$VERSION" \
+            --repo "${{ github.repository }}" \
+            -o /tmp/heyeddi-skills-release-notes.md
 
-          \`\`\`bash
-          npx skills add https://github.com/HeyEddi-com/skills/tree/${TAG} -a cursor -y --skill '*'
-          \`\`\`
-
-          Hub version **${VERSION}** from \`skills-registry.json\`.
-
-          ## Changelog
-
-          See generated commit notes below / on the release page.
-          EOF
-          # Strip leading indentation from heredoc body
-          sed -i 's/^          //' "$NOTES_FILE"
+      - name: Create GitHub Release (both packs)
+        if: steps.tag.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.ver.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # Stable asset names for consumers / Marketplace tooling
+          cp packs/heyeddi-skills.json /tmp/heyeddi-skills.json
+          cp packs/heyeddi-ci-skills.json /tmp/heyeddi-ci-skills.json
           gh release create "$TAG" \
             --title "HeyEddi Skills ${TAG}" \
-            --notes-file "$NOTES_FILE" \
+            --notes-file /tmp/heyeddi-skills-release-notes.md \
             --generate-notes \
-            --target "${{ github.sha }}"
-          echo "Created release ${TAG} at ${{ github.sha }}"
+            --target "${{ github.sha }}" \
+            /tmp/heyeddi-skills.json \
+            /tmp/heyeddi-ci-skills.json
+          echo "Created release ${TAG} at ${{ github.sha }} with pack assets"
+
+      - name: Summary
+        run: |
+          echo "### Release" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Hub tag: \`${{ steps.ver.outputs.tag }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Full pack: **heyeddi-skills** @ ${{ steps.ver.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- CI pack: **heyeddi-ci-skills** @ ${{ steps.ver.outputs.ci_pack_version }}" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "${{ steps.tag.outputs.exists }}" == "true" ]]; then
+            echo "- Status: tag already existed (no-op)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- Status: created GitHub Release + pack JSON assets" >> "$GITHUB_STEP_SUMMARY"
+          fi

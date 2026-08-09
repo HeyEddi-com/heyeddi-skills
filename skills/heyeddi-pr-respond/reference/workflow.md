@@ -1,8 +1,12 @@
 # PR review response workflow
 
-**Date:** 2026-08-05
+**Date:** 2026-08-09
 
 **Role:** PR **author** addressing human reviewer feedback.
+
+## Ephemeral artifacts
+
+`.heyeddi/docs/pr-<N>-{tracking,replies,posted,comments}*` are **local session working files**. Keep them for `verify_response` during the turn. **Never commit them.** GitHub threads are the SSOT. See consumer gitignore patterns from `project-engineering`.
 
 ## Phase 1: Fetch and track
 

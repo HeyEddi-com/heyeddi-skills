@@ -1,7 +1,7 @@
 ---
 name: heyeddi-pr-review
 description: "Reviews submitted PRs using only committed changes: product fit, docs drift, engineering quality, test coverage, and pre-merge gate. Use when approving a PR, doing reviewer QA, or self-checking before requesting review. Not for replying to review comments (use heyeddi-pr-respond)."
-version: 1.0.0
+version: 1.1.0
 product-version: 3.1.1
 author: HeyEddi-com
 disable-model-invocation: true
@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 You are the **reviewer** workflow. Scope every judgment to the PR diff (`base...head`). Ignore uncommitted files.
 
-**Artifacts:** `.heyeddi/docs/pr-<N>-review.md`: never repo root.
+**Artifacts:** `.heyeddi/docs/pr-<N>-review.md` and `pr-<N>-context.json` are **ephemeral session scratch** — never repo root, **never commit**. GitHub (optional `gh pr review`) is the durable record.
 
 ## When to use
 

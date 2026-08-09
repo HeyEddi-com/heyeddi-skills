@@ -1,0 +1,102 @@
+{
+  "skill": "heyeddi-ci-respond",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "fetch_pr_comments",
+      "description": "Fetch inline, review, and discussion PR comments into pr-<N>-ci-comments.json.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "fixture": { "type": "string" }
+        },
+        "required": ["pr", "project_root"]
+      },
+      "script": "scripts/fetch_pr_comments.py",
+      "readonly": true
+    },
+    {
+      "name": "filter_heyeddi_comments",
+      "description": "Filter comments cache to HeyEddi CI markers / bot logins / HeyEddi parents.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "input": { "type": "string" },
+          "output": { "type": "string" },
+          "check": { "type": "boolean" }
+        },
+        "required": ["pr", "project_root"]
+      },
+      "script": "scripts/filter_heyeddi_comments.py",
+      "readonly": false
+    },
+    {
+      "name": "discover_and_verify",
+      "description": "Discover evidenced npm/pytest/go/cargo/make commands; optionally run them. Never invent.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "run": { "type": "boolean" },
+          "kinds": { "type": "string" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/discover_and_verify.py",
+      "readonly": false
+    },
+    {
+      "name": "assert_no_merge",
+      "description": "Hard-fail merge-like plans unless user said authorize merge this turn.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_text": { "type": "string" },
+          "planned_command": { "type": "string" },
+          "check": { "type": "boolean" }
+        },
+        "required": []
+      },
+      "script": "scripts/assert_no_merge.py",
+      "readonly": true
+    },
+    {
+      "name": "post_thread_replies",
+      "description": "Post every ## Comment <id> reply in-thread; write pr-<N>-ci-posted.json.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "dry_run": { "type": "boolean" },
+          "post_summary": { "type": "boolean" }
+        },
+        "required": ["pr", "project_root"]
+      },
+      "script": "scripts/post_thread_replies.py",
+      "readonly": false
+    },
+    {
+      "name": "verify_response",
+      "description": "Hard-fail unless every tracked CI comment has reply draft + posted.json entry.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "fixture": { "type": "string" },
+          "live": { "type": "boolean" },
+          "allow_draft_only": { "type": "boolean" },
+          "check": { "type": "boolean" }
+        },
+        "required": ["pr", "project_root"]
+      },
+      "script": "scripts/verify_response.py",
+      "readonly": true
+    }
+  ]
+}

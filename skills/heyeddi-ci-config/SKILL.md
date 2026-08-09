@@ -1,7 +1,7 @@
 ---
 name: heyeddi-ci-config
 description: Author or update eddi-ci.yaml for HeyEddi CI and Spot runners. Use when enabling HeyEddi CI, runners, or the user asks to create/configure eddi-ci.yaml. Loads the live policy contract from cihook.heyeddi.com so knobs stay current.
-version: 1.0.0
+version: 1.1.0
 product-version: 3.1.1
 author: HeyEddi-com
 paths:
@@ -12,6 +12,13 @@ paths:
 # HeyEddi CI Config
 
 Authors a correct `eddi-ci.yaml` for HeyEddi Reviewer / optional Spot runners. **Do not invent knobs from memory.**
+
+## Safety
+
+- Never merge a PR without **authorize merge** in the current turn; never write `auto_merge`
+- Billable knobs and Spot `pipeline` jobs need explicit opt-in
+- Always `load_policy_contract` before authoring
+- Spot runners are **fail-closed / placeholder** — declare YAML only; never claim jobs ran (`@heyeddi-ci-runners`)
 
 ## Knowledge rule (mandatory)
 

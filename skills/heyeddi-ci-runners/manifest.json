@@ -1,0 +1,48 @@
+{
+  "skill": "heyeddi-ci-runners",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "load_policy_contract",
+      "description": "Load living eddi-ci.yaml contract (knobs, rules, guide, minimal_example).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "heyeddi_ci_root": { "type": "string" },
+          "url": { "type": "string" }
+        },
+        "required": []
+      },
+      "script": "scripts/load_policy_contract.py",
+      "readonly": true
+    },
+    {
+      "name": "inspect_repo",
+      "description": "Read-only scan of languages and likely test commands for pipeline jobs.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/inspect_repo.py",
+      "readonly": true
+    },
+    {
+      "name": "assert_runners_placeholder",
+      "description": "Fail when agent text claims Spot jobs ran (execution is fail-closed).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "agent_text": { "type": "string" },
+          "check": { "type": "boolean" }
+        },
+        "required": []
+      },
+      "script": "scripts/assert_runners_placeholder.py",
+      "readonly": true
+    }
+  ]
+}
