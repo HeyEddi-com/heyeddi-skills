@@ -2,13 +2,13 @@
 
 **Date:** 2026-07-24
 
-HeyEddi skills are already **indexed** on [skills.sh/heyeddi-com/skills](https://www.skills.sh/heyeddi-com/skills) via install telemetry. **Official** status (Vercel-verified, featured alongside primary product teams) is a separate bar that requires traction plus a core-team review.
+HeyEddi skills are already **indexed** on [skills.sh/heyeddi-com/heyeddi-skills](https://www.skills.sh/heyeddi-com/heyeddi-skills) via install telemetry. **Official** status (Vercel-verified, featured alongside primary product teams) is a separate bar that requires traction plus a core-team review.
 
 ## Where you are today
 
 | Stage | Status |
 |-------|--------|
-| Public GitHub repo | Yes — `HeyEddi-com/skills` |
+| Public GitHub repo | Yes — `HeyEddi-com/heyeddi-skills` |
 | skills.sh index page | Yes — bundle + grouped `skills.sh.json` |
 | Install telemetry | Depends on real `npx skills add` usage |
 | GitHub topics | `agent-skills`, `skills-sh` (+ add `ai-agents`) |
@@ -27,13 +27,13 @@ HeyEddi skills are already **indexed** on [skills.sh/heyeddi-com/skills](https:/
 The directory does not rank empty repos. Every real install via:
 
 ```bash
-npx skills add HeyEddi-com/skills -a cursor -y --skill '*'
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 ```
 
 …feeds anonymous CLI telemetry that powers the leaderboard and search index.
 
 **Actions:**
-- Share the **repo** page URL (`skills.sh/heyeddi-com/skills`), not only the org page.
+- Share the **repo** page URL (`skills.sh/heyeddi-com/heyeddi-skills`), not only the org page.
 - Pin a release tag in docs/README (`v3.0.5` or latest).
 - Add the install block to heyeddi.com, `.heyeddi/README.md` scaffold, and onboarding docs.
 - Use `@heyeddi-orchestrator` in demos so consumers install the full bundle.
@@ -49,7 +49,7 @@ Required crawler tags:
 Set on the hub repo (maintainers):
 
 ```bash
-gh api repos/HeyEddi-com/skills/topics -X PUT \
+gh api repos/HeyEddi-com/heyeddi-skills/topics -X PUT \
   -f names='["agent-skills","skills-sh","ai-agents","cursor","claude-code"]'
 ```
 

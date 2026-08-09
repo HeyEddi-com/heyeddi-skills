@@ -5,8 +5,8 @@
     "email": "eddi@heyeddi.com"
   },
   "metadata": {
-    "description": "HeyEddi agent skills — full product pack plus CI-only plugin",
-    "version": "3.2.0",
+    "description": "HeyEddi agent skills \u2014 full product pack plus CI-only plugin",
+    "version": "3.3.0",
     "pluginRoot": "plugins"
   },
   "plugins": [
@@ -18,8 +18,8 @@
     {
       "name": "heyeddi-ci-skills",
       "source": "heyeddi-ci-skills",
-      "description": "CI-only HeyEddi skills — config, respond, fails, runners placeholder, guide"
+      "description": "CI-only HeyEddi skills \u2014 config, respond, fails, runners placeholder, guide"
     }
   ],
-  "version": "3.2.0"
+  "version": "3.3.0"
 }

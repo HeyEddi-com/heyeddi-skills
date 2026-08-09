@@ -1,14 +1,14 @@
 {
   "name": "heyeddi-ci-skills",
   "displayName": "HeyEddi CI Skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Stack-agnostic HeyEddi CI agent skills: eddi-ci.yaml config, CI finding response, Check failure diagnosis, runners placeholder, and CI guide.",
   "author": {
     "name": "HeyEddi",
     "email": "eddi@heyeddi.com"
   },
-  "homepage": "https://github.com/HeyEddi-com/skills",
-  "repository": "https://github.com/HeyEddi-com/skills",
+  "homepage": "https://github.com/HeyEddi-com/heyeddi-skills",
+  "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "license": "MIT",
   "logo": "assets/logo.svg",
   "keywords": [

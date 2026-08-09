@@ -1,9 +1,9 @@
 {
   "pack": "heyeddi-ci-skills",
   "displayName": "HeyEddi CI Skills",
-  "description": "CI-only HeyEddi skills — eddi-ci.yaml config, CI respond, fails, runners placeholder, guide.",
+  "description": "CI-only HeyEddi skills \u2014 eddi-ci.yaml config, CI respond, fails, runners placeholder, guide.",
   "plugin": "heyeddi-ci-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "skills": [
     "heyeddi-ci-config",
     "heyeddi-ci-guide",

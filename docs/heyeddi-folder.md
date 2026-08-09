@@ -8,7 +8,7 @@ Every HeyEddi client or internal app uses a **`.heyeddi/`** directory at the pro
 
 **HeyEddi** is a **collaborative workspace for agents and humans**. The `.heyeddi/` folder in your repo is where product context, design artifacts, and skill-generated docs live so AI agents and your team share one source of truth while building SaaS apps (Vue or **Flutter** + FastAPI or Firebase, OpenProps + PrimeVue for web).
 
-We publish **free, open [Cursor Agent Skills](https://github.com/HeyEddi-com/skills)** — install the full bundle with `npx skills add HeyEddi-com/skills -a cursor -y --skill '*'` or `./scripts/install-skills.sh --all`. Invoke with `@skill-name` in Cursor.
+We publish **free, open [Cursor Agent Skills](https://github.com/HeyEddi-com/heyeddi-skills)** — install the full bundle with `npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'` or `./scripts/install-skills.sh --all`. Invoke with `@skill-name` in Cursor.
 
 **Need people, not just agents?** [heyeddi.com/humans](https://heyeddi.com/humans) — hire vetted designers, engineers, and product folks to complement your agent workflows.
 

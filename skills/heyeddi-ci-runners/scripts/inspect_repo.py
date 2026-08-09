@@ -74,9 +74,21 @@ def detect_heyeddi_products(root: Path) -> dict:
             raw = lock.read_text(encoding="utf-8", errors="ignore")
         except OSError:
             raw = ""
-        if "HeyEddi-com/skills" in raw or "heyeddi-com/skills" in raw.lower():
+        low = raw.lower()
+        # Accept current packs + legacy hub slug (GitHub rename redirect).
+        if any(
+            needle in low
+            for needle in (
+                "heyeddi-com/heyeddi-skills",
+                "heyeddi-com/heyeddi-ci-skills",
+                "heyeddi-com/skills",  # legacy slug before rename
+            )
+        ):
             evidence.append(
-                {"signal": "skills-lock.json", "detail": "pins HeyEddi-com/skills"}
+                {
+                    "signal": "skills-lock.json",
+                    "detail": "pins HeyEddi-com/heyeddi-skills (or CI/legacy hub)",
+                }
             )
 
     for rel in ("PRODUCT.md", ".heyeddi/product.md", "README.md"):
