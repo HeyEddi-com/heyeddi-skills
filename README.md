@@ -2,9 +2,9 @@
 
 [![skills.sh](https://skills.sh/b/HeyEddi-com/heyeddi-skills)](https://skills.sh/HeyEddi-com/heyeddi-skills)
 
-Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi — branded **heyeddi-skills**. One codebase ships the **full pack** and a **CI-only pack** (`heyeddi-ci-skills`) via [packs/](packs/) + `./scripts/sync-plugins.sh`.
+Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi — branded **HeyEddi Skills** (`heyeddi-skills`). This hub is the **SSOT** for the full pack. The CI-only skills.sh package lives in the sibling repo [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills) (published from [packs/](packs/) via `./scripts/publish-ci-pack-repo.sh`). Marketplace plugins for both packs also ship from this repo (`./scripts/sync-plugins.sh`).
 
-**Status:** **v3.3.0** · 27 skills · see [skills-registry.json](skills-registry.json)
+**Status:** **v3.4.0** · 27 skills · see [skills-registry.json](skills-registry.json)
 
 ## About HeyEddi
 
@@ -39,18 +39,19 @@ cd heyeddi-skills
 ./scripts/install-skills.sh --all --global
 ```
 
-### Install CI skills only (same monorepo)
+### Install CI-only pack (sibling skills.sh repo)
+
+For [HeyEddi CI](https://ci.heyeddi.com) workflows (config, respond, fails, runners placeholder, guide):
 
 ```bash
-npx skills add HeyEddi-com/heyeddi-skills -a cursor -y \
-  --skill heyeddi-ci-config \
-  --skill heyeddi-ci-guide \
-  --skill heyeddi-ci-respond \
-  --skill heyeddi-ci-fails \
-  --skill heyeddi-ci-runners
+npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 ```
 
-Or Cursor Team Marketplace → plugin **heyeddi-ci-skills**.
+- Repo: [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills)
+- Browse: [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills)
+- Policy: [ci.heyeddi.com/docs#policy](https://ci.heyeddi.com/docs#policy)
+
+Local folder for this hub may stay named `skills`; the GitHub remote is **heyeddi-skills**.
 
 ### Install one skill from the bundle
 
@@ -64,7 +65,7 @@ List names in [skills-registry.json](skills-registry.json) or the catalog below.
 ### Pin a release tag
 
 ```bash
-npx skills add https://github.com/HeyEddi-com/heyeddi-skills/tree/v3.3.0 -a cursor -y --skill '*'
+npx skills add https://github.com/HeyEddi-com/heyeddi-skills/tree/v3.4.0 -a cursor -y --skill '*'
 ```
 
 ### Cursor Team Marketplace (teams / enterprise)
@@ -75,7 +76,7 @@ Admins can import this repo as a **Team Marketplace** plugin source (Cursor 2.6+
 2. Paste `https://github.com/HeyEddi-com/heyeddi-skills`
 3. Assign plugins to access groups; members install from **Customize**
 
-Plugins (from one hub):
+Plugins (from this hub; CI skills.sh package is the sibling repo):
 
 | Plugin | Pack |
 |--------|------|
@@ -88,7 +89,10 @@ Invoke skills in chat with `@skill-name` (e.g. `@heyeddi-intake`, `@heyeddi-hand
 
 ### skills.sh listing
 
-Browse the bundle at [skills.sh/heyeddi-com/heyeddi-skills](https://www.skills.sh/heyeddi-com/heyeddi-skills). Install counts on the leaderboard come from the Vercel CLI's own [install telemetry](https://www.skills.sh/privacy) — nothing is collected by this repo.
+- **Full pack:** [skills.sh/heyeddi-com/heyeddi-skills](https://www.skills.sh/heyeddi-com/heyeddi-skills)
+- **CI-only pack:** [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills)
+
+Install counts on the leaderboard come from the Vercel CLI's own [install telemetry](https://www.skills.sh/privacy) — nothing is collected by this repo.
 
 **Official listing playbook:** see [docs/skills-sh-official-listing.md](docs/skills-sh-official-listing.md) (topics, frontmatter, security score, Vercel core review).
 

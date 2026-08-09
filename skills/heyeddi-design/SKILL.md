@@ -2,7 +2,7 @@
 name: heyeddi-design
 description: "End-to-end UI design for HeyEddi stack (PrimeVue, DESIGN.md, semantic tokens: OpenProps on scaffold default). Use when the user wants to design, explore, critique, or improve existing frontend: e.g. \"enterprise view\", \"critique the login page\", \"this UI looks bad\", \"settings page\". Runs discovery, critique, polish, craft, document. Sub-commands init, discover, shape, craft, critique, polish, document. Not for pre-made screenshot handoff: use heyeddi-handoff instead."
 version: 2.2.0
-product-version: 3.1.1
+product-version: 3.4.0
 author: HeyEddi-com
 ---
 

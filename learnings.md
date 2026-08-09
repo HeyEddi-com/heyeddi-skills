@@ -851,3 +851,22 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - CI install: selective `--skill heyeddi-ci-*` from the hub, or Marketplace plugin **heyeddi-ci-skills**
 
 **Process:** Author under `skills/<name>/` → `sync-plugins.sh` → release attaches both pack JSON assets.
+
+## 2026-08-09 — Dual skills.sh repos restored (v3.4.0 / CI 1.2.0)
+
+**Context:** The monorepo-only decision (single hub, Marketplace packs only) conflicted with skills.sh indexing **one page per GitHub repo**. CI consumers need a dedicated install URL.
+
+**Decision (reverses “Monorepo only (no CI skills.sh mirror)”):**
+- Hub GitHub remains `HeyEddi-com/heyeddi-skills` (local folder may stay `skills`)
+- Publish CI pack mirror `HeyEddi-com/heyeddi-ci-skills` via `scripts/publish-ci-pack-repo.sh`
+- SSOT stays `skills/<name>/` in the hub; CI repo is a published skills.sh package only
+- Marketplace still lists both plugins from the hub
+- Release workflow optionally syncs the CI mirror when secret `CI_PACK_PUSH_TOKEN` is set (never use `secrets.X || github.token` — invalid Actions expression)
+
+**Install:**
+```bash
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
+npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
+```
+
+**Process:** Bump hub + CI pack versions → `sync-plugins.sh` → merge → Release tags hub → `publish-ci-pack-repo.sh --push` (or Actions with token).
