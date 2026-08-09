@@ -41,14 +41,15 @@ jobs:
           python3 -c "
           import json
           from pathlib import Path
-          reg = {s['name'] for s in json.load(open('skills-registry.json'))['skills']}
+          reg_doc = json.load(open('skills-registry.json'))
+          reg = {s['name'] for s in reg_doc['skills']}
           full = set(json.load(open('packs/heyeddi-skills.json'))['skills'])
           ci = set(json.load(open('packs/heyeddi-ci-skills.json'))['skills'])
           assert full == reg, (full ^ reg)
           assert ci <= full
           for name in full:
               assert (Path('skills') / name / 'SKILL.md').is_file(), name
-          print(f'ok: hub {REG_VER}, full={len(full)}, ci={len(ci)}')
+          print('ok: hub %s, full=%d, ci=%d' % (reg_doc['version'], len(full), len(ci)))
           "
 
       - name: pytest
