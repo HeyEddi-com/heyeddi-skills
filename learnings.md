@@ -838,3 +838,16 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 ```
+
+## 2026-08-09 — Monorepo only (no CI skills.sh mirror)
+
+**Context:** Dual GitHub repos for skills.sh conflicted with the agreed monorepo model (one hub, two Marketplace packs).
+
+**Decision:**
+- Single public hub: `HeyEddi-com/heyeddi-skills` (local folder may stay `skills`)
+- Packs `heyeddi-skills` + `heyeddi-ci-skills` are plugins/manifests inside the hub — **not** a second GitHub skill tree
+- Remove `publish-ci-pack-repo.sh` / `CI_PACK_PUSH_TOKEN` / mirror sync
+- Archive `HeyEddi-com/heyeddi-ci-skills` if it was created as a publish mirror
+- CI install: selective `--skill heyeddi-ci-*` from the hub, or Marketplace plugin **heyeddi-ci-skills**
+
+**Process:** Author under `skills/<name>/` → `sync-plugins.sh` → release attaches both pack JSON assets.

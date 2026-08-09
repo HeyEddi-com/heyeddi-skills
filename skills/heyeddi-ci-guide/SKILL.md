@@ -54,8 +54,8 @@ Spot / isolated runners are **PLACEHOLDER / fail-closed**. Skills may author val
 ## Install
 
 ```bash
-npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
-# or full hub: npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
+# or CI skills by name / Marketplace plugin heyeddi-ci-skills
 # or Team Marketplace plugin heyeddi-ci-skills
 ```
 
