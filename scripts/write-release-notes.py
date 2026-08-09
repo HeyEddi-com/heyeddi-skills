@@ -7,7 +7,6 @@ import json
 from pathlib import Path
 
 HUB_REPO = "HeyEddi-com/heyeddi-skills"
-CI_REPO = "HeyEddi-com/heyeddi-ci-skills"
 
 
 def main() -> None:
@@ -15,7 +14,6 @@ def main() -> None:
     parser.add_argument("--tag", required=True)
     parser.add_argument("--version", required=True)
     parser.add_argument("--repo", default=HUB_REPO)
-    parser.add_argument("--ci-repo", default=CI_REPO)
     parser.add_argument("-o", "--output", required=True)
     args = parser.parse_args()
 
@@ -26,19 +24,21 @@ def main() -> None:
     full_skills = "\n".join(f"- `{n}`" for n in full["skills"])
     ci_skills = "\n".join(f"- `{n}`" for n in ci["skills"])
     ci_ver = ci.get("version", "—")
-    ci_tag = f"v{ci_ver}" if isinstance(ci_ver, str) and ci_ver[0].isdigit() else ci_ver
 
     tree = f"https://github.com/{args.repo}/tree/{args.tag}"
+    ci_skill_flags = " ".join(f"--skill {n}" for n in ci["skills"])
     notes = f"""## HeyEddi Skills {args.tag}
 
-Hub version **{args.version}** (`skills-registry.json`). Two public skills.sh packs:
+Hub version **{args.version}** (`skills-registry.json`). **Monorepo:** one GitHub repo, two Cursor packs (Marketplace plugins + pack JSON assets).
 
-| Pack | GitHub | skills.sh |
-|------|--------|-----------|
-| Full | `{args.repo}` | https://www.skills.sh/heyeddi-com/heyeddi-skills |
-| CI-only | `{args.ci_repo}` | https://www.skills.sh/heyeddi-com/heyeddi-ci-skills |
+| Pack | How to get it |
+|------|----------------|
+| Full (`heyeddi-skills`) | `npx skills add {args.repo} -a cursor -y --skill '*'` |
+| CI-only (`heyeddi-ci-skills`) | Marketplace plugin **heyeddi-ci-skills**, or install CI skills by name from this hub |
 
-### Install — full pack (`heyeddi-skills`)
+skills.sh: https://www.skills.sh/heyeddi-com/heyeddi-skills
+
+### Install — full pack
 
 ```bash
 npx skills add {args.repo} -a cursor -y --skill '*'
@@ -54,21 +54,15 @@ npx skills add https://github.com/{args.repo}/tree/{args.tag} -a cursor -y --ski
 
 {full_skills}
 
-### Install — CI pack (`heyeddi-ci-skills`)
-
-Published mirror repo (same skill SSOT as this hub):
+### Install — CI skills only (same monorepo)
 
 ```bash
-npx skills add {args.ci_repo} -a cursor -y --skill '*'
+npx skills add {args.repo} -a cursor -y {ci_skill_flags}
 ```
 
-Pin CI pack **{ci_tag}**:
+Or import this repo in Cursor Team Marketplace → plugin **heyeddi-ci-skills**.
 
-```bash
-npx skills add https://github.com/{args.ci_repo}/tree/{ci_tag} -a cursor -y --skill '*'
-```
-
-**{len(ci["skills"])} skills** (pack version {ci_ver}):
+**{len(ci["skills"])} CI skills** (pack version {ci_ver}):
 
 {ci_skills}
 

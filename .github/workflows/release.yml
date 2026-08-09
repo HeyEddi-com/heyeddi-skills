@@ -99,8 +99,7 @@ jobs:
             /tmp/heyeddi-ci-skills.json
           echo "Created release ${TAG} at ${{ github.sha }} with pack assets"
 
-      # CI pack mirror sync is local-only (no cross-repo token):
-      #   ./scripts/publish-ci-pack-repo.sh --out ../heyeddi-ci-skills --push
+      # CI pack is Marketplace plugin + pack JSON asset only (monorepo; no mirror repo).
 
       - name: Summary
         run: |

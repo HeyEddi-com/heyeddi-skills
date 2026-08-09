@@ -2,19 +2,26 @@
 
 **Date:** 2026-08-09
 
-Stack-agnostic skills for HeyEddi CI. **SSOT** lives in this hub under pack [`heyeddi-ci-skills`](../packs/heyeddi-ci-skills.json). **Published** for skills.sh as [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills).
+Stack-agnostic skills for HeyEddi CI. Authored in this **monorepo** under pack [`heyeddi-ci-skills`](../packs/heyeddi-ci-skills.json). No separate publish repo.
 
 ## Install
 
 ```bash
-# CI-only (recommended for CI workflows)
-npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
-
-# Or full hub (includes CI + product/design/engineering)
+# Full hub (includes CI)
 npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
+
+# CI skills only
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y \
+  --skill heyeddi-ci-config \
+  --skill heyeddi-ci-guide \
+  --skill heyeddi-ci-respond \
+  --skill heyeddi-ci-fails \
+  --skill heyeddi-ci-runners
 ```
 
-Browse: [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills)
+**Cursor Team Marketplace:** import `https://github.com/HeyEddi-com/heyeddi-skills` → plugin **heyeddi-ci-skills**.
+
+Browse hub: [skills.sh/heyeddi-com/heyeddi-skills](https://www.skills.sh/heyeddi-com/heyeddi-skills)
 
 ## Skills
 
@@ -40,7 +47,6 @@ Human reviews: `@heyeddi-pr-review` / `@heyeddi-pr-respond` (full pack).
 
 ```bash
 ./scripts/sync-plugins.sh --pack heyeddi-ci-skills
-./scripts/publish-ci-pack-repo.sh --out ../heyeddi-ci-skills --push
 ```
 
 See also [pr-workflows.md](./pr-workflows.md).

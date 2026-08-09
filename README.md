@@ -39,13 +39,18 @@ cd heyeddi-skills
 ./scripts/install-skills.sh --all --global
 ```
 
-### Install CI-only pack (separate skills.sh repo)
+### Install CI skills only (same monorepo)
 
 ```bash
-npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y \
+  --skill heyeddi-ci-config \
+  --skill heyeddi-ci-guide \
+  --skill heyeddi-ci-respond \
+  --skill heyeddi-ci-fails \
+  --skill heyeddi-ci-runners
 ```
 
-Browse: [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills)
+Or Cursor Team Marketplace → plugin **heyeddi-ci-skills**.
 
 ### Install one skill from the bundle
 
