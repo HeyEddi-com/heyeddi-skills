@@ -1,8 +1,8 @@
 # PR workflows
 
-**Date:** 2026-07-07
+**Date:** 2026-08-09
 
-HeyEddi splits pull request work into **two skills** with distinct roles. Use the right one — they are not interchangeable.
+HeyEddi splits pull request work into **skills** with distinct roles. Use the right one — they are not interchangeable.
 
 ## Overview
 
@@ -10,6 +10,7 @@ HeyEddi splits pull request work into **two skills** with distinct roles. Use th
 |----------|-------|-----|------|
 | **1. Review submitted PR** | `@heyeddi-pr-review` | Reviewer, QA, or author self-check | Before approval / before requesting review |
 | **2. Respond to PR review** | `@heyeddi-pr-respond` | PR author | After human reviewers leave comments |
+| **3. Respond to HeyEddi CI** | `@heyeddi-ci-respond` | PR author | After HeyEddi CI findings (not human review) |
 
 ```
                     ┌─────────────────────────┐
@@ -71,8 +72,8 @@ Check product fit, doc drift, engineering quality, and run pre-merge gate.
 4. Apply fixes in code/docs
 5. `@pre-merge-gate` after fixes
 6. Draft `.heyeddi/docs/pr-<N>-replies.md` — one `## Comment <id>` per thread, `## Summary` last
-7. `post_thread_replies` — posts every individual reply; writes `pr-<N>-posted.json`
-8. `verify_response --check` (add `--live` to confirm GitHub threaded replies)
+7. `post_thread_replies` — inline `/replies`; discussion = **quote-reply** (never bare main-node); writes `pr-<N>-posted.json`
+8. `verify_response --check` (add `--live` to confirm GitHub threaded replies for inline)
 9. Summary comment on PR **only after** verify passes
 
 ### vs `/babysit`
@@ -89,6 +90,22 @@ Check product fit, doc drift, engineering quality, and run pre-merge gate.
 Reply to every comment; fix what's correct; re-run pre-merge gate.
 ```
 
+## Workflow 3 — Respond to HeyEddi CI findings
+
+**Invoke:** `@heyeddi-ci-respond` + PR number
+
+**Scope rule:** Only comments that look like HeyEddi CI (`<!-- heyeddi-ci-review -->` / bot user). Human threads → `@heyeddi-pr-respond`.
+
+### Pipeline
+
+1. `fetch_pr_comments` + `filter_heyeddi_comments`
+2. Tracking → `.heyeddi/docs/pr-<N>-ci-tracking.md` (ephemeral)
+3. Fix vs decline; stack-agnostic `discover_and_verify`
+4. `post_thread_replies` + `verify_response`
+5. Never merge without **authorize merge**
+
+See [ci-skills.md](./ci-skills.md).
+
 ## Delegation map
 
 | Concern | Workflow 1 | Workflow 2 |
@@ -99,15 +116,18 @@ Reply to every comment; fix what's correct; re-run pre-merge gate.
 | CI / tests | `@pre-merge-gate` | `@pre-merge-gate` after fixes |
 | GitHub | optional review | **required** threaded replies |
 
-## Artifacts (`.heyeddi/docs/`)
+## Artifacts (`.heyeddi/docs/`) — local / gitignored / not for commit
 
-| File | Workflow |
-|------|----------|
-| `pr-<N>-review.md` | Submission review report |
-| `pr-<N>-context.json` | Cached fetch_pr_context (optional) |
-| `pr-<N>-tracking.md` | Comment tracking table |
-| `pr-<N>-replies.md` | Drafted replies (`## Comment <id>` per thread) |
-| `pr-<N>-posted.json` | Post log from `post_thread_replies` (live hard gate) |
+These files are **ephemeral session scratch** for agent verify gates. **Do not commit them.** GitHub PR threads (and posted `gh pr review`) are the SSOT.
+
+| File | Workflow | Commit? |
+|------|----------|---------|
+| `pr-<N>-review.md` | Submission review report | No — gitignore |
+| `pr-<N>-context.json` | Cached fetch_pr_context | No — gitignore |
+| `pr-<N>-tracking.md` | Comment tracking table | No — gitignore |
+| `pr-<N>-replies.md` | Drafted replies (`## Comment <id>` per thread) | No — gitignore |
+| `pr-<N>-posted.json` | Post log from `post_thread_replies` | No — gitignore |
+| `pr-<N>-ci-*` | `@heyeddi-ci-respond` / `@heyeddi-ci-fails` scratch | No — gitignore |
 
 ## Eval cases
 

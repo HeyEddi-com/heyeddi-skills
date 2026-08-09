@@ -5,16 +5,21 @@
     "email": "eddi@heyeddi.com"
   },
   "metadata": {
-    "description": "23 agent skills for product intake, design, engineering, CI config, and QA",
-    "version": "3.0.6",
+    "description": "HeyEddi agent skills — full product pack plus CI-only plugin",
+    "version": "3.2.0",
     "pluginRoot": "plugins"
   },
   "plugins": [
     {
       "name": "heyeddi-skills",
       "source": "heyeddi-skills",
-      "description": "Full HeyEddi skill bundle \u2014 install all 23 skills for Cursor"
+      "description": "Full HeyEddi skill bundle for Cursor"
+    },
+    {
+      "name": "heyeddi-ci-skills",
+      "source": "heyeddi-ci-skills",
+      "description": "CI-only HeyEddi skills — config, respond, fails, runners placeholder, guide"
     }
   ],
-  "version": "3.1.1"
+  "version": "3.2.0"
 }

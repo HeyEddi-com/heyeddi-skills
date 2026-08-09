@@ -2,9 +2,9 @@
 
 [![skills.sh](https://skills.sh/b/HeyEddi-com/skills)](https://skills.sh/HeyEddi-com/skills)
 
-Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi product workflows — intake, design, engineering, CI config, QA, and merge. **All 23 skills ship as one package** from this repo; install the full set into your app or Cursor global skills with a single command.
+Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi — branded **heyeddi-skills**. One codebase ships the **full pack** and a **CI-only pack** (`heyeddi-ci-skills`) via [packs/](packs/) + `./scripts/sync-plugins.sh`.
 
-**Status:** **v3.1.1** · 23 skills · [Release v3.1.1](https://github.com/HeyEddi-com/skills/releases/tag/v3.1.1)
+**Status:** **v3.2.0** · 27 skills · see [skills-registry.json](skills-registry.json)
 
 ## About HeyEddi
 
@@ -62,7 +62,14 @@ Admins can import this repo as a **Team Marketplace** plugin source (Cursor 2.6+
 2. Paste `https://github.com/HeyEddi-com/skills`
 3. Assign plugins to access groups; members install from **Customize**
 
-Plugin bundle: `.cursor-plugin/marketplace.json` + `plugins/heyeddi-skills/`. See [docs/distribution.md](docs/distribution.md).
+Plugins (from one hub):
+
+| Plugin | Pack |
+|--------|------|
+| **heyeddi-skills** | Full set |
+| **heyeddi-ci-skills** | CI-only (`packs/heyeddi-ci-skills.json`) |
+
+Maintainer: after adding/removing skills, update `packs/*.json` and run `./scripts/sync-plugins.sh`. See [docs/distribution.md](docs/distribution.md) and [docs/ci-skills.md](docs/ci-skills.md). Merges to `main` publish a GitHub Release (both packs) when the hub version tag is new.
 
 Invoke skills in chat with `@skill-name` (e.g. `@heyeddi-intake`, `@heyeddi-handoff`).
 
@@ -91,6 +98,10 @@ Browse the bundle at [skills.sh/heyeddi-com/skills](https://www.skills.sh/heyedd
 | `flutter-patterns` | Riverpod repositories — Dio + Firebase patterns |
 | `engineering-excellence` | KISS/YAGNI/DRY/SOLID audits + `.heyeddi/docs/engineering/` |
 | `heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract (Reviewer + optional runners) |
+| `heyeddi-ci-guide` | HeyEddi CI commands, auth matrix, runners placeholder, feedback paths |
+| `heyeddi-ci-respond` | Respond to HeyEddi CI findings only (not human review) |
+| `heyeddi-ci-fails` | Diagnose failing GitHub Checks; optional `/heyeddi fails` |
+| `heyeddi-ci-runners` | PLACEHOLDER — author `pipeline:` YAML; Spot fail-closed |
 | `ux-flow-auditor` | Task-flow traces — friction, click depth — `.heyeddi/docs/ux-flows/` |
 | `visual-auditor` | Review screenshots vs spec, fix visual issues, document fixes |
 | `verify-build` | Vite static build validator |

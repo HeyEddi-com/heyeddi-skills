@@ -21,6 +21,9 @@ for arg in "$@"; do
   esac
 done
 
+echo "==> 0/4 sync marketplace plugins from packs/"
+./scripts/sync-plugins.sh --link
+
 echo "==> 1/4 pytest"
 uv run pytest tests/ -q --tb=line
 

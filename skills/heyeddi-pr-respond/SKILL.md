@@ -1,7 +1,7 @@
 ---
 name: heyeddi-pr-respond
 description: "Addresses PR review feedback: fetch comments, fix-vs-decline, apply fixes, re-gate, reply IN EACH review thread via post_thread_replies (/replies only; never top-level acknowledgement spam), verify_response hard gate. Use when responding as the PR author. For reviewing a submitted PR use heyeddi-pr-review."
-version: 1.2.1
+version: 1.3.1
 product-version: 3.1.1
 author: HeyEddi-com
 disable-model-invocation: true
@@ -10,6 +10,10 @@ disable-model-invocation: true
 # HeyEddi PR Respond
 
 **PR author response workflow**: fetch every review comment, decide fix vs decline, apply fixes, re-run pre-merge gate, and **reply in the same GitHub thread as each reviewer comment** before any summary.
+
+## Ephemeral artifacts (do not commit)
+
+Files under `.heyeddi/docs/pr-<N>-{tracking,replies,posted,comments}.md|.json` are **session scratch** for the reply/verify gate. **Do not `git add` or commit them.** GitHub PR threads are the SSOT. Prefer the consumer gitignore snippet from `project-engineering` scaffold.
 
 ## Critical: in-thread replies only
 

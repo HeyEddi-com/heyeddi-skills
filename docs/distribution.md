@@ -1,6 +1,17 @@
 # Skill distribution
 
-**Date:** 2026-08-05 · **Release:** v3.1.0
+**Date:** 2026-08-09 · **Release:** v3.2.0 · **Brand:** **HeyEddi Skills** (`heyeddi-skills`)
+
+One git hub ships **multiple packs** from a single SSOT (`skills/<name>/`):
+
+| Pack | Marketplace plugin | Contents |
+|------|--------------------|----------|
+| `heyeddi-skills` | `plugins/heyeddi-skills/` | Full product + CI + QA |
+| `heyeddi-ci-skills` | `plugins/heyeddi-ci-skills/` | CI-only subset |
+
+Pack manifests: [`packs/`](../packs/). Sync: `./scripts/sync-plugins.sh` (default per-skill links; `--copy` for materialize).
+
+**GitHub repo:** `HeyEddi-com/skills` (branded **heyeddi-skills** in docs/plugins; no rename required).
 
 ## Vercel ecosystem (skills.sh + `npx skills`)
 
@@ -9,18 +20,24 @@ There is **no deploy step** and **no submission form**. Distribution is GitHub +
 | Channel | How consumers get skills | Maintainer action |
 |---------|--------------------------|-------------------|
 | **CLI** (`npx skills`) | `npx skills add HeyEddi-com/skills -a cursor -y --skill '*'` | Keep repo public; tag releases |
+| **CI subset via CLI** | `--skill heyeddi-ci-config` (etc.) or install CI plugin from Marketplace | Keep `packs/heyeddi-ci-skills.json` in sync |
 | **skills.sh** | Same install command; leaderboard from [install telemetry](https://www.skills.sh/privacy) | `skills.sh.json` at repo root; share repo page URL |
-| **Pinned version** | `npx skills add https://github.com/HeyEddi-com/skills/tree/v3.1.0 -a cursor -y --skill '*'` | Tag releases on GitHub |
+| **Pinned version** | `npx skills add https://github.com/HeyEddi-com/skills/tree/v3.2.0 -a cursor -y --skill '*'` | Tag releases on GitHub |
 
-### Automated releases
+### Automated releases (GitHub Actions)
 
 On every push to `main` (and via **Actions → Release → Run workflow**), [`.github/workflows/release.yml`](../.github/workflows/release.yml):
 
-1. Reads hub version from `skills-registry.json`
-2. If tag `vX.Y.Z` is **missing**, creates a GitHub Release for that tag at the push SHA
-3. If the tag **already exists**, no-ops (idempotent)
+1. Runs `./scripts/sync-plugins.sh --link`
+2. Reads hub version from `skills-registry.json` (must match `packs/heyeddi-skills.json`)
+3. If tag `vX.Y.Z` is **missing**, creates a GitHub Release with:
+   - Notes covering **both** packs (`heyeddi-skills` + `heyeddi-ci-skills`) via `scripts/write-release-notes.py`
+   - Assets: `heyeddi-skills.json`, `heyeddi-ci-skills.json`
+4. If the tag **already exists**, no-ops (idempotent)
 
-**Maintainer flow:** bump version in the PR (`skills-registry.json`, README, plugin `plugin.json`, orchestrator when needed) → `python3 scripts/sync-skill-frontmatter.py` → merge to `main` → release workflow tags. CI on the PR is the quality gate; release does **not** re-run the full eval suite.
+PR [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) also syncs packs and asserts registry ↔ full pack consistency before pytest.
+
+**Maintainer flow:** bump version in the PR (`skills-registry.json`, `packs/heyeddi-skills.json`, README, plugin metadata) → update `packs/heyeddi-ci-skills.json` version when the CI pack changes meaningfully → `python3 scripts/sync-skill-frontmatter.py` → `./scripts/sync-plugins.sh` → merge to `main` → Release workflow tags. PR CI is the quality gate; release does **not** re-run the full eval suite.
 
 **CLI flag trap:** `--all` = all skills **and all agents** (creates `agent/skills/` for Eve, etc.). For Cursor-only, use `-a cursor --skill '*'`, not `--all`.
 
@@ -43,10 +60,10 @@ Indexed ≠ official. See [docs/skills-sh-official-listing.md](skills-sh-officia
 
 | Channel | Submit? | Repo needs |
 |---------|---------|------------|
-| **Team Marketplace** | Admin imports `https://github.com/HeyEddi-com/skills` | `.cursor-plugin/marketplace.json` + `plugins/heyeddi-skills/` ✅ |
-| **Public Marketplace** | [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish) | Same plugin bundle + `LICENSE` ✅ |
+| **Team Marketplace** | Admin imports `https://github.com/HeyEddi-com/skills` | `.cursor-plugin/marketplace.json` + `plugins/heyeddi-skills/` + `plugins/heyeddi-ci-skills/` ✅ |
+| **Public Marketplace** | [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish) | Same plugin bundles + `LICENSE` ✅ |
 
-Logo for Cursor plugin: `plugins/heyeddi-skills/assets/logo.svg`.
+Logos: `plugins/heyeddi-skills/assets/logo.svg` (and CI plugin assets). After editing skills, run `./scripts/sync-plugins.sh` before relying on plugin trees.
 
 ---
 

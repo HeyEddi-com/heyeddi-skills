@@ -1,5 +1,5 @@
 {
-  "version": "3.1.1",
+  "version": "3.2.0",
   "repository": "https://github.com/HeyEddi-com/skills",
   "install": "npx skills add HeyEddi-com/skills -a cursor -y --skill '*'",
   "skills": [
@@ -25,6 +25,10 @@
     { "name": "heyeddi-design", "description": "Design from scratch (replaces impeccable)" },
     { "name": "engineering-excellence", "description": "KISS/YAGNI/DRY/SOLID audits + .heyeddi/docs/engineering/" },
     { "name": "ux-flow-auditor", "description": "Task flow traces — click depth, friction — .heyeddi/docs/ux-flows/" },
-    { "name": "heyeddi-ci-config", "description": "Author eddi-ci.yaml from the live policy contract; Reviewer + optional runners" }
+    { "name": "heyeddi-ci-config", "description": "Author eddi-ci.yaml from the live policy contract; Reviewer + optional runners" },
+    { "name": "heyeddi-ci-guide", "description": "HeyEddi CI commands, auth matrix, runners placeholder status, feedback via debate/support" },
+    { "name": "heyeddi-ci-respond", "description": "Respond to HeyEddi CI findings only — filter, fix-vs-decline, threaded replies, no unauthorized merge" },
+    { "name": "heyeddi-ci-fails", "description": "Diagnose failing GitHub Checks for a PR head; optional /heyeddi fails handoff" },
+    { "name": "heyeddi-ci-runners", "description": "PLACEHOLDER: author pipeline jobs in eddi-ci.yaml; Spot execution fail-closed" }
   ]
 }

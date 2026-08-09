@@ -1,4 +1,4 @@
-# CI for HeyEddi skills hub — unit tests, smoke, static skill security.
+# CI for HeyEddi skills hub — packs sync, unit tests, smoke, static skill security.
 name: CI
 
 on:
@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   test:
-    name: pytest + smoke + skill-security
+    name: packs + pytest + smoke + skill-security
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -28,6 +28,28 @@ jobs:
 
       - name: Sync Python deps
         run: uv sync --group dev
+
+      - name: Sync plugins from packs
+        run: ./scripts/sync-plugins.sh --link
+
+      - name: Pack / registry consistency
+        run: |
+          set -euo pipefail
+          REG_VER="$(python3 -c "import json; print(json.load(open('skills-registry.json'))['version'])")"
+          FULL_VER="$(python3 -c "import json; print(json.load(open('packs/heyeddi-skills.json'))['version'])")"
+          test "$REG_VER" = "$FULL_VER"
+          python3 -c "
+          import json
+          from pathlib import Path
+          reg = {s['name'] for s in json.load(open('skills-registry.json'))['skills']}
+          full = set(json.load(open('packs/heyeddi-skills.json'))['skills'])
+          ci = set(json.load(open('packs/heyeddi-ci-skills.json'))['skills'])
+          assert full == reg, (full ^ reg)
+          assert ci <= full
+          for name in full:
+              assert (Path('skills') / name / 'SKILL.md').is_file(), name
+          print(f'ok: hub {REG_VER}, full={len(full)}, ci={len(ci)}')
+          "
 
       - name: pytest
         run: uv run pytest tests/ -q --tb=line
