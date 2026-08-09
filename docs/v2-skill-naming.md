@@ -157,7 +157,7 @@ Generated JSON in app repos must migrate or dual-read:
 
 ## Implementation checklist
 
-### Hub repo (`HeyEddi-com/skills`)
+### Hub repo (`HeyEddi-com/heyeddi-skills`)
 
 - [ ] Agree minimal vs full rename set (6 vs 8)
 - [ ] `git mv` skill directories to canonical names
@@ -207,7 +207,7 @@ Each renamed skill with a standalone GitHub repo needs:
 Pinned v2 install:
 
 ```bash
-npx skills add https://github.com/HeyEddi-com/skills/tree/v2.0.0 -a cursor -y --skill '*'
+npx skills add https://github.com/HeyEddi-com/heyeddi-skills/tree/v2.0.0 -a cursor -y --skill '*'
 ```
 
 Both `@heyeddi-intake` and `@heyeddi-intake` work during v2.x if alias stubs ship.

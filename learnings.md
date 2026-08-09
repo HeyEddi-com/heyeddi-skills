@@ -818,3 +818,23 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 - No GitHub rename
 
 **Process:** Bump `skills-registry.json` + `packs/heyeddi-skills.json` (and CI pack version when needed) in PR → merge main → Release workflow.
+
+## 2026-08-09 — Dual public repos for skills.sh (v3.3.0)
+
+**Context:** skills.sh indexes GitHub repos 1:1. Branding packs as heyeddi-skills / heyeddi-ci-skills inside one `skills` repo left a single skills.sh page.
+
+**Decision:**
+- Rename GitHub `HeyEddi-com/skills` → `HeyEddi-com/heyeddi-skills` (redirects keep old URL)
+- Publish CI pack mirror `HeyEddi-com/heyeddi-ci-skills` via `scripts/publish-ci-pack-repo.sh`
+- SSOT remains the hub `skills/<name>/`; CI repo is mirror only
+- App CTAs install `heyeddi-ci-skills`; orchestrator update checks hub `heyeddi-skills`
+- `inspect_repo` accepts heyeddi-skills, heyeddi-ci-skills, and legacy `skills` lock pins
+- Release workflow syncs CI mirror when `CI_PACK_PUSH_TOKEN` / cross-repo token available
+
+**Process:** Bump hub + CI pack versions → sync-plugins → merge → Release tags hub → publish-ci-pack-repo pushes mirror.
+
+**Install:**
+```bash
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
+npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
+```

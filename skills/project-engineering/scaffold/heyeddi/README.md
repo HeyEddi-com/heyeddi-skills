@@ -6,10 +6,10 @@ This folder is that workspace **inside your repository**. Skills read and write 
 
 ## Skills (free to use)
 
-Our [Cursor Agent Skills](https://github.com/HeyEddi-com/skills) are **free and open**. Install the full set into any project:
+Our [Cursor Agent Skills](https://github.com/HeyEddi-com/heyeddi-skills) are **free and open**. Install the full set into any project:
 
 ```bash
-npx skills add HeyEddi-com/skills -a cursor -y --all
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --all
 ```
 
 Invoke with `@skill-name` in Cursor (e.g. `@heyeddi-intake`, `@heyeddi-handoff`) or wire the same skills into a Cloud Run agent. They automate intake, design, engineering scaffold, handoff, API types, QA gates, and PR workflows.
@@ -44,7 +44,7 @@ Agents handle repeatable workflow; some work still needs people. **[heyeddi.com/
 5. `@engineering-excellence`: architecture notes under `docs/engineering/`
 6. `@ux-flow-auditor`: task flows under `docs/ux-flows/`
 
-See [HeyEddi skills hub](https://github.com/HeyEddi-com/skills) for the full cheat sheet.
+See [HeyEddi skills hub](https://github.com/HeyEddi-com/heyeddi-skills) for the full cheat sheet.
 
 ---
 *Last updated: 2026-07-04: maintained by project-engineering scaffold*

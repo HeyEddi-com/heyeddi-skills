@@ -1,14 +1,14 @@
 {
   "name": "heyeddi-skills",
   "displayName": "HeyEddi Skills",
-  "version": "3.2.0",
-  "description": "HeyEddi agent skills for collaborative agents and humans — product intake, design, engineering, QA, CI config/respond, and merge workflows.",
+  "version": "3.3.0",
+  "description": "HeyEddi agent skills for collaborative agents and humans \u2014 product intake, design, engineering, QA, CI config/respond, and merge workflows.",
   "author": {
     "name": "HeyEddi",
     "email": "eddi@heyeddi.com"
   },
-  "homepage": "https://github.com/HeyEddi-com/skills",
-  "repository": "https://github.com/HeyEddi-com/skills",
+  "homepage": "https://github.com/HeyEddi-com/heyeddi-skills",
+  "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "license": "MIT",
   "logo": "assets/logo.svg",
   "keywords": [

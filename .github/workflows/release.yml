@@ -99,14 +99,59 @@ jobs:
             /tmp/heyeddi-ci-skills.json
           echo "Created release ${TAG} at ${{ github.sha }} with pack assets"
 
+      - name: Publish CI pack mirror (heyeddi-ci-skills)
+        if: steps.tag.outputs.exists == 'false'
+        env:
+          # Prefer a PAT/fine-grained token with contents:write on heyeddi-ci-skills.
+          # Falls back to GITHUB_TOKEN (same-repo only unless org grants cross-repo).
+          GH_TOKEN: ${{ secrets.CI_PACK_PUSH_TOKEN || github.token }}
+          CI_PACK_VER: ${{ steps.ver.outputs.ci_pack_version }}
+        run: |
+          set -euo pipefail
+          STAGE="$(mktemp -d)"
+          ./scripts/publish-ci-pack-repo.sh --out "$STAGE"
+          # Clone existing mirror (or create empty remote first via maintainer)
+          WORK="$(mktemp -d)"
+          if gh repo view HeyEddi-com/heyeddi-ci-skills >/dev/null 2>&1; then
+            git clone --depth 1 "https://x-access-token:${GH_TOKEN}@github.com/HeyEddi-com/heyeddi-ci-skills.git" "$WORK"
+            rsync -a --delete --exclude .git "$STAGE"/ "$WORK"/
+            git -C "$WORK" config user.name "github-actions[bot]"
+            git -C "$WORK" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git -C "$WORK" add -A
+            if git -C "$WORK" diff --cached --quiet; then
+              echo "CI pack mirror already up to date"
+            else
+              git -C "$WORK" commit -m "chore: sync heyeddi-ci-skills pack v${CI_PACK_VER} from hub"
+              git -C "$WORK" push origin HEAD:main
+            fi
+            TAG="v${CI_PACK_VER}"
+            if ! git -C "$WORK" rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+              git -C "$WORK" tag -a "$TAG" -m "HeyEddi CI Skills ${TAG}"
+              git -C "$WORK" push origin "$TAG" || true
+            fi
+            if ! gh release view "$TAG" --repo HeyEddi-com/heyeddi-ci-skills >/dev/null 2>&1; then
+              gh release create "$TAG" --repo HeyEddi-com/heyeddi-ci-skills \
+                --title "HeyEddi CI Skills ${TAG}" \
+                --notes "Published mirror of pack \`heyeddi-ci-skills\` v${CI_PACK_VER} from HeyEddi-com/heyeddi-skills.
+
+\`\`\`bash
+npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
+\`\`\`
+"
+            fi
+          else
+            echo "::warning::HeyEddi-com/heyeddi-ci-skills does not exist yet — create it and re-run, or push locally with ./scripts/publish-ci-pack-repo.sh --push"
+          fi
+
       - name: Summary
         run: |
           echo "### Release" >> "$GITHUB_STEP_SUMMARY"
           echo "- Hub tag: \`${{ steps.ver.outputs.tag }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- Full pack: **heyeddi-skills** @ ${{ steps.ver.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- CI pack: **heyeddi-ci-skills** @ ${{ steps.ver.outputs.ci_pack_version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- skills.sh: heyeddi-skills + heyeddi-ci-skills" >> "$GITHUB_STEP_SUMMARY"
           if [[ "${{ steps.tag.outputs.exists }}" == "true" ]]; then
             echo "- Status: tag already existed (no-op)" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- Status: created GitHub Release + pack JSON assets" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Status: created GitHub Release + pack JSON assets (+ CI mirror if configured)" >> "$GITHUB_STEP_SUMMARY"
           fi

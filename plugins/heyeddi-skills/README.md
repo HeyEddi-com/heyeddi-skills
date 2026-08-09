@@ -13,12 +13,12 @@ Sister pack: **heyeddi-ci-skills** (CI-only) — [`../heyeddi-ci-skills/`](../he
 ## Install via CLI (consumers)
 
 ```bash
-npx skills add HeyEddi-com/skills -a cursor -y --skill '*'
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 ```
 
 ## Install via Cursor
 
-- **Team Marketplace:** Settings → Plugins → Team Marketplaces → Import `https://github.com/HeyEddi-com/skills`
+- **Team Marketplace:** Settings → Plugins → Team Marketplaces → Import `https://github.com/HeyEddi-com/heyeddi-skills`
 - Assign **heyeddi-skills** (full) and/or **heyeddi-ci-skills** (CI-only)
 
 ## Components

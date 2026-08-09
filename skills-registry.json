@@ -1,7 +1,7 @@
 {
-  "version": "3.2.0",
-  "repository": "https://github.com/HeyEddi-com/skills",
-  "install": "npx skills add HeyEddi-com/skills -a cursor -y --skill '*'",
+  "version": "3.3.0",
+  "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
+  "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
     { "name": "heyeddi-orchestrator", "description": "Discover available @skills and suggest which to invoke; reads skill-routing.json" },
     { "name": "heyeddi-product", "description": "PM review — stories, AC, usefulness; orchestrates UX/design/engineering research" },

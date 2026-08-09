@@ -1,9 +1,9 @@
 {
   "pack": "heyeddi-skills",
   "displayName": "HeyEddi Skills",
-  "description": "Full HeyEddi agent skill bundle — product, design, engineering, CI, QA, and merge.",
+  "description": "Full HeyEddi agent skill bundle \u2014 product, design, engineering, CI, QA, and merge.",
   "plugin": "heyeddi-skills",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "skills": [
     "heyeddi-orchestrator",
     "heyeddi-product",

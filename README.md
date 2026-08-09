@@ -1,10 +1,10 @@
 # HeyEddi Skills
 
-[![skills.sh](https://skills.sh/b/HeyEddi-com/skills)](https://skills.sh/HeyEddi-com/skills)
+[![skills.sh](https://skills.sh/b/HeyEddi-com/heyeddi-skills)](https://skills.sh/HeyEddi-com/heyeddi-skills)
 
 Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi — branded **heyeddi-skills**. One codebase ships the **full pack** and a **CI-only pack** (`heyeddi-ci-skills`) via [packs/](packs/) + `./scripts/sync-plugins.sh`.
 
-**Status:** **v3.2.0** · 27 skills · see [skills-registry.json](skills-registry.json)
+**Status:** **v3.3.0** · 27 skills · see [skills-registry.json](skills-registry.json)
 
 ## About HeyEddi
 
@@ -19,13 +19,13 @@ Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEdd
 Into your **project** (`.agents/skills/` — shared with other agents):
 
 ```bash
-npx skills add HeyEddi-com/skills -a cursor -y --skill '*'
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 ```
 
 Into **global** Cursor skills (`~/.cursor/skills/`):
 
 ```bash
-npx skills add HeyEddi-com/skills -a cursor -g -y --skill '*'
+npx skills add HeyEddi-com/heyeddi-skills -a cursor -g -y --skill '*'
 ```
 
 > **Note:** Do **not** use `--all` with `-a cursor`. In the Vercel CLI, `--all` means *all skills **and** all 72 agents* (including Eve → `agent/skills/`). Use `--skill '*'` to install every skill for Cursor only.
@@ -33,17 +33,25 @@ npx skills add HeyEddi-com/skills -a cursor -g -y --skill '*'
 From a local clone of this hub:
 
 ```bash
-git clone git@github.com:HeyEddi-com/skills.git
-cd skills
+git clone git@github.com:HeyEddi-com/heyeddi-skills.git
+cd heyeddi-skills
 ./scripts/install-skills.sh --all --project /path/to/your-app
 ./scripts/install-skills.sh --all --global
 ```
 
+### Install CI-only pack (separate skills.sh repo)
+
+```bash
+npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
+```
+
+Browse: [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills)
+
 ### Install one skill from the bundle
 
 ```bash
-npx skills add HeyEddi-com/skills -a cursor --skill heyeddi-handoff -y
-npx skills add HeyEddi-com/skills -a cursor --skill heyeddi-intake -g -y
+npx skills add HeyEddi-com/heyeddi-skills -a cursor --skill heyeddi-handoff -y
+npx skills add HeyEddi-com/heyeddi-skills -a cursor --skill heyeddi-intake -g -y
 ```
 
 List names in [skills-registry.json](skills-registry.json) or the catalog below.
@@ -51,7 +59,7 @@ List names in [skills-registry.json](skills-registry.json) or the catalog below.
 ### Pin a release tag
 
 ```bash
-npx skills add https://github.com/HeyEddi-com/skills/tree/v3.1.1 -a cursor -y --skill '*'
+npx skills add https://github.com/HeyEddi-com/heyeddi-skills/tree/v3.3.0 -a cursor -y --skill '*'
 ```
 
 ### Cursor Team Marketplace (teams / enterprise)
@@ -59,7 +67,7 @@ npx skills add https://github.com/HeyEddi-com/skills/tree/v3.1.1 -a cursor -y --
 Admins can import this repo as a **Team Marketplace** plugin source (Cursor 2.6+):
 
 1. **Settings → Plugins → Team Marketplaces → Import**
-2. Paste `https://github.com/HeyEddi-com/skills`
+2. Paste `https://github.com/HeyEddi-com/heyeddi-skills`
 3. Assign plugins to access groups; members install from **Customize**
 
 Plugins (from one hub):
@@ -75,7 +83,7 @@ Invoke skills in chat with `@skill-name` (e.g. `@heyeddi-intake`, `@heyeddi-hand
 
 ### skills.sh listing
 
-Browse the bundle at [skills.sh/heyeddi-com/skills](https://www.skills.sh/heyeddi-com/skills). Install counts on the leaderboard come from the Vercel CLI's own [install telemetry](https://www.skills.sh/privacy) — nothing is collected by this repo.
+Browse the bundle at [skills.sh/heyeddi-com/heyeddi-skills](https://www.skills.sh/heyeddi-com/heyeddi-skills). Install counts on the leaderboard come from the Vercel CLI's own [install telemetry](https://www.skills.sh/privacy) — nothing is collected by this repo.
 
 **Official listing playbook:** see [docs/skills-sh-official-listing.md](docs/skills-sh-official-listing.md) (topics, frontmatter, security score, Vercel core review).
 
@@ -116,7 +124,7 @@ Browse the bundle at [skills.sh/heyeddi-com/skills](https://www.skills.sh/heyedd
 **Requirements:** Python 3.11+, [uv](https://docs.astral.sh/uv/), Node.js 18+ (skill-security CLIs + eval templates), [Cursor agent CLI](https://cursor.com) for agent evals.
 
 ```bash
-git clone git@github.com:HeyEddi-com/skills.git
+git clone git@github.com:HeyEddi-com/heyeddi-skills.git
 cd skills
 uv sync --group dev --group evals
 
@@ -148,7 +156,7 @@ See [docs/agent-evals.md](docs/agent-evals.md) and [docs/agent-eval-results.md](
 └── skills-registry.json    # Catalog metadata
 ```
 
-Skill sources live under `skills/`, not `.cursor/skills/`, so `npx skills add HeyEddi-com/skills` can install the whole catalog into consumer projects.
+Skill sources live under `skills/`, not `.cursor/skills/`, so `npx skills add HeyEddi-com/heyeddi-skills` can install the whole catalog into consumer projects.
 
 ## Maintainer workflow (optional per-skill repos)
 

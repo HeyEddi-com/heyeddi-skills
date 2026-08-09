@@ -49,7 +49,7 @@ Missing `eddi-ci.yaml` is **not** a defect. Safe defaults already apply (runners
 
 - `.heyeddi/` workspace present
 - `.agents/skills/heyeddi-*` installed
-- `skills-lock.json` pins `HeyEddi-com/skills`
+- `skills-lock.json` pins `HeyEddi-com/heyeddi-skills` or `HeyEddi-com/heyeddi-ci-skills` (legacy `HeyEddi-com/skills` still counts)
 - `PRODUCT.md` / `.heyeddi/product.md` / `README.md` / package identity mention HeyEddi
 
 ### Do **not** create the file when

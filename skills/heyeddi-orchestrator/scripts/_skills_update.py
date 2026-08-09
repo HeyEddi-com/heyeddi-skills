@@ -10,8 +10,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-DEFAULT_REPO = "HeyEddi-com/skills"
-DEFAULT_INSTALL = "npx skills add HeyEddi-com/skills -a cursor -y --skill '*'"
+DEFAULT_REPO = "HeyEddi-com/heyeddi-skills"
+DEFAULT_INSTALL = "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'"
 THROTTLE = timedelta(hours=24)
 ENV_KILL = "HEYEDDI_SKILLS_UPDATE_CHECK"
 FRONTMATTER = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
