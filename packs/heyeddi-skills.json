@@ -1,7 +1,7 @@
 {
   "pack": "heyeddi-skills",
   "displayName": "HeyEddi Skills",
-  "description": "Full HeyEddi agent skill bundle \u2014 product, design, engineering, CI, QA, and merge.",
+  "description": "HeyEddi open agent toolkit \u2014 opinionated product, design, engineering, QA, and PR skills (Vue/FastAPI/Firebase + Flutter).",
   "plugin": "heyeddi-skills",
   "version": "3.4.0",
   "skills": [

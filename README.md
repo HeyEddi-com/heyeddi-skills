@@ -2,9 +2,22 @@
 
 [![skills.sh](https://skills.sh/b/HeyEddi-com/heyeddi-skills)](https://skills.sh/HeyEddi-com/heyeddi-skills)
 
-Curated [Cursor Agent Skills](https://cursor.com/docs/context/skills) for HeyEddi — branded **HeyEddi Skills** (`heyeddi-skills`). This hub is the **SSOT** for the full pack. The CI-only skills.sh package lives in the sibling repo [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills) (published from [packs/](packs/) via `./scripts/publish-ci-pack-repo.sh`). Marketplace plugins for both packs also ship from this repo (`./scripts/sync-plugins.sh`).
+**HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) — free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.4.0** · 27 skills · see [skills-registry.json](skills-registry.json)
+**Status:** **v3.4.0** · 27 skills · [skills-registry.json](skills-registry.json)
+
+### Who this is for
+
+- Teams shipping on **HeyEddi** (or adopting its `.heyeddi/` conventions)
+- Apps on **Vue + FastAPI + Firebase** and/or **Flutter** that want structured agent workflows
+- Anyone who wants open, battle-tested skills for handoff, visual QA, engineering audits, and PR loops — and is fine with an opinionated stack
+
+### Who this is not
+
+- A stack-agnostic “any framework” skills marketplace
+- A substitute for [HeyEddi CI](https://ci.heyeddi.com) product docs — for CI-only agents use the sibling pack [`heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills)
+
+This hub is the **SSOT** for the full pack. Marketplace plugins for both packs ship from here (`./scripts/sync-plugins.sh`). The CI skills.sh package is published to [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills) via `./scripts/publish-ci-pack-repo.sh`.
 
 ## About HeyEddi
 
@@ -208,4 +221,4 @@ Evals give the agent a **goal**, not a script. Each skill must run its real work
 
 ---
 
-**Last updated:** 2026-07-24
+**Last updated:** 2026-08-09
