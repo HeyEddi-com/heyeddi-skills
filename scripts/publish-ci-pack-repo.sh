@@ -41,8 +41,8 @@ done
 [[ -n "$OUT_DIR" ]] || usage
 [[ -f "$PACK_FILE" ]] || { echo "Missing ${PACK_FILE}" >&2; exit 1; }
 
-VERSION="$(python3 -c "import json; print(json.load(open('${PACK_FILE}'))['version'])")"
-mapfile -t SKILL_NAMES < <(python3 -c "import json; print('\n'.join(json.load(open('${PACK_FILE}'))['skills']))")
+VERSION="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1], encoding='utf-8'))['version'])" "$PACK_FILE")"
+mapfile -t SKILL_NAMES < <(python3 -c "import json,sys; print('\n'.join(json.load(open(sys.argv[1], encoding='utf-8'))['skills']))" "$PACK_FILE")
 
 mkdir -p "$OUT_DIR"
 # Refresh skills/ only; keep .git if present

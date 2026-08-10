@@ -25,8 +25,11 @@ def main() -> None:
 
     full_skills = "\n".join(f"- `{n}`" for n in full["skills"])
     ci_skills = "\n".join(f"- `{n}`" for n in ci["skills"])
-    ci_ver = ci.get("version", "—")
-    ci_tag = f"v{ci_ver}" if isinstance(ci_ver, str) and ci_ver[0].isdigit() else ci_ver
+    ci_ver_raw = ci.get("version")
+    ci_ver = str(ci_ver_raw).strip() if ci_ver_raw is not None else ""
+    if not ci_ver:
+        ci_ver = "—"
+    ci_tag = f"v{ci_ver}" if ci_ver[:1].isdigit() else ci_ver
 
     tree = f"https://github.com/{args.repo}/tree/{args.tag}"
     notes = f"""## HeyEddi Skills {args.tag}
