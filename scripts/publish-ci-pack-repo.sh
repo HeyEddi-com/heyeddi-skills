@@ -99,6 +99,8 @@ cat > "${OUT_DIR}/README.md" <<EOF
 
 [![skills.sh](https://skills.sh/b/HeyEddi-com/heyeddi-ci-skills)](https://skills.sh/HeyEddi-com/heyeddi-ci-skills)
 
+Badge populates after skills.sh indexes the first installs.
+
 **Product-specific agent skills for [HeyEddi CI](https://ci.heyeddi.com)** — not a general CI toolkit. Use these when your GitHub App is HeyEddi CI: \`eddi-ci.yaml\`, PR findings, failing Checks, and Spot runners (placeholder / fail-closed).
 
 **Product:** [ci.heyeddi.com](https://ci.heyeddi.com) · **Policy docs:** [ci.heyeddi.com/docs#policy](https://ci.heyeddi.com/docs#policy)
@@ -193,6 +195,17 @@ if [[ "$PUSH" -eq 1 ]]; then
 npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 \`\`\`
 "
+  fi
+  # Idempotent skills.sh discovery topics (required for indexing)
+  if ! gh api --method PUT "repos/${REMOTE_REPO}/topics" \
+    -H "Accept: application/vnd.github.mercy-preview+json" \
+    --input - <<'TOPICS_EOF'
+{"names":["agent-skills","skills-sh","ai-agents","cursor","claude-code","heyeddi","ci"]}
+TOPICS_EOF
+  then
+    echo "Warning: failed to set GitHub topics on ${REMOTE_REPO}" >&2
+  else
+    echo "Ensured GitHub topics on ${REMOTE_REPO}"
   fi
   echo "Pushed ${REMOTE_REPO}@${BRANCH} (${TAG})"
 fi

@@ -43,4 +43,7 @@ Human reviews: `@heyeddi-pr-review` / `@heyeddi-pr-respond` (full pack).
 ./scripts/publish-ci-pack-repo.sh --out ../heyeddi-ci-skills --push
 ```
 
+After `--push`, the script also ensures GitHub topics for skills.sh discovery. The CI sibling still needs **real install telemetry** (same as the hub) before [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills) and the README badge populate — listing (`-l`) alone is not enough.
+
+
 See also [pr-workflows.md](./pr-workflows.md).
