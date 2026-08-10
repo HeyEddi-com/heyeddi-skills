@@ -13,6 +13,7 @@
 - NEVER craft flagship routes without **Personas + Per-route intent** in `product.md`: run `@heyeddi-intake` or `discover` first.
 - NEVER skip **audience-fit** critique on marketing, dashboard, or settings: see `reference/audience-fit.md`.
 - NEVER ship flagship routes that look like **the last project with a name swap**: define and implement **Design signature** per `reference/design-ambition.md`.
+- NEVER ship marketing/flagship UI that reads as **generic AI chrome** (template KPI hero, Inter-only type, fake 01/02/03, purple gradient SaaS, cream+terracotta default, scattered motion): follow `reference/aesthetic-direction.md` and take **one justified aesthetic risk**.
 - NEVER treat "make it artistic / top notch" as optional polish: that is the **default ambition bar** unless brief scopes minimal/wireframe.
 - NEVER hand off to `@heyeddi-handoff` to fix missing visual ambition: run `craft` / `polish` with ambition checklist first.
 - NEVER ship AI prose slop (em/en dashes, delve/leverage/tapestry, "Certainly!", "it is important to note", emoji theater); follow `context/PROSE_ANTI_SLOP.md` fully

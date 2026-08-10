@@ -2,7 +2,7 @@
 name: heyeddi-pr-respond
 description: "Addresses PR review feedback: fetch comments, fix-vs-decline, apply fixes, re-gate, reply IN EACH review thread via post_thread_replies (/replies only; never top-level acknowledgement spam), verify_response hard gate. Use when responding as the PR author. For reviewing a submitted PR use heyeddi-pr-review."
 version: 1.3.1
-product-version: 3.1.1
+product-version: 3.4.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---

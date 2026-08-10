@@ -110,6 +110,14 @@ Before each hub release:
 3. `./scripts/release-gate.sh --quick` (or full before major)
 4. Merge to `main` → auto-tag → share pinned install URL
 
+
+## CI sibling pack (`HeyEddi-com/heyeddi-ci-skills`)
+
+The published CI mirror needs the **same discovery prerequisites** as the hub:
+
+1. **GitHub topics** — `agent-skills`, `skills-sh`, `ai-agents`, plus `cursor`, `claude-code`, `heyeddi`, `ci` (set idempotently by `scripts/publish-ci-pack-repo.sh --push`).
+2. **Real install telemetry** — at least one non-list `npx skills add` (not only `-l`), e.g. `npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'`. Listing alone does not index the page; the badge can 404 until skills.sh catches up.
+
 ## Related
 
 - [docs/distribution.md](distribution.md) — CLI, skills.sh, Cursor marketplace

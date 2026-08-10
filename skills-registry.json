@@ -1,34 +1,115 @@
 {
-  "version": "3.3.0",
+  "version": "3.4.0",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
-    { "name": "heyeddi-orchestrator", "description": "Discover available @skills and suggest which to invoke; reads skill-routing.json" },
-    { "name": "heyeddi-product", "description": "PM review — stories, AC, usefulness; orchestrates UX/design/engineering research" },
-    { "name": "heyeddi-intake", "description": "User prompt → product.md, mockups, briefs, skill-routing for downstream agents" },
-    { "name": "project-engineering", "description": "Vue + FastAPI + Firebase scaffold, deps, dev servers, tests" },
-    { "name": "flutter-engineering", "description": "Flutter + FastAPI + Firebase scaffold, flutter test/analyze, dev servers" },
-    { "name": "flutter-patterns", "description": "Riverpod repositories — FastAPI Dio + Firebase client patterns" },
-    { "name": "dart-type-bridger", "description": "OpenAPI / Firestore → Dart model stubs" },
-    { "name": "design-handoff-flutter", "description": "Screenshot-first Material 3 Flutter implementation" },
-    { "name": "primevue-openprops-architect", "description": "PrimeVue + OpenProps guardrails" },
-    { "name": "verify-build", "description": "Vite static build validator" },
-    { "name": "visual-auditor", "description": "Screenshot review vs product/design spec, contrast audit, fix + document visual issues" },
-    { "name": "heyeddi-handoff", "description": "Screenshot-first design implementation (Vue)" },
-    { "name": "pre-merge-gate", "description": "QA merge readiness checklist" },
-    { "name": "heyeddi-pr-review", "description": "Review submitted PR — committed diff, product fit, docs drift, engineering, tests" },
-    { "name": "heyeddi-pr-respond", "description": "Respond to PR review comments — fix vs decline, re-gate, threaded replies" },
-    { "name": "design-system-generalizer", "description": "Spread golden page patterns" },
-    { "name": "no-duplicate-ui", "description": "Detect duplicate Vue UI" },
-    { "name": "backend-type-bridger", "description": "FastAPI OpenAPI / Firestore types (TypeScript)" },
-    { "name": "composable-patterns", "description": "FastAPI JWT + Firebase composables (Vue)" },
-    { "name": "heyeddi-design", "description": "Design from scratch (replaces impeccable)" },
-    { "name": "engineering-excellence", "description": "KISS/YAGNI/DRY/SOLID audits + .heyeddi/docs/engineering/" },
-    { "name": "ux-flow-auditor", "description": "Task flow traces — click depth, friction — .heyeddi/docs/ux-flows/" },
-    { "name": "heyeddi-ci-config", "description": "Author eddi-ci.yaml from the live policy contract; Reviewer + optional runners" },
-    { "name": "heyeddi-ci-guide", "description": "HeyEddi CI commands, auth matrix, runners placeholder status, feedback via debate/support" },
-    { "name": "heyeddi-ci-respond", "description": "Respond to HeyEddi CI findings only — filter, fix-vs-decline, threaded replies, no unauthorized merge" },
-    { "name": "heyeddi-ci-fails", "description": "Diagnose failing GitHub Checks for a PR head; optional /heyeddi fails handoff" },
-    { "name": "heyeddi-ci-runners", "description": "PLACEHOLDER: author pipeline jobs in eddi-ci.yaml; Spot execution fail-closed" }
+    {
+      "name": "heyeddi-orchestrator",
+      "description": "Discover available @skills and suggest which to invoke; reads skill-routing.json"
+    },
+    {
+      "name": "heyeddi-product",
+      "description": "PM review \u2014 stories, AC, usefulness; orchestrates UX/design/engineering research"
+    },
+    {
+      "name": "heyeddi-intake",
+      "description": "User prompt \u2192 product.md, mockups, briefs, skill-routing for downstream agents"
+    },
+    {
+      "name": "project-engineering",
+      "description": "Vue + FastAPI + Firebase scaffold, deps, dev servers, tests"
+    },
+    {
+      "name": "flutter-engineering",
+      "description": "Flutter + FastAPI + Firebase scaffold, flutter test/analyze, dev servers"
+    },
+    {
+      "name": "flutter-patterns",
+      "description": "Riverpod repositories \u2014 FastAPI Dio + Firebase client patterns"
+    },
+    {
+      "name": "dart-type-bridger",
+      "description": "OpenAPI / Firestore \u2192 Dart model stubs"
+    },
+    {
+      "name": "design-handoff-flutter",
+      "description": "Screenshot-first Material 3 Flutter implementation"
+    },
+    {
+      "name": "primevue-openprops-architect",
+      "description": "PrimeVue + OpenProps guardrails"
+    },
+    {
+      "name": "verify-build",
+      "description": "Vite static build validator"
+    },
+    {
+      "name": "visual-auditor",
+      "description": "Screenshot review vs product/design spec, contrast audit, fix + document visual issues"
+    },
+    {
+      "name": "heyeddi-handoff",
+      "description": "Screenshot-first design implementation (Vue)"
+    },
+    {
+      "name": "pre-merge-gate",
+      "description": "QA merge readiness checklist"
+    },
+    {
+      "name": "heyeddi-pr-review",
+      "description": "Review submitted PR \u2014 committed diff, product fit, docs drift, engineering, tests"
+    },
+    {
+      "name": "heyeddi-pr-respond",
+      "description": "Respond to PR review comments \u2014 fix vs decline, re-gate, threaded replies"
+    },
+    {
+      "name": "design-system-generalizer",
+      "description": "Spread golden page patterns"
+    },
+    {
+      "name": "no-duplicate-ui",
+      "description": "Detect duplicate Vue UI"
+    },
+    {
+      "name": "backend-type-bridger",
+      "description": "FastAPI OpenAPI / Firestore types (TypeScript)"
+    },
+    {
+      "name": "composable-patterns",
+      "description": "FastAPI JWT + Firebase composables (Vue)"
+    },
+    {
+      "name": "heyeddi-design",
+      "description": "Design from scratch (replaces impeccable)"
+    },
+    {
+      "name": "engineering-excellence",
+      "description": "KISS/YAGNI/DRY/SOLID audits + .heyeddi/docs/engineering/"
+    },
+    {
+      "name": "ux-flow-auditor",
+      "description": "Task flow traces \u2014 click depth, friction \u2014 .heyeddi/docs/ux-flows/"
+    },
+    {
+      "name": "heyeddi-ci-config",
+      "description": "Author eddi-ci.yaml from the live policy contract; Reviewer + optional runners"
+    },
+    {
+      "name": "heyeddi-ci-guide",
+      "description": "HeyEddi CI commands, auth matrix, runners placeholder status, feedback via debate/support"
+    },
+    {
+      "name": "heyeddi-ci-respond",
+      "description": "Respond to HeyEddi CI findings only \u2014 filter, fix-vs-decline, threaded replies, no unauthorized merge"
+    },
+    {
+      "name": "heyeddi-ci-fails",
+      "description": "Diagnose failing GitHub Checks for a PR head; optional /heyeddi fails handoff"
+    },
+    {
+      "name": "heyeddi-ci-runners",
+      "description": "PLACEHOLDER: author pipeline jobs in eddi-ci.yaml; Spot execution fail-closed"
+    }
   ]
 }

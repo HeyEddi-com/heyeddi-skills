@@ -2,7 +2,7 @@
 name: heyeddi-ci-respond
 description: "Respond to HeyEddi CI findings only: filter markers/bot, fix-vs-decline, stack-agnostic verify, threaded replies, never merge without authorize merge. Use for CI findings; human reviews use heyeddi-pr-respond."
 version: 1.0.0
-product-version: 3.1.1
+product-version: 3.4.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---

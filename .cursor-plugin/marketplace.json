@@ -5,21 +5,21 @@
     "email": "eddi@heyeddi.com"
   },
   "metadata": {
-    "description": "HeyEddi agent skills \u2014 full product pack plus CI-only plugin",
-    "version": "3.3.0",
+    "description": "HeyEddi open agent toolkit \u2014 full pack plus CI plugin; CI skills.sh package is HeyEddi-com/heyeddi-ci-skills (ci.heyeddi.com)",
+    "version": "3.4.0",
     "pluginRoot": "plugins"
   },
   "plugins": [
     {
       "name": "heyeddi-skills",
       "source": "heyeddi-skills",
-      "description": "Full HeyEddi skill bundle for Cursor"
+      "description": "HeyEddi open agent toolkit \u2014 opinionated product, design, engineering, QA, PR (Vue/FastAPI/Firebase + Flutter)"
     },
     {
       "name": "heyeddi-ci-skills",
       "source": "heyeddi-ci-skills",
-      "description": "CI-only HeyEddi skills \u2014 config, respond, fails, runners placeholder, guide"
+      "description": "HeyEddi CI only (ci.heyeddi.com) \u2014 eddi-ci.yaml, respond, fails, runners placeholder, guide"
     }
   ],
-  "version": "3.3.0"
+  "version": "3.4.0"
 }

@@ -1,61 +1,134 @@
 # Skill distribution
 
-**Date:** 2026-08-09 · **Release:** v3.3.0 · **Brand:** **HeyEddi Skills** (`heyeddi-skills`)
+**Date:** 2026-08-09 · **Release:** v3.4.0 · **Brand:** **HeyEddi Skills** (`heyeddi-skills`)
 
-**Monorepo:** one GitHub hub ships **two packs** from a single SSOT (`skills/<name>/`). There is **no** second skills repo / skills.sh mirror.
+One SSOT hub ships **two public GitHub repos** (skills.sh indexes repos 1:1):
 
-| Pack | Marketplace plugin | Contents |
-|------|--------------------|----------|
-| `heyeddi-skills` | `plugins/heyeddi-skills/` | Full product + CI + QA |
-| `heyeddi-ci-skills` | `plugins/heyeddi-ci-skills/` | CI-only subset |
+| Pack | GitHub (skills.sh) | Marketplace plugin | Contents |
+|------|--------------------|--------------------|----------|
+| `heyeddi-skills` | [`HeyEddi-com/heyeddi-skills`](https://github.com/HeyEddi-com/heyeddi-skills) | `plugins/heyeddi-skills/` | Full product + CI + QA |
+| `heyeddi-ci-skills` | [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills) | `plugins/heyeddi-ci-skills/` | CI-only published mirror |
 
-Pack manifests: [`packs/`](../packs/). Sync: `./scripts/sync-plugins.sh`.
+Pack manifests: [`packs/`](../packs/). Plugin sync: `./scripts/sync-plugins.sh`. CI mirror: `./scripts/publish-ci-pack-repo.sh`.
 
-**GitHub:** [`HeyEddi-com/heyeddi-skills`](https://github.com/HeyEddi-com/heyeddi-skills) (legacy `HeyEddi-com/skills` redirects here). Local clone folder may still be named `skills`.
+**Legacy:** `HeyEddi-com/skills` was renamed to `heyeddi-skills` (GitHub redirects). Prefer the new slug everywhere.
 
 ## Vercel ecosystem (skills.sh + `npx skills`)
 
+There is **no deploy step** and **no submission form**. Distribution is GitHub + the [Vercel `skills` CLI](https://github.com/vercel-labs/skills).
+
 | Channel | How consumers get skills | Maintainer action |
 |---------|--------------------------|-------------------|
-| **CLI full** | `npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'` | Keep hub public; tag releases |
-| **CLI CI subset** | Same repo + `--skill heyeddi-ci-*` names | Keep `packs/heyeddi-ci-skills.json` in sync |
-| **skills.sh** | One page for the hub | Root `skills.sh.json` |
-| **Pinned** | `…/tree/v3.3.0` | Tag releases on GitHub |
+| **Full pack CLI** | `npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'` | Keep hub public; tag releases |
+| **CI pack CLI** | `npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'` | Publish mirror via `publish-ci-pack-repo.sh` |
+| **skills.sh** | Two pages (full + CI) | Root `skills.sh.json` on each repo |
+| **Pinned version** | `…/tree/v3.4.0` (hub) or `…/tree/v1.2.0` (CI pack) | Tag releases on both repos |
 
-### Automated releases
+### Automated releases (GitHub Actions)
 
-On push to `main`, [`.github/workflows/release.yml`](../.github/workflows/release.yml) tags `vX.Y.Z` when missing and attaches both pack JSON assets. Notes from `scripts/write-release-notes.py`.
+On every push to `main` (and via **Actions → Release → Run workflow**), [`.github/workflows/release.yml`](../.github/workflows/release.yml):
 
-**Maintainer flow:** bump versions → `sync-skill-frontmatter.py` → `./scripts/sync-plugins.sh` → merge → Release tags.
+1. Runs `./scripts/sync-plugins.sh --link`
+2. Reads hub version from `skills-registry.json` (must match `packs/heyeddi-skills.json`)
+3. If tag `vX.Y.Z` is **missing**, creates a GitHub Release with:
+   - Notes covering **both** packs via `scripts/write-release-notes.py`
+   - Assets: `heyeddi-skills.json`, `heyeddi-ci-skills.json`
+4. Materializes + pushes the CI pack mirror to `HeyEddi-com/heyeddi-ci-skills` when secret `CI_PACK_PUSH_TOKEN` is set (contents:write on the CI mirror); otherwise run `publish-ci-pack-repo.sh` locally
+5. If the hub tag **already exists**, no-ops (idempotent)
+
+PR [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) also syncs packs and asserts registry ↔ full pack consistency before pytest.
+
+**Maintainer flow:** bump version in the PR → `python3 scripts/sync-skill-frontmatter.py` → `./scripts/sync-plugins.sh` → merge to `main` → Release workflow tags hub + syncs CI mirror.
 
 **CLI flag trap:** `--all` = all skills **and all agents**. For Cursor-only, use `-a cursor --skill '*'`.
 
-### skills.sh
+**Updates:** consumers run `npx skills update` or re-run `npx skills add` **after approving** an agent prompt. `@heyeddi-orchestrator` `check_skills_update` detects a newer hub release and asks; it never silent-installs.
 
-- **Hub page:** [skills.sh/heyeddi-com/heyeddi-skills](https://www.skills.sh/heyeddi-com/heyeddi-skills)
-- **Org:** [skills.sh/heyeddi-com](https://www.skills.sh/heyeddi-com)
-- Customize via [`skills.sh.json`](../skills.sh.json)
+### skills.sh listing
 
-## Cursor Marketplace
+- **Full:** [skills.sh/heyeddi-com/heyeddi-skills](https://www.skills.sh/heyeddi-com/heyeddi-skills)
+- **CI-only:** [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills)
+- **Org page:** [skills.sh/heyeddi-com](https://www.skills.sh/heyeddi-com)
+- **Customize layout:** hub [`skills.sh.json`](../skills.sh.json); CI mirror has its own grouping
+- Reindex can lag after rename; GitHub redirects cover `HeyEddi-com/skills`
 
-| Channel | Repo |
-|---------|------|
-| **Team Marketplace** | Import `https://github.com/HeyEddi-com/heyeddi-skills` → plugins **heyeddi-skills** and/or **heyeddi-ci-skills** |
-| **Public Marketplace** | Same plugin bundles |
+### Official listing (beyond index)
 
-After editing skills: `./scripts/sync-plugins.sh`.
+Indexed ≠ official. See [docs/skills-sh-official-listing.md](skills-sh-official-listing.md).
 
-## Install examples
+## Cursor Marketplace (separate from Vercel)
+
+| Channel | Submit? | Repo needs |
+|---------|---------|------------|
+| **Team Marketplace** | Admin imports `https://github.com/HeyEddi-com/heyeddi-skills` | `.cursor-plugin/marketplace.json` + both plugins ✅ |
+| **Public Marketplace** | [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish) | Same plugin bundles + `LICENSE` ✅ |
+
+Logos: `plugins/heyeddi-skills/assets/logo.svg` (and CI plugin assets). After editing skills, run `./scripts/sync-plugins.sh` before relying on plugin trees.
+
+---
+
+## Git subtrees (maintainer sync to per-skill repos)
+
+**Date:** 2026-07-02
+
+## Model
+
+```
+┌─────────────────────────┐     git subtree add/pull/push     ┌──────────────────────────┐
+│  heyeddi-skills (hub)   │ ◄──────────────────────────────► │  my-skill-name (remote)  │
+│  skills/name/           │                                   │  SKILL.md at repo root   │
+└─────────────────────────┘                                   └──────────────────────────┘
+                                      │
+                                      │ npx skills add HeyEddi-com/heyeddi-skills --skill <name>
+                                      ▼
+                            ┌─────────────────────────┐
+                            │  consumer Vue project   │
+                            │  .agents/skills/name/   │
+                            │  or ~/.cursor/skills/   │
+                            └─────────────────────────┘
+```
+
+- **Standalone skill repo** — `SKILL.md` at repository root (not under `.cursor/`).
+- **Collection hub** — aggregates under `skills/<name>/`.
+- **CI publish repo** — mirror of CI pack only (`publish-ci-pack-repo.sh`).
+- **Consumer project** — install via `scripts/install-skills.sh` or `npx skills add`.
+
+## Prefix
+
+```
+skills/<skill-name>
+```
+
+## Commands
+
+### Add a skill from a remote repository
 
 ```bash
-# Full pack
-npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
+./scripts/add-skill-subtree.sh <skill-name> <remote-url> [branch]
+```
 
-# CI skills only (same monorepo)
-npx skills add HeyEddi-com/heyeddi-skills -a cursor -y \
-  --skill heyeddi-ci-config \
-  --skill heyeddi-ci-guide \
-  --skill heyeddi-ci-respond \
-  --skill heyeddi-ci-fails \
-  --skill heyeddi-ci-runners
+### Install into a project
+
+```bash
+./scripts/install-skills.sh <skill-name> --project /path/to/app
+./scripts/install-skills.sh --all --global
+```
+
+### Push hub changes to standalone repo
+
+```bash
+./scripts/push-skill-subtree.sh <skill-name> [remote-url] [branch]
+```
+
+### Publish CI pack mirror
+
+```bash
+./scripts/publish-ci-pack-repo.sh --out ../heyeddi-ci-skills --push
+```
+
+**Consumers should install from the branded repos:**
+
+```bash
+npx skills add HeyEddi-com/heyeddi-skills -a cursor --skill visual-auditor -y
+npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 ```

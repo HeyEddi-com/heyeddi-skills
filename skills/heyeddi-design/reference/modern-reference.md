@@ -100,10 +100,14 @@ Before calling a screen done:
 - [ ] Is there one clear primary action per viewport?
 - [ ] Do cards have padding ≥ 16px and visible separation from background?
 - [ ] Does dark mode look intentional (not inverted gray mush)?
-- [ ] Decision log entry cites which reference pattern you borrowed **and this project's memorable detail** (`design-ambition.md`)
+- [ ] Hero/first viewport is a **thesis**, not a default KPI strip + gradient (unless brief demands it) — `aesthetic-direction.md`
+- [ ] Type pairing is deliberate (not Inter/Roboto/system as the whole brand)
+- [ ] No decorative 01/02/03 or chrome that does not encode real structure
+- [ ] Motion is intentional or absent — not scattered “AI polish”
+- [ ] Avoided generic AI look clusters unless the brief asked for them
+- [ ] Decision log entry cites which reference pattern you borrowed **and this project's memorable detail + aesthetic risk** (`design-ambition.md`)
 - [ ] UI **copy** follows `context/PROSE_ANTI_SLOP.md` (no em dashes, no AI filler)
 - [ ] `verify_prose.py --check` passes on Vue/locale files
-- [ ] Smell test: would this copy survive Slack without an eye-roll?
 - [ ] Smell test: would this copy survive Slack without an eye-roll?
 
 ## When plain is OK
@@ -115,6 +119,7 @@ Before calling a screen done:
 ## Related
 
 - `reference/research.md`: synthesize trends into `research.md`
+- `reference/aesthetic-direction.md`: distinctive thesis, type, motion, anti–generic-AI
 - `reference/surface-completeness.md`: full states and affordances
 - `context/ANTI_PATTERNS.md`: plain admin template called out
 - `context/PROSE_ANTI_SLOP.md`: writing / copy anti-slop (em dashes, filler phrases)
