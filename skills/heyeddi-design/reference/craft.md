@@ -15,6 +15,7 @@ If user invokes craft with only a vague prompt and no brief, **stop and run `sha
 
 0. Read `reference/audience-design.md`: confirm direction for primary persona on this route.
 0a. Read `reference/design-ambition.md`: implement **Design signature** from brief; run ambition checklist before done.
+0a2. Read `reference/aesthetic-direction.md`: implement thesis/hero, type personality, intentional motion; avoid generic AI look clusters; log the aesthetic risk.
 0b. Read `reference/surface-completeness.md`: implement full brief regions, affordances, and states; stub unwired actions; document **Deferred wiring**.
 0c. Read `reference/modern-reference.md`: apply typography, surfaces, and layout character (not default PrimeVue admin).
 1. Map brief regions → PrimeVue components per component map in brief.

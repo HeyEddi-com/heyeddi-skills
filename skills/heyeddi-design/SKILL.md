@@ -1,7 +1,7 @@
 ---
 name: heyeddi-design
 description: "End-to-end UI design for HeyEddi stack (PrimeVue, DESIGN.md, semantic tokens: OpenProps on scaffold default). Use when the user wants to design, explore, critique, or improve existing frontend: e.g. \"enterprise view\", \"critique the login page\", \"this UI looks bad\", \"settings page\". Runs discovery, critique, polish, craft, document. Sub-commands init, discover, shape, craft, critique, polish, document. Not for pre-made screenshot handoff: use heyeddi-handoff instead."
-version: 2.2.0
+version: 2.3.0
 product-version: 3.4.0
 author: HeyEddi-com
 ---
@@ -48,7 +48,8 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 3d. Read `reference/modern-reference.md` when shaping or crafting **marketing, dashboard, or settings** routes: avoid plain admin-template output.
 3e. Read `reference/audience-design.md` when shaping, crafting, or polishing **any user-facing route**: tie direction to `product.md` personas.
 3f. Read `reference/design-ambition.md` when shaping, crafting, or polishing **flagship routes**: project-specific signature and impressive craft bar (default; do not wait for user to ask).
-3g. Read `context/PROSE_ANTI_SLOP.md` once per session when writing **UI copy** (Vue strings, locale files, product.md voice): no em/en dashes, no AI filler.
+3g. Read `reference/aesthetic-direction.md` when shaping, crafting, critiquing, or polishing **any user-facing route**: subject-grounded thesis, type personality, intentional motion, anti–generic-AI looks, one justified aesthetic risk.
+3h. Read `context/PROSE_ANTI_SLOP.md` once per session when writing **UI copy** (Vue strings, locale files, product.md voice): no em/en dashes, no AI filler.
 4. After **craft**, **polish**, **critique** (when leading to polish), or **shape** (brief confirmed), append to **Decision log** in `.heyeddi/design.md` per `reference/design-talk.md`: **cite primary persona + pattern borrowed + memorable detail for this project**.
 5. After implementation, run `reference/audience-fit.md` on flagship routes before calling done.
 6. Chain `@primevue-openprops-architect` validation and full **`@visual-auditor`** fix loop (review vs spec → fix → document) at 375/768/1440.

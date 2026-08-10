@@ -32,14 +32,15 @@ Before `craft` on any flagship route, define in `designs/<feature>/brief.md`:
 ## Design signature (this project only)
 
 - **Aesthetic energy:** (e.g. calm precision | warm human | bold editorial | dense utilitarian)
+- **Subject / page job:** one concrete subject + what this page must do
 - **Signature moment:** one screen/region that should feel unmistakably *this* product
+- **Aesthetic risk:** one bold, justified choice (type, hero, layout, motion) — not random ornament
 - **Borrow:** 2 named references: what specifically (not "like Linear")
-- **Avoid:** 2 tells that would make this look like our last scaffold or a competitor clone
+- **Avoid:** 2 tells that would make this look like our last scaffold, a competitor clone, or generic AI UI
 - **Memorable detail:** one concrete choice (type pairing, hero grid, stat treatment, settings card rhythm, nav pill style, …)
 ```
 
-Re-read this section at **craft** and **polish**. If implementation could belong to another product with a name swap, **revise before calling done**.
-
+Re-read this section at **craft** and **polish**. If implementation could belong to another product with a name swap, **revise before calling done**. Also read `reference/aesthetic-direction.md` (hero as thesis, type personality, anti–generic-AI clusters).
 ## Discovery: ask when ambition is unclear
 
 Add to `discover` (2-3 questions per round):
@@ -59,12 +60,13 @@ If the user says "top notch / artistic / impressive": treat that as **confirmati
 
 ## Craft: ambition checklist (before done)
 
-After `modern-reference` anti-slop and before audience-fit:
+After `modern-reference` + `aesthetic-direction` checks and before audience-fit:
 
 - [ ] **Signature moment** from brief is implemented and visible at 1440 and 375
+- [ ] **Aesthetic risk** from brief is visible and justified (Decision log)
 - [ ] **Three PrimeVue tells removed** (default card padding mush, undifferentiated table, system-font sameness, flat gray shell: pick what applied)
 - [ ] **Competitor differentiation**: one layout or copy choice a clone would not make
-- [ ] **Decision log** cites persona + **specific** borrowed pattern + **this project's** memorable detail
+- [ ] **Decision log** cites persona + **specific** borrowed pattern + **this project's** memorable detail + aesthetic risk
 - [ ] Screenshot test: would a designer say "template" or "crafted for {product_name}"?
 
 If any fail → `@heyeddi-design polish` or revise in craft; do not hand off to `@heyeddi-handoff` with generic chrome.
@@ -85,5 +87,5 @@ When user asks to "make it more artistic" or "top of the line":
 
 ## Related
 
-- `audience-design.md`, `modern-reference.md`, `explore.md`, `audience-fit.md`
+- `audience-design.md`, `modern-reference.md`, `aesthetic-direction.md`, `explore.md`, `audience-fit.md`
 - `context/ANTI_PATTERNS.md`: template swap called out
