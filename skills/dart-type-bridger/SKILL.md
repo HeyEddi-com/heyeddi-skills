@@ -2,7 +2,7 @@
 name: dart-type-bridger
 description: Syncs a local FastAPI OpenAPI file to Dart model stubs and reads Firestore schema hints for Flutter projects. Use when writing Flutter repositories against FastAPI or Firebase backends.
 version: 1.0.0
-product-version: 3.4.1
+product-version: 3.4.2
 author: HeyEddi-com
 paths:
   - "lib/models/**"
