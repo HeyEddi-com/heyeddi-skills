@@ -102,7 +102,7 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 
 - `gh` CLI authenticated
 
-## When complete
+## When the task is complete: suggest next skills
 
 ```bash
 python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py \

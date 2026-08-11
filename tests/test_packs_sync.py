@@ -27,7 +27,8 @@ def test_ci_pack_is_subset() -> None:
     full = set(json.loads((PACKS / "heyeddi-skills.json").read_text(encoding="utf-8"))["skills"])
     ci = set(json.loads((PACKS / "heyeddi-ci-skills.json").read_text(encoding="utf-8"))["skills"])
     assert ci <= full
-    assert all(n.startswith("heyeddi-ci-") for n in ci)
+    assert "heyeddi-pr-respond" in ci
+    assert all(n.startswith("heyeddi-ci-") or n == "heyeddi-pr-respond" for n in ci)
 
 
 def test_write_release_notes(tmp_path: Path) -> None:
@@ -52,7 +53,7 @@ def test_write_release_notes(tmp_path: Path) -> None:
     text = out.read_text(encoding="utf-8")
     assert "heyeddi-skills" in text
     assert "heyeddi-ci-skills" in text
-    assert "heyeddi-ci-respond" in text
+    assert "heyeddi-pr-respond" in text
 
 
 def test_sync_plugins_link_mode() -> None:
@@ -70,5 +71,5 @@ def test_sync_plugins_link_mode() -> None:
     sample = full_skills / "heyeddi-ci-config"
     assert sample.is_symlink()
     assert sample.resolve() == (ROOT / "skills" / "heyeddi-ci-config").resolve()
-    ci_sample = ROOT / "plugins" / "heyeddi-ci-skills" / "skills" / "heyeddi-ci-respond"
+    ci_sample = ROOT / "plugins" / "heyeddi-ci-skills" / "skills" / "heyeddi-pr-respond"
     assert ci_sample.exists()
