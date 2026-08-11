@@ -79,14 +79,9 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "why": "Config is set: orient on CI commands and safety before respond/fails.",
     },
     "heyeddi-ci-guide": {
-        "skill": "heyeddi-ci-respond",
-        "prompt": "@heyeddi-ci-respond address HeyEddi CI findings on PR #<number>",
-        "why": "Guide done: respond to CI findings when a PR has HeyEddi markers.",
-    },
-    "heyeddi-ci-respond": {
-        "skill": "heyeddi-ci-fails",
-        "prompt": "@heyeddi-ci-fails diagnose failing Checks on PR #<number>",
-        "why": "After CI findings: diagnose any remaining red Checks.",
+        "skill": "heyeddi-pr-respond",
+        "prompt": "@heyeddi-pr-respond address review feedback on PR #<number> (human + HeyEddi CI)",
+        "why": "Guide done: respond to all PR review findings.",
     },
     "heyeddi-ci-fails": {
         "skill": "heyeddi-ci-config",

@@ -103,7 +103,7 @@ Covers human reviewers, HeyEddi CI root summaries, inline threads, and discussio
 4. `post_thread_replies --replies-text` + `verify_response --use-inventory --live`
 5. Never merge without **authorize merge**
 
-**Deprecated:** `@heyeddi-ci-respond` — alias only; use `@heyeddi-pr-respond`.
+**Removed:** `@heyeddi-ci-respond` — deleted; use `@heyeddi-pr-respond` only.
 
 ## Delegation map
 

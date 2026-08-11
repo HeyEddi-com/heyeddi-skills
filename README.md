@@ -129,15 +129,14 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `engineering-excellence` | KISS/YAGNI/DRY/SOLID audits + `.heyeddi/docs/engineering/` |
 | `heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract (Reviewer + optional runners) |
 | `heyeddi-ci-guide` | HeyEddi CI commands, auth matrix, runners placeholder, feedback paths |
-| `heyeddi-ci-respond` | Respond to HeyEddi CI findings only (not human review) |
-| `heyeddi-ci-fails` | Diagnose failing GitHub Checks; optional `/heyeddi fails` |
+| `@heyeddi-pr-respond` | Respond to all PR review feedback (human + HeyEddi CI) |
+| `@heyeddi-ci-fails` | Diagnose failing GitHub Checks; optional `/heyeddi fails` |
 | `heyeddi-ci-runners` | PLACEHOLDER — author `pipeline:` YAML; Spot fail-closed |
 | `ux-flow-auditor` | Task-flow traces — friction, click depth — `.heyeddi/docs/ux-flows/` |
 | `visual-auditor` | Review screenshots vs spec, fix visual issues, document fixes |
 | `verify-build` | Vite static build validator |
 | `pre-merge-gate` | QA merge-readiness checklist |
 | `heyeddi-pr-review` | Review submitted PR — diff, product, docs, engineering, tests |
-| `heyeddi-pr-respond` | Respond to PR review comments — fix vs decline, re-gate |
 | `design-system-generalizer` | Spread golden-page patterns across routes |
 | `no-duplicate-ui` | Detect duplicate Vue UI |
 

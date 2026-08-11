@@ -1,5 +1,5 @@
 {
-  "version": "3.4.3",
+  "version": "3.4.4",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -98,10 +98,6 @@
     {
       "name": "heyeddi-ci-guide",
       "description": "HeyEddi CI commands, auth matrix, runners placeholder status, feedback via debate/support"
-    },
-    {
-      "name": "heyeddi-ci-respond",
-      "description": "Respond to HeyEddi CI findings only \u2014 filter, fix-vs-decline, threaded replies, no unauthorized merge"
     },
     {
       "name": "heyeddi-ci-fails",

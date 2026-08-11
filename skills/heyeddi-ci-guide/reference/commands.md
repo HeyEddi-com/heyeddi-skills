@@ -49,6 +49,6 @@ Declared `pipeline:` jobs are validated by App lint when present. Execution is *
 ## Related agent skills
 
 - `@heyeddi-ci-config` — living contract → YAML
-- `@heyeddi-ci-respond` — author agent vs CI findings
+- `@heyeddi-pr-respond` — author agent vs all PR review feedback
 - `@heyeddi-ci-fails` — local Check diagnosis
 - `@heyeddi-pr-respond` — human reviewer threads only
