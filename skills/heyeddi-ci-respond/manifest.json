@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-ci-respond",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "tools": [
     {
       "name": "fetch_pr_comments",
@@ -65,15 +65,31 @@
       "readonly": true
     },
     {
+      "name": "assert_fixes_pushed",
+      "description": "Hard-fail when the working tree is dirty or commits are unpushed; run before posting Fixed replies.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "check": { "type": "boolean" },
+          "allow_unpushed": { "type": "boolean" }
+        },
+        "required": []
+      },
+      "script": "scripts/assert_fixes_pushed.py",
+      "readonly": true
+    },
+    {
       "name": "post_thread_replies",
-      "description": "Post every ## Comment <id> reply in-thread; write pr-<N>-ci-posted.json.",
+      "description": "Post every ## Comment <id> reply in-thread; write pr-<N>-ci-posted.json. Blocks unless fixes are pushed (unless dry-run / allow-unpushed).",
       "parameters": {
         "type": "object",
         "properties": {
           "pr": { "type": "integer" },
           "project_root": { "type": "string" },
           "dry_run": { "type": "boolean" },
-          "post_summary": { "type": "boolean" }
+          "post_summary": { "type": "boolean" },
+          "allow_unpushed": { "type": "boolean" }
         },
         "required": ["pr", "project_root"]
       },

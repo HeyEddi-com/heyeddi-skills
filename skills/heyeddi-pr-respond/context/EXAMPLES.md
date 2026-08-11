@@ -45,3 +45,12 @@ python scripts/verify_response.py --pr 42 --check --live --project-root .
 ```
 Fixed - Added count_assets method for proper pagination
 ```
+
+## Commit + push before replies
+
+1. Apply fixes
+2. Commit + push to the PR branch
+3. Then `post_thread_replies`
+
+Wrong order: post “Fixed” while changes are local-only → reviewer/bot cannot verify remote HEAD.
+

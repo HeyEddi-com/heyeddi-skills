@@ -2,7 +2,7 @@
 name: heyeddi-ci-fails
 description: "Diagnose failing GitHub Checks for a PR head: fetch evidence, write ephemeral ci-fails report, optional local fix loop. Never merge without authorize merge. Companion to /heyeddi fails."
 version: 1.0.0
-product-version: 3.4.0
+product-version: 3.4.1
 author: HeyEddi-com
 disable-model-invocation: true
 ---
