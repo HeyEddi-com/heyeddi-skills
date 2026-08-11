@@ -2,7 +2,7 @@
 name: composable-patterns
 description: "Provides FastAPI JWT and Firebase client composable patterns for consistent auth and data layers. Context-first skill: use when writing or reviewing Vue composables for API access."
 version: 1.0.0
-product-version: 3.4.0
+product-version: 3.4.1
 author: HeyEddi-com
 paths:
   - "**/composables/**"

@@ -1,8 +1,8 @@
 ---
 name: heyeddi-ci-respond
-description: "Respond to HeyEddi CI findings only: filter markers/bot, fix-vs-decline, stack-agnostic verify, threaded replies, never merge without authorize merge. Use for CI findings; human reviews use heyeddi-pr-respond."
-version: 1.0.0
-product-version: 3.4.0
+description: "Respond to HeyEddi CI findings only: filter markers/bot, fix-vs-decline, stack-agnostic verify, commit+push before replies, threaded replies, never merge without authorize merge. Use for CI findings; human reviews use heyeddi-pr-respond."
+version: 1.1.0
+product-version: 3.4.1
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -21,6 +21,19 @@ Working files under `.heyeddi/docs/pr-<N>-ci-*` are **session scratch** for the 
 | `pr-<N>-ci-tracking.md` | Tracking table |
 | `pr-<N>-ci-replies.md` | Drafted `## Comment <id>` replies |
 | `pr-<N>-ci-posted.json` | Post log from `post_thread_replies` |
+
+## Critical: commit + push before replies
+
+HeyEddi debate / re-review reads **remote HEAD** only.
+
+1. Apply code/docs fixes locally
+2. **Commit** (ask the user if needed) — never include `pr-*-ci-*` scratch
+3. **Push** to the PR branch
+4. Then draft/post in-thread replies that say Fixed
+
+**Never** post “Fixed” (or invite debate) while the working tree is dirty or commits are unpushed. That makes the bot correctly say it cannot verify.
+
+Hard gate: `assert_fixes_pushed --check` (also enforced inside `post_thread_replies` unless `--dry-run` or `--allow-unpushed`). Use `--allow-unpushed` only for decline-only sessions with no code changes.
 
 ## Critical: in-thread replies only
 
@@ -48,8 +61,10 @@ for each comment: fix | decline | partial | out-of-scope
 apply code/docs fixes when fix
 discover_and_verify [--run]          → evidenced npm/pytest/go/cargo/make only
 assert_no_merge --check              → unless user said authorize merge
+→ if any fix: commit + push to PR branch (ask user if commit not authorized yet)
+assert_fixes_pushed --check          → hard-fail if dirty / unpushed
 draft pr-<N>-ci-replies.md
-post_thread_replies --pr <N>
+post_thread_replies --pr <N>         → blocked unless pushed (or --allow-unpushed)
 verify_response --pr <N> --check [--live]
 → optional one Summary after verify
 ```
@@ -70,6 +85,7 @@ verify_response --pr <N> --check [--live]
 | `filter_heyeddi_comments` | Keep HeyEddi CI findings only |
 | `discover_and_verify` | Evidenced verify commands only |
 | `assert_no_merge` | Merge hard gate |
+| `assert_fixes_pushed` | Commit+push hard gate before replies |
 | `post_thread_replies` | Post every draft in-thread |
 | `verify_response` | Hard-fail if any thread skipped |
 

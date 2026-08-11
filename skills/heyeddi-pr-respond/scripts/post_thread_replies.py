@@ -22,6 +22,7 @@ from _replies_parse import (
     summary_is_last,
 )
 from _skill_cli import emit, resolve_project_root, run_command
+from assert_fixes_pushed import evaluate as evaluate_fixes_pushed
 
 TRACKING_NAME = "pr-{pr}-tracking.md"
 REPLIES_NAME = "pr-{pr}-replies.md"
@@ -236,9 +237,39 @@ def main() -> None:
         action="store_true",
         help="Post ## Summary once via gh pr comment AFTER all threads succeed (optional)",
     )
+    parser.add_argument(
+        "--allow-unpushed",
+        action="store_true",
+        help=(
+            "Skip commit+push gate (decline-only / no code changes). "
+            "Never use after applying fixes — reviewers only see remote HEAD."
+        ),
+    )
     args = parser.parse_args()
 
     root = resolve_project_root(args.project_root)
+    dry_run = args.dry_run or not shutil.which("gh")
+    if not dry_run and not args.allow_unpushed:
+        gate = evaluate_fixes_pushed(root)
+        if not gate.get("ok"):
+            emit(
+                json.dumps(
+                    {
+                        "error": "commit_push_required_before_replies",
+                        "issues": gate.get("issues"),
+                        "dirty_paths": gate.get("dirty_paths"),
+                        "unpushed_commits": gate.get("unpushed_commits"),
+                        "rule": gate.get("rule"),
+                        "hint": (
+                            "Commit + push fixes to the PR branch, then re-run "
+                            "post_thread_replies. Do not claim Fixed while changes "
+                            "are local-only."
+                        ),
+                    },
+                    indent=2,
+                )
+            )
+            sys.exit(1)
     docs = docs_dir(root)
     docs.mkdir(parents=True, exist_ok=True)
     tracking_path = docs / TRACKING_NAME.format(pr=args.pr)
@@ -267,7 +298,6 @@ def main() -> None:
     )
     kind_by_id = {r.comment_id: r.kind for r in tracking_rows}
 
-    dry_run = args.dry_run or not shutil.which("gh")
     repo = None if dry_run else _resolve_repo(root, cache_path)
     if not dry_run and not repo:
         emit(json.dumps({"error": "could not resolve repo for gh posts"}, indent=2))

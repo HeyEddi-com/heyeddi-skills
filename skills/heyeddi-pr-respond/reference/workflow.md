@@ -42,8 +42,18 @@ Document reasoning in the tracking table **Action** column.
 ## Phase 3: Apply fixes
 
 - Fix only comments marked **fix** or valid parts of **partial**
-- One logical commit per fix batch (user commits: do not commit unless asked)
+- After the fix batch: **commit + push** to the PR branch before posting “Fixed” replies (ask the user to authorize the commit if needed)
+- Never claim Fixed on GitHub while changes are local-only — reviewers only see remote HEAD
+- Do not commit `.heyeddi/docs/pr-*` scratch
 - Update docs when fix changes product/API behavior
+
+## Phase 3b: Commit + push gate
+
+```bash
+python scripts/assert_fixes_pushed.py --project-root <root> --check
+```
+
+Decline-only (no code changes): `--allow-unpushed` is OK if the tree is clean. Never use it after applying fixes.
 
 ## Phase 4: Re-gate
 
@@ -83,6 +93,8 @@ Responded to 4/4 comments. All fixes pushed; pre-merge gate OK. Ready for re-rev
 ```bash
 python scripts/post_thread_replies.py --pr <N> --project-root <root>
 ```
+
+Blocked unless `assert_fixes_pushed` passes (or `--dry-run` / `--allow-unpushed`).
 
 **In-thread only:**
 

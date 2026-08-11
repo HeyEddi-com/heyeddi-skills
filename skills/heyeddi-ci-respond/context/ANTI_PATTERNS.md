@@ -18,3 +18,5 @@
 - NEVER `git add` / commit `.heyeddi/docs/pr-*-ci-*` scratch
 - NEVER invent an FP API; use debate + `support@heyeddi.com`
 - NEVER ship AI prose slop; follow `context/PROSE_ANTI_SLOP.md`
+- NEVER post “Fixed” / invite debate while code fixes are still local-only (dirty tree or unpushed commits). Commit + push to the PR branch first; debate only sees remote HEAD
+- NEVER bypass `assert_fixes_pushed` / `post_thread_replies` push gate with `--allow-unpushed` after applying code fixes

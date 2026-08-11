@@ -870,3 +870,11 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 ```
 
 **Process:** Bump hub + CI pack versions → `sync-plugins.sh` → merge → Release tags hub → `publish-ci-pack-repo.sh --push` (or Actions with token).
+
+## Commit + push before PR/CI reply posts (2026-08-10)
+
+**Context:** `@heyeddi-ci-respond` posted “Fixed” while fixes were still local; HeyEddi debate correctly said it could not verify (remote HEAD unchanged).
+
+**Rule:** After applying fixes, **commit + push** to the PR branch **before** `post_thread_replies`. Hard gate: `assert_fixes_pushed --check` (also enforced inside `post_thread_replies` unless `--dry-run` / `--allow-unpushed`). Decline-only may use `--allow-unpushed`. Never claim Fixed while dirty/unpushed.
+
+**Skills:** `heyeddi-ci-respond` v1.1.0, `heyeddi-pr-respond` v1.4.0 in hub `skills/`.
