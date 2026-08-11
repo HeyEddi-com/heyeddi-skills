@@ -18,18 +18,13 @@ from pathlib import Path
 from _replies_parse import (
     infer_reply_kind,
     parse_reply_sections,
-    parse_tracking_rows,
     summary_is_last,
 )
 from _skill_cli import emit, resolve_project_root, run_command
+from _temp_store import comments_cache_path
 from assert_fixes_pushed import evaluate as evaluate_fixes_pushed
 
-TRACKING_NAME = "pr-{pr}-tracking.md"
-REPLIES_NAME = "pr-{pr}-replies.md"
-POSTED_NAME = "pr-{pr}-posted.json"
-COMMENTS_CACHE = "pr-{pr}-comments.json"
-
-# Status values that satisfy verify_response posted.json checks
+# Status values that satisfy verify_response checks
 OK_STATUSES = frozenset({"posted", "dry-run", "skipped_review_body", "already-replied"})
 
 BANNED_BODY = re.compile(
@@ -38,8 +33,28 @@ BANNED_BODY = re.compile(
 )
 
 
-def docs_dir(root: Path) -> Path:
-    return root / ".heyeddi" / "docs"
+def _load_replies_text(args: argparse.Namespace) -> str:
+    if args.replies_text:
+        return args.replies_text
+    if args.replies_file:
+        path = Path(args.replies_file)
+        if not path.is_file():
+            emit(json.dumps({"error": "replies file not found", "path": str(path)}, indent=2))
+            sys.exit(1)
+        return path.read_text(encoding="utf-8")
+    emit(
+        json.dumps(
+            {
+                "error": "missing replies draft",
+                "hint": (
+                    "Pass --replies-text or --replies-file. "
+                    "Do not write pr-*-replies.md under .heyeddi/docs/."
+                ),
+            },
+            indent=2,
+        )
+    )
+    sys.exit(1)
 
 
 def _resolve_repo(root: Path, cache_path: Path) -> str | None:
@@ -59,33 +74,6 @@ def _resolve_repo(root: Path, cache_path: Path) -> str | None:
     if out.startswith("[exit") or out.startswith("[error]"):
         return None
     return out.strip() or None
-
-
-def _mark_tracking_responded(tracking_path: Path, comment_ids: set[str]) -> None:
-    if not tracking_path.is_file() or not comment_ids:
-        return
-    lines = tracking_path.read_text(encoding="utf-8").splitlines()
-    out: list[str] = []
-    for line in lines:
-        updated = line
-        for comment_id in comment_ids:
-            if f"| {comment_id} |" in line or f"|{comment_id}|" in line.replace(" ", ""):
-                updated = re.sub(
-                    r"(\|\s*)PENDING(\s*\|?\s*)$",
-                    r"\1RESPONDED\2",
-                    updated,
-                    flags=re.IGNORECASE,
-                )
-                if "PENDING" in updated.upper() and "RESPONDED" not in updated.upper():
-                    updated = re.sub(
-                        r"PENDING",
-                        "RESPONDED",
-                        updated,
-                        count=1,
-                        flags=re.IGNORECASE,
-                    )
-        out.append(updated)
-    tracking_path.write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
 def _post_review_comment_reply(
@@ -228,9 +216,19 @@ def main() -> None:
     parser.add_argument("--pr", type=int, required=True)
     parser.add_argument("--project-root", default=None)
     parser.add_argument(
+        "--replies-text",
+        default=None,
+        help="Draft replies markdown (## Comment <id> sections + ## Summary last)",
+    )
+    parser.add_argument(
+        "--replies-file",
+        default=None,
+        help="Path to replies markdown (prefer --replies-text; never .heyeddi/docs/pr-*-ci-*)",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Write posted.json without calling gh (evals / offline)",
+        help="Simulate posts without calling gh (evals / offline); results on stdout only",
     )
     parser.add_argument(
         "--post-summary",
@@ -242,12 +240,15 @@ def main() -> None:
         action="store_true",
         help=(
             "Skip commit+push gate (decline-only / no code changes). "
-            "Never use after applying fixes — reviewers only see remote HEAD."
+            "Never use after applying fixes — debate only sees remote HEAD."
         ),
     )
     args = parser.parse_args()
 
     root = resolve_project_root(args.project_root)
+    cache_path = comments_cache_path(args.pr)
+
+    # Live posts require remote HEAD to already contain any code fixes.
     dry_run = args.dry_run or not shutil.which("gh")
     if not dry_run and not args.allow_unpushed:
         gate = evaluate_fixes_pushed(root)
@@ -270,18 +271,8 @@ def main() -> None:
                 )
             )
             sys.exit(1)
-    docs = docs_dir(root)
-    docs.mkdir(parents=True, exist_ok=True)
-    tracking_path = docs / TRACKING_NAME.format(pr=args.pr)
-    replies_path = docs / REPLIES_NAME.format(pr=args.pr)
-    posted_path = docs / POSTED_NAME.format(pr=args.pr)
-    cache_path = docs / COMMENTS_CACHE.format(pr=args.pr)
 
-    if not replies_path.is_file():
-        emit(json.dumps({"error": "missing replies draft", "path": str(replies_path)}, indent=2))
-        sys.exit(1)
-
-    replies_text = replies_path.read_text(encoding="utf-8")
+    replies_text = _load_replies_text(args)
     sections, summary_body = parse_reply_sections(replies_text)
     if not sections:
         emit(json.dumps({"error": "no ## Comment <id> sections in replies draft"}, indent=2))
@@ -292,11 +283,6 @@ def main() -> None:
     if not summary_is_last(replies_text):
         emit(json.dumps({"error": "## Summary must be last (after all individual replies)"}, indent=2))
         sys.exit(1)
-
-    tracking_rows = (
-        parse_tracking_rows(tracking_path.read_text(encoding="utf-8")) if tracking_path.is_file() else []
-    )
-    kind_by_id = {r.comment_id: r.kind for r in tracking_rows}
 
     repo = None if dry_run else _resolve_repo(root, cache_path)
     if not dry_run and not repo:
@@ -313,9 +299,7 @@ def main() -> None:
             posted.append(
                 {
                     "comment_id": section.comment_id,
-                    "type": infer_reply_kind(
-                        section.comment_id, kind_by_id.get(section.comment_id), section.kind
-                    ),
+                    "type": infer_reply_kind(section.comment_id, None, section.kind),
                     "status": "error",
                     "detail": "empty body",
                 }
@@ -327,16 +311,14 @@ def main() -> None:
             posted.append(
                 {
                     "comment_id": section.comment_id,
-                    "type": infer_reply_kind(
-                        section.comment_id, kind_by_id.get(section.comment_id), section.kind
-                    ),
+                    "type": infer_reply_kind(section.comment_id, None, section.kind),
                     "status": "error",
                     "detail": "banned acknowledgement body",
                 }
             )
             continue
 
-        kind = infer_reply_kind(section.comment_id, kind_by_id.get(section.comment_id), section.kind)
+        kind = infer_reply_kind(section.comment_id, None, section.kind)
 
         if dry_run:
             status = "skipped_review_body" if kind == "review" else "dry-run"
@@ -403,13 +385,8 @@ def main() -> None:
         "errors": errors,
         "summary": summary_status,
         "rule": "Individual replies MUST use in-thread /replies. Never gh pr comment per comment.",
-        "hint": "Run verify_response.py --pr <N> --check before considering the workflow done.",
+        "hint": "Run verify_response.py --pr <N> --live --check after posting.",
     }
-    posted_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    payload["posted_log"] = str(posted_path.relative_to(root))
-
-    if succeeded_ids:
-        _mark_tracking_responded(tracking_path, succeeded_ids)
 
     emit(json.dumps(payload, indent=2))
     if errors:

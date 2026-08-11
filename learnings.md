@@ -878,3 +878,30 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Rule:** After applying fixes, **commit + push** to the PR branch **before** `post_thread_replies`. Hard gate: `assert_fixes_pushed --check` (also enforced inside `post_thread_replies` unless `--dry-run` / `--allow-unpushed`). Decline-only may use `--allow-unpushed`. Never claim Fixed while dirty/unpushed.
 
 **Skills:** `heyeddi-ci-respond` v1.1.0, `heyeddi-pr-respond` v1.4.0 in hub `skills/`.
+
+## 2026-08-11 — Skills release needs a version bump
+
+**Context:** Merged docs-only routing clarity (#15) without bumping `skills-registry.json`; Release workflow no-oped because `v3.4.1` already existed.
+
+**Process:** Bump hub + CI pack versions in a release PR → `sync-skill-frontmatter.py` → `sync-plugins.sh` → merge `main` → verify hub GitHub Release. If Actions logs `Skipping CI mirror push` (no `CI_PACK_PUSH_TOKEN`), run locally:
+
+```bash
+./scripts/publish-ci-pack-repo.sh --out ../heyeddi-ci-skills --push
+```
+
+**Notes:** Released **v3.4.2** (hub) / **v1.2.2** (CI pack) for respond-skill routing clarity.
+
+## 2026-08-11 — Merge `@heyeddi-pr-respond` + `@heyeddi-ci-respond` (v2.0.0)
+
+**Context:** User wanted one respond skill, no `pr-*` scratch files, commit+push before Fixed replies, and proper handling of HeyEddi CI **root review summaries** (review submission bodies listing path:line findings).
+
+**Decision:**
+- **`@heyeddi-pr-respond` v2.0.0** is the single respond skill for human + HeyEddi CI + all bots
+- **`@heyeddi-ci-respond`** deprecated alias (`metadata.internal`, empty manifest tools)
+- No `.heyeddi/docs/pr-*` or `pr-*-ci-*` files — temp cache + `--replies-text` only
+- New `build_comment_inventory.py`: parses root review bodies for `` `path:line` ``, links to inline IDs, flags orphans
+- Mandatory pipeline: fetch → inventory → fix/decline all items → commit+push → post_thread_replies → verify `--use-inventory --live`
+
+**Process:** CI-specific scripts merged into `heyeddi-pr-respond/scripts/`; `docs/pr-workflows.md` unified.
+
+**Notes:** Reinstall `@heyeddi-pr-respond` in consumer projects. Delete legacy scratch files under `.heyeddi/docs/`.

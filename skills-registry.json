@@ -1,5 +1,5 @@
 {
-  "version": "3.4.2",
+  "version": "3.4.3",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -61,7 +61,7 @@
     },
     {
       "name": "heyeddi-pr-respond",
-      "description": "Respond to PR review comments \u2014 fix vs decline, re-gate, threaded replies"
+      "description": "Respond to all PR review feedback — human, HeyEddi CI root summaries, inline threads"
     },
     {
       "name": "design-system-generalizer",
