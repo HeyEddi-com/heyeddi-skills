@@ -2,7 +2,7 @@
 name: heyeddi-ci-guide
 description: Reference for HeyEddi CI commands, authorize-merge auth, feedback via debate + support@, and Spot runners placeholder status. Use when asking how to work with HeyEddi CI.
 version: 1.0.0
-product-version: 3.4.1
+product-version: 3.4.2
 author: HeyEddi-com
 ---
 

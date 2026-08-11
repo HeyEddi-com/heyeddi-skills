@@ -1,6 +1,6 @@
 # Skill distribution
 
-**Date:** 2026-08-10 · **Release:** v3.4.1 · **Brand:** **HeyEddi Skills** (`heyeddi-skills`)
+**Date:** 2026-08-11 · **Release:** v3.4.2 · **Brand:** **HeyEddi Skills** (`heyeddi-skills`)
 
 One SSOT hub ships **two public GitHub repos** (skills.sh indexes repos 1:1):
 
@@ -22,7 +22,7 @@ There is **no deploy step** and **no submission form**. Distribution is GitHub +
 | **Full pack CLI** | `npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'` | Keep hub public; tag releases |
 | **CI pack CLI** | `npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'` | Publish mirror via `publish-ci-pack-repo.sh` |
 | **skills.sh** | Two pages (full + CI) | Root `skills.sh.json` on each repo |
-| **Pinned version** | `…/tree/v3.4.1` (hub) or `…/tree/v1.2.1` (CI pack) | Tag releases on both repos |
+| **Pinned version** | `…/tree/v3.4.2` (hub) or `…/tree/v1.2.2` (CI pack) | Tag releases on both repos |
 
 ### Automated releases (GitHub Actions)
 

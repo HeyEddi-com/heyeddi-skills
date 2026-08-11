@@ -2,7 +2,7 @@
 name: heyeddi-ci-respond
 description: "Respond to HeyEddi CI bot findings only (heyeddi-ci[bot] / <!-- heyeddi-ci-review). Not for human PR reviews — use heyeddi-pr-respond. Filter, fix-vs-decline, commit+push, threaded replies; never merge without authorize merge."
 version: 1.1.1
-product-version: 3.4.1
+product-version: 3.4.2
 author: HeyEddi-com
 disable-model-invocation: true
 ---

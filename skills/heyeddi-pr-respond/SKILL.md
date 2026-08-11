@@ -2,7 +2,7 @@
 name: heyeddi-pr-respond
 description: "Human PR review response only (teammate/QA comments). Not for HeyEddi CI bot findings — use heyeddi-ci-respond. Fetch comments, fix-vs-decline, commit+push, threaded /replies, verify_response."
 version: 1.4.1
-product-version: 3.4.1
+product-version: 3.4.2
 author: HeyEddi-com
 disable-model-invocation: true
 ---

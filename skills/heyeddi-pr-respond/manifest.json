@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-pr-respond",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "tools": [
     {
       "name": "fetch_pr_comments",

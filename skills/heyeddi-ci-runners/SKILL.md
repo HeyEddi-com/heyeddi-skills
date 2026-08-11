@@ -2,7 +2,7 @@
 name: heyeddi-ci-runners
 description: "PLACEHOLDER: author eddi-ci.yaml pipeline jobs from live contract + inspect_repo. Spot runners are fail-closed — never claim jobs ran. Use when configuring runners or pipeline YAML."
 version: 1.0.0
-product-version: 3.4.1
+product-version: 3.4.2
 author: HeyEddi-com
 ---
 

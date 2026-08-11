@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-ci-respond",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "tools": [
     {
       "name": "fetch_pr_comments",
@@ -8,11 +8,20 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "pr": { "type": "integer" },
-          "project_root": { "type": "string" },
-          "fixture": { "type": "string" }
+          "pr": {
+            "type": "integer"
+          },
+          "project_root": {
+            "type": "string"
+          },
+          "fixture": {
+            "type": "string"
+          }
         },
-        "required": ["pr", "project_root"]
+        "required": [
+          "pr",
+          "project_root"
+        ]
       },
       "script": "scripts/fetch_pr_comments.py",
       "readonly": true
@@ -23,13 +32,26 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "pr": { "type": "integer" },
-          "project_root": { "type": "string" },
-          "input": { "type": "string" },
-          "output": { "type": "string" },
-          "check": { "type": "boolean" }
+          "pr": {
+            "type": "integer"
+          },
+          "project_root": {
+            "type": "string"
+          },
+          "input": {
+            "type": "string"
+          },
+          "output": {
+            "type": "string"
+          },
+          "check": {
+            "type": "boolean"
+          }
         },
-        "required": ["pr", "project_root"]
+        "required": [
+          "pr",
+          "project_root"
+        ]
       },
       "script": "scripts/filter_heyeddi_comments.py",
       "readonly": false
@@ -40,11 +62,19 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "project_root": { "type": "string" },
-          "run": { "type": "boolean" },
-          "kinds": { "type": "string" }
+          "project_root": {
+            "type": "string"
+          },
+          "run": {
+            "type": "boolean"
+          },
+          "kinds": {
+            "type": "string"
+          }
         },
-        "required": ["project_root"]
+        "required": [
+          "project_root"
+        ]
       },
       "script": "scripts/discover_and_verify.py",
       "readonly": false
@@ -55,9 +85,15 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "user_text": { "type": "string" },
-          "planned_command": { "type": "string" },
-          "check": { "type": "boolean" }
+          "user_text": {
+            "type": "string"
+          },
+          "planned_command": {
+            "type": "string"
+          },
+          "check": {
+            "type": "boolean"
+          }
         },
         "required": []
       },
@@ -70,9 +106,15 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "project_root": { "type": "string" },
-          "check": { "type": "boolean" },
-          "allow_unpushed": { "type": "boolean" }
+          "project_root": {
+            "type": "string"
+          },
+          "check": {
+            "type": "boolean"
+          },
+          "allow_unpushed": {
+            "type": "boolean"
+          }
         },
         "required": []
       },
@@ -85,13 +127,26 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "pr": { "type": "integer" },
-          "project_root": { "type": "string" },
-          "dry_run": { "type": "boolean" },
-          "post_summary": { "type": "boolean" },
-          "allow_unpushed": { "type": "boolean" }
+          "pr": {
+            "type": "integer"
+          },
+          "project_root": {
+            "type": "string"
+          },
+          "dry_run": {
+            "type": "boolean"
+          },
+          "post_summary": {
+            "type": "boolean"
+          },
+          "allow_unpushed": {
+            "type": "boolean"
+          }
         },
-        "required": ["pr", "project_root"]
+        "required": [
+          "pr",
+          "project_root"
+        ]
       },
       "script": "scripts/post_thread_replies.py",
       "readonly": false
@@ -102,14 +157,29 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "pr": { "type": "integer" },
-          "project_root": { "type": "string" },
-          "fixture": { "type": "string" },
-          "live": { "type": "boolean" },
-          "allow_draft_only": { "type": "boolean" },
-          "check": { "type": "boolean" }
+          "pr": {
+            "type": "integer"
+          },
+          "project_root": {
+            "type": "string"
+          },
+          "fixture": {
+            "type": "string"
+          },
+          "live": {
+            "type": "boolean"
+          },
+          "allow_draft_only": {
+            "type": "boolean"
+          },
+          "check": {
+            "type": "boolean"
+          }
         },
-        "required": ["pr", "project_root"]
+        "required": [
+          "pr",
+          "project_root"
+        ]
       },
       "script": "scripts/verify_response.py",
       "readonly": true
