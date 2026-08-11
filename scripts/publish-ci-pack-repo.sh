@@ -134,7 +134,7 @@ npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 | Skill | Role |
 |-------|------|
 | \`@heyeddi-ci-config\` | Author \`eddi-ci.yaml\` from the live policy contract |
-| \`@heyeddi-ci-respond\` | Reply to HeyEddi CI findings (not human review) |
+| \`@heyeddi-pr-respond\` | Reply to all PR review feedback (human + HeyEddi CI) |
 | \`@heyeddi-ci-fails\` | Diagnose failing GitHub Checks |
 | \`@heyeddi-ci-runners\` | PLACEHOLDER — \`pipeline:\` YAML only (Spot not executing) |
 | \`@heyeddi-ci-guide\` | Commands, auth, feedback paths |

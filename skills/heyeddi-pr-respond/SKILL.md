@@ -2,7 +2,7 @@
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback — human reviewers, HeyEddi CI root summaries, and inline threads. Fetch, inventory, fix-or-decline, commit+push, in-thread replies, verify. One skill for every review source."
 version: 2.0.0
-product-version: 3.4.3
+product-version: 3.4.4
 author: HeyEddi-com
 disable-model-invocation: true
 ---

@@ -21,12 +21,12 @@ Browse: [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-
 | Skill | Role |
 |-------|------|
 | `@heyeddi-ci-config` | Living-contract `eddi-ci.yaml` authoring |
-| `@heyeddi-ci-respond` | HeyEddi CI findings only |
+| `@heyeddi-pr-respond` | All PR review feedback (human + HeyEddi CI root summaries + inline) |
 | `@heyeddi-ci-fails` | Failing Checks diagnosis |
 | `@heyeddi-ci-runners` | PLACEHOLDER pipeline YAML (Spot fail-closed) |
 | `@heyeddi-ci-guide` | Commands, auth, feedback |
 
-Human reviews: `@heyeddi-pr-review` / `@heyeddi-pr-respond` (full pack).
+Human + HeyEddi CI reviews: `@heyeddi-pr-respond` only (one skill).
 
 ## Rules
 

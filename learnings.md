@@ -905,3 +905,11 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Process:** CI-specific scripts merged into `heyeddi-pr-respond/scripts/`; `docs/pr-workflows.md` unified.
 
 **Notes:** Reinstall `@heyeddi-pr-respond` in consumer projects. Delete legacy scratch files under `.heyeddi/docs/`.
+
+## 2026-08-11 — Delete `@heyeddi-ci-respond` (v3.4.4)
+
+**Context:** v3.4.3 left `heyeddi-ci-respond` as a deprecated alias; `npx skills add` still installed two respond skills.
+
+**Decision:** Remove `skills/heyeddi-ci-respond/` entirely from registry, packs, and skills.sh. One skill only: `@heyeddi-pr-respond`.
+
+**Process:** Uninstall stale copy: `rm -rf .agents/skills/heyeddi-ci-respond` (or `~/.cursor/skills/heyeddi-ci-respond`).
