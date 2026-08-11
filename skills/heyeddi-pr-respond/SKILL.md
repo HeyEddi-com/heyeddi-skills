@@ -1,7 +1,7 @@
 ---
 name: heyeddi-pr-respond
-description: "Addresses PR review feedback: fetch comments, fix-vs-decline, apply fixes, commit+push before replies, re-gate, reply IN EACH review thread via post_thread_replies (/replies only; never top-level acknowledgement spam), verify_response hard gate. Use when responding as the PR author. For reviewing a submitted PR use heyeddi-pr-review."
-version: 1.4.0
+description: "Human PR review response only (teammate/QA comments). Not for HeyEddi CI bot findings — use heyeddi-ci-respond. Fetch comments, fix-vs-decline, commit+push, threaded /replies, verify_response."
+version: 1.4.1
 product-version: 3.4.1
 author: HeyEddi-com
 disable-model-invocation: true
@@ -9,7 +9,14 @@ disable-model-invocation: true
 
 # HeyEddi PR Respond
 
-**PR author response workflow**: fetch every review comment, decide fix vs decline, apply fixes, **commit + push**, re-run pre-merge gate, and **reply in the same GitHub thread as each reviewer comment** before any summary.
+**PR author response to human reviewers only.**
+
+| Finding source | Skill |
+|---|---|
+| Teammate / Bugbot / CodeRabbit / Cursor review humans | **`@heyeddi-pr-respond`** (this skill) |
+| `heyeddi-ci[bot]` inline findings / debate | **`@heyeddi-ci-respond`** |
+
+Do **not** duplicate pipelines: both share the same reply/post/verify scripts; they differ only in comment filter + verify stack. If you are about to run this skill on HeyEddi CI markers, stop and switch to `@heyeddi-ci-respond`.
 
 ## Ephemeral artifacts (do not commit)
 

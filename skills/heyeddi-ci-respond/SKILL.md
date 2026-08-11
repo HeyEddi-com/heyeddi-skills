@@ -1,7 +1,7 @@
 ---
 name: heyeddi-ci-respond
-description: "Respond to HeyEddi CI findings only: filter markers/bot, fix-vs-decline, stack-agnostic verify, commit+push before replies, threaded replies, never merge without authorize merge. Use for CI findings; human reviews use heyeddi-pr-respond."
-version: 1.1.0
+description: "Respond to HeyEddi CI bot findings only (heyeddi-ci[bot] / <!-- heyeddi-ci-review). Not for human PR reviews — use heyeddi-pr-respond. Filter, fix-vs-decline, commit+push, threaded replies; never merge without authorize merge."
+version: 1.1.1
 product-version: 3.4.1
 author: HeyEddi-com
 disable-model-invocation: true
@@ -9,7 +9,14 @@ disable-model-invocation: true
 
 # HeyEddi CI Respond
 
-**PR author response to HeyEddi CI findings only** (stack-agnostic). Human reviewer threads → `@heyeddi-pr-respond`.
+**PR author response to HeyEddi CI findings only** (stack-agnostic).
+
+| Finding source | Skill |
+|---|---|
+| `heyeddi-ci[bot]` / `<!-- heyeddi-ci-review` / debate markers | **`@heyeddi-ci-respond`** (this skill) |
+| Human teammates / external review bots | **`@heyeddi-pr-respond`** |
+
+Do **not** invent a third “responder” skill. Shared machinery lives under each skill’s `scripts/`; keep naming distinct so agents never conflate human vs CI threads.
 
 ## Ephemeral artifacts (do not commit)
 
