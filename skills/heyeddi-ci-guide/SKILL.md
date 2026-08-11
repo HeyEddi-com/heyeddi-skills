@@ -15,12 +15,12 @@ Short reference for agents and humans working with **HeyEddi CI**. Depth lives i
 | Skill | Job |
 |-------|-----|
 | `@heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract |
-| `@heyeddi-ci-respond` | Address HeyEddi CI findings only |
+| `@heyeddi-pr-respond` | Address all PR review feedback (human + HeyEddi CI) |
 | `@heyeddi-ci-fails` | Diagnose failing Checks locally (optional `/heyeddi fails` on PR) |
 | `@heyeddi-ci-runners` | PLACEHOLDER: declare `pipeline:` YAML; Spot fail-closed |
 | `@heyeddi-ci-guide` | This skill |
 
-Human PR review stays on `@heyeddi-pr-review` / `@heyeddi-pr-respond`.
+Human PR review uses the same `@heyeddi-pr-respond` skill (merged v2.0.0).
 
 ## Commands (PR comments)
 

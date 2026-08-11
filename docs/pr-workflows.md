@@ -9,8 +9,7 @@ HeyEddi splits pull request work into **skills** with distinct roles. Use the ri
 | Workflow | Skill | Who | When |
 |----------|-------|-----|------|
 | **1. Review submitted PR** | `@heyeddi-pr-review` | Reviewer, QA, or author self-check | Before approval / before requesting review |
-| **2. Respond to PR review** | `@heyeddi-pr-respond` | PR author | After human reviewers leave comments |
-| **3. Respond to HeyEddi CI** | `@heyeddi-ci-respond` | PR author | After HeyEddi CI findings (not human review) |
+| **2. Respond to PR review** | `@heyeddi-pr-respond` | PR author | All review feedback (human, HeyEddi CI, inline + root summaries) |
 
 ```
                     ┌─────────────────────────┐
@@ -90,21 +89,21 @@ Check product fit, doc drift, engineering quality, and run pre-merge gate.
 Reply to every comment; fix what's correct; re-run pre-merge gate.
 ```
 
-## Workflow 3 — Respond to HeyEddi CI findings
+## Workflow 2 — Respond to PR review (unified)
 
-**Invoke:** `@heyeddi-ci-respond` + PR number
+**Invoke:** `@heyeddi-pr-respond` + PR number
 
-**Scope rule:** Only comments that look like HeyEddi CI (`<!-- heyeddi-ci-review -->` / bot user). Human threads → `@heyeddi-pr-respond`.
+Covers human reviewers, HeyEddi CI root summaries, inline threads, and discussion comments.
 
 ### Pipeline
 
-1. `fetch_pr_comments` + `filter_heyeddi_comments`
-2. Tracking → `.heyeddi/docs/pr-<N>-ci-tracking.md` (ephemeral)
-3. Fix vs decline; stack-agnostic `discover_and_verify`
-4. `post_thread_replies` + `verify_response`
+1. `fetch_pr_comments` + `build_comment_inventory --write-cache`
+2. Tracking in chat (every inventory item)
+3. Fix vs decline each item; commit + push before Fixed replies
+4. `post_thread_replies --replies-text` + `verify_response --use-inventory --live`
 5. Never merge without **authorize merge**
 
-See [ci-skills.md](./ci-skills.md).
+**Deprecated:** `@heyeddi-ci-respond` — alias only; use `@heyeddi-pr-respond`.
 
 ## Delegation map
 
@@ -124,10 +123,7 @@ These files are **ephemeral session scratch** for agent verify gates. **Do not c
 |------|----------|---------|
 | `pr-<N>-review.md` | Submission review report | No — gitignore |
 | `pr-<N>-context.json` | Cached fetch_pr_context | No — gitignore |
-| `pr-<N>-tracking.md` | Comment tracking table | No — gitignore |
-| `pr-<N>-replies.md` | Drafted replies (`## Comment <id>` per thread) | No — gitignore |
-| `pr-<N>-posted.json` | Post log from `post_thread_replies` | No — gitignore |
-| `pr-<N>-ci-*` | `@heyeddi-ci-respond` / `@heyeddi-ci-fails` scratch | No — gitignore |
+| `pr-<N>-ci-*` | **Deprecated** — delete if present | No |
 
 ## Eval cases
 

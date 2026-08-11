@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RESPOND = ROOT / "skills" / "heyeddi-ci-respond" / "scripts"
+RESPOND = ROOT / "skills" / "heyeddi-pr-respond" / "scripts"
 FAILS = ROOT / "skills" / "heyeddi-ci-fails" / "scripts"
 RUNNERS = ROOT / "skills" / "heyeddi-ci-runners" / "scripts"
 
@@ -23,9 +23,9 @@ def _run(script: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 
 def test_filter_heyeddi_comments(tmp_path: Path) -> None:
-    docs = tmp_path / ".heyeddi" / "docs"
-    docs.mkdir(parents=True)
-    src = docs / "pr-9-comments.json"
+    import tempfile
+
+    src = tmp_path / "comments-in.json"
     src.write_text(
         json.dumps(
             {
@@ -48,19 +48,25 @@ def test_filter_heyeddi_comments(tmp_path: Path) -> None:
         ),
         encoding="utf-8",
     )
+    out = Path(tempfile.gettempdir()) / "heyeddi-test-pr-9-filter.json"
     proc = _run(
-        RESPOND / "filter_heyeddi_comments.py",
+        RESPOND / "filter_comments.py",
         "--pr",
         "9",
         "--project-root",
         str(tmp_path),
         "--input",
         str(src),
+        "--output",
+        str(out),
+        "--scope",
+        "heyeddi",
     )
     assert proc.returncode == 0, proc.stderr + proc.stdout
-    out = json.loads((docs / "pr-9-ci-comments.json").read_text(encoding="utf-8"))
-    assert len(out["inline"]) == 1
-    assert out["inline"][0]["id"] == 1
+    data = json.loads(out.read_text(encoding="utf-8"))
+    assert len(data["inline"]) == 1
+    assert data["inline"][0]["id"] == 1
+    assert not (tmp_path / ".heyeddi" / "docs" / "pr-9-ci-comments.json").exists()
 
 
 def test_assert_no_merge_default() -> None:

@@ -1,49 +1,98 @@
 {
   "skill": "heyeddi-pr-respond",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "tools": [
     {
       "name": "fetch_pr_comments",
-      "description": "Fetch inline, review, and discussion PR comments as flat JSON.",
+      "description": "Fetch inline, review, and discussion PR comments into system temp cache (never .heyeddi/docs/).",
       "parameters": {
         "type": "object",
         "properties": {
-          "pr": {
-            "type": "integer",
-            "description": "Pull request number"
-          },
-          "project_root": {
-            "type": "string",
-            "description": "Workspace root path"
-          },
-          "fixture": {
-            "type": "string",
-            "description": "Optional fixture JSON path (eval/CI without gh)"
-          }
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "fixture": { "type": "string" }
         },
-        "required": [
-          "pr",
-          "project_root"
-        ]
+        "required": ["pr", "project_root"]
       },
       "script": "scripts/fetch_pr_comments.py",
       "readonly": true
     },
     {
-      "name": "assert_fixes_pushed",
-      "description": "Hard-fail when working tree is dirty or commits are unpushed; run before posting Fixed replies.",
+      "name": "build_comment_inventory",
+      "description": "Parse root review summaries and inline threads; list every item requiring fix/decline and reply.",
       "parameters": {
         "type": "object",
         "properties": {
-          "project_root": {
-            "type": "string"
-          },
-          "check": {
-            "type": "boolean"
-          },
-          "allow_unpushed": {
-            "type": "boolean"
-          }
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "input": { "type": "string" },
+          "write_cache": { "type": "boolean" },
+          "check": { "type": "boolean" }
+        },
+        "required": ["pr", "project_root"]
+      },
+      "script": "scripts/build_comment_inventory.py",
+      "readonly": true
+    },
+    {
+      "name": "filter_comments",
+      "description": "Optional filter: scope all (default) or heyeddi CI markers only.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "scope": { "type": "string" },
+          "input": { "type": "string" },
+          "output": { "type": "string" },
+          "check": { "type": "boolean" }
+        },
+        "required": ["pr", "project_root"]
+      },
+      "script": "scripts/filter_comments.py",
+      "readonly": false
+    },
+    {
+      "name": "discover_and_verify",
+      "description": "Discover evidenced npm/pytest/go/cargo/make commands; optionally run them.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "run": { "type": "boolean" },
+          "kinds": { "type": "string" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/discover_and_verify.py",
+      "readonly": false
+    },
+    {
+      "name": "assert_no_merge",
+      "description": "Hard-fail merge plans unless user said authorize merge this turn.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_text": { "type": "string" },
+          "planned_command": { "type": "string" },
+          "check": { "type": "boolean" },
+          "project_root": { "type": "string" },
+          "check_yaml": { "type": "boolean" }
+        },
+        "required": []
+      },
+      "script": "scripts/assert_no_merge.py",
+      "readonly": true
+    },
+    {
+      "name": "assert_fixes_pushed",
+      "description": "Hard-fail when working tree dirty or commits unpushed before Fixed replies.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "check": { "type": "boolean" },
+          "allow_unpushed": { "type": "boolean" }
         },
         "required": []
       },
@@ -52,78 +101,43 @@
     },
     {
       "name": "post_thread_replies",
-      "description": "Post every drafted ## Comment <id> reply to its GitHub thread; blocked unless fixes are pushed (unless dry-run / allow-unpushed).",
+      "description": "Post every ## Comment <id> reply in-thread from --replies-text.",
       "parameters": {
         "type": "object",
         "properties": {
-          "pr": {
-            "type": "integer",
-            "description": "Pull request number"
-          },
-          "project_root": {
-            "type": "string",
-            "description": "Workspace root path"
-          },
-          "dry_run": {
-            "type": "boolean",
-            "description": "Write posted.json without calling gh"
-          },
-          "post_summary": {
-            "type": "boolean",
-            "description": "Also post ## Summary after all threads succeed"
-          },
-          "allow_unpushed": {
-            "type": "boolean",
-            "description": "Skip commit+push gate (decline-only only)"
-          }
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "replies_text": { "type": "string" },
+          "replies_file": { "type": "string" },
+          "dry_run": { "type": "boolean" },
+          "post_summary": { "type": "boolean" },
+          "allow_unpushed": { "type": "boolean" }
         },
-        "required": [
-          "pr",
-          "project_root"
-        ]
+        "required": ["pr", "project_root"]
       },
       "script": "scripts/post_thread_replies.py",
       "readonly": false
     },
     {
       "name": "verify_response",
-      "description": "Hard-fail unless every tracked comment has a reply draft and posted.json entry (optional --live GitHub check).",
+      "description": "Hard-fail unless every inventory postable ID has a reply draft; --live checks GitHub threads.",
       "parameters": {
         "type": "object",
         "properties": {
-          "pr": {
-            "type": "integer",
-            "description": "Pull request number"
-          },
-          "project_root": {
-            "type": "string",
-            "description": "Workspace root path"
-          },
-          "fixture": {
-            "type": "string",
-            "description": "Optional fixture comments JSON to validate row count"
-          },
-          "require_gate": {
-            "type": "boolean",
-            "description": "Fail when pre-merge gate is BLOCKED"
-          },
-          "live": {
-            "type": "boolean",
-            "description": "Require GitHub threaded replies for each inline comment"
-          },
-          "allow_draft_only": {
-            "type": "boolean",
-            "description": "Skip posted.json requirement (offline)"
-          },
-          "check": {
-            "type": "boolean",
-            "description": "Exit 1 when incomplete"
-          }
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "replies_text": { "type": "string" },
+          "replies_file": { "type": "string" },
+          "comment_ids": { "type": "string" },
+          "use_inventory": { "type": "boolean" },
+          "inventory": { "type": "string" },
+          "fixture": { "type": "string" },
+          "live": { "type": "boolean" },
+          "allow_draft_only": { "type": "boolean" },
+          "require_gate": { "type": "boolean" },
+          "check": { "type": "boolean" }
         },
-        "required": [
-          "pr",
-          "project_root"
-        ]
+        "required": ["pr", "project_root"]
       },
       "script": "scripts/verify_response.py",
       "readonly": true

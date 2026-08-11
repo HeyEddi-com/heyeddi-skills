@@ -1,10 +1,7 @@
+# Vocabulary: HeyEddi PR respond
 
-# Vocabulary: PR review
-
-- Inline comment: line-specific code feedback: reply via `/replies` endpoint.
-- Review comment: general review body from a submitted review.
-- Discussion comment: PR conversation thread.
-- Tracking table: Comment ID, type, author, summary, action, status (PENDING/RESPONDED).
-- Replies draft: `.heyeddi/docs/pr-<N>-replies.md` with `## Comment <id>` per thread and `## Summary` last.
-- Posted log: `.heyeddi/docs/pr-<N>-posted.json` written by `post_thread_replies` (required by live verify).
-- Ephemeral artifacts: all `pr-<N>-*` tracking/replies/posted/comments files are **never committed**; GitHub is SSOT.
+- **Root summary**: review submission body listing findings (HeyEddi "Commented on the diff")
+- **Inventory**: output of `build_comment_inventory` — every item needing fix/decline + reply
+- **Postable ID**: inline or discussion comment ID that gets `## Comment <id>` + `/replies`
+- **Orphan finding**: path:line in a root summary with no matching inline thread
+- **Comment cache**: temp JSON from `fetch_pr_comments` (not in `.heyeddi/docs/`)
