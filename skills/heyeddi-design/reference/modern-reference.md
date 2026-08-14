@@ -1,6 +1,6 @@
 # Modern reference: beyond default PrimeVue
 
-**Date:** 2026-07-03
+**Date:** 2026-08-13
 
 HeyEddi scaffolds use PrimeVue + semantic tokens. That stack is **fast to ship** but defaults to an **admin-template** look unless the designer deliberately adds depth, typography, and layout character.
 
@@ -33,8 +33,24 @@ Use these in `research.md` and briefs as **direction anchors**. Describe *what* 
 | **Notion (marketing)** | Large headlines, feature grids, muted illustration placeholders |
 | **Superhuman** | Confident single-column settings, strong section labels, one primary action |
 | **Arc / Dia (marketing)** | Bold color blocks, personality in hero: sparingly for B2B |
+| **Volta / motion-studio** | Living atmosphere, scroll-as-chapters, one thesis per viewport, `LIVE`/`LOOP` status craft, soft hairlines — **translate to calm B2B**, never clone neon dual-accent or GLSL portfolio grids |
 
 During **`research`**, web-search 2-3 of the above plus your product category (e.g. "B2B team dashboard UI 2026").
+
+### Calm wow (Volta → HeyEddi)
+
+Borrow the **language**, keep HeyEddi calm and on-token (`design.md` / website `docs/design-system.md`).
+
+| Borrow | Marketing intensity | App shell intensity |
+|--------|---------------------|---------------------|
+| Ambient living mesh / soft drift | Yes (`.mesh-bg--alive`) | Low / optional |
+| Section thesis (one job per viewport) | Required on flagship | Page title + first actionable region |
+| Status craft (`Live`, sync, stage) | Sharp chip + accent pulse | Quiet chip; no neon scream |
+| One orchestrated moment | Hero atmosphere or scroll beat | Companion / spine micro-motion only |
+| Dual neon cyan+magenta cyberpunk | **No** | **No** |
+| Heavy canvas / shader grids in product UI | Portfolio-only if ever | **No** |
+
+Always honor `prefers-reduced-motion` (`foundations.md`). Full translation rules: `aesthetic-direction.md` → **Calm wow for B2B**.
 
 ## Concrete techniques (PrimeVue + CSS tokens)
 
@@ -74,6 +90,7 @@ During **`research`**, web-search 2-3 of the above plus your product category (e
 - Hero: headline + subcopy + **one** primary CTA + optional secondary link
 - Feature row: 3 columns with icon or simple SVG, not lorem blocks
 - Background: subtle gradient mesh or noise via CSS (`radial-gradient` at low opacity): not full-bleed stock photo unless brief asks
+- Flagship marketing: prefer **living** mesh (slow drift) over static blur blobs; status chip may show a calm live pulse (brand accent only)
 
 ### App dashboard (TaskFlow-style)
 
@@ -91,6 +108,7 @@ During **`research`**, web-search 2-3 of the above plus your product category (e
 
 - `transition: background 150ms, border-color 150ms` on nav items
 - No gratuitous page transitions in eval turns
+- Flagship: **one** ambient loop (mesh drift / status pulse) + short entrance (~0.35s); not multi-second fades or scattered polish
 
 ## Anti-slop checklist (craft / polish)
 
@@ -104,6 +122,7 @@ Before calling a screen done:
 - [ ] Type pairing is deliberate (not Inter/Roboto/system as the whole brand)
 - [ ] No decorative 01/02/03 or chrome that does not encode real structure
 - [ ] Motion is intentional or absent — not scattered “AI polish”
+- [ ] Flagship marketing/app: calm-wow borrow is translated (atmosphere + thesis + status), not neon Volta clone
 - [ ] Avoided generic AI look clusters unless the brief asked for them
 - [ ] Decision log entry cites which reference pattern you borrowed **and this project's memorable detail + aesthetic risk** (`design-ambition.md`)
 - [ ] UI **copy** follows `context/PROSE_ANTI_SLOP.md` (no em dashes, no AI filler)

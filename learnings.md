@@ -913,3 +913,13 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Decision:** Remove `skills/heyeddi-ci-respond/` entirely from registry, packs, and skills.sh. One skill only: `@heyeddi-pr-respond`.
 
 **Process:** Uninstall stale copy: `rm -rf .agents/skills/heyeddi-ci-respond` (or `~/.cursor/skills/heyeddi-ci-respond`).
+
+## 2026-08-13: Calm wow in heyeddi-design + visual-auditor
+
+**Context:** Volta Studio inspiration; consumer asked for wow on marketing + app while staying calm B2B. First edit landed only in `heyeddi-tool/.agents/skills/` (install copy); corrected to SSOT.
+
+**Process:**
+- Edit `skills/heyeddi-design/` and `skills/visual-auditor/` in this hub first
+- Then install/sync into consumer `.agents/skills/` (do not treat install trees as SSOT)
+
+**Date:** 2026-08-13
