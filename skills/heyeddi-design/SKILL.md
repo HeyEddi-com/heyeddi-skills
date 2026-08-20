@@ -1,14 +1,16 @@
 ---
 name: heyeddi-design
 description: "End-to-end UI design for HeyEddi stack (PrimeVue, DESIGN.md, semantic tokens: OpenProps on scaffold default). Use when the user wants to design, explore, critique, or improve existing frontend: e.g. \"enterprise view\", \"critique the login page\", \"this UI looks bad\", \"settings page\". Runs discovery, critique, polish, craft, document. Sub-commands init, discover, shape, craft, critique, polish, document. Not for pre-made screenshot handoff: use heyeddi-handoff instead."
-version: 2.3.0
-product-version: 3.4.2
+version: 2.3.1
+product-version: 3.4.5
 author: HeyEddi-com
 ---
 
 # HeyEddi Design
 
 **End-to-end UI design for HeyEddi apps**: discovery, briefs, critique, craft, and polish within PrimeVue, `.heyeddi/design.md`, and semantic CSS tokens. **OpenProps is the HeyEddi scaffold default but not mandatory**: detect token source per `reference/token-strategy.md`.
+
+**Calm wow:** when users ask for modern / wow / living UI, read `reference/modern-reference.md` (Volta borrow) and `reference/aesthetic-direction.md` (**Calm wow for B2B**) before crafting.
 
 **You do not need design vocabulary from the user.** Plain intent ("enterprise view for our app") is enough: ask questions until direction is clear.
 

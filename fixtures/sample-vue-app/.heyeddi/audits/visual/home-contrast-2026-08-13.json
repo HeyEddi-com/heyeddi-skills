@@ -1,0 +1,53 @@
+{
+  "route": "/",
+  "url": "file:///home/eddi/Projects/heyeddi/skills/skills/visual-auditor/fixtures/contrast-violations.html",
+  "results": [
+    {
+      "scanned": 4,
+      "violationCount": 3,
+      "errorCount": 3,
+      "warnCount": 0,
+      "violations": [
+        {
+          "severity": "error",
+          "code": "same-hue-low-contrast",
+          "selector": "h1",
+          "text": "Green headline on green panel",
+          "ratio": 1.44,
+          "required": 3,
+          "foreground": "rgb(22,163,74)",
+          "background": "rgb(34,197,94)",
+          "fontSizePx": 40,
+          "fontWeight": "700"
+        },
+        {
+          "severity": "error",
+          "code": "same-hue-low-contrast",
+          "selector": "p",
+          "text": "This text should fail same-hue contrast checks.",
+          "ratio": 1.44,
+          "required": 3,
+          "foreground": "rgb(22,163,74)",
+          "background": "rgb(34,197,94)",
+          "fontSizePx": 20,
+          "fontWeight": "400"
+        },
+        {
+          "severity": "error",
+          "code": "low-contrast",
+          "selector": "h2",
+          "text": "Animated gradient hero",
+          "ratio": 1,
+          "required": 3,
+          "foreground": "rgb(0,0,0)",
+          "background": "rgb(0,0,0)",
+          "fontSizePx": 24,
+          "fontWeight": "700"
+        }
+      ],
+      "viewport": 375,
+      "url": "file:///home/eddi/Projects/heyeddi/skills/skills/visual-auditor/fixtures/contrast-violations.html"
+    }
+  ],
+  "report": ".heyeddi/audits/visual/home-contrast-2026-08-13.md"
+}

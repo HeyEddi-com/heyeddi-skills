@@ -1,6 +1,6 @@
 # Aesthetic direction: distinctive craft (not template AI UI)
 
-**Date:** 2026-08-09
+**Date:** 2026-08-13
 
 Work as a design lead hired for a point of view the client could not get from a template. Make deliberate, product-specific choices about palette, type, layout, and motion — and take **one justified aesthetic risk**.
 
@@ -40,6 +40,22 @@ Use motion where it serves the subject: load sequence, scroll reveal, hover micr
 
 Always respect `prefers-reduced-motion` (`foundations.md`).
 
+### Calm wow for B2B (studio craft → product calm)
+
+When the brief asks for “wow,” “modern,” or “alive” (or when borrowing **Volta / motion-studio** from `modern-reference.md`), translate — do not costume-change:
+
+| Studio signal | HeyEddi translation |
+|---------------|---------------------|
+| Particle void + dual neon | Brand-token mesh drift; **one** accent glow (blue/cyan family). No magenta+cyan cyberpunk |
+| Giant kinetic wordmark | Marketing: display hero thesis. App: strong page title + first actionable region |
+| Scroll chapters | One job per section; real structure only (Planning spine order OK; fake `01/02/03` not OK) |
+| LIVE / LOOP chips | Sharp brutalist/enterprise chips with quiet pulse; copy names product truth (“Ready now”, “Vault live”) |
+| GLSL / metaball grids | Marketing atmosphere only if budgeted; **never** inside dashboard task density |
+
+**Intensity dial:** marketing = higher atmosphere; app shell = lower (focus first). Same language both places so the product feels one brand.
+
+**Aesthetic risk default for flagship:** living atmosphere + status craft, not a new palette.
+
 ### Match complexity to the vision
 
 Maximalist directions need elaborate execution. Minimal directions need precision in spacing, type, and detail. Elegance is executing the chosen vision well — not adding more chrome.
@@ -50,9 +66,10 @@ These can be legitimate for a brief that asks for them. When the brief leaves an
 
 1. Warm cream background (~`#F4F1EA`) + high-contrast serif display + terracotta accent  
 2. Near-black background + single acid-green or vermilion accent “glow”  
-3. Broadsheet: hairline rules, zero radius, dense newspaper columns  
-4. Purple-on-white / purple-to-indigo gradient SaaS hero  
-5. Card grid everywhere (especially in heroes) when a single composition would read clearer  
+3. Near-black + **dual neon** (cyan + magenta) “studio void” when the product is calm B2B — borrow atmosphere, not the costume  
+4. Broadsheet: hairline rules, zero radius, dense newspaper columns  
+5. Purple-on-white / purple-to-indigo gradient SaaS hero  
+6. Card grid everywhere (especially in heroes) when a single composition would read clearer  
 
 Where the brief pins a look, follow the brief. Where it does not, choose something grounded in **this** product.
 
@@ -101,6 +118,7 @@ Full copy rules: `context/PROSE_ANTI_SLOP.md` + `verify_prose.py`.
 - [ ] Type pairing is deliberate and documented in tokens/`design.md`  
 - [ ] Structural chrome encodes real information  
 - [ ] Motion is intentional (or intentionally absent)  
+- [ ] If wow/alive was requested: calm-wow translation applied (not neon studio clone)  
 - [ ] Avoided generic AI look clusters unless brief asked for them  
 - [ ] Signature element is the one memorable thing; surroundings restrained  
 - [ ] Copy passes prose anti-slop  

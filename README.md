@@ -4,7 +4,7 @@
 
 **HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) — free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.4.2** · 27 skills · [skills-registry.json](skills-registry.json)
+**Status:** **v3.4.5** · 27 skills · [skills-registry.json](skills-registry.json)
 
 ### Who this is for
 
@@ -78,7 +78,7 @@ List names in [skills-registry.json](skills-registry.json) or the catalog below.
 ### Pin a release tag
 
 ```bash
-npx skills add https://github.com/HeyEddi-com/heyeddi-skills/tree/v3.4.2 -a cursor -y --skill '*'
+npx skills add https://github.com/HeyEddi-com/heyeddi-skills/tree/v3.4.5 -a cursor -y --skill '*'
 ```
 
 ### Cursor Team Marketplace (teams / enterprise)

@@ -1,5 +1,5 @@
 {
-  "version": "3.4.4",
+  "version": "3.4.5",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
