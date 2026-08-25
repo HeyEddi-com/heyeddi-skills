@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Orchestrate pre-merge checks including optional UI duplicate scan and visual audit."""
+"""Orchestrate pre-merge checks including backend smoke and optional UI audits.
+
+Any FAIL makes the process exit 1 (hard stop). SKIP is allowed only for
+optional UI skills or missing toolchains; required frontend/backend checks
+that cannot run when their tree exists are FAIL, not SKIP.
+"""
 from __future__ import annotations
 
 import argparse
@@ -60,12 +65,45 @@ def routes_for_visual_audit(root: Path) -> list[str]:
     return routes[:4] or ["/settings"]
 
 
+def backend_python(root: Path) -> str | None:
+    venv_py = root / "backend" / ".venv" / "bin" / "python"
+    if venv_py.is_file():
+        return str(venv_py)
+    return shutil.which("python3") or shutil.which("python")
+
+
+def run_backend_checks(root: Path, rows: list[tuple[str, str, str]]) -> None:
+    backend = root / "backend"
+    if not backend.is_dir():
+        rows.append(("backend-pytest", "SKIP", "no backend/"))
+        rows.append(("backend-f821", "SKIP", "no backend/"))
+        return
+
+    py = backend_python(root)
+    if not py:
+        rows.append(("backend-pytest", "FAIL", "python not found for backend tests"))
+        rows.append(("backend-f821", "FAIL", "python not found for ruff F821"))
+        return
+
+    out = run_command([py, "-m", "pytest", "-q", "tests"], backend, timeout=900)
+    rows.append(("backend-pytest", status_from_output(out), out[:200]))
+
+    app_dir = backend / "app"
+    out = run_command([py, "-m", "ruff", "check", str(app_dir), "--select", "F821"], backend, timeout=120)
+    st = status_from_output(out)
+    if st == "SKIP" or (st == "FAIL" and "No module named" in out and "ruff" in out):
+        st = "FAIL"
+        out = "ruff required (backend[dev]); " + out
+    rows.append(("backend-f821", st, out[:200]))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Pre-merge gate")
     parser.add_argument("--project-root", default=None)
     parser.add_argument("--skip-duplicate-ui", action="store_true")
     parser.add_argument("--skip-prose-audit", action="store_true")
     parser.add_argument("--skip-visual-audit", action="store_true")
+    parser.add_argument("--skip-backend", action="store_true", help="Emergency only; do not use for merge")
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
     rows: list[tuple[str, str, str]] = []
@@ -75,18 +113,29 @@ def main() -> None:
         data = json.loads(pkg.read_text())
         scripts = data.get("scripts", {})
         if "test" in scripts:
-            out = run_command(["npm", "test"], root, timeout=300)
+            # Match CI / pre-commit: vitest must not start watch mode.
+            out = run_command(["npm", "test", "--", "--run"], root, timeout=300)
             rows.append(("test", status_from_output(out), out[:200]))
+        else:
+            rows.append(("test", "FAIL", "package.json has no test script"))
         out = run_command(["npm", "run", "build"], root, timeout=600)
         rows.append(("build", status_from_output(out), out[:200]))
     else:
         rows.append(("build", "SKIP", "no package.json"))
 
     if shutil.which("npx") and (root / "node_modules").is_dir():
-        out = run_command(["npx", "vue-tsc", "--noEmit"], root)
+        out = run_command(["npx", "vue-tsc", "--noEmit"], root, timeout=300)
         rows.append(("vue-tsc", status_from_output(out), out[:200]))
+    elif pkg.is_file():
+        rows.append(("vue-tsc", "FAIL", "npx or node_modules missing but frontend tree present"))
     else:
         rows.append(("vue-tsc", "SKIP", "npx or node_modules missing"))
+
+    if args.skip_backend:
+        rows.append(("backend-pytest", "SKIP", "skipped via --skip-backend"))
+        rows.append(("backend-f821", "SKIP", "skipped via --skip-backend"))
+    else:
+        run_backend_checks(root, rows)
 
     if not args.skip_duplicate_ui:
         out = run_skill_script(root, "no-duplicate-ui", "scripts/find_duplicate_ui.py", [])
@@ -129,6 +178,8 @@ def main() -> None:
     lines.append("")
     lines.append(f"**Overall:** {'BLOCKED' if fail_count else 'OK'} ({fail_count} failures)")
     emit("\n".join(lines))
+    if fail_count:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
