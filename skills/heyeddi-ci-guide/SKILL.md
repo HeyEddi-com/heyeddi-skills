@@ -1,7 +1,7 @@
 ---
 name: heyeddi-ci-guide
 description: Reference for HeyEddi CI commands, authorize-merge auth, feedback via debate + support@, and Spot runners placeholder status. Use when asking how to work with HeyEddi CI.
-version: 1.0.0
+version: 1.1.0
 product-version: 3.4.2
 author: HeyEddi-com
 ---
@@ -16,11 +16,21 @@ Short reference for agents and humans working with **HeyEddi CI**. Depth lives i
 |-------|-----|
 | `@heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract |
 | `@heyeddi-pr-respond` | Address all PR review feedback (human + HeyEddi CI) |
-| `@heyeddi-ci-fails` | Diagnose failing Checks locally (optional `/heyeddi fails` on PR) |
+| `@heyeddi-ci-fails` | Diagnose and fix failing Checks (default on PR work; `/heyeddi fails` for App path) |
 | `@heyeddi-ci-runners` | PLACEHOLDER: declare `pipeline:` YAML; Spot fail-closed |
 | `@heyeddi-ci-guide` | This skill |
 
-Human PR review uses the same `@heyeddi-pr-respond` skill (merged v2.0.0).
+Human PR review stays on `@heyeddi-pr-review` / `@heyeddi-pr-respond`.
+
+## Default PR workflow
+
+On any PR work (open PR, PR branch, review request):
+
+1. **Always** run `@heyeddi-ci-fails` first — fetch failing Checks, diagnose, fix actionable failures, commit + push
+2. **Always** run `@heyeddi-pr-respond` — fix all review items, commit + push, post every reply in-thread
+3. **Never** ask "do you want me to fix?" or "should I comment on threads?" — that is always the default
+4. **Never** skip CI because the user did not mention it
+5. Only **merge** requires **authorize merge** in the current turn
 
 ## Commands (PR comments)
 
@@ -35,7 +45,7 @@ See `reference/commands.md`. Common:
 
 | Action | Allowed when |
 |--------|----------------|
-| Push | User explicitly asks to push |
+| Commit + push (PR workflow) | Automatic during `@heyeddi-ci-fails` / `@heyeddi-pr-respond` — do not ask |
 | Merge (`gh pr merge`) | User says **authorize merge** in the **current turn** |
 | `auto_merge` in YAML | Never (schema rejects / forbidden) |
 | Billable knobs (`on_ci_failure`, runners) | Explicit opt-in |

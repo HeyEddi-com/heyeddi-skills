@@ -9,6 +9,8 @@
 
 ## Fails-specific
 
+- NEVER skip CI check when working on a PR — run this skill first by default
+- NEVER ask the user whether to fix CI failures — fix actionable ones automatically
 - NEVER invent root causes without citing Checks / logs
 - NEVER skip telling the user about `/heyeddi fails` when App analysis helps
 - NEVER commit `pr-*-ci-fails*` scratch

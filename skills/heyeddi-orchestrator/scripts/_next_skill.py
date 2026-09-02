@@ -1,6 +1,7 @@
 """Suggest the next HeyEddi skill and user prompt after a pipeline task completes."""
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -30,8 +31,8 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
     },
     "heyeddi-design": {
         "skill": "heyeddi-handoff",
-        "prompt": "@heyeddi-handoff implement <route> from mockups and mockup-brief in .heyeddi/designs/<feature>/",
-        "why": "When mockups exist, hand off layout to Vue. If no mockups yet, use `@heyeddi-design craft <route>` first.",
+        "prompt": "@heyeddi-handoff implement <route> from .heyeddi/designs/<feature>/",
+        "why": "Brief or mockups ready: stack implementer builds Vue, then visual QA.",
     },
     "heyeddi-handoff": {
         "skill": "visual-auditor",
@@ -71,7 +72,7 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
     "heyeddi-pr-respond": {
         "skill": "pre-merge-gate",
         "prompt": "@pre-merge-gate re-run gates after addressing review feedback",
-        "why": "Confirm merge readiness before requesting re-review.",
+        "why": "All threads responded and CI fixed: confirm merge readiness.",
     },
     "heyeddi-ci-config": {
         "skill": "heyeddi-ci-guide",
@@ -84,9 +85,9 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "why": "Guide done: respond to all PR review findings.",
     },
     "heyeddi-ci-fails": {
-        "skill": "heyeddi-ci-config",
-        "prompt": "@heyeddi-ci-config review eddi-ci.yaml against the live policy contract",
-        "why": "Fails diagnosed: confirm policy/runners config if needed.",
+        "skill": "heyeddi-pr-respond",
+        "prompt": "@heyeddi-pr-respond address all review feedback on PR #<number>",
+        "why": "CI failures fixed: respond to all PR review threads.",
     },
     "heyeddi-ci-runners": {
         "skill": "heyeddi-ci-guide",
@@ -98,20 +99,10 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
 # Overrides when the finishing skill used a specific sub-command (e.g. design shape → craft).
 MODE_NEXT: dict[str, dict[str, dict[str, str]]] = {
     "heyeddi-design": {
-        "shape": {
-            "skill": "heyeddi-design",
-            "prompt": "@heyeddi-design craft <route> from the confirmed brief",
-            "why": "Brief is confirmed: build the Vue screen before handoff or visual QA.",
-        },
         "critique": {
-            "skill": "heyeddi-design",
-            "prompt": "@heyeddi-design polish <route> using the critique report",
-            "why": "Critique is written: polish applies fixes from the report.",
-        },
-        "craft": {
             "skill": "visual-auditor",
             "prompt": "@visual-auditor review and fix <route> against product.md and design.md",
-            "why": "Screen is built: visual QA before merge gate.",
+            "why": "Critique done: visual QA implements P0/P1 fixes from the report.",
         },
         "polish": {
             "skill": "visual-auditor",
@@ -150,6 +141,34 @@ DONE_NEXT: dict[str, str] = {
     "prompt": "@heyeddi-orchestrator: what skill should handle: <describe next task>",
     "why": "Pipeline step complete: orchestrator picks the next @skill.",
 }
+
+def _frontend_stack(project_root: Path) -> str:
+    stack_path = project_root / ".heyeddi" / "stack.json"
+    if stack_path.is_file():
+        try:
+            data = json.loads(stack_path.read_text(encoding="utf-8"))
+            return str(data.get("frontend") or "vue").lower()
+        except (json.JSONDecodeError, OSError):
+            pass
+    if (project_root / "pubspec.yaml").is_file():
+        return "flutter"
+    return "vue"
+
+
+def _implement_next(project_root: Path, route: str | None) -> dict[str, str]:
+    frontend = _frontend_stack(project_root)
+    route_token = route or "/<route>"
+    if frontend == "flutter":
+        return {
+            "skill": "design-handoff-flutter",
+            "prompt": f"@design-handoff-flutter implement {route_token} from .heyeddi/designs/<feature>/",
+            "why": "Brief confirmed: Flutter implementer builds the screen, then visual QA.",
+        }
+    return {
+        "skill": "heyeddi-handoff",
+        "prompt": f"@heyeddi-handoff implement {route_token} from .heyeddi/designs/<feature>/",
+        "why": "Brief confirmed: Vue implementer builds the screen, then visual QA.",
+    }
 
 
 def _feature_slug(route: str | None, feature: str | None = None) -> str:
@@ -352,7 +371,10 @@ def suggest_next_skill(
     mode = (current_mode or "").strip().lower()
     next_step: dict[str, str] | None = None
 
-    if mode and skill in MODE_NEXT and mode in MODE_NEXT[skill]:
+    if mode and skill == "heyeddi-design" and mode in {"shape", "craft"}:
+        next_step = _implement_next(project_root, current_route)
+        next_step["source"] = "mode-chain"
+    elif mode and skill in MODE_NEXT and mode in MODE_NEXT[skill]:
         next_step = dict(MODE_NEXT[skill][mode])
         next_step["source"] = "mode-chain"
 
@@ -363,15 +385,9 @@ def suggest_next_skill(
             current_route=current_route,
         )
 
-    if next_step is None and skill == "heyeddi-design" and not _has_mockups(
-        project_root, current_route, None
-    ):
-        next_step = {
-            "skill": "heyeddi-design",
-            "prompt": "@heyeddi-design craft <route> from the confirmed brief",
-            "why": "No mockup PNGs yet: craft the screen before handoff.",
-            "source": "default-chain",
-        }
+    if next_step is None and skill == "heyeddi-design":
+        next_step = _implement_next(project_root, current_route)
+        next_step["source"] = "default-chain"
 
     if next_step is None and skill and skill in DEFAULT_NEXT:
         next_step = dict(DEFAULT_NEXT[skill])

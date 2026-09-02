@@ -1,7 +1,7 @@
 ---
 name: heyeddi-ci-fails
-description: "Diagnose failing GitHub Checks for a PR head: fetch evidence, write ephemeral ci-fails report, optional local fix loop. Never merge without authorize merge. Companion to /heyeddi fails."
-version: 1.0.0
+description: "Diagnose and fix failing GitHub Checks on PR work by default: fetch evidence, write ephemeral ci-fails report, apply fixes, verify locally. Run automatically — do not wait for user to ask. Never merge without authorize merge. Companion to /heyeddi fails."
+version: 1.1.0
 product-version: 3.4.2
 author: HeyEddi-com
 disable-model-invocation: true
@@ -9,7 +9,16 @@ disable-model-invocation: true
 
 # HeyEddi CI Fails
 
-Local agent counterpart to App `/heyeddi fails`: fetch failing Checks, write a diagnosis report, optionally fix with evidenced verify. **Stack-agnostic** (log-driven).
+Local agent counterpart to App `/heyeddi fails`: fetch failing Checks, write a diagnosis report, **fix actionable failures**, verify with evidenced commands. **Stack-agnostic** (log-driven).
+
+## Default behavior (no confirmation)
+
+Run this skill **automatically** on any PR work — open PR, PR branch, review request, or before `@heyeddi-pr-respond`. Do **not** wait for the user to mention CI or ask you to fix failures.
+
+- **Always** fetch and diagnose failing Checks
+- **Always** apply fixes when the diagnosis identifies actionable failures
+- **Always** commit + push fixes as part of the PR workflow
+- Only **merge** still requires **authorize merge** in the current turn
 
 ## Ephemeral artifacts (do not commit)
 
@@ -26,9 +35,10 @@ Never commit these. GitHub Checks remain SSOT.
 fetch_failing_checks --pr <N>
 write_ci_fails_report --pr <N> --force
 → fill likely cause / proposed fix from logs
-(optional) apply fixes when user asks
+apply fixes when diagnosis identifies actionable failures (default — do not ask)
 discover_and_verify [--run]
 assert_no_merge --check
+→ commit + push to PR branch when fixes applied
 ```
 
 Also tell the user they can comment `/heyeddi fails` on the PR for hosted App analysis (billable when that path applies).

@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-ci-fails",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "tools": [
     {
       "name": "fetch_failing_checks",

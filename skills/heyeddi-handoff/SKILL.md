@@ -1,15 +1,17 @@
 ---
 name: heyeddi-handoff
-description: "Implements screens from designer screenshots and handoff notes. Two-pass workflow: designer writes mockup-brief with Implementation spec, implementer builds shell then route, verify_handoff checks tokens and layout. Use when approved mockups exist: not for greenfield design."
-version: 1.2.0
-product-version: 3.4.2
+description: "Implements screens from briefs, wireframes, or designer screenshots. Vue + PrimeVue + project tokens. Two-pass for PNGs; single-pass from confirmed brief.md. Chains to @visual-auditor automatically."
+version: 1.3.0
+product-version: 3.4.6
 author: HeyEddi-com
 disable-model-invocation: true
 ---
 
 # HeyEddi Handoff
 
-**Screenshot-first Vue implementation**: designer then implementer in two explicit passes (mockup-brief → shell → route). See `reference/handoff-to-code.md`.
+**Vue implementation** from confirmed design artifacts: mockup-brief + PNGs **or** `brief.md` + wireframes from `@heyeddi-design shape`. See `reference/handoff-to-code.md` and `heyeddi-design/reference/implement-routing.md`.
+
+**Default:** after implement, chain `@primevue-openprops-architect` → `@visual-auditor` without asking.
 
 ## Subagents (default)
 

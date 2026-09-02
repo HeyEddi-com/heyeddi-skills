@@ -1,7 +1,7 @@
 {
   "name": "heyeddi-ci-skills",
   "displayName": "HeyEddi CI Skills",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "HeyEddi CI agent skills for https://ci.heyeddi.com \u2014 eddi-ci.yaml, CI respond, fails, runners placeholder, guide. Published skills.sh mirror: HeyEddi-com/heyeddi-ci-skills.",
   "author": {
     "name": "HeyEddi",
