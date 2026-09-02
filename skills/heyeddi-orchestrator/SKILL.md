@@ -1,8 +1,8 @@
 ---
 name: heyeddi-orchestrator
-description: Discover HeyEddi skills, auto-sync .heyeddi/ (skills index), detect hub updates (ask before install), cross-pillar opinions, and suggest @skills. Use at session start, after reinstalling skills, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route.
-version: 3.1.0
-product-version: 3.4.2
+description: Discover HeyEddi skills, auto-sync .heyeddi/, cross-pillar opinions, suggest @skills, and default pipelines (UI + PR). Use at session start or before multi-step work.
+version: 3.2.0
+product-version: 3.4.6
 author: HeyEddi-com
 ---
 
@@ -60,6 +60,8 @@ append_pillar_opinion --pillar …      (end: triggers sibling opinions)
 ```
 
 ## Skill discovery pipeline
+
+Read **`reference/default-pipelines.md`** for automatic UI and PR chains (no confirmation between steps).
 
 ```
 load_catalog / suggest_skills   → auto-sync runs first

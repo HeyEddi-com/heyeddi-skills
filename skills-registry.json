@@ -1,5 +1,5 @@
 {
-  "version": "3.4.5",
+  "version": "3.4.6",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -61,7 +61,7 @@
     },
     {
       "name": "heyeddi-pr-respond",
-      "description": "Respond to all PR review feedback — human, HeyEddi CI root summaries, inline threads"
+      "description": "Respond to all PR feedback — auto-fix, CI first, threaded replies, no confirmation"
     },
     {
       "name": "design-system-generalizer",
@@ -81,7 +81,7 @@
     },
     {
       "name": "heyeddi-design",
-      "description": "Design from scratch (replaces impeccable)"
+      "description": "Stack-agnostic design — briefs, critique, design.md; implement via handoff skills"
     },
     {
       "name": "engineering-excellence",
@@ -101,7 +101,7 @@
     },
     {
       "name": "heyeddi-ci-fails",
-      "description": "Diagnose failing GitHub Checks for a PR head; optional /heyeddi fails handoff"
+      "description": "Diagnose and fix failing Checks by default on PR work"
     },
     {
       "name": "heyeddi-ci-runners",

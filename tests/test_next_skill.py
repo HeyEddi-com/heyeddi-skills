@@ -23,15 +23,16 @@ def test_default_chain_handoff_to_visual(tmp_path: Path) -> None:
     assert "python scripts/" not in result["user_block"]
 
 
-def test_design_shape_mode_suggests_craft(tmp_path: Path) -> None:
+def test_design_shape_mode_suggests_handoff(tmp_path: Path) -> None:
+    """After shape, stack implementer (vue default) is suggested — not in-skill craft."""
     result = suggest_next_skill(
         tmp_path,
         current_skill="heyeddi-design",
         current_route="/dashboard",
         current_mode="shape",
     )
-    assert result["next"]["skill"] == "heyeddi-design"
-    assert "craft" in result["next"]["prompt"]
+    assert result["next"]["skill"] == "heyeddi-handoff"
+    assert "implement" in result["next"]["prompt"]
     assert "/dashboard" in result["next"]["prompt"]
 
 

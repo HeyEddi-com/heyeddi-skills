@@ -1,18 +1,35 @@
 ---
 name: heyeddi-design
-description: "End-to-end UI design for HeyEddi stack (PrimeVue, DESIGN.md, semantic tokens: OpenProps on scaffold default). Use when the user wants to design, explore, critique, or improve existing frontend: e.g. \"enterprise view\", \"critique the login page\", \"this UI looks bad\", \"settings page\". Runs discovery, critique, polish, craft, document. Sub-commands init, discover, shape, craft, critique, polish, document. Not for pre-made screenshot handoff: use heyeddi-handoff instead."
-version: 2.3.1
-product-version: 3.4.5
+description: "Stack-agnostic UI design: discovery, briefs, critique, design system docs (.heyeddi/design.md). Does not write framework code — chains to @heyeddi-handoff or @design-handoff-flutter after brief. Auto-fix on critique (no confirmation). Sub-commands: init, discover, shape, craft, critique, polish, document. Screenshots → @heyeddi-handoff."
+version: 2.4.0
+product-version: 3.4.6
 author: HeyEddi-com
 ---
 
 # HeyEddi Design
 
-**End-to-end UI design for HeyEddi apps**: discovery, briefs, critique, craft, and polish within PrimeVue, `.heyeddi/design.md`, and semantic CSS tokens. **OpenProps is the HeyEddi scaffold default but not mandatory**: detect token source per `reference/token-strategy.md`.
+**Stack-agnostic UI design** for HeyEddi apps: discovery, briefs, critique, and design-system documentation. **Implementation** (Vue, Flutter, CSS in components) belongs to stack skills — see `reference/implement-routing.md`.
 
-**Calm wow:** when users ask for modern / wow / living UI, read `reference/modern-reference.md` (Volta borrow) and `reference/aesthetic-direction.md` (**Calm wow for B2B**) before crafting.
+**Calm wow:** when users ask for modern / wow / living UI, read `reference/modern-reference.md` and `reference/aesthetic-direction.md` (**Calm wow for B2B**) before shaping.
 
 **You do not need design vocabulary from the user.** Plain intent ("enterprise view for our app") is enough: ask questions until direction is clear.
+
+## Design vs implement (mandatory split)
+
+| Layer | Skill | Delivers |
+|-------|-------|----------|
+| Design (this skill) | `@heyeddi-design` | Briefs, wireframes, critique, `design.md`, IA, aesthetic direction |
+| Implement (stack) | `@heyeddi-handoff`, `@design-handoff-flutter` | Production UI code in Vue / Flutter |
+| Enforce (stack) | `@primevue-openprops-architect` | Vue tokens + PrimeVue guardrails |
+| Verify (agnostic) | `@visual-auditor`, `@ux-flow-auditor` | Screenshots, contrast, flows, **fixes** |
+
+Read **`reference/implement-routing.md`** every session that ends in shipped UI.
+
+## Default behavior (no confirmation)
+
+- **Critique + fix:** "looks bad", "fix this page", "improve UI" → critique report **then** stack implementer fixes code **then** `@visual-auditor` — do not ask
+- **Craft:** confirmed brief → hand off to stack implementer in the same workflow
+- **Ambition bar:** impressive craft is default on flagship routes — do not wait for user to ask
 
 ## Subagents (default)
 
@@ -26,7 +43,7 @@ author: HeyEddi-com
 | `research`, wireframe `explore` | `generalPurpose` |
 | Codebase scan for `document` | `explore` |
 
-Do not run visual capture inline during craft/handoff turns.
+Do not run visual capture inline during handoff turns.
 
 ## Cross-pillar sync (mandatory)
 
@@ -44,17 +61,16 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 1. Run `python scripts/load_context.py --project-root <root>` once per session (skip if output is already in the conversation).
 2. If `product_exists` is false and the task needs strategic context, run **`init`** before shape/craft.
 3. Read the sub-command reference file for the invoked mode (required: do not skip).
-3a. Read `reference/surface-completeness.md` once per session when shaping, crafting, or critiquing any route: design full surfaces, not happy-path minimums.
-3b. Read `reference/foundations.md` once per session: responsive, theme, i18n, a11y, reading modes are **always on** unless `product.md` waives them.
-3c. Read `reference/token-strategy.md` when styling: detect OpenProps vs custom tokens before writing CSS.
-3d. Read `reference/modern-reference.md` when shaping or crafting **marketing, dashboard, or settings** routes: avoid plain admin-template output.
-3e. Read `reference/audience-design.md` when shaping, crafting, or polishing **any user-facing route**: tie direction to `product.md` personas.
-3f. Read `reference/design-ambition.md` when shaping, crafting, or polishing **flagship routes**: project-specific signature and impressive craft bar (default; do not wait for user to ask).
-3g. Read `reference/aesthetic-direction.md` when shaping, crafting, critiquing, or polishing **any user-facing route**: subject-grounded thesis, type personality, intentional motion, anti–generic-AI looks, one justified aesthetic risk.
-3h. Read `context/PROSE_ANTI_SLOP.md` once per session when writing **UI copy** (Vue strings, locale files, product.md voice): no em/en dashes, no AI filler.
-4. After **craft**, **polish**, **critique** (when leading to polish), or **shape** (brief confirmed), append to **Decision log** in `.heyeddi/design.md` per `reference/design-talk.md`: **cite primary persona + pattern borrowed + memorable detail for this project**.
-5. After implementation, run `reference/audience-fit.md` on flagship routes before calling done.
-6. Chain `@primevue-openprops-architect` validation and full **`@visual-auditor`** fix loop (review vs spec → fix → document) at 375/768/1440.
+3a. Read `reference/implement-routing.md` when shaping, crafting, critiquing, or polishing any route.
+3b. Read `reference/surface-completeness.md` once per session when shaping, crafting, or critiquing any route.
+3c. Read `reference/foundations.md` once per session: responsive, theme, i18n, a11y, reading modes are **always on** unless `product.md` waives them.
+3d. Read `reference/modern-reference.md` when shaping **marketing, dashboard, or settings** routes.
+3e. Read `reference/audience-design.md` when shaping, crafting, or polishing **any user-facing route**.
+3f. Read `reference/design-ambition.md` on **flagship routes**.
+3g. Read `reference/aesthetic-direction.md` on **any user-facing route**.
+3h. Read `context/PROSE_ANTI_SLOP.md` when writing **UI copy** in briefs or `design.md`.
+4. After **shape** (brief confirmed), **critique**, or **polish**, append to **Decision log** in `.heyeddi/design.md`.
+5. After stack implementer finishes, ensure `@visual-auditor` ran at 375/768/1440 before calling design work done.
 
 ## Commands
 
@@ -67,23 +83,20 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 | `explore` | Concept images + wireframes after discovery |
 | `shape` | Full planning flow: discover → research → explore → confirmed brief |
 | `document` | Generate or refresh `DESIGN.md` from code or seed questions |
-| `craft` | Build a screen in Vue (runs `shape` first if no confirmed brief) |
-| `critique` | UX review of **existing** UI: write report, no code unless asked |
-| `polish` | Refine an existing route (**after critique**) |
-
-Visual proof always delegates to `@visual-auditor` via **Task** (`shell` subagent): see `reference/subagents.md`.
+| `craft` | Brief ready → **hand off to stack implementer** (see implement-routing) |
+| `critique` | UX review of existing UI → report → **auto-chain implement + visual-auditor** |
+| `polish` | Design-spec refinement + stack implementer for code (after critique) |
 
 ## Routing rules
 
-1. **Existing UI: critique or improve** ("critique", "review", "what's wrong", "looks bad", "ugly", "fix this page", "polish the login"): load `reference/critique.md` first. If user wants fixes in the same turn → critique, then `reference/polish.md`. Do **not** start greenfield `discover` when code already exists for the target route.
-2. **No sub-command, vague greenfield** ("enterprise view", "design the settings area" with no existing screen): load `reference/discover.md`. Do not jump to code.
-3. **Sub-command matches table above**: load `reference/<command>.md` and follow it. Remaining words are the target/brief.
-4. **`craft` without a confirmed design brief**: pause and run `shape` (full flow) first; resume `craft` only after explicit brief confirmation.
-4b. **`craft` on flagship routes** (`/`, `/login`, `/dashboard`, `/settings`): if `load_context` reports `audience_ready: false`, stop: `@heyeddi-intake` or `discover` first.
-5. **`polish` without critique this session**: run **critique** first, then polish.
-6. **`init` blocker**: if `load_context` reports missing `PRODUCT.md` and the task is net-new or strategic, complete `init` then resume the original command.
-7. **Screenshots / approved mockups provided**: stop: tell the user to use `@heyeddi-handoff` instead.
-8. **Never invoke impeccable**: this skill replaces it for the HeyEddi stack.
+1. **Existing UI: critique or improve** ("critique", "looks bad", "fix this page"): load `reference/critique.md` → implement + `@visual-auditor` in the same workflow. Do **not** ask.
+2. **No sub-command, vague greenfield**: load `reference/discover.md`.
+3. **Sub-command matches table**: load `reference/<command>.md`.
+4. **`craft` without confirmed brief**: run **`shape`** first.
+4b. **Flagship routes** without personas: `@heyeddi-intake` or `discover` first.
+5. **`polish` without critique this session**: run **critique** first.
+6. **Screenshots / approved mockups**: `@heyeddi-handoff` (implement), not design `craft` code.
+7. **Never invoke impeccable**: this skill replaces it.
 
 ## Artifacts
 
@@ -92,36 +105,23 @@ Visual proof always delegates to `@visual-auditor` via **Task** (`shell` subagen
 | Design brief (confirmed) | `.heyeddi/designs/<feature>/brief.md` |
 | Wireframes | `.heyeddi/designs/<feature>/wireframes/` |
 | Research notes | `.heyeddi/designs/<feature>/research.md` |
-| Concept direction | Chat images + summary in brief |
-| Design system | `.heyeddi/design.md`: [DESIGN.md format](https://getdesign.md/what-is-design-md); see [Superhuman example](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/superhuman/DESIGN.md) |
-| Product context | `.heyeddi/product.md` (legacy: root `PRODUCT.md`) |
-| Skill reports, critiques | `.heyeddi/docs/` (critique reports, ship notes, audits) |
+| Design system | `.heyeddi/design.md` |
+| Product context | `.heyeddi/product.md` |
+| Critiques, audits | `.heyeddi/docs/` |
 
-Use kebab-case for `<feature>` (e.g. `enterprise-settings`).
+Use kebab-case for `<feature>`.
 
-## Stack constraints
+## Foundations (design spec — implementer enforces in code)
 
-- **Foundations:** responsive, system light/dark, `en`+`es` i18n, WCAG 2.2 AA, dyslexia reading mode option: see `reference/foundations.md`.
-- **Tokens:** semantic CSS variables from project `tokens.css` / `DESIGN.md`: OpenProps when the project already uses it; custom `:root` vars otherwise (`reference/token-strategy.md`). No raw hex in Vue/CSS unless documented exception.
-- **Components:** PrimeVue from project catalog in `DESIGN.md`; no duplicate wrapper components.
-- **Register:** `product` (app UI) vs `brand` (marketing) from `PRODUCT.md`: shapes density, nav patterns, and polish level.
+Responsive, light/dark, `en`+`es` i18n, WCAG 2.2 AA, semantic tokens: see `reference/foundations.md`, `reference/token-strategy.md`.
 
-See `context/VOCABULARY.md`, `context/ANTI_PATTERNS.md`, `context/PROSE_ANTI_SLOP.md`, `context/EXAMPLES.md`, and `reference/foundations.md`.
+See `context/VOCABULARY.md`, `context/ANTI_PATTERNS.md`, `context/PROSE_ANTI_SLOP.md`, `context/EXAMPLES.md`.
+
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:
+```bash
+python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py \
+  --current-skill heyeddi-design --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill heyeddi-design --project-root .
-   ```
-
-   Add `--route /path` if you worked a specific route.
-
-2. Include the script's **`### Next step`** block in your **final** reply. The user copies the **Prompt** line into chat (e.g. `@heyeddi-design craft /settings`).
-
-Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
-
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
-
+Add `--route /path` and `--mode <sub-command>` when known.

@@ -44,8 +44,9 @@ The **Prompt** is the main deliverable: natural language with `@skill` and sub-c
 |----------|---------------------|
 | `@heyeddi-intake` | `@heyeddi-product audit the product and write feature specs for each routed surface` |
 | `@heyeddi-product` | `@heyeddi-design shape /dashboard from product.md personas` |
-| `@heyeddi-design shape` | `@heyeddi-design craft /dashboard from the confirmed brief` |
-| `@heyeddi-design craft` | `@visual-auditor review and fix /dashboard against product.md and design.md` |
+| `@heyeddi-design shape` | `@heyeddi-handoff implement <route>` (or `@design-handoff-flutter` when `stack.json` → flutter) |
+| `@heyeddi-design craft` | Same as shape — stack implementer from brief |
+| `@heyeddi-design critique` | `@visual-auditor review and fix <route>` |
 | `@heyeddi-handoff` | `@visual-auditor review and fix /settings against product.md and design.md` |
 | `@visual-auditor` | `@pre-merge-gate run the merge readiness checklist` |
 | `@heyeddi-orchestrator sync` | `@heyeddi-intake: describe the app in plain language` |

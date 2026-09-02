@@ -10,9 +10,9 @@
 - **Token source:** OpenProps optional: `reference/token-strategy.md`.
 - **Foundations:** always-on defaults (responsive, theme, i18n, a11y, reading modes): `reference/foundations.md`.
 - **Design talk:** append **Decision log** entries in `.heyeddi/design.md` after craft, polish, or handoff (`reference/design-talk.md`).
-- **Craft:** implement Vue from confirmed brief + design doc.
+- **Craft:** brief confirmed → hand off to stack implementer (`reference/implement-routing.md`); no framework code in design skill.
 - **Surface completeness:** design full screens per `reference/surface-completeness.md`: affordances, states, spacing, deferred wiring backlog.
-- **Critique:** designer-eye review of **existing** UI → `.heyeddi/docs/<feature>-critique.md`; no code unless asked. **Before polish.**
-- **Polish:** refine spacing, hierarchy, microcopy on existing routes: **after critique**.
+- **Critique:** designer-eye review → `.heyeddi/docs/<feature>-critique.md`; **then** auto-chain implement + `@visual-auditor` (default).
+- **Polish:** design-spec + code refinement on existing routes: **after critique**.
 - **Register:** `product` (app UI) vs `brand` (marketing) in product brief.
 - **Skill reports:** ship notes, drift audits → `.heyeddi/docs/`.

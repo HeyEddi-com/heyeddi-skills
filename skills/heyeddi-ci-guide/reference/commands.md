@@ -26,7 +26,7 @@ Inline: reply on a finding whose parent has `<!-- heyeddi-ci-review -->` or a He
 
 - **authorize merge** (exact phrase, current turn) required before any merge
 - Never write `auto_merge` into `eddi-ci.yaml`
-- Push ≠ merge; still needs an explicit push ask
+- Commit + push are automatic during PR respond/fix workflow — do not ask first
 - Billable: `ai_review.on_ci_failure`, Spot `pipeline` jobs — opt-in only
 
 ## Feedback
@@ -49,6 +49,6 @@ Declared `pipeline:` jobs are validated by App lint when present. Execution is *
 ## Related agent skills
 
 - `@heyeddi-ci-config` — living contract → YAML
-- `@heyeddi-pr-respond` — author agent vs all PR review feedback
+- `@heyeddi-pr-respond` — all PR review feedback (human + HeyEddi CI)
 - `@heyeddi-ci-fails` — local Check diagnosis
 - `@heyeddi-pr-respond` — human reviewer threads only
