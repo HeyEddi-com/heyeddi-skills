@@ -3,7 +3,7 @@
 
 - **Discover:** plain-language Q&A: no code; translates "enterprise view" into concrete requirements.
 - **Research:** web trend / reference gathering → `.heyeddi/designs/<feature>/research.md`.
-- **Explore:** concept images + wireframes → `.heyeddi/designs/<feature>/wireframes/`.
+- **Explore:** concept images (GenerateImage) + optional Canvas + wireframes → `.heyeddi/designs/<feature>/wireframes/`; see `visual-tools.md`.
 - **Shape:** discover → research → explore → confirmed `brief.md`.
 - **Init:** create `.heyeddi/product.md`; offer `document` for `.heyeddi/design.md`.
 - **Document:** scan or seed `.heyeddi/design.md` (semantic tokens + PrimeVue; OpenProps when scaffold uses it).

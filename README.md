@@ -4,7 +4,7 @@
 
 **HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) — free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.4.6** · 27 skills · [skills-registry.json](skills-registry.json)
+**Status:** **v3.4.7** · 27 skills · [skills-registry.json](skills-registry.json)
 
 ### Who this is for
 

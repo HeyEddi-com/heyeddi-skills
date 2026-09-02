@@ -6,7 +6,7 @@
 |--------------------|----------|----------|---------------|
 | `discover` / `shape` Q&A | main |: | Short: conversational |
 | `research` (web + trends) | `generalPurpose` | yes | `@heyeddi-design research` for feature X; write `research.md` only |
-| `explore` (wireframes) | `generalPurpose` | no | Wireframes under `.heyeddi/designs/<feature>/wireframes/` |
+| `explore` (wireframes + visuals) | `generalPurpose` | no | GenerateImage probes + optional Canvas; wireframes under `.heyeddi/designs/<feature>/wireframes/` per `visual-tools.md` |
 | `critique` | `generalPurpose` | yes | `@heyeddi-design critique` route; read PNGs if exist; write `.heyeddi/docs/<feature>-critique.md`; no code |
 | `craft` (full route) | `generalPurpose` | no | Confirmed brief + `design.md`; one route; surface-completeness |
 | `polish` | `generalPurpose` | no | After critique exists; target route only |

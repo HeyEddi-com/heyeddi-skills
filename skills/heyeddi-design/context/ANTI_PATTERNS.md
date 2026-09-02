@@ -8,6 +8,7 @@
 - NEVER design outside the project's token system + PrimeVue without documenting exception in `DESIGN.md`.
 - NEVER use impeccable: this skill replaces it for the HeyEddi stack.
 - NEVER skip web research in `shape` unless the user explicitly opts out.
+- NEVER skip GenerateImage / Canvas during `explore` when the IDE provides them — show direction, don't only describe it (`visual-tools.md`).
 - NEVER treat generated concept images as final accessibility or copy spec.
 - NEVER ship **default PrimeVue admin** look on marketing or flagship app routes: read `reference/modern-reference.md` and add typography, surfaces, and hierarchy.
 - NEVER craft flagship routes without **Personas + Per-route intent** in `product.md`: run `@heyeddi-intake` or `discover` first.
