@@ -147,7 +147,8 @@ def _frontend_stack(project_root: Path) -> str:
     if stack_path.is_file():
         try:
             data = json.loads(stack_path.read_text(encoding="utf-8"))
-            return str(data.get("frontend") or "vue").lower()
+            if isinstance(data, dict):
+                return str(data.get("frontend") or "vue").lower()
         except (json.JSONDecodeError, OSError):
             pass
     if (project_root / "pubspec.yaml").is_file():
@@ -157,7 +158,7 @@ def _frontend_stack(project_root: Path) -> str:
 
 def _implement_next(project_root: Path, route: str | None) -> dict[str, str]:
     frontend = _frontend_stack(project_root)
-    route_token = route or "/<route>"
+    route_token = route if route else "<route>"
     if frontend == "flutter":
         return {
             "skill": "design-handoff-flutter",

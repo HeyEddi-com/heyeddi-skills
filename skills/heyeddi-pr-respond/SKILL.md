@@ -112,7 +112,9 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 
 - `gh` CLI authenticated
 
-## When complete
+## When the task is complete: suggest next skills
+
+When you have **finished the user's request** for this skill, suggest what to run next:
 
 ```bash
 python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py \
