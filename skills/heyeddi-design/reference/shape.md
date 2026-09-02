@@ -14,7 +14,7 @@ Load and follow each phase in order:
 
 1. `reference/discover.md`: discovery interview (personas if missing from product.md)
 2. `reference/research.md`: web trend research → `designs/<feature>/research.md` (**Audience fit** section required)
-3. `reference/explore.md`: concept images + `designs/<feature>/wireframes/`
+3. `reference/explore.md`: concept images + wireframes + **visual tools** (`reference/visual-tools.md`)
 4. Read `reference/audience-design.md`: pick direction row before writing brief
 4b. Read `reference/design-ambition.md`: draft **Design signature** for flagship routes
 4c. Read `reference/aesthetic-direction.md`: subject/job, thesis hero, type, motion, one aesthetic risk; run two-pass uniqueness check before locking the brief

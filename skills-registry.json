@@ -1,5 +1,5 @@
 {
-  "version": "3.4.6",
+  "version": "3.4.7",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -81,7 +81,7 @@
     },
     {
       "name": "heyeddi-design",
-      "description": "Stack-agnostic design — briefs, critique, design.md; implement via handoff skills"
+      "description": "Stack-agnostic design — briefs, critique, GenerateImage + Canvas during explore"
     },
     {
       "name": "engineering-excellence",

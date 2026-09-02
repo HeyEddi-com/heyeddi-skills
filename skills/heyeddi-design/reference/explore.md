@@ -10,7 +10,7 @@ Skip explore (announce in one line why) when:
 
 - Fidelity is **sketch-only** planning, or
 - User explicitly said no images / no wireframes, or
-- Image generation is unavailable in the harness: proceed to brief with text-only wireframes (ASCII or markdown blocks).
+- Image generation is unavailable in the harness **and** Canvas is unavailable: proceed to brief with text-only wireframes (ASCII or markdown blocks).
 
 Do not ask the user to install image APIs.
 
@@ -25,7 +25,7 @@ Base probes on:
 - Discovery: color strategy, scene sentence, anchors, anti-goals
 - Research: trends and patterns to adopt/avoid
 
-**Use native image generation** when the harness provides it.
+**Use native image generation** when the harness provides it. See **`reference/visual-tools.md`** for GenerateImage, Canvas, and when each is mandatory.
 
 After generating:
 

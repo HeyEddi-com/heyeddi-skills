@@ -1,8 +1,8 @@
 ---
 name: heyeddi-design
-description: "Stack-agnostic UI design: discovery, briefs, critique, design system docs (.heyeddi/design.md). Does not write framework code — chains to @heyeddi-handoff or @design-handoff-flutter after brief. Auto-fix on critique (no confirmation). Sub-commands: init, discover, shape, craft, critique, polish, document. Screenshots → @heyeddi-handoff."
-version: 2.4.0
-product-version: 3.4.6
+description: "Stack-agnostic UI design: discovery, briefs, critique, design system docs. Uses GenerateImage + Canvas to show direction during explore/shape. Implementation via @heyeddi-handoff or @design-handoff-flutter. Auto-fix on critique. Screenshots → @heyeddi-handoff."
+version: 2.5.0
+product-version: 3.4.7
 author: HeyEddi-com
 ---
 
@@ -69,6 +69,7 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 3f. Read `reference/design-ambition.md` on **flagship routes**.
 3g. Read `reference/aesthetic-direction.md` on **any user-facing route**.
 3h. Read `context/PROSE_ANTI_SLOP.md` when writing **UI copy** in briefs or `design.md`.
+3i. Read `reference/visual-tools.md` during **`explore`**, **`shape`**, and **`critique`** on flagship routes: use **GenerateImage** for direction probes and **Canvas** for compare/brief/critique summaries when the IDE provides them.
 4. After **shape** (brief confirmed), **critique**, or **polish**, append to **Decision log** in `.heyeddi/design.md`.
 5. After stack implementer finishes, ensure `@visual-auditor` ran at 375/768/1440 before calling design work done.
 
@@ -80,7 +81,7 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 | `init` | Create or refresh `PRODUCT.md`; offer `document` for `DESIGN.md` |
 | `discover` | Discovery interview only: no code, no final brief yet |
 | `research` | Web trend / reference research for current design direction |
-| `explore` | Concept images + wireframes after discovery |
+| `explore` | Concept images (GenerateImage) + Canvas compare + wireframes |
 | `shape` | Full planning flow: discover → research → explore → confirmed brief |
 | `document` | Generate or refresh `DESIGN.md` from code or seed questions |
 | `craft` | Brief ready → **hand off to stack implementer** (see implement-routing) |
