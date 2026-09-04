@@ -14,13 +14,23 @@ sys.path.insert(0, str(SCRIPTS))
 from _next_skill import suggest_next_skill  # noqa: E402
 
 
-def test_default_chain_handoff_to_visual(tmp_path: Path) -> None:
+def test_default_chain_handoff_to_engineering(tmp_path: Path) -> None:
     result = suggest_next_skill(tmp_path, current_skill="heyeddi-handoff", current_route="/settings")
-    assert result["next"]["skill"] == "visual-auditor"
-    assert "@visual-auditor" in result["next"]["prompt"]
+    assert result["next"]["skill"] == "engineering-excellence"
+    assert "@engineering-excellence" in result["next"]["prompt"]
     assert "/settings" in result["next"]["prompt"]
     assert "**Prompt:**" in result["user_block"]
     assert "python scripts/" not in result["user_block"]
+
+
+def test_default_chain_engineering_to_visual(tmp_path: Path) -> None:
+    result = suggest_next_skill(
+        tmp_path,
+        current_skill="engineering-excellence",
+        current_route="/settings",
+    )
+    assert result["next"]["skill"] == "visual-auditor"
+    assert "@visual-auditor" in result["next"]["prompt"]
 
 
 def test_design_shape_mode_suggests_handoff(tmp_path: Path) -> None:
@@ -68,6 +78,7 @@ def test_pipeline_skills_have_handoff_section() -> None:
         "project-engineering",
         "flutter-engineering",
         "visual-auditor",
+        "engineering-excellence",
         "pre-merge-gate",
         "heyeddi-pr-review",
         "heyeddi-pr-respond",

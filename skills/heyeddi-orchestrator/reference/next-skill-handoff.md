@@ -47,7 +47,9 @@ The **Prompt** is the main deliverable: natural language with `@skill` and sub-c
 | `@heyeddi-design shape` | `@heyeddi-handoff implement <route>` (or `@design-handoff-flutter` when `stack.json` → flutter) |
 | `@heyeddi-design craft` | Same as shape — stack implementer from brief |
 | `@heyeddi-design critique` | `@visual-auditor review and fix <route>` |
-| `@heyeddi-handoff` | `@visual-auditor review and fix /settings against product.md and design.md` |
+| `@heyeddi-handoff` | `@engineering-excellence audit_engineering --check after implementing <route>` |
+| `@design-handoff-flutter` | `@engineering-excellence audit_engineering --check after Flutter handoff` |
+| `@engineering-excellence` | `@visual-auditor review and fix <route>` |
 | `@visual-auditor` | `@pre-merge-gate run the merge readiness checklist` |
 | `@heyeddi-orchestrator sync` | `@heyeddi-intake: describe the app in plain language` |
 
@@ -60,6 +62,6 @@ The **Prompt** is the main deliverable: natural language with `@skill` and sub-c
 
 ## Pipeline skills
 
-`heyeddi-intake`, `heyeddi-product`, `heyeddi-orchestrator`, `heyeddi-design`, `heyeddi-handoff`, `design-handoff-flutter`, `project-engineering`, `flutter-engineering`, `visual-auditor`, `pre-merge-gate`, `heyeddi-pr-review`, `heyeddi-pr-respond`
+`heyeddi-intake`, `heyeddi-product`, `heyeddi-orchestrator`, `heyeddi-design`, `heyeddi-handoff`, `design-handoff-flutter`, `project-engineering`, `flutter-engineering`, `engineering-excellence`, `visual-auditor`, `pre-merge-gate`, `heyeddi-pr-review`, `heyeddi-pr-respond`
 
 Utility skills (`verify-build`, `backend-type-bridger`, …) are mid-pipeline: no handoff unless that was the whole user request.

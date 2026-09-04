@@ -1,8 +1,8 @@
 ---
 name: heyeddi-orchestrator
-description: Discover HeyEddi skills, auto-sync .heyeddi/, cross-pillar opinions, suggest @skills, and default pipelines (UI + PR). Use at session start or before multi-step work.
+description: "ALWAYS-ON router: discover HeyEddi skills, auto-sync .heyeddi/ (skills index), cross-pillar opinions, suggest @skills. Use at every session start, after reinstalling skills, on ambiguous tasks, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route."
 version: 3.2.0
-product-version: 3.4.6
+product-version: 3.4.7
 author: HeyEddi-com
 ---
 
@@ -10,13 +10,23 @@ author: HeyEddi-com
 
 **Skill discovery and workspace sync**: routes work to the right `@skill`, refreshes `.heyeddi/`, and **keeps product, UX, and design pillars in sync**.
 
+**Always on** as the router bookend for every chat. See `reference/always-on.md` and hub `docs/always-on-skills.md`.
+
 ## When to use
 
-- Session start on a HeyEddi project (`.heyeddi/` present or greenfield app request)
+- **Every session start** on a HeyEddi project (`.heyeddi/` present or greenfield app request)
 - User asks "what skills do we have?" or "which skill should handle this?"
 - Before a multi-step pipeline (intake → scaffold → design → handoff → QA)
 - **Any time one pillar runs**: bookend with `load_workflow_context` / `append_pillar_opinion`
 - After `@heyeddi-intake`: confirm `skill-routing.json` before downstream work
+
+## Always-on siblings (every chat)
+
+After routing, enforce:
+
+1. **`@engineering-excellence`** plan gate before coding; change gate (`audit_engineering --check`) after edits — errors fail; warns advisory
+2. **Prose anti-slop** when copy or `.heyeddi` docs change (`verify_prose --check`)
+3. **Clarify-before-act** when product/design/stack intent is missing
 
 ## Automatic `.heyeddi/` upkeep
 
@@ -26,27 +36,7 @@ author: HeyEddi-com
 
 Reinstall skills (`npx skills add`) and keep working: the next `@heyeddi-intake`, `@heyeddi-product`, or orchestrator tool updates `.heyeddi/` automatically.
 
-Optional explicit full sync (includes workflow scaffold + update check): `sync --project-root .`
-
-## Skills update check (detect and ask)
-
-**Never silent self-update.** `sync` and `check_skills_update` compare the installed hub `product-version` to the latest GitHub release (`gh`), then ask the user.
-
-```
-check_skills_update --project-root .
-# or: sync --project-root .   (includes the check unless --skip-update-check)
-```
-
-If `update_available` / `ask_user` is true:
-
-1. Show the tool's `user_block` to the user.
-2. Wait for explicit approval (`update` / `yes` / `proceed`).
-3. Only then run the install command from the payload.
-4. On `skip` / `no`: `check_skills_update --dismiss --latest <ver> --project-root .`
-
-**Kill switch:** `check_skills_update --disable` or `.heyeddi/sync-state.json` → `"skills_update_check": false`, or env `HEYEDDI_SKILLS_UPDATE_CHECK=off`.
-
-Checks are throttled to once per 24h (`--force` to bypass). No network on every skill invoke.
+Optional explicit full sync (includes workflow scaffold): `sync --project-root .`
 
 ## Cross-pillar sync (mandatory for product · UX · design)
 
@@ -61,8 +51,6 @@ append_pillar_opinion --pillar …      (end: triggers sibling opinions)
 
 ## Skill discovery pipeline
 
-Read **`reference/default-pipelines.md`** for automatic UI and PR chains (no confirmation between steps).
-
 ```
 load_catalog / suggest_skills   → auto-sync runs first
 read one SKILL.md               → follow that skill's pipeline
@@ -75,8 +63,7 @@ If `.heyeddi/docs/intake/skill-routing.json` exists, **follow route order**.
 | Script | Purpose |
 |--------|---------|
 | *(auto)* | Every tool: refresh index when missing |
-| `sync.py` | Optional full sync + workflow scaffold + update check |
-| `check_skills_update.py` | Detect hub updates; ask before `npx skills add` |
+| `sync.py` | Optional full sync + workflow scaffold |
 | `write_skills_index.py` | Scan → `.heyeddi/skills-index.*` |
 | `load_catalog.py` | Read cached index |
 | `suggest_skills.py` | Rank skills for a prompt |
@@ -106,6 +93,8 @@ See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
 ## Related
 
 - `@heyeddi-product` · `@ux-flow-auditor` · `@heyeddi-design`: three pillars
+- `@engineering-excellence`: always-on plan + change gates
 - `@heyeddi-intake`: upstream intake
 - `reference/next-skill-handoff.md`: next-skill block when a pipeline task completes
 - `docs/cross-pillar-workflow.md`: hub summary
+- `docs/always-on-skills.md`: hub always-on policy

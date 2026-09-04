@@ -10,10 +10,11 @@ Agents should run these chains **automatically** — do not ask the user for con
 @heyeddi-intake          → product.md + skill-routing
 @heyeddi-design shape    → confirmed brief.md
 <stack implementer>      → @heyeddi-handoff (vue) or @design-handoff-flutter
+@engineering-excellence  → plan gate before code; audit_engineering --check after
 @primevue-openprops-architect   (vue)
 @visual-auditor          → fix, not report-only
 @ux-flow-auditor         → flagship routes
-@pre-merge-gate
+@pre-merge-gate          → includes engineering + prose audits
 ```
 
 ## UI: improve existing screen
@@ -21,6 +22,7 @@ Agents should run these chains **automatically** — do not ask the user for con
 ```
 @heyeddi-design critique → report + auto-chain
 <stack implementer>      → P0/P1 from critique
+@engineering-excellence  → change gate
 @visual-auditor
 ```
 
@@ -28,7 +30,7 @@ Agents should run these chains **automatically** — do not ask the user for con
 
 ```
 @heyeddi-ci-fails        → always first
-@heyeddi-pr-respond      → fix, commit, push, every thread
+@heyeddi-pr-respond      → fix, commit, push, every thread (+ engineering audit)
 @pre-merge-gate
 ```
 
