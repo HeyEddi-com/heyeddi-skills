@@ -923,3 +923,17 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - Then install/sync into consumer `.agents/skills/` (do not treat install trees as SSOT)
 
 **Date:** 2026-08-13
+
+## 2026-09-04 — Always-on: orchestrator + engineering excellence + prose
+
+**Context:** User wants engineering excellence on every chat (plans and changes), with orchestrator always-on as router. Errors fail; warns advisory.
+
+**Decision:**
+- Hub policy: `docs/always-on-skills.md` (orchestrator + excellence + prose + clarify-before-act)
+- `@engineering-excellence` v1.1.0: `check_engineering_plan` (plan gate) + `audit_engineering --check` (change gate); missing eng docs / extreme files = **error**; warns advisory
+- `@pre-merge-gate` v1.2.0: runs `audit_engineering --check` by default (`--skip-engineering-audit` emergency only)
+- Next-skill chain: handoff → engineering-excellence → visual-auditor → pre-merge-gate
+- Bookends on project-engineering, flutter-engineering, heyeddi-handoff, design-handoff-flutter, heyeddi-pr-respond
+- `@heyeddi-orchestrator` always-on router (`reference/always-on.md`)
+
+**Verify:** `uv run pytest tests/test_engineering_always_on.py tests/test_next_skill.py`; `python3 scripts/test-skills.py engineering-excellence`

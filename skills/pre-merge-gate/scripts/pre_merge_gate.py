@@ -103,6 +103,11 @@ def main() -> None:
     parser.add_argument("--skip-duplicate-ui", action="store_true")
     parser.add_argument("--skip-prose-audit", action="store_true")
     parser.add_argument("--skip-visual-audit", action="store_true")
+    parser.add_argument(
+        "--skip-engineering-audit",
+        action="store_true",
+        help="Emergency only; do not use for merge sign-off",
+    )
     parser.add_argument("--skip-backend", action="store_true", help="Emergency only; do not use for merge")
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
@@ -149,6 +154,20 @@ def main() -> None:
         rows.append(("prose-audit", st, out[:200]))
     else:
         rows.append(("prose-audit", "SKIP", "skipped via --skip-prose-audit"))
+
+    if not args.skip_engineering_audit:
+        out = run_skill_script(
+            root,
+            "engineering-excellence",
+            "scripts/audit_engineering.py",
+            ["--check"],
+        )
+        st = status_from_output(out)
+        if st == "PASS" and '"ok": false' in out:
+            st = "FAIL"
+        rows.append(("engineering-audit", st, out[:200]))
+    else:
+        rows.append(("engineering-audit", "SKIP", "skipped via --skip-engineering-audit"))
 
     if not args.skip_visual_audit:
         contrast_script = find_skill_script(root, "visual-auditor", "scripts/audit_contrast.py")

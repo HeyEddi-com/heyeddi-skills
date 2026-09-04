@@ -35,14 +35,19 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "why": "Brief or mockups ready: stack implementer builds Vue, then visual QA.",
     },
     "heyeddi-handoff": {
-        "skill": "visual-auditor",
-        "prompt": "@visual-auditor review and fix <route> against product.md and design.md",
-        "why": "Visual QA after implementation: capture, contrast, fix, document.",
+        "skill": "engineering-excellence",
+        "prompt": "@engineering-excellence audit_engineering --check after implementing <route>",
+        "why": "Always-on change gate: KISS/YAGNI/SOLID before visual QA.",
     },
     "design-handoff-flutter": {
+        "skill": "engineering-excellence",
+        "prompt": "@engineering-excellence audit_engineering --check after Flutter handoff for <route>",
+        "why": "Always-on change gate after Material handoff.",
+    },
+    "engineering-excellence": {
         "skill": "visual-auditor",
-        "prompt": "@visual-auditor review and fix <route> on Flutter web against product.md and design.md",
-        "why": "Visual QA after Material handoff.",
+        "prompt": "@visual-auditor review and fix <route> against product.md and design.md",
+        "why": "Engineering audit passed or advisory-only: visual QA next.",
     },
     "project-engineering": {
         "skill": "heyeddi-design",
@@ -57,7 +62,7 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
     "visual-auditor": {
         "skill": "pre-merge-gate",
         "prompt": "@pre-merge-gate run the merge readiness checklist",
-        "why": "Full QA gate after visual fixes pass.",
+        "why": "Full QA gate after visual fixes pass (includes engineering + prose audits).",
     },
     "pre-merge-gate": {
         "skill": "heyeddi-pr-review",
@@ -132,6 +137,18 @@ MODE_NEXT: dict[str, dict[str, dict[str, str]]] = {
             "skill": "heyeddi-intake",
             "prompt": "@heyeddi-intake: continue product intake for this project",
             "why": "Workspace synced: intake if product context is still thin.",
+        },
+    },
+    "engineering-excellence": {
+        "audit": {
+            "skill": "visual-auditor",
+            "prompt": "@visual-auditor review and fix <route> against product.md and design.md",
+            "why": "Change-gate audit done: visual QA when UI was touched.",
+        },
+        "plan": {
+            "skill": "heyeddi-handoff",
+            "prompt": "@heyeddi-handoff implement <route> from the approved plan",
+            "why": "Plan gate passed: implement the smallest change that meets AC.",
         },
     },
 }

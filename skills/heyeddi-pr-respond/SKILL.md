@@ -79,6 +79,7 @@ build_comment_inventory --pr <N> --write-cache
 → tracking table in chat (every item: id, type, fix|decline, status)
 for each item: analyze vs PR goals → fix | decline | partial | out-of-scope
 apply code/docs fixes when fix
+@engineering-excellence check_engineering_plan / audit_engineering --check  → always-on (errors fail)
 discover_and_verify [--run]              → evidenced commands only
 assert_no_merge --check                  → unless user said authorize merge
 → if any fix: commit + push (automatic — do not ask)

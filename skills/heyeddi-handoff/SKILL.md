@@ -52,17 +52,19 @@ mockup text.
 
 ### Pass 2: Implementer (build)
 
-5. Read `reference/handoff-to-code.md` + `mockup-brief.md` Implementation spec.
-6. Update `tokens.css` from spec: **no same-name aliases** (`--size-6: var(--size-6)` breaks spacing). Run `python scripts/verify_tokens.py --check`.
-7. Build **AppShell / AppSidebar / AppTopBar**.
-8. Run `python scripts/verify_handoff.py --route <route> --phase shell --check`.
-9. Build route content (e.g. `SettingsView`): override PrimeVue Card padding per spec.
-10. Run `python scripts/verify_handoff.py --route <route> --phase full --check`.
-10b. Run `python .agents/skills/heyeddi-design/scripts/verify_prose.py --check` (or project-installed path): no em/en dashes or AI filler in route copy.
-11. Run `python scripts/verify_theme.py --check`: light/dark + PrimeVue surfaces (`reference/theme-coherence.md`).
-12. Read `reference/mockup-contract.md` when needed.
-13. Chain `@primevue-openprops-architect` → `@visual-auditor` when available.
-14. **Append** Decision log: region → component + rationale.
+5. **Plan gate:** `python .agents/skills/engineering-excellence/scripts/check_engineering_plan.py --project-root <root> --check` (init docs if missing; read reuse-catalog).
+6. Read `reference/handoff-to-code.md` + `mockup-brief.md` Implementation spec.
+7. Update `tokens.css` from spec: **no same-name aliases** (`--size-6: var(--size-6)` breaks spacing). Run `python scripts/verify_tokens.py --check`.
+8. Build **AppShell / AppSidebar / AppTopBar**.
+9. Run `python scripts/verify_handoff.py --route <route> --phase shell --check`.
+10. Build route content (e.g. `SettingsView`): override PrimeVue Card padding per spec.
+11. Run `python scripts/verify_handoff.py --route <route> --phase full --check`.
+12. Run `python .agents/skills/heyeddi-design/scripts/verify_prose.py --check` (or project-installed path): no em/en dashes or AI filler in route copy.
+13. Run `python scripts/verify_theme.py --check`: light/dark + PrimeVue surfaces (`reference/theme-coherence.md`).
+14. **Change gate:** `python .agents/skills/engineering-excellence/scripts/audit_engineering.py --project-root <root> --check` (errors fail; warns advisory).
+15. Read `reference/mockup-contract.md` when needed.
+16. Chain `@primevue-openprops-architect` → `@visual-auditor` when available.
+17. **Append** Decision log: region → component + rationale.
 
 ## Modes
 
