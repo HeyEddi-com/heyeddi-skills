@@ -11,6 +11,7 @@
 3. **Routing present**: follow `.heyeddi/docs/intake/skill-routing.json` order.
 4. **Always-on siblings**: after routing, enforce `@engineering-excellence` plan/change gates and prose anti-slop. See hub `docs/always-on-skills.md`.
 5. **Honor `stack.json`**: read git/tools/agent prefs before commit, push, or CI assumptions.
+6. **Host surfaces**: prefer native plan / data / visual tools when this session lists them; otherwise portable fallbacks. See `reference/host-surfaces.md`.
 
 ## Not required every message
 

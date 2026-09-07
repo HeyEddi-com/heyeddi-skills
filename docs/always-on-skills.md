@@ -16,6 +16,8 @@ Plus **clarify-before-act** ([clarify-before-act.md](clarify-before-act.md)): as
 
 Plus **project prefs**: if `.heyeddi/stack.json` is missing required keys (`verify_setup --check`), run **`@heyeddi-setup`** before assuming git/CI/agent behavior.
 
+Plus **host surfaces** (`@heyeddi-orchestrator` → `reference/host-surfaces.md`): prefer this session's native plan / data / visual tools when listed; never require IDE-only surfaces on CLI or Cloud Run.
+
 ## Trigger matrix (not every chat)
 
 | Skill | When |
@@ -44,5 +46,5 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 ## Related
 
 - `@engineering-excellence` → `reference/engineering-always-on.md`
-- `@heyeddi-orchestrator` → `reference/always-on.md`
+- `@heyeddi-orchestrator` → `reference/always-on.md` · `reference/host-surfaces.md`
 - `@pre-merge-gate` runs `audit_engineering --check` and `verify_prose --check` by default

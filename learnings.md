@@ -978,3 +978,15 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - Tech keys optional for `verify_setup`
 
 **Verify:** `uv run pytest tests/test_heyeddi_setup.py`
+
+## 2026-09-06 — Prefer host surfaces; no capability probe
+
+**Context:** Agents should use native plan / data / visual tools when the host provides them (Cursor, other IDEs, CLI, Cloud Run), without Cursor-only hardcoding.
+
+**Decision (lean):**
+- Orchestrator `reference/host-surfaces.md`: intent → prefer session tools → portable fallback
+- Always-on cite in orchestrator + `docs/always-on-skills.md`
+- Discovery = injected tool list only; **no** skill-side probe script
+- Design `visual-tools.md` points at host-surfaces for degrade policy
+
+**Anti-pattern:** Guessing IDE capabilities from the filesystem.

@@ -27,6 +27,7 @@ After routing, enforce:
 1. **`@engineering-excellence`** plan gate before coding; change gate (`audit_engineering --check`) after edits — errors fail; warns advisory
 2. **Prose anti-slop** when copy or `.heyeddi` docs change (`verify_prose --check`)
 3. **Clarify-before-act** when product/design/stack intent is missing
+4. **Host surfaces** — prefer this session's native plan / data / visual tools when listed; degrade to `.heyeddi` / scripts otherwise (`reference/host-surfaces.md`)
 
 ## Automatic `.heyeddi/` upkeep
 
@@ -95,6 +96,7 @@ See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
 - `@heyeddi-product` · `@ux-flow-auditor` · `@heyeddi-design`: three pillars
 - `@engineering-excellence`: always-on plan + change gates
 - `@heyeddi-intake`: upstream intake
+- `reference/host-surfaces.md`: prefer host plan/data/visual tools; portable degrade
 - `reference/next-skill-handoff.md`: next-skill block when a pipeline task completes
 - `docs/cross-pillar-workflow.md`: hub summary
 - `docs/always-on-skills.md`: hub always-on policy
