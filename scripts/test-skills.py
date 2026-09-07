@@ -199,6 +199,7 @@ def default_args_for_tool(tool_name: str, skill_name: str, fixture_root: Path) -
         "scan_patterns",
         "init_engineering_docs",
         "audit_engineering",
+        "check_engineering_plan",
         "init_ux_flows",
         "trace_flow",
     }:

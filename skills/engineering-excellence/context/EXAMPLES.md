@@ -1,13 +1,20 @@
 
 # Examples: Engineering excellence
 
+## Plan gate (every chat before coding)
+
+```bash
+python scripts/check_engineering_plan.py --project-root . --check
+python scripts/check_engineering_plan.py --project-root . --check --plan-file plan.md
+```
+
 ## Init docs
 
 ```bash
 python scripts/init_engineering_docs.py --project-root .
 ```
 
-## Audit before merge
+## Change gate (after edits / before merge)
 
 ```bash
 python scripts/audit_engineering.py --project-root . --check

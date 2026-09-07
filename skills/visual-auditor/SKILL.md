@@ -2,7 +2,7 @@
 name: visual-auditor
 description: "Captures screenshots, reviews UI against product.md and design.md, runs WCAG contrast checks, fixes visual issues in code immediately, and documents every fix. Mandatory after implement/handoff. Auto-fix — never report-only unless user explicitly says audit-only."
 version: 3.1.0
-product-version: 3.4.6
+product-version: 3.4.8
 author: HeyEddi-com
 ---
 

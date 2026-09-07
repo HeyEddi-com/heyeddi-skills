@@ -1,6 +1,6 @@
 # Clarify before act (all HeyEddi skills)
 
-**Date:** 2026-07-04
+**Date:** 2026-09-04
 
 Every skill follows this order when information is missing:
 
@@ -11,6 +11,16 @@ Every skill follows this order when information is missing:
 4. Ask the user       1 focused question or numbered list (max one round unless blocking)
 5. Act                never guess routes, API fields, or layout intent
 ```
+
+## Always-on (every chat)
+
+Before step 5 when planning or coding:
+
+1. **`@heyeddi-orchestrator`** — route if session start or task is ambiguous
+2. **`@engineering-excellence`** — `check_engineering_plan --check` before implement; `audit_engineering --check` after edits (errors fail; warns advisory)
+3. **Prose anti-slop** — `verify_prose --check` when user-facing or `.heyeddi` prose changes
+
+See `docs/always-on-skills.md`.
 
 ## When to ask
 
@@ -32,3 +42,4 @@ Every skill follows this order when information is missing:
 - Dumping 10 questions at once → 2–3 per round
 - Skipping `product.md` personas on design work → run `@heyeddi-intake` or `@heyeddi-design discover`
 - Auto-updating installed skills without approval → detect with `@heyeddi-orchestrator` `check_skills_update`, then ask
+- Skipping engineering excellence on a coding chat → always-on plan + change gates

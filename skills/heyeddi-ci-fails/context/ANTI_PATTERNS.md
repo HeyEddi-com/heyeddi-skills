@@ -5,7 +5,7 @@
 - NEVER `gh pr merge` without **authorize merge**
 - NEVER enable `auto_merge`
 - NEVER invent test commands without evidence
-- NEVER claim Spot runners executed
+- NEVER claim Spot/GHA jobs executed without Check or Spot evidence
 
 ## Fails-specific
 

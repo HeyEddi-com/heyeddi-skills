@@ -12,6 +12,7 @@ from _heyeddi_paths import engineering_docs_dir, product_md, skill_docs_dir
 from _skill_cli import emit, fail, resolve_project_root
 
 MAX_FILE_LINES = 400
+ERROR_FILE_LINES = 800
 ABSTRACTION_HINTS = re.compile(
     r"(Factory|Manager|Orchestrator|Abstract|Base[A-Z]\w+Service)",
     re.MULTILINE,
@@ -42,7 +43,16 @@ def _scan_src(root: Path) -> list[dict]:
     for path in vue_files + ts_files + py_backend:
         rel = str(path.relative_to(root))
         lines = _line_count(path)
-        if lines > MAX_FILE_LINES:
+        if lines > ERROR_FILE_LINES:
+            findings.append(
+                {
+                    "principle": "KISS",
+                    "severity": "error",
+                    "file": rel,
+                    "message": f"File has {lines} lines (>{ERROR_FILE_LINES}): split before merge",
+                }
+            )
+        elif lines > MAX_FILE_LINES:
             findings.append(
                 {
                     "principle": "KISS",
@@ -115,13 +125,22 @@ def _check_docs(root: Path) -> list[dict]:
     required = ("architecture.md", "reuse-catalog.md", "decisions.md")
     for name in required:
         path = eng / name
-        if not path.is_file() or path.stat().st_size < 100:
+        if not path.is_file():
+            issues.append(
+                {
+                    "principle": "Documentation",
+                    "severity": "error",
+                    "file": f".heyeddi/docs/engineering/{name}",
+                    "message": "Missing: run init_engineering_docs.py",
+                }
+            )
+        elif path.stat().st_size < 100:
             issues.append(
                 {
                     "principle": "Documentation",
                     "severity": "warn",
-                    "file": str(path.relative_to(root)) if path.is_file() else f".heyeddi/docs/engineering/{name}",
-                    "message": "Missing or stub: run init_engineering_docs.py",
+                    "file": str(path.relative_to(root)),
+                    "message": "Stub: expand engineering notes",
                 }
             )
     return issues

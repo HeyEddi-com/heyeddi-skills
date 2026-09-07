@@ -1,5 +1,5 @@
 {
-  "version": "3.4.7",
+  "version": "3.4.8",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -61,7 +61,7 @@
     },
     {
       "name": "heyeddi-pr-respond",
-      "description": "Respond to all PR feedback — auto-fix, CI first, threaded replies, no confirmation"
+      "description": "Respond to all PR feedback \u2014 auto-fix, CI first, threaded replies, no confirmation"
     },
     {
       "name": "design-system-generalizer",
@@ -81,7 +81,7 @@
     },
     {
       "name": "heyeddi-design",
-      "description": "Stack-agnostic design — briefs, critique, GenerateImage + Canvas during explore"
+      "description": "Stack-agnostic design \u2014 briefs, critique, GenerateImage + Canvas during explore"
     },
     {
       "name": "engineering-excellence",
@@ -93,11 +93,11 @@
     },
     {
       "name": "heyeddi-ci-config",
-      "description": "Author eddi-ci.yaml from the live policy contract; Reviewer + optional runners"
+      "description": "Author eddi-ci.yaml from the live policy contract; Reviewer + optional Spot (GHA-first)"
     },
     {
       "name": "heyeddi-ci-guide",
-      "description": "HeyEddi CI commands, auth matrix, runners placeholder status, feedback via debate/support"
+      "description": "HeyEddi CI commands, auth matrix, Spot runners status, feedback via debate/support"
     },
     {
       "name": "heyeddi-ci-fails",
@@ -105,7 +105,7 @@
     },
     {
       "name": "heyeddi-ci-runners",
-      "description": "PLACEHOLDER: author pipeline jobs in eddi-ci.yaml; Spot execution fail-closed"
+      "description": "Spot runners: GHA overflow/always + sealed pipeline; evidence before execution claims"
     }
   ]
 }

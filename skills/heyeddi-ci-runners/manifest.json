@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-ci-runners",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "tools": [
     {
       "name": "load_policy_contract",
@@ -31,8 +31,8 @@
       "readonly": true
     },
     {
-      "name": "assert_runners_placeholder",
-      "description": "Fail when agent text claims Spot jobs ran (execution is fail-closed).",
+      "name": "assert_runners_claims",
+      "description": "Fail when agent text claims Spot/GHA jobs ran without Check or Spot evidence.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -41,7 +41,7 @@
         },
         "required": []
       },
-      "script": "scripts/assert_runners_placeholder.py",
+      "script": "scripts/assert_runners_claims.py",
       "readonly": true
     }
   ]

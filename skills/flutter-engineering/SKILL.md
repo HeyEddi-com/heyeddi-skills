@@ -2,7 +2,7 @@
 name: flutter-engineering
 description: "Ensures HeyEddi Flutter projects have the right engineering stack: Flutter (Riverpod, go_router, Material 3), FastAPI backend, or Firebase tooling. Audits gaps, scaffolds as needed, runs flutter test/analyze, documents local dev servers. Use when frontend is Flutter or before design/feature work on a HeyEddi mobile/web app."
 version: 1.0.0
-product-version: 3.4.2
+product-version: 3.4.8
 author: HeyEddi-com
 paths:
   - "pubspec.yaml"
@@ -49,8 +49,10 @@ Or `"backends": ["firebase"]` or `["fastapi", "firebase"]`.
 2. **`scaffold_stack --stack auto`**: fills gaps (`flutter`, `fastapi`, `firebase`, or `full`).
 3. **`ensure_flutter`** + **`ensure_python`** (via `@project-engineering`) as needed.
 4. **`dev_server_info`**: Flutter web `:8085`, API `:8090`, Firebase emulators `:4000`.
-5. Implement features (`@design-handoff-flutter`, `@flutter-patterns`, `@dart-type-bridger`).
-6. **`run_tests`** + **`run_backend_tests`** + **`verify_build`**.
+5. **Plan gate (always-on):** `@engineering-excellence` `check_engineering_plan --check` before feature code.
+6. Implement features (`@design-handoff-flutter`, `@flutter-patterns`, `@dart-type-bridger`).
+7. **`run_tests`** + **`run_backend_tests`** + **`verify_build`**.
+8. **Change gate (always-on):** `audit_engineering --check` (errors fail; warns advisory).
 
 ## Local dev servers
 

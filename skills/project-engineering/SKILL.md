@@ -2,7 +2,7 @@
 name: project-engineering
 description: "Ensures HeyEddi projects have the right engineering stack: Vue (Vite/Vitest), FastAPI backend, or Firebase tooling. Audits gaps, scaffolds as needed, installs deps, runs tests, documents local dev servers. Use when the repo is thin or before design/feature work on any HeyEddi app."
 version: 1.1.0
-product-version: 3.4.2
+product-version: 3.4.8
 author: HeyEddi-com
 paths:
   - "package.json"
@@ -62,9 +62,11 @@ Every HeyEddi app should have a **`.heyeddi/`** folder (created by `scaffold_sta
 2. **`scaffold_stack --stack auto`**: fills gaps (preferred over `scaffold_vue` alone).
 3. **`ensure_npm`** + **`ensure_python`** as needed.
 4. **`dev_server_info`**: all local servers (Vue :5173, API :8090, Firebase emulators :4000).
-5. Implement features (design skills, composables, etc.).
-6. **`write_test_stub`** + **`run_tests`** + **`run_backend_tests`**.
-7. **`verify-build`** + **`pre-merge-gate`**.
+5. **Plan gate (always-on):** `@engineering-excellence` `check_engineering_plan --check` before feature code; read reuse-catalog.
+6. Implement features (design skills, composables, etc.).
+7. **`write_test_stub`** + **`run_tests`** + **`run_backend_tests`**.
+8. **Change gate (always-on):** `audit_engineering --check` (errors fail; warns advisory).
+9. **`verify-build`** + **`pre-merge-gate`**.
 
 ## Local dev servers
 

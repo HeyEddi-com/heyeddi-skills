@@ -1,6 +1,6 @@
 {
   "skill": "engineering-excellence",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "tools": [
     {
       "name": "init_engineering_docs",
@@ -17,8 +17,24 @@
       "readonly": false
     },
     {
+      "name": "check_engineering_plan",
+      "description": "Always-on plan gate: engineering docs ready + optional plan YAGNI/KISS smells.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "plan_file": { "type": "string", "description": "Optional plan markdown path" },
+          "plan_text": { "type": "string", "description": "Optional plan text" },
+          "check": { "type": "boolean", "description": "Exit non-zero on errors" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/check_engineering_plan.py",
+      "readonly": true
+    },
+    {
       "name": "audit_engineering",
-      "description": "Scan for KISS/YAGNI/SOLID/testability signals; write engineering-audit report.",
+      "description": "Always-on change gate: KISS/YAGNI/SOLID/testability scan; write engineering-audit report.",
       "parameters": {
         "type": "object",
         "properties": {
