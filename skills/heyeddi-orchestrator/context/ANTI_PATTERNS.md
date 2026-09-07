@@ -9,4 +9,5 @@
 - **Central trigger map in orchestrator**: each skill owns optional `reference/triggers.md` instead.
 - **Skipping engineering excellence**: after routing, plan/change gates are mandatory (see `docs/always-on-skills.md`).
 - **Silent skills self-update**: never run `npx skills add` / `npx skills update` without explicit user approval after `check_skills_update` reports `ask_user`.
+- **Assuming host tools**: never require canvas / plan UI / image gen / browser when the session tool list lacks them; degrade per `reference/host-surfaces.md`.
 - NEVER ship AI prose slop (em/en dashes, delve/leverage/tapestry, "Certainly!", "it is important to note", emoji theater); follow `context/PROSE_ANTI_SLOP.md` fully
