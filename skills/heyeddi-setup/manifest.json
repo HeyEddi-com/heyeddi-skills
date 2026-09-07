@@ -1,0 +1,65 @@
+{
+  "skill": "heyeddi-setup",
+  "version": "1.1.0",
+  "tools": [
+    {
+      "name": "load_setup",
+      "description": "Load .heyeddi/stack.json and list missing required setup keys.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/load_setup.py",
+      "readonly": true
+    },
+    {
+      "name": "list_questions",
+      "description": "List setup questions with current values for ask or re-run.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "missing_only": { "type": "boolean" },
+          "all": { "type": "boolean" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/list_questions.py",
+      "readonly": true
+    },
+    {
+      "name": "write_setup",
+      "description": "Merge preference answers into .heyeddi/stack.json.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "json": { "type": "string" },
+          "answers": { "type": "boolean" },
+          "merge_stack": { "type": "boolean" },
+          "dry_run": { "type": "boolean" }
+        },
+        "required": ["project_root", "json"]
+      },
+      "script": "scripts/write_setup.py",
+      "readonly": false
+    },
+    {
+      "name": "verify_setup",
+      "description": "Verify stack.json has all required setup keys; --check exits 1 if incomplete.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "check": { "type": "boolean" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/verify_setup.py",
+      "readonly": true
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Always-on skills (every chat)
 
-**Date:** 2026-09-04
+**Date:** 2026-09-06
 
 These guards run on **every chat** that plans or changes work. They are not optional suggestions.
 
@@ -14,10 +14,13 @@ These guards run on **every chat** that plans or changes work. They are not opti
 
 Plus **clarify-before-act** ([clarify-before-act.md](clarify-before-act.md)): ask when product/design/stack intent is missing. Never guess.
 
+Plus **project prefs**: if `.heyeddi/stack.json` is missing required keys (`verify_setup --check`), run **`@heyeddi-setup`** before assuming git/CI/agent behavior.
+
 ## Trigger matrix (not every chat)
 
 | Skill | When |
 |-------|------|
+| `@heyeddi-setup` | Incomplete `stack.json` prefs, or user asks for setup / preferences |
 | `@heyeddi-intake` | Greenfield / thin `product.md` |
 | `@heyeddi-product` | Specs, backlog, usefulness review |
 | `@heyeddi-design` | UI / design work (foundations always-on inside design) |
@@ -31,11 +34,12 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 ## Agent checklist (every chat)
 
 1. **Orchestrator** — if session start or task is ambiguous: `load_catalog` / `suggest_skills` (or read skills-index); follow `skill-routing.json` when present.
-2. **Plan gate** — before implementing: `check_engineering_plan --check` (docs ready + plan smells); read `reuse-catalog.md`.
-3. **Work** — follow the routed `@skill`.
-4. **Change gate** — after code changes: `audit_engineering --check` (errors only).
-5. **Prose** — if copy or `.heyeddi` docs changed: `verify_prose --check`.
-6. **Ship** — `@pre-merge-gate` before merge-ready claims.
+2. **Setup** — if `stack.json` prefs incomplete: `@heyeddi-setup` (or honor existing keys when complete).
+3. **Plan gate** — before implementing: `check_engineering_plan --check` (docs ready + plan smells); read `reuse-catalog.md`.
+4. **Work** — follow the routed `@skill`.
+5. **Change gate** — after code changes: `audit_engineering --check` (errors only).
+6. **Prose** — if copy or `.heyeddi` docs changed: `verify_prose --check`.
+7. **Ship** — `@pre-merge-gate` before merge-ready claims.
 
 ## Related
 

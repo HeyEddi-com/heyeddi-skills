@@ -1,4 +1,26 @@
 {
   "frontend": "vue",
-  "backends": []
+  "backends": [],
+  "api_port": 8090,
+  "web_port": 8085,
+  "git": {
+    "preset": "main_staging_dev",
+    "default_branch": "dev",
+    "pr_base": "dev",
+    "environments": {
+      "production": "main",
+      "staging": "staging",
+      "dev": "dev"
+    },
+    "worktrees": false,
+    "custom_workflow": null
+  },
+  "agent": {
+    "commit": "ask",
+    "push": "ask"
+  },
+  "setup": {
+    "version": 1,
+    "updated": "2026-09-06"
+  }
 }

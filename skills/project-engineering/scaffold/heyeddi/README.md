@@ -24,7 +24,7 @@ Agents handle repeatable workflow; some work still needs people. **[heyeddi.com/
 
 | Path | Purpose |
 |------|---------|
-| `stack.json` | Declared stacks: Vue, FastAPI, Firebase |
+| `stack.json` | Stack + prefs (frontend/backends/ports, git, tools, agent) — `@heyeddi-setup` |
 | `product.md` | Product brief: users, routes, acceptance criteria |
 | `design.md` | DESIGN.md format: tokens, rationale, Decision log |
 | `designs/<feature>/` | Per-feature artifacts: handoff PNGs, briefs, wireframes, research |
@@ -37,12 +37,13 @@ Agents handle repeatable workflow; some work still needs people. **[heyeddi.com/
 
 ## Typical flow
 
-1. `@project-engineering`: audit scaffold, install deps, declare `stack.json`
-2. `@heyeddi-design` or `@heyeddi-handoff`: product + design docs, then UI
-3. `@backend-type-bridger` + `@composable-patterns`: API types and composables
-4. `@verify-build` + `@visual-auditor` + `@pre-merge-gate`: ship checklist
-5. `@engineering-excellence`: architecture notes under `docs/engineering/`
-6. `@ux-flow-auditor`: task flows under `docs/ux-flows/`
+1. `@heyeddi-setup`: confirm stack + git/tools/agent prefs in `stack.json`
+2. `@project-engineering`: audit scaffold, install deps
+3. `@heyeddi-design` or `@heyeddi-handoff`: product + design docs, then UI
+4. `@backend-type-bridger` + `@composable-patterns`: API types and composables
+5. `@verify-build` + `@visual-auditor` + `@pre-merge-gate`: ship checklist
+6. `@engineering-excellence`: architecture notes under `docs/engineering/`
+7. `@ux-flow-auditor`: task flows under `docs/ux-flows/`
 
 See [HeyEddi skills hub](https://github.com/HeyEddi-com/heyeddi-skills) for the full cheat sheet.
 

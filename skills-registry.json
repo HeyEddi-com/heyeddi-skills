@@ -16,6 +16,10 @@
       "description": "User prompt \u2192 product.md, mockups, briefs, skill-routing for downstream agents"
     },
     {
+      "name": "heyeddi-setup",
+      "description": "Ensure .heyeddi/stack.json has stack + git/tools/agent prefs; quick Q&A, re-run to update"
+    },
+    {
       "name": "project-engineering",
       "description": "Vue + FastAPI + Firebase scaffold, deps, dev servers, tests"
     },

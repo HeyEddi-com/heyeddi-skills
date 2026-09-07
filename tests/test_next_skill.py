@@ -14,7 +14,17 @@ sys.path.insert(0, str(SCRIPTS))
 from _next_skill import suggest_next_skill  # noqa: E402
 
 
-def test_default_chain_handoff_to_engineering(tmp_path: Path) -> None:
+def test_orchestrator_suggests_setup(tmp_path: Path) -> None:
+    result = suggest_next_skill(tmp_path, current_skill="heyeddi-orchestrator")
+    assert result["next"]["skill"] == "heyeddi-setup"
+    assert "@heyeddi-setup" in result["next"]["prompt"]
+
+
+def test_setup_suggests_intake(tmp_path: Path) -> None:
+    result = suggest_next_skill(tmp_path, current_skill="heyeddi-setup")
+    assert result["next"]["skill"] == "heyeddi-intake"
+    assert "@heyeddi-intake" in result["next"]["prompt"]
+
     result = suggest_next_skill(tmp_path, current_skill="heyeddi-handoff", current_route="/settings")
     assert result["next"]["skill"] == "engineering-excellence"
     assert "@engineering-excellence" in result["next"]["prompt"]
@@ -69,6 +79,7 @@ def test_routing_prefers_next_route(tmp_path: Path) -> None:
 
 def test_pipeline_skills_have_handoff_section() -> None:
     pipeline = {
+        "heyeddi-setup",
         "heyeddi-intake",
         "heyeddi-product",
         "heyeddi-orchestrator",

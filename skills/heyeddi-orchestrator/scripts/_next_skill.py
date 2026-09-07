@@ -25,9 +25,14 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "why": "Turn product intent into a confirmed design brief before craft or handoff.",
     },
     "heyeddi-orchestrator": {
+        "skill": "heyeddi-setup",
+        "prompt": "@heyeddi-setup: confirm stack + git/tools/agent prefs in .heyeddi/stack.json",
+        "why": "Working prefs should exist before intake or scaffold.",
+    },
+    "heyeddi-setup": {
         "skill": "heyeddi-intake",
         "prompt": "@heyeddi-intake: describe the app or feature in plain language",
-        "why": "No locked task yet: intake when product.md is thin or the goal is greenfield.",
+        "why": "Setup complete: capture product intent next (or scaffold if product.md already exists).",
     },
     "heyeddi-design": {
         "skill": "heyeddi-handoff",
