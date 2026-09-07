@@ -213,7 +213,8 @@ def validate_value(path: str, value: Any) -> str | None:
             return f"{path} must be ask or auto"
         return None
     if path == "setup.version":
-        if not isinstance(value, int) or value < 1:
+        # bool is a subclass of int; reject True/False explicitly
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             return "setup.version must be a positive int"
         return None
     if path == "setup.updated":

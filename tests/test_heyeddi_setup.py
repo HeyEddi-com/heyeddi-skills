@@ -14,6 +14,7 @@ from _stack_schema import (  # noqa: E402
     apply_answers,
     missing_paths,
     stamp_setup,
+    validate_value,
 )
 
 
@@ -107,6 +108,24 @@ def test_write_and_verify_scripts(tmp_path: Path) -> None:
 
     check = _run("verify_setup.py", "--check", cwd=tmp_path)
     assert check.returncode == 0, check.stderr
+
+
+def test_setup_version_rejects_bool() -> None:
+    assert validate_value("setup.version", True) is not None
+    assert validate_value("setup.version", False) is not None
+    assert validate_value("setup.version", 1) is None
+
+
+def test_frontmatter_accepts_crlf(tmp_path: Path) -> None:
+    from _auto_sync import _parse_frontmatter  # noqa: PLC0415
+
+    skill = tmp_path / "SKILL.md"
+    skill.write_bytes(
+        b"---\r\nname: demo\r\nversion: 1.0.0\r\n---\r\n\r\n# Demo\r\n"
+    )
+    meta = _parse_frontmatter(skill)
+    assert meta.get("name") == "demo"
+    assert meta.get("version") == "1.0.0"
 
 
 def test_verify_fails_when_incomplete(tmp_path: Path) -> None:

@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 _ENSURED: set[str] = set()
-_FRONTMATTER = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
+_FRONTMATTER = re.compile(r"^---\s*\r?\n(.*?)\r?\n---", re.DOTALL)
 
 
 def _parse_frontmatter(skill_md: Path) -> dict[str, str]:
