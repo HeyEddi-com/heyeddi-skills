@@ -114,6 +114,7 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | Skill | Role |
 |-------|------|
 | `heyeddi-orchestrator` | Discover @skills and suggest pipelines from `skill-routing.json` |
+| `heyeddi-setup` | Ensure `.heyeddi/stack.json` has stack + git/tools/agent prefs |
 | `heyeddi-intake` | User prompt → `product.md`, mockups, intake JSON, routing |
 | `heyeddi-product` | PM review — stories, AC, usefulness; orchestrates UX/design/engineering research |
 | `heyeddi-design` | Design from scratch — briefs, wireframes, craft (Vue) |

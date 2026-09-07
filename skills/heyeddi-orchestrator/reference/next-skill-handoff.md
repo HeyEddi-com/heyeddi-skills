@@ -42,6 +42,7 @@ The **Prompt** is the main deliverable: natural language with `@skill` and sub-c
 
 | Finished | Typical next prompt |
 |----------|---------------------|
+| `@heyeddi-setup` | `@heyeddi-intake: describe the app in plain language` |
 | `@heyeddi-intake` | `@heyeddi-product audit the product and write feature specs for each routed surface` |
 | `@heyeddi-product` | `@heyeddi-design shape /dashboard from product.md personas` |
 | `@heyeddi-design shape` | `@heyeddi-handoff implement <route>` (or `@design-handoff-flutter` when `stack.json` → flutter) |
@@ -51,7 +52,7 @@ The **Prompt** is the main deliverable: natural language with `@skill` and sub-c
 | `@design-handoff-flutter` | `@engineering-excellence audit_engineering --check after Flutter handoff` |
 | `@engineering-excellence` | `@visual-auditor review and fix <route>` |
 | `@visual-auditor` | `@pre-merge-gate run the merge readiness checklist` |
-| `@heyeddi-orchestrator sync` | `@heyeddi-intake: describe the app in plain language` |
+| `@heyeddi-orchestrator sync` | `@heyeddi-setup: confirm stack + prefs in stack.json` |
 
 ## Priority order
 
@@ -62,6 +63,6 @@ The **Prompt** is the main deliverable: natural language with `@skill` and sub-c
 
 ## Pipeline skills
 
-`heyeddi-intake`, `heyeddi-product`, `heyeddi-orchestrator`, `heyeddi-design`, `heyeddi-handoff`, `design-handoff-flutter`, `project-engineering`, `flutter-engineering`, `engineering-excellence`, `visual-auditor`, `pre-merge-gate`, `heyeddi-pr-review`, `heyeddi-pr-respond`
+`heyeddi-setup`, `heyeddi-intake`, `heyeddi-product`, `heyeddi-orchestrator`, `heyeddi-design`, `heyeddi-handoff`, `design-handoff-flutter`, `project-engineering`, `flutter-engineering`, `engineering-excellence`, `visual-auditor`, `pre-merge-gate`, `heyeddi-pr-review`, `heyeddi-pr-respond`
 
 Utility skills (`verify-build`, `backend-type-bridger`, …) are mid-pipeline: no handoff unless that was the whole user request.

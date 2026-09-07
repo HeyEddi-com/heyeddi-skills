@@ -30,7 +30,26 @@ Delegate scaffold/audit/test scripts to **Task** `shell`; repo discovery to `exp
 | **FastAPI** | REST API backend | `backend/`, pytest, `openapi.json`, uvicorn |
 | **Firebase** | Firestore / Auth client | `firebase.json`, rules, emulators, env template |
 
-Declare intent in `.heyeddi/stack.json`:
+Declare intent prefs via `@heyeddi-setup` (git/env + agent). Tech keys in `.heyeddi/stack.json` are filled by scaffold / this skill as the project evolves:
+
+```json
+{
+  "frontend": "vue",
+  "backends": ["fastapi"],
+  "api_port": 8090,
+  "web_port": 8085,
+  "git": {
+    "preset": "main_staging_dev",
+    "default_branch": "dev",
+    "pr_base": "dev",
+    "environments": { "production": "main", "staging": "staging", "dev": "dev" },
+    "worktrees": false,
+    "custom_workflow": null
+  },
+  "agent": { "commit": "ask", "push": "ask" },
+  "setup": { "version": 1, "updated": "2026-09-06" }
+}
+```
 
 ```json
 { "frontend": "vue", "backends": ["fastapi"], "api_port": 8090 }
@@ -48,7 +67,7 @@ Every HeyEddi app should have a **`.heyeddi/`** folder (created by `scaffold_sta
 | Path | Purpose |
 |------|---------|
 | `README.md` | HeyEddi intro (agents + humans workspace), free skills, [heyeddi.com/humans](https://heyeddi.com/humans) |
-| `stack.json` | Declared stacks |
+| `stack.json` | Stack + prefs (`@heyeddi-setup`) |
 | `product.md` | Product brief |
 | `design.md` | DESIGN.md format: tokens, rationale, Decision log |
 | `designs/<feature>/` | Handoff PNGs, briefs, wireframes |

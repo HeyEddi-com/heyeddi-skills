@@ -951,3 +951,30 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Claim rule:** Jobs *can* run when entitled; jobs *did* run only with Check/Spot evidence (`HeyEddi Runner: …` or workflow Check).
 
 **Verify:** `uv run pytest tests/test_heyeddi_ci_skills.py`
+
+## 2026-09-06 — `@heyeddi-setup`: stack + prefs in `stack.json`
+
+**Context:** Need a re-runnable project setup that captures git/tools/agent prefs alongside stack, so agents always honor one file.
+
+**Decision:**
+- New skill `@heyeddi-setup` — Q&A writes **only** `.heyeddi/stack.json` (no separate prefs file)
+- Required keys: frontend/backends/ports + `git.*` + `tools.*` + `agent.*` + `setup.*`
+- Job is **ensure keys exist** (ask/confirm), not silent repo sniffing
+- Re-run: `list_questions` shows current defaults → `write_setup` → `verify_setup --check`
+- Orchestrator session start suggests setup when prefs incomplete; next-skill: orchestrator → setup → intake
+
+**Process:** `load_setup` → ask → `write_setup --json` → `verify_setup --check`
+
+**Verify:** `uv run pytest tests/test_heyeddi_setup.py tests/test_next_skill.py`; `python3 scripts/test-skills.py heyeddi-setup`
+
+## 2026-09-06 — `@heyeddi-setup` prefs-only + env presets
+
+**Context:** Frontend/backends/package manager/CI should not be quiz questions; they are discovered as the project evolves. Git model should default to production+staging envs with an escape hatch.
+
+**Decision:**
+- Setup asks only: env preset (`main_staging_dev` | `main_dev`), custom workflow (null or description), worktrees, agent commit/push
+- Always require `environments.production` + `environments.staging`
+- `custom_workflow` non-null → `preset: custom`
+- Tech keys optional for `verify_setup`
+
+**Verify:** `uv run pytest tests/test_heyeddi_setup.py`
