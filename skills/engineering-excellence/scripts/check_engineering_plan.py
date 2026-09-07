@@ -36,7 +36,7 @@ def _docs_status(root: Path) -> list[dict]:
                 {
                     "principle": "Documentation",
                     "severity": "warn",
-                    "file": str(path.relative_to(root)),
+                    "file": f".heyeddi/docs/engineering/{name}",
                     "message": "Stub doc: expand before large features",
                 }
             )
