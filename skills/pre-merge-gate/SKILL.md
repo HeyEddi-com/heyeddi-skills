@@ -2,7 +2,7 @@
 name: pre-merge-gate
 description: Runs pre-merge checks (backend + frontend + engineering excellence + optional UI audit). Any FAIL exits 1 (hard stop). Use when QA approves a PR or before merge to main.
 version: 1.2.0
-product-version: 3.4.7
+product-version: 3.4.8
 author: HeyEddi-com
 disable-model-invocation: true
 ---

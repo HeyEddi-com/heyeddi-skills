@@ -2,7 +2,7 @@
 name: heyeddi-orchestrator
 description: "ALWAYS-ON router: discover HeyEddi skills, auto-sync .heyeddi/ (skills index), cross-pillar opinions, suggest @skills. Use at every session start, after reinstalling skills, on ambiguous tasks, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route."
 version: 3.2.0
-product-version: 3.4.7
+product-version: 3.4.8
 author: HeyEddi-com
 ---
 

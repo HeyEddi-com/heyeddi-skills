@@ -2,7 +2,7 @@
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback — human reviewers, HeyEddi CI, inline threads. Auto-fix, commit+push, in-thread replies, CI check first — never ask before fixing or posting. One skill for every review source."
 version: 2.1.0
-product-version: 3.4.6
+product-version: 3.4.8
 author: HeyEddi-com
 disable-model-invocation: true
 ---

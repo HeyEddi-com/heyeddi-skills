@@ -1,8 +1,8 @@
 ---
 name: heyeddi-ci-guide
-description: Reference for HeyEddi CI commands, authorize-merge auth, feedback via debate + support@, and Spot runners placeholder status. Use when asking how to work with HeyEddi CI.
+description: Reference for HeyEddi CI commands, authorize-merge auth, feedback via debate + support@, and Spot runners (GHA overflow + sealed pipeline). Use when asking how to work with HeyEddi CI.
 version: 1.1.0
-product-version: 3.4.2
+product-version: 3.4.8
 author: HeyEddi-com
 ---
 
@@ -17,7 +17,7 @@ Short reference for agents and humans working with **HeyEddi CI**. Depth lives i
 | `@heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract |
 | `@heyeddi-pr-respond` | Address all PR review feedback (human + HeyEddi CI) |
 | `@heyeddi-ci-fails` | Diagnose and fix failing Checks (default on PR work; `/heyeddi fails` for App path) |
-| `@heyeddi-ci-runners` | PLACEHOLDER: declare `pipeline:` YAML; Spot fail-closed |
+| `@heyeddi-ci-runners` | Spot: GHA overflow/always + sealed `pipeline:` (evidence before claims) |
 | `@heyeddi-ci-guide` | This skill |
 
 Human PR review stays on `@heyeddi-pr-review` / `@heyeddi-pr-respond`.
@@ -48,7 +48,7 @@ See `reference/commands.md`. Common:
 | Commit + push (PR workflow) | Automatic during `@heyeddi-ci-fails` / `@heyeddi-pr-respond` — do not ask |
 | Merge (`gh pr merge`) | User says **authorize merge** in the **current turn** |
 | `auto_merge` in YAML | Never (schema rejects / forbidden) |
-| Billable knobs (`on_ci_failure`, runners) | Explicit opt-in |
+| Billable knobs (`on_ci_failure`, sealed runners) | Explicit opt-in |
 
 ## Feedback (real paths only)
 
@@ -59,7 +59,11 @@ There is **no** structured FP/telemetry API yet.
 
 ## Runners status
 
-Spot / isolated runners are **PLACEHOLDER / fail-closed**. Skills may author valid `pipeline:` YAML; never claim jobs ran. See `@heyeddi-ci-runners`.
+Spot is **shipped**:
+
+- Prefer **GHA + workspace Runners mode** (`overflow` / `always`) with `runs-on: ${{ vars.HEYEDDI_RUNS_ON || 'ubuntu-latest' }}`
+- Sealed `pipeline:` jobs post `HeyEddi Runner: {job_id}` Checks for entitled workspaces
+- Claim a job ran only with Check/Spot evidence — see `@heyeddi-ci-runners`
 
 ## Install
 

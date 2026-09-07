@@ -102,22 +102,35 @@ def test_assert_no_merge_blocks_unauthorized_gh_merge() -> None:
     assert data["allow"] is False
 
 
-def test_assert_runners_placeholder() -> None:
-    proc = _run(RUNNERS / "assert_runners_placeholder.py")
+def test_assert_runners_claims_shipped() -> None:
+    proc = _run(RUNNERS / "assert_runners_claims.py")
     assert proc.returncode == 0, proc.stderr + proc.stdout
     data = json.loads(proc.stdout)
-    assert data["execution_available"] is False
-    assert data["placeholder"] is True
+    assert data["execution_available"] is True
+    assert data["placeholder"] is False
 
 
-def test_assert_runners_blocks_false_claim() -> None:
+def test_assert_runners_blocks_unsubstantiated_claim() -> None:
     proc = _run(
-        RUNNERS / "assert_runners_placeholder.py",
+        RUNNERS / "assert_runners_claims.py",
         "--agent-text",
         "The Spot job succeeded on your PR.",
         "--check",
     )
     assert proc.returncode == 1
+
+
+def test_assert_runners_allows_claim_with_evidence() -> None:
+    proc = _run(
+        RUNNERS / "assert_runners_claims.py",
+        "--agent-text",
+        "HeyEddi Runner: test conclusion=success — the Spot job succeeded on your PR.",
+        "--check",
+    )
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    data = json.loads(proc.stdout)
+    assert data["blocked"] is False
+    assert data["evidence_detected"] is True
 
 
 def test_discover_and_verify_empty_repo(tmp_path: Path) -> None:

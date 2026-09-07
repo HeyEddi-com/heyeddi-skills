@@ -2,7 +2,7 @@
 name: engineering-excellence
 description: "ALWAYS-ON: audits plans and code for KISS, YAGNI, DRY, SOLID, and testability; maintains .heyeddi/docs/engineering/. Use on every chat that plans or changes code, before merge, refactor, ADRs, or reuse-catalog work. Not for visual UX (ux-flow-auditor) or full CI (pre-merge-gate includes this audit)."
 version: 1.1.0
-product-version: 3.4.7
+product-version: 3.4.8
 author: HeyEddi-com
 ---
 

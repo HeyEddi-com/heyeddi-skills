@@ -96,8 +96,8 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
     },
     "heyeddi-ci-runners": {
         "skill": "heyeddi-ci-guide",
-        "prompt": "@heyeddi-ci-guide confirm runners are placeholder/fail-closed and list next CI skills",
-        "why": "Pipeline YAML authored: restate fail-closed status and safety.",
+        "prompt": "@heyeddi-ci-guide confirm Spot claim rules (evidence before execution claims) and list next CI skills",
+        "why": "Runners wired: restate evidence rule and point at fails/respond.",
     },
 }
 

@@ -2,7 +2,7 @@
 
 Always re-check keys against `load_policy_contract` output before writing.
 
-## Reviewer-only (prefer this unless runners are requested)
+## Reviewer-only (prefer when GHA owns CI)
 
 ```yaml
 version: "1.0"
@@ -14,7 +14,9 @@ ai_review:
 pipeline: {}
 ```
 
-## Python + Node runners (only with evidence + user intent)
+Pair with `@heyeddi-ci-runners` for the `HEYEDDI_RUNS_ON` workflow hook + workspace mode.
+
+## Sealed pipeline (only with evidence + user intent + no GHA duplicate)
 
 ```yaml
 version: "1.0"
@@ -32,10 +34,10 @@ pipeline:
       paths: ["backend/**"]
   test-node:
     stage: test
-    image: node:20
+    image: node:22
     run: npm test
     filter:
       paths: ["src/**"]
 ```
 
-Path filters and `run` commands must match `inspect_repo` evidence for the target repository.
+Path filters and `run` commands must match `inspect_repo` evidence. Checks appear as `HeyEddi Runner: {job_id}` when entitled.

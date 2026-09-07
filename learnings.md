@@ -937,3 +937,17 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - `@heyeddi-orchestrator` always-on router (`reference/always-on.md`)
 
 **Verify:** `uv run pytest tests/test_engineering_always_on.py tests/test_next_skill.py`; `python3 scripts/test-skills.py engineering-excellence`
+
+## 2026-09-04 — Spot runners shipped: retire CI skills PLACEHOLDER
+
+**Context:** HeyEddi CI product (`heyeddi-tool/heyeddi-ci`) runs sealed `pipeline:` on Spot and GHA overflow/always under entitlement. Skills still said PLACEHOLDER/fail-closed.
+
+**Decision:**
+- `@heyeddi-ci-runners` v2.0.0 — GHA-first (`HEYEDDI_RUNS_ON`) + sealed `pipeline:` for no-GHA; evidence before execution claims
+- `@heyeddi-ci-config` v1.2.0 — drop placeholder language; prefer `pipeline: {}` when workflows exist
+- Cascade: guide, fails, registry, README, `docs/ci-skills.md`, packs, orchestrator next-skill
+- Replace `assert_runners_placeholder` with `assert_runners_claims` (deprecated alias kept)
+
+**Claim rule:** Jobs *can* run when entitled; jobs *did* run only with Check/Spot evidence (`HeyEddi Runner: …` or workflow Check).
+
+**Verify:** `uv run pytest tests/test_heyeddi_ci_skills.py`
