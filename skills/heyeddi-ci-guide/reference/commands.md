@@ -44,11 +44,11 @@ Product may offer Apply suggestions and reaction shortcuts. Apply is **not** mer
 
 ## Runners
 
-Declared `pipeline:` jobs are validated by App lint when present. Execution is **fail-closed** until Spot ships. `@heyeddi-ci-runners` is the placeholder skill.
+Spot is shipped. Prefer GHA + workspace `gha_spot_mode` with the `HEYEDDI_RUNS_ON` hook; keep `pipeline: {}` when workflows own CI. Sealed `pipeline:` jobs run on Spot for entitled workspaces and post `HeyEddi Runner: {job_id}` Checks. Claim execution only with Check/Spot evidence — `@heyeddi-ci-runners`.
 
 ## Related agent skills
 
 - `@heyeddi-ci-config` — living contract → YAML
 - `@heyeddi-pr-respond` — all PR review feedback (human + HeyEddi CI)
 - `@heyeddi-ci-fails` — local Check diagnosis
-- `@heyeddi-pr-respond` — human reviewer threads only
+- `@heyeddi-ci-runners` — GHA overflow/always + sealed pipeline

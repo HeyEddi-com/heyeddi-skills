@@ -14,4 +14,4 @@ Only if they said **authorize merge** this turn. Otherwise refuse and explain th
 
 ## User asks if Spot ran their pipeline job
 
-Say runners are placeholder / fail-closed; YAML may be linted but jobs did not execute.
+Look up Checks (`gh pr checks` / `@heyeddi-ci-fails`). Cite `HeyEddi Runner: …` or the workflow Check conclusion. If none, say unknown — YAML lint is not execution. See `@heyeddi-ci-runners`.

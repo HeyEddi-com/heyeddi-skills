@@ -2,7 +2,7 @@
 name: heyeddi-orchestrator
 description: Discover HeyEddi skills, auto-sync .heyeddi/, cross-pillar opinions, suggest @skills, and default pipelines (UI + PR). Use at session start or before multi-step work.
 version: 3.2.0
-product-version: 3.4.6
+product-version: 3.4.8
 author: HeyEddi-com
 ---
 

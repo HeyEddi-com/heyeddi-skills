@@ -1,6 +1,6 @@
 # HeyEddi CI skills
 
-**Date:** 2026-08-09
+**Date:** 2026-09-04
 
 Stack-agnostic skills for HeyEddi CI. **SSOT** lives in this hub under pack [`heyeddi-ci-skills`](../packs/heyeddi-ci-skills.json). **Published** for skills.sh as [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills).
 
@@ -20,10 +20,10 @@ Browse: [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-
 
 | Skill | Role |
 |-------|------|
-| `@heyeddi-ci-config` | Living-contract `eddi-ci.yaml` authoring |
+| `@heyeddi-ci-config` | Living-contract `eddi-ci.yaml` authoring (GHA-first; sealed pipeline opt-in) |
 | `@heyeddi-pr-respond` | All PR review feedback (human + HeyEddi CI root summaries + inline) |
 | `@heyeddi-ci-fails` | Failing Checks diagnosis |
-| `@heyeddi-ci-runners` | PLACEHOLDER pipeline YAML (Spot fail-closed) |
+| `@heyeddi-ci-runners` | Spot: GHA overflow/always + sealed `pipeline:` (evidence before claims) |
 | `@heyeddi-ci-guide` | Commands, auth, feedback |
 
 Human + HeyEddi CI reviews: `@heyeddi-pr-respond` only (one skill).
@@ -34,7 +34,7 @@ Human + HeyEddi CI reviews: `@heyeddi-pr-respond` only (one skill).
 - Never commit `.heyeddi/docs/pr-*` scratch (gitignored; GitHub is SSOT)
 - Never invent knobs — `load_policy_contract`
 - Feedback: debate / `support@heyeddi.com` (no FP API yet)
-- Runners: do not claim execution
+- Runners: Spot is shipped; claim execution only with Check/Spot evidence
 
 ## Maintainer
 

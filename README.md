@@ -4,7 +4,7 @@
 
 **HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) — free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.4.7** · 27 skills · [skills-registry.json](skills-registry.json)
+**Status:** **v3.4.8** · 27 skills · [skills-registry.json](skills-registry.json)
 
 ### Who this is for
 
@@ -54,7 +54,7 @@ cd heyeddi-skills
 
 ### Install CI-only pack (sibling skills.sh repo)
 
-For [HeyEddi CI](https://ci.heyeddi.com) workflows (config, respond, fails, runners placeholder, guide):
+For [HeyEddi CI](https://ci.heyeddi.com) workflows (config, respond, fails, Spot runners, guide):
 
 ```bash
 npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
@@ -127,11 +127,11 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `composable-patterns` | Vue composables for FastAPI / Firebase access |
 | `flutter-patterns` | Riverpod repositories — Dio + Firebase patterns |
 | `engineering-excellence` | KISS/YAGNI/DRY/SOLID audits + `.heyeddi/docs/engineering/` |
-| `heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract (Reviewer + optional runners) |
-| `heyeddi-ci-guide` | HeyEddi CI commands, auth matrix, runners placeholder, feedback paths |
+| `heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract (Reviewer + optional Spot; GHA-first) |
+| `heyeddi-ci-guide` | HeyEddi CI commands, auth matrix, Spot runners, feedback paths |
 | `@heyeddi-pr-respond` | Respond to all PR review feedback (human + HeyEddi CI) |
 | `@heyeddi-ci-fails` | Diagnose failing GitHub Checks; optional `/heyeddi fails` |
-| `heyeddi-ci-runners` | PLACEHOLDER — author `pipeline:` YAML; Spot fail-closed |
+| `heyeddi-ci-runners` | Spot: GHA overflow/always + sealed `pipeline:`; evidence before claims |
 | `ux-flow-auditor` | Task-flow traces — friction, click depth — `.heyeddi/docs/ux-flows/` |
 | `visual-auditor` | Review screenshots vs spec, fix visual issues, document fixes |
 | `verify-build` | Vite static build validator |

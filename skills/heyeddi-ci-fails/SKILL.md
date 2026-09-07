@@ -2,7 +2,7 @@
 name: heyeddi-ci-fails
 description: "Diagnose and fix failing GitHub Checks on PR work by default: fetch evidence, write ephemeral ci-fails report, apply fixes, verify locally. Run automatically — do not wait for user to ask. Never merge without authorize merge. Companion to /heyeddi fails."
 version: 1.1.0
-product-version: 3.4.2
+product-version: 3.4.8
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -47,7 +47,7 @@ Also tell the user they can comment `/heyeddi fails` on the PR for hosted App an
 
 - Never invent failure causes without citing check evidence
 - Never merge without **authorize merge**
-- Never claim Spot runners ran
+- Never claim Spot/GHA jobs ran without Check or Spot evidence
 
 ## Tools
 
