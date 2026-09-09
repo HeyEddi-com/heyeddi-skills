@@ -1,8 +1,8 @@
 ---
 name: pre-merge-gate
-description: Runs pre-merge checks (backend + frontend + engineering excellence + optional UI audit). Any FAIL exits 1 (hard stop). Use when QA approves a PR or before merge to main.
-version: 1.2.0
-product-version: 3.4.8
+description: Runs pre-merge checks (setup prefs + backend + frontend + engineering excellence + optional UI audit). Any FAIL exits 1 (hard stop). Use when QA approves a PR or before merge to main.
+version: 1.3.0
+product-version: 3.4.9
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -35,6 +35,7 @@ The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED`
 
 **Required when the tree exists**
 
+- **setup audit** (`@heyeddi-setup` `verify_setup --check`: incomplete prefs fail)
 - npm test + production build (`package.json`)
 - `vue-tsc --noEmit` when `node_modules` is present (FAIL if frontend exists but toolchain missing)
 - `backend` pytest (`backend/tests`, prefers `backend/.venv`)
@@ -47,7 +48,7 @@ The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED`
 - prose audit (`heyeddi-design` `verify_prose.py`) — always-on for copy; skip only in emergency
 - contrast audit on product routes (`visual-auditor`; SKIP if Playwright missing)
 
-Flags: `--skip-duplicate-ui`, `--skip-prose-audit`, `--skip-engineering-audit`, `--skip-visual-audit`. `--skip-backend` and `--skip-engineering-audit` are emergency-only and must not be used for merge sign-off.
+Flags: `--skip-duplicate-ui`, `--skip-prose-audit`, `--skip-engineering-audit`, `--skip-setup-audit`, `--skip-visual-audit`. `--skip-backend`, `--skip-engineering-audit`, and `--skip-setup-audit` are emergency-only and must not be used for merge sign-off.
 
 ## When the task is complete: suggest next skills
 

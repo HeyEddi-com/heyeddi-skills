@@ -990,3 +990,18 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - Design `visual-tools.md` points at host-surfaces for degrade policy
 
 **Anti-pattern:** Guessing IDE capabilities from the filesystem.
+
+## 2026-09-08 — `@heyeddi-setup` HARD prefs gate
+
+**Context:** Setup skill existed with `verify_setup --check`, but always-on policy only soft-suggested it. Agents could invent git/agent prefs.
+
+**Decision:**
+- Promote `@heyeddi-setup` to always-on **hard gate** for git/CI/commit/push/agent assumptions (non-git work may continue)
+- `reference/setup-always-on.md`; hub `docs/always-on-skills.md` fail rule; orchestrator hard-routes on fail
+- `@pre-merge-gate` runs `verify_setup --check` (`setup-audit`; emergency `--skip-setup-audit` only)
+- Bookends: project-engineering, flutter-engineering, heyeddi-pr-respond
+- Skill v1.2.0 ALWAYS-ON description
+
+**Process:** `verify_setup --check` before prefs-dependent actions; incomplete → `@heyeddi-setup` until pass
+
+**Verify:** `uv run pytest tests/test_setup_always_on.py tests/test_engineering_always_on.py tests/test_heyeddi_setup.py`

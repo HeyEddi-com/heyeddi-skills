@@ -137,6 +137,7 @@ def test_pre_merge_includes_engineering_audit(tmp_path: Path) -> None:
             "--skip-duplicate-ui",
             "--skip-prose-audit",
             "--skip-visual-audit",
+            "--skip-setup-audit",
         ],
         cwd=str(PRE_MERGE.parent),
         capture_output=True,
@@ -161,6 +162,7 @@ def test_pre_merge_skip_engineering_flag(tmp_path: Path) -> None:
             "--skip-prose-audit",
             "--skip-visual-audit",
             "--skip-engineering-audit",
+            "--skip-setup-audit",
         ],
         cwd=str(PRE_MERGE.parent),
         capture_output=True,
@@ -192,6 +194,9 @@ def test_always_on_docs_exist() -> None:
     assert (ROOT / "docs" / "always-on-skills.md").is_file()
     assert (
         ROOT / "skills" / "engineering-excellence" / "reference" / "engineering-always-on.md"
+    ).is_file()
+    assert (
+        ROOT / "skills" / "heyeddi-setup" / "reference" / "setup-always-on.md"
     ).is_file()
     assert (ROOT / "skills" / "heyeddi-orchestrator" / "reference" / "always-on.md").is_file()
 

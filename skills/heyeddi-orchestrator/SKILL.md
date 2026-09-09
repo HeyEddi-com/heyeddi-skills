@@ -1,8 +1,8 @@
 ---
 name: heyeddi-orchestrator
 description: "ALWAYS-ON router: discover HeyEddi skills, auto-sync .heyeddi/ (skills index), cross-pillar opinions, suggest @skills. Use at every session start, after reinstalling skills, on ambiguous tasks, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route."
-version: 3.2.0
-product-version: 3.4.8
+version: 3.3.0
+product-version: 3.4.9
 author: HeyEddi-com
 ---
 
@@ -24,10 +24,11 @@ author: HeyEddi-com
 
 After routing, enforce:
 
-1. **`@engineering-excellence`** plan gate before coding; change gate (`audit_engineering --check`) after edits — errors fail; warns advisory
-2. **Prose anti-slop** when copy or `.heyeddi` docs change (`verify_prose --check`)
-3. **Clarify-before-act** when product/design/stack intent is missing
-4. **Host surfaces** — prefer this session's native plan / data / visual tools when listed; degrade to `.heyeddi` / scripts otherwise (`reference/host-surfaces.md`)
+1. **`@heyeddi-setup`** prefs gate (`verify_setup --check`) before git/CI/commit/push or agent autonomy — incomplete prefs **fail** those actions; route setup until pass (`reference/setup-always-on.md` on that skill)
+2. **`@engineering-excellence`** plan gate before coding; change gate (`audit_engineering --check`) after edits — errors fail; warns advisory
+3. **Prose anti-slop** when copy or `.heyeddi` docs change (`verify_prose --check`)
+4. **Clarify-before-act** when product/design/stack intent is missing
+5. **Host surfaces** — prefer this session's native plan / data / visual tools when listed; degrade to `.heyeddi` / scripts otherwise (`reference/host-surfaces.md`)
 
 ## Automatic `.heyeddi/` upkeep
 
@@ -94,6 +95,7 @@ See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
 ## Related
 
 - `@heyeddi-product` · `@ux-flow-auditor` · `@heyeddi-design`: three pillars
+- `@heyeddi-setup`: always-on prefs hard gate (`verify_setup --check`)
 - `@engineering-excellence`: always-on plan + change gates
 - `@heyeddi-intake`: upstream intake
 - `reference/host-surfaces.md`: prefer host plan/data/visual tools; portable degrade

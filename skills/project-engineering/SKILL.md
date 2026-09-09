@@ -2,7 +2,7 @@
 name: project-engineering
 description: "Ensures HeyEddi projects have the right engineering stack: Vue (Vite/Vitest), FastAPI backend, or Firebase tooling. Audits gaps, scaffolds as needed, installs deps, runs tests, documents local dev servers. Use when the repo is thin or before design/feature work on any HeyEddi app."
 version: 1.1.0
-product-version: 3.4.8
+product-version: 3.4.9
 author: HeyEddi-com
 paths:
   - "package.json"
@@ -77,15 +77,16 @@ Every HeyEddi app should have a **`.heyeddi/`** folder (created by `scaffold_sta
 
 ## Workflow
 
-1. **`audit_scaffold`**: per-layer JSON (vue / fastapi / firebase).
-2. **`scaffold_stack --stack auto`**: fills gaps (preferred over `scaffold_vue` alone).
-3. **`ensure_npm`** + **`ensure_python`** as needed.
-4. **`dev_server_info`**: all local servers (Vue :5173, API :8090, Firebase emulators :4000).
-5. **Plan gate (always-on):** `@engineering-excellence` `check_engineering_plan --check` before feature code; read reuse-catalog.
-6. Implement features (design skills, composables, etc.).
-7. **`write_test_stub`** + **`run_tests`** + **`run_backend_tests`**.
-8. **Change gate (always-on):** `audit_engineering --check` (errors fail; warns advisory).
-9. **`verify-build`** + **`pre-merge-gate`**.
+1. **Prefs gate (always-on hard):** `@heyeddi-setup` `verify_setup --check` before git/CI/commit assumptions; incomplete → run setup until pass.
+2. **`audit_scaffold`**: per-layer JSON (vue / fastapi / firebase).
+3. **`scaffold_stack --stack auto`**: fills gaps (preferred over `scaffold_vue` alone).
+4. **`ensure_npm`** + **`ensure_python`** as needed.
+5. **`dev_server_info`**: all local servers (Vue :5173, API :8090, Firebase emulators :4000).
+6. **Plan gate (always-on):** `@engineering-excellence` `check_engineering_plan --check` before feature code; read reuse-catalog.
+7. Implement features (design skills, composables, etc.).
+8. **`write_test_stub`** + **`run_tests`** + **`run_backend_tests`**.
+9. **Change gate (always-on):** `audit_engineering --check` (errors fail; warns advisory).
+10. **`verify-build`** + **`pre-merge-gate`**.
 
 ## Local dev servers
 

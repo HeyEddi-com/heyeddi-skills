@@ -2,7 +2,7 @@
 name: heyeddi-ci-guide
 description: Reference for HeyEddi CI commands, authorize-merge auth, feedback via debate + support@, and Spot runners (GHA overflow + sealed pipeline). Use when asking how to work with HeyEddi CI.
 version: 1.1.0
-product-version: 3.4.8
+product-version: 3.4.9
 author: HeyEddi-com
 ---
 

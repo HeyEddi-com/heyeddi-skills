@@ -2,7 +2,7 @@
 name: heyeddi-design
 description: "Stack-agnostic UI design: discovery, briefs, critique, design system docs. Uses GenerateImage + Canvas to show direction during explore/shape. Implementation via @heyeddi-handoff or @design-handoff-flutter. Auto-fix on critique. Screenshots → @heyeddi-handoff."
 version: 2.5.0
-product-version: 3.4.8
+product-version: 3.4.9
 author: HeyEddi-com
 ---
 
