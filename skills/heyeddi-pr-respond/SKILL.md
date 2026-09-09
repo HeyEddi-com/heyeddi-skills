@@ -2,7 +2,7 @@
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback — human reviewers, HeyEddi CI, inline threads. Auto-fix, commit+push, in-thread replies, CI check first — never ask before fixing or posting. One skill for every review source."
 version: 2.1.0
-product-version: 3.4.8
+product-version: 3.4.9
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -79,10 +79,11 @@ build_comment_inventory --pr <N> --write-cache
 → tracking table in chat (every item: id, type, fix|decline, status)
 for each item: analyze vs PR goals → fix | decline | partial | out-of-scope
 apply code/docs fixes when fix
+@heyeddi-setup verify_setup --check      → always-on prefs hard gate (before commit/push)
 @engineering-excellence check_engineering_plan / audit_engineering --check  → always-on (errors fail)
 discover_and_verify [--run]              → evidenced commands only
 assert_no_merge --check                  → unless user said authorize merge
-→ if any fix: commit + push (automatic — do not ask)
+→ if any fix: commit + push (automatic — do not ask; honor agent.commit/push)
 assert_fixes_pushed --check
 → compose ## Comment <id> for every postable_reply_id + ## Summary last
 post_thread_replies --pr <N> --replies-text '...'

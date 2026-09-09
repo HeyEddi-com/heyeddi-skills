@@ -1,8 +1,8 @@
 ---
 name: heyeddi-setup
-description: "Ensures `.heyeddi/stack.json` holds git/env and agent prefs. Asks a few preference questions (env layout, custom workflow escape hatch, worktrees, commit/push autonomy). Tech stack is discovered by other skills. Use when setup is incomplete or the user says setup, preferences, or heyeddi-setup."
-version: 1.1.0
-product-version: 3.4.8
+description: "ALWAYS-ON prefs gate: ensures `.heyeddi/stack.json` holds git/env and agent prefs. Incomplete prefs fail git/CI/commit/push assumptions until verify_setup --check passes. Asks env layout, custom workflow escape hatch, worktrees, commit/push autonomy. Tech stack is discovered by other skills. Use when setup is incomplete or the user says setup, preferences, or heyeddi-setup."
+version: 1.2.0
+product-version: 3.4.9
 author: HeyEddi-com
 paths:
   - ".heyeddi/stack.json"
@@ -12,14 +12,28 @@ paths:
 
 **Project working agreement** for agents: ensure `.heyeddi/stack.json` has **git/env + agent prefs**. Re-run anytime to update.
 
+**Always on** as the prefs hard gate before git/CI/commit/push or agent autonomy. See `reference/setup-always-on.md` and hub `docs/always-on-skills.md`.
+
 Does **not** quiz frontend, backends, package manager, or CI — those are filled by scaffold / engineering / CI skills as the project evolves.
 
 ## When to use
 
 - Missing `git` / `agent` / `setup` prefs in `stack.json`
 - User says "setup", "preferences", or `@heyeddi-setup`
-- Session start when `verify_setup --check` fails
+- Session start when `verify_setup --check` fails (**hard route** — do not invent prefs)
+- Before commit, push, PR base, or branch/env assumptions
 - Re-run to change env layout or agent autonomy
+
+## Hard gate
+
+```bash
+python .agents/skills/heyeddi-setup/scripts/verify_setup.py --project-root . --check
+```
+
+- **Exit 0** — honor prefs in `stack.json`
+- **Exit 1** — stop git/CI/agent assumptions; finish this skill until check passes
+
+Non-git work may continue. Never invent branch names, PR bases, or auto-commit/push while incomplete.
 
 ## Mandatory pipeline
 
@@ -57,7 +71,7 @@ python .agents/skills/heyeddi-setup/scripts/verify_setup.py --project-root . --c
 
 ## Agents: always honor prefs
 
-Read `.heyeddi/stack.json` before git/commit/push:
+Read `.heyeddi/stack.json` before git/commit/push (only after `verify_setup --check` passes):
 
 - `git.environments` — which branch maps to production / staging / (optional) dev
 - `git.pr_base` / `git.default_branch`
@@ -69,6 +83,7 @@ Read `.heyeddi/stack.json` before git/commit/push:
 - Ask frontend / backends / package manager / CI in this skill
 - Put prefs outside `.heyeddi/stack.json`
 - Claim setup done without `verify_setup --check`
+- Treat incomplete prefs as advisory when about to commit, push, or assume branches
 - Replace `@project-engineering` / `@flutter-engineering` scaffold duties
 
 ## When the task is complete: suggest next skills
@@ -81,6 +96,8 @@ Include the script's **`### Next step`** block in your final reply.
 
 ## Related
 
+- `reference/setup-always-on.md` — hard gate policy
 - `reference/stack-schema.md` — key list
-- `@heyeddi-orchestrator` — suggest setup when prefs incomplete
+- `@heyeddi-orchestrator` — hard-route setup when prefs incomplete
+- `@pre-merge-gate` — runs `verify_setup --check`
 - `@project-engineering` / `@flutter-engineering` — discover and write tech into `stack.json`

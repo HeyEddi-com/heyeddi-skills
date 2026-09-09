@@ -1,5 +1,5 @@
 {
-  "version": "3.4.8",
+  "version": "3.4.9",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -17,7 +17,7 @@
     },
     {
       "name": "heyeddi-setup",
-      "description": "Ensure .heyeddi/stack.json has stack + git/tools/agent prefs; quick Q&A, re-run to update"
+      "description": "ALWAYS-ON prefs gate \u2014 verify_setup --check before git/CI/commit/push; Q&A for stack.json prefs"
     },
     {
       "name": "project-engineering",

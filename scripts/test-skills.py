@@ -275,6 +275,9 @@ def default_args_for_tool(tool_name: str, skill_name: str, fixture_root: Path) -
         args["route"] = "/settings"
     if tool_name == "audit_dependencies":
         pass
+    if tool_name == "run_pre_merge_gate":
+        # Fixture has no node_modules / Playwright; avoid Traceback noise in report cells
+        args["skip_visual_audit"] = True
     if tool_name in ("scaffold_vue", "scaffold_stack", "scaffold_fastapi", "scaffold_firebase", "scaffold_flutter"):
         args["dry_run"] = True
     if tool_name in ("write_product", "write_translation", "write_routing", "generate_wireframe", "prepare_mockup_prompts", "seed_brief", "build_routing"):

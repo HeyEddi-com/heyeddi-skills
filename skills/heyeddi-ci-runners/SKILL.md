@@ -2,7 +2,7 @@
 name: heyeddi-ci-runners
 description: "Configure HeyEddi Spot runners — prefer GHA overflow/always with the HEYEDDI_RUNS_ON hook; author sealed eddi-ci.yaml pipeline jobs only for no-GHA or niche checks. Use when wiring runners, pipeline YAML, or Spot CI."
 version: 2.0.0
-product-version: 3.4.8
+product-version: 3.4.9
 author: HeyEddi-com
 ---
 

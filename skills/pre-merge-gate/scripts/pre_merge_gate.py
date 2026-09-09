@@ -108,10 +108,24 @@ def main() -> None:
         action="store_true",
         help="Emergency only; do not use for merge sign-off",
     )
+    parser.add_argument(
+        "--skip-setup-audit",
+        action="store_true",
+        help="Emergency only; do not use for merge sign-off",
+    )
     parser.add_argument("--skip-backend", action="store_true", help="Emergency only; do not use for merge")
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
     rows: list[tuple[str, str, str]] = []
+
+    if not args.skip_setup_audit:
+        out = run_skill_script(root, "heyeddi-setup", "scripts/verify_setup.py", ["--check"])
+        st = status_from_output(out)
+        if st == "PASS" and '"complete": false' in out:
+            st = "FAIL"
+        rows.append(("setup-audit", st, out[:200]))
+    else:
+        rows.append(("setup-audit", "SKIP", "skipped via --skip-setup-audit"))
 
     pkg = root / "package.json"
     if pkg.is_file():

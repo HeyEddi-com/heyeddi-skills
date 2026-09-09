@@ -1,6 +1,6 @@
 # stack.json prefs schema (@heyeddi-setup)
 
-**Date:** 2026-09-06
+**Date:** 2026-09-08
 
 Setup owns **git/env + agent** prefs. Tech (`frontend`, `backends`, ports, package manager, CI) may live in the same file but is filled by other skills.
 

@@ -2,7 +2,7 @@
 name: heyeddi-handoff
 description: "Implements screens from briefs, wireframes, or designer screenshots. Vue + PrimeVue + project tokens. Two-pass for PNGs; single-pass from confirmed brief.md. Chains to @visual-auditor automatically."
 version: 1.3.0
-product-version: 3.4.8
+product-version: 3.4.9
 author: HeyEddi-com
 disable-model-invocation: true
 ---
