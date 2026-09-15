@@ -1005,3 +1005,18 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Process:** `verify_setup --check` before prefs-dependent actions; incomplete → `@heyeddi-setup` until pass
 
 **Verify:** `uv run pytest tests/test_setup_always_on.py tests/test_engineering_always_on.py tests/test_heyeddi_setup.py`
+
+## 2026-09-14 — Better design escalates to shape (not polish-only)
+
+**Context:** Asking for a "better design" routinely produced spacing/token tweaks because improve-existing intent was routed to critique → polish, which forbids IA change.
+
+**Decision:** `heyeddi-design` v2.5.1 — critique **ambition gate** (Escalate shape | Stay polish). Redesign phrases ("better design", "make it better", "redesign", "new look", "overhaul", "wow", "top notch") plus template/name-swap/missing signature triggers → **shape → craft → implement**. Polish only when gate says Stay.
+
+**Process:**
+1. Critique writes Ambition gate section
+2. Escalate → `shape` (Design signature) → craft → stack implementer
+3. Stay → P0/P1 implement + visual-auditor
+
+**Files:** `skills/heyeddi-design/SKILL.md`, `reference/critique.md`, `polish.md`, `design-ambition.md`, `context/ANTI_PATTERNS.md`, `VOCABULARY.md`, `EXAMPLES.md`, `manifest.json`
+
+**Notes:** Reinstall/sync skill into consumer `.agents/skills/` after publish; do not treat install trees as SSOT.

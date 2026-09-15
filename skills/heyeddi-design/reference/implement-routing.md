@@ -44,16 +44,15 @@ Read `.heyeddi/stack.json` → `frontend` (fallback: `package.json` → Vue; `pu
 2. Updates `design.md` Decision log
 3. **Invokes** the stack implementer for the route (do not write Vue/Flutter in the design turn)
 
-## Critique → fix (default, no confirmation)
+## Critique → next step (default, no confirmation)
 
-When user says "looks bad", "fix this page", "improve UI":
+1. `@heyeddi-design critique` → write `.heyeddi/docs/<feature>-critique.md` with **ambition gate**
+2. **If Escalate (shape):** run `shape` (confirm Design signature) → `craft` → stack implementer → `@visual-auditor`
+3. **If Stay (polish):** stack implementer applies P0/P1 → `@visual-auditor` → `polish` only if design-doc sync needed
 
-1. `@heyeddi-design critique` → write `.heyeddi/docs/<feature>-critique.md`
-2. **Immediately** stack implementer applies P0/P1 code fixes from critique
-3. `@visual-auditor` full fix loop
-4. `@heyeddi-design polish` only if IA/token spec still needs design-doc updates
+**Redesign intent** ("better design", "make it better", "redesign", …) usually hits step 2 — do not treat as spacing-only.
 
-Do **not** stop after critique and ask whether to fix.
+Do **not** stop after critique and ask whether to fix. Do **not** ask for polish vs shape when the gate already decided.
 
 ## PR work (orthogonal)
 

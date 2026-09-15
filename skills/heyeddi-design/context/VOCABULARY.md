@@ -12,7 +12,8 @@
 - **Design talk:** append **Decision log** entries in `.heyeddi/design.md` after craft, polish, or handoff (`reference/design-talk.md`).
 - **Craft:** brief confirmed → hand off to stack implementer (`reference/implement-routing.md`); no framework code in design skill.
 - **Surface completeness:** design full screens per `reference/surface-completeness.md`: affordances, states, spacing, deferred wiring backlog.
-- **Critique:** designer-eye review → `.heyeddi/docs/<feature>-critique.md`; **then** auto-chain implement + `@visual-auditor` (default).
-- **Polish:** design-spec + code refinement on existing routes: **after critique**.
+- **Critique:** designer-eye review → `.heyeddi/docs/<feature>-critique.md` with **ambition gate** (Escalate shape | Stay polish); then auto-chain the recommended path (default).
+- **Ambition gate:** decide polish vs `shape` before fixing; redesign phrases and template-like UI escalate (`critique.md`, `design-ambition.md`).
+- **Polish:** local refinement on existing routes **only** after critique gate says Stay; does not replace redesign.
 - **Register:** `product` (app UI) vs `brand` (marketing) in product brief.
 - **Skill reports:** ship notes, drift audits → `.heyeddi/docs/`.

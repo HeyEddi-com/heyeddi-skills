@@ -1,8 +1,8 @@
 ---
 name: heyeddi-design
-description: "Stack-agnostic UI design: discovery, briefs, critique, design system docs. Uses GenerateImage + Canvas to show direction during explore/shape. Implementation via @heyeddi-handoff or @design-handoff-flutter. Auto-fix on critique. Screenshots → @heyeddi-handoff."
-version: 2.5.0
-product-version: 3.4.9
+description: "Stack-agnostic UI design: discovery, briefs, critique, design system docs. Better design / redesign escalates to shape (not polish-only) when template-like. Uses GenerateImage + Canvas during explore/shape. Implementation via @heyeddi-handoff or @design-handoff-flutter. Screenshots → @heyeddi-handoff."
+version: 2.5.1
+product-version: 3.4.10
 author: HeyEddi-com
 ---
 
@@ -27,7 +27,8 @@ Read **`reference/implement-routing.md`** every session that ends in shipped UI.
 
 ## Default behavior (no confirmation)
 
-- **Critique + fix:** "looks bad", "fix this page", "improve UI" → critique report **then** stack implementer fixes code **then** `@visual-auditor` — do not ask
+- **Better design / redesign:** "better design", "make it better", "redesign", "new look", "overhaul", "wow", "top notch" → **do not polish-only**. Run critique ambition gate (`reference/critique.md`); if template-like or ambition fails → **`shape` → craft → implement**. Spacing/token tweaks alone are wrong for these phrases.
+- **Critique + fix (local):** "looks bad", "fix this page", "polish", "tweak spacing" → critique **then** stack implementer + `@visual-auditor` — **unless** the ambition gate says escalate to `shape` (then shape first; do not ask).
 - **Craft:** confirmed brief → hand off to stack implementer in the same workflow
 - **Ambition bar:** impressive craft is default on flagship routes — do not wait for user to ask
 
@@ -90,14 +91,15 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 
 ## Routing rules
 
-1. **Existing UI: critique or improve** ("critique", "looks bad", "fix this page"): load `reference/critique.md` → implement + `@visual-auditor` in the same workflow. Do **not** ask.
-2. **No sub-command, vague greenfield**: load `reference/discover.md`.
-3. **Sub-command matches table**: load `reference/<command>.md`.
-4. **`craft` without confirmed brief**: run **`shape`** first.
-4b. **Flagship routes** without personas: `@heyeddi-intake` or `discover` first.
-5. **`polish` without critique this session**: run **critique** first.
-6. **Screenshots / approved mockups**: `@heyeddi-handoff` (implement), not design `craft` code.
-7. **Never invoke impeccable**: this skill replaces it.
+1. **Better design / redesign intent** ("better design", "make it better", "redesign", "new look", "overhaul", "major improvement", "wow", "top notch" on an existing route): load `reference/critique.md` **ambition gate** → if escalate → `reference/shape.md` then `craft` (not polish-only). See `reference/design-ambition.md` § Improve vs redesign.
+2. **Existing UI: local fix** ("critique", "looks bad", "fix this page", "polish"): load `reference/critique.md` → run ambition gate → polish-path implement + `@visual-auditor` **only if** gate says stay local. Do **not** ask.
+3. **No sub-command, vague greenfield**: load `reference/discover.md`.
+4. **Sub-command matches table**: load `reference/<command>.md`.
+5. **`craft` without confirmed brief**: run **`shape`** first.
+5b. **Flagship routes** without personas: `@heyeddi-intake` or `discover` first.
+6. **`polish` without critique this session**: run **critique** first (including ambition gate).
+7. **Screenshots / approved mockups**: `@heyeddi-handoff` (implement), not design `craft` code.
+8. **Never invoke impeccable**: this skill replaces it.
 
 ## Artifacts
 

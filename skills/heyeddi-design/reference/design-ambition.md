@@ -71,13 +71,24 @@ After `modern-reference` + `aesthetic-direction` checks and before audience-fit:
 
 If any fail → `@heyeddi-design polish` or revise in craft; do not hand off to `@heyeddi-handoff` with generic chrome.
 
+## Improve vs redesign
+
+| User says | Default path |
+|-----------|--------------|
+| polish, tweak, fix spacing, looks bad (minor) | critique → polish-path **if** ambition gate Stay |
+| better design, make it better, redesign, new look, overhaul, wow, top notch | critique → **shape** when gate Escalate (usual) → craft → implement |
+| design a new … | discover / shape |
+
+**Never** answer redesign intent with hierarchy-unchanged spacing/token diffs. If the name-swap or template test fails, **shape** is mandatory even when the user also said "fix it".
+
 ## Polish & critique
 
-When user asks to "make it more artistic" or "top of the line":
+When user asks to "make it more artistic", "better design", or "top of the line":
 
-1. Re-read **Design signature**: sharpen memorable detail, do not add random ornament
-2. Upgrade **typography + surfaces + spacing** before adding new components
-3. Run `audience-fit` + ambition checklist; report which dimension was weak
+1. Run critique **ambition gate** (`critique.md`) — expect **Escalate: shape** on template-like flagship routes
+2. If escalate: new or sharpened **Design signature** via `shape`, then craft — do not polish-only
+3. If stay: re-read **Design signature** — sharpen memorable detail, do not add random ornament; upgrade **typography + surfaces + spacing** before new components
+4. Run `audience-fit` + ambition checklist; report which dimension was weak
 
 ## Handoff boundary
 
@@ -87,5 +98,5 @@ When user asks to "make it more artistic" or "top of the line":
 
 ## Related
 
-- `audience-design.md`, `modern-reference.md`, `aesthetic-direction.md`, `explore.md`, `audience-fit.md`
+- `audience-design.md`, `modern-reference.md`, `aesthetic-direction.md`, `explore.md`, `audience-fit.md`, `critique.md`
 - `context/ANTI_PATTERNS.md`: template swap called out

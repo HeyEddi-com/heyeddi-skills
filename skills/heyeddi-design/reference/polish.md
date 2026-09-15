@@ -1,6 +1,6 @@
 # Polish: refine existing screen
 
-**Scope:** Improve an implemented route without changing core IA.
+**Scope:** Improve an implemented route **without** changing core IA — only after critique ambition gate says **Stay: polish**.
 
 **Prerequisite:** Run **`critique`** first (`reference/critique.md`) and write `.heyeddi/docs/<feature>-critique.md`: unless you already critiqued this route in the current session. Polish addresses the P0/P1 items from that critique.
 
@@ -8,6 +8,7 @@
 
 1. Run `load_context.py`: DESIGN.md + PRODUCT.md (check `audience_ready`).
 2. **Read the critique**: `.heyeddi/docs/<feature>-critique.md`. If missing, run **critique** before changing code.
+2b. If critique **Ambition gate** is `ESCALATE shape` (or user asked for better design / redesign): **stop polish** — run `reference/shape.md` then craft. Do not ship spacing-only diffs as the answer.
 3. Re-check `reference/audience-fit.md`: tone and persona alignment, not just spacing.
 3b. Re-check `reference/aesthetic-direction.md`: thesis, type, motion, generic AI looks; sharpen **one** aesthetic risk rather than adding ornament.
 4. Run **`@visual-auditor`** full fix loop: capture → review vs product + design → fix code → `append_fix_log` → `finalize_visual_review --check`.
@@ -18,5 +19,6 @@
 
 ## Boundaries
 
-- **Polish** does not replace **shape**: if critique flags IA problems, recommend `shape` + brief update first.
+- **Polish** does not replace **shape**: if critique flags IA problems, template/scaffold look, or redesign intent, run `shape` + brief update first.
 - Do not introduce new PrimeVue components without updating DESIGN.md component table.
+- "Better design" is not a polish synonym — see `design-ambition.md` § Improve vs redesign.
