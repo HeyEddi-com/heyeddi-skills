@@ -34,7 +34,7 @@ Route: /settings
 
 Then `document` → `shape` → `craft`.
 
-## Critique only
+## Critique (auto next step)
 
 ```
 @heyeddi-design critique the login page
@@ -42,17 +42,28 @@ Then `document` → `shape` → `craft`.
 
 Or plain language: *"this login screen looks terrible: what's wrong?"*
 
-Writes `.heyeddi/docs/login-critique.md`: no code unless you ask to fix.
+Writes `.heyeddi/docs/login-critique.md` with ambition gate, then **Stay → implement** or **Escalate → shape** (unless user said report-only).
 
-## Critique then polish
+## Better design (usually redesign)
+
+```
+@heyeddi-design
+Make the dashboard a better design — not just polish
+```
+
+Or: *"redesign the settings page"* / *"make it better"*
+
+Runs critique ambition gate → typically **shape** (new Design signature) → craft → implement. Not spacing-only.
+
+## Critique then polish (local)
 
 ```
 @heyeddi-design polish /login
 ```
 
-Runs **critique** first if needed, then fixes P0/P1 issues.
+Runs **critique** first if needed; polish-path only if gate says Stay.
 
-## Polish only
+## Polish only (local)
 
 ```
 @heyeddi-design polish
