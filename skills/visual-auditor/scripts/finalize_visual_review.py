@@ -12,13 +12,24 @@ from pathlib import Path
 from _heyeddi_paths import screenshot_dir, visual_audit_dir
 from _skill_cli import emit, fail, resolve_project_root
 from _spec_context import feature_slug, latest_contrast_report
+from _widths import DONE_WIDTHS, resolve_widths
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Re-verify route and finalize visual review")
     parser.add_argument("--route", required=True)
     parser.add_argument("--project-root", default=None)
-    parser.add_argument("--widths", default="375,768,1440")
+    parser.add_argument(
+        "--widths",
+        default=None,
+        help=f"Comma-separated widths (finalize default: done = {DONE_WIDTHS})",
+    )
+    parser.add_argument(
+        "--preset",
+        default="done",
+        choices=["fast", "done", "flagship"],
+        help="Default done (6 widths). Use fast for quick re-check.",
+    )
     parser.add_argument("--strict", action="store_true")
     parser.add_argument("--skip-recapture", action="store_true")
     parser.add_argument("--check", action="store_true", help="Exit 1 if contrast still fails")
@@ -27,11 +38,15 @@ def main() -> None:
     root = resolve_project_root(args.project_root)
     slug = feature_slug(args.route)
     scripts = Path(__file__).parent
+    try:
+        widths_str = resolve_widths(args.widths, args.preset, default=DONE_WIDTHS)
+    except ValueError as exc:
+        fail(str(exc))
 
     if not args.skip_recapture:
         for script, extra in (
-            ("audit_ui.py", ["--route", args.route, "--widths", args.widths]),
-            ("audit_contrast.py", ["--route", args.route, "--widths", args.widths, "--check"]),
+            ("audit_ui.py", ["--route", args.route, "--widths", widths_str]),
+            ("audit_contrast.py", ["--route", args.route, "--widths", widths_str, "--check"]),
         ):
             cmd = [sys.executable, str(scripts / script), "--project-root", str(root), *extra]
             if script == "audit_contrast.py" and args.strict:
@@ -67,6 +82,7 @@ def main() -> None:
             "",
             f"**Date:** {date.today().isoformat()}",
             f"**Contrast errors:** {contrast_errors}",
+            f"**Widths:** {widths_str}",
             "",
             "### Post-fix captures",
             "",
@@ -82,6 +98,7 @@ def main() -> None:
     payload = {
         "status": "ok" if contrast_errors == 0 else "contrast_remaining",
         "route": args.route,
+        "widths": widths_str,
         "contrast_errors": contrast_errors,
         "review_doc": str(review_path.relative_to(root)) if review_path else None,
         "fix_log": str((visual_audit_dir(root) / "fix-log.md").relative_to(root)),

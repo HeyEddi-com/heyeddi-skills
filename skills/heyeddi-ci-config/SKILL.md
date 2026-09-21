@@ -2,7 +2,7 @@
 name: heyeddi-ci-config
 description: Author or update eddi-ci.yaml for HeyEddi CI and Spot runners. Prefer GHA + HEYEDDI_RUNS_ON for existing workflows; sealed pipeline only when opted in. Loads the live policy contract from cihook.heyeddi.com so knobs stay current.
 version: 1.2.0
-product-version: 3.4.10
+product-version: 3.4.11
 author: HeyEddi-com
 paths:
   - "eddi-ci.yaml"

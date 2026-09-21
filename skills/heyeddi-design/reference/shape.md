@@ -16,8 +16,9 @@ Load and follow each phase in order:
 2. `reference/research.md`: web trend research → `designs/<feature>/research.md` (**Audience fit** section required)
 3. `reference/explore.md`: concept images + wireframes + **visual tools** (`reference/visual-tools.md`)
 4. Read `reference/audience-design.md`: pick direction row before writing brief
-4b. Read `reference/design-ambition.md`: draft **Design signature** for flagship routes
-4c. Read `reference/aesthetic-direction.md`: subject/job, thesis hero, type, motion, one aesthetic risk; run two-pass uniqueness check before locking the brief
+4b. Read `reference/brief-language.md`: subject/metaphor, hard rejects, hero/type/accent/responsive/SSOT — adjective-only briefs are incomplete
+4c. Read `reference/design-ambition.md`: draft **Design signature** for flagship routes
+4d. Read `reference/aesthetic-direction.md`: subject/job, thesis hero, type, motion, one aesthetic risk; run two-pass uniqueness check before locking the brief
 5. **Brief** (below) → `designs/<feature>/brief.md`
 6. **Stop and wait** for explicit user confirmation
 
@@ -36,17 +37,25 @@ After phases 1-3, write the brief to `designs/<feature>/brief.md` and present in
 
 1. **Feature summary**: what, who, outcome (2-3 sentences)
 2. **Audience**: primary persona, route intent, direction row, differentiation (from `audience-design.md`)
-3. **Design signature**: aesthetic energy, subject/page job, signature moment, **aesthetic risk**, borrow/avoid, memorable detail (`design-ambition.md` + `aesthetic-direction.md`): **required on flagship routes**
+3. **Design signature** (`design-ambition.md` + `brief-language.md` + `aesthetic-direction.md`): **required on flagship routes**
+   - Aesthetic energy; **subject / metaphor** (one concrete world); audience; single page job
+   - Signature moment; **one aesthetic risk**
+   - **Borrow:** 3 references + what to steal (X not Y)
+   - **Hard rejects / Avoid:** explicit anti-defaults (not "don't be generic")
+   - **Hero composition** (brand register): full-bleed?, brand loudest?, headline/lede/CTAs/visual
+   - **Typography roles**; **accent vs edge**; **responsive contract** (desktop vs mobile stack)
+   - **Token SSOT**; intensity dial; motion budget (2–3); memorable detail
 4. **Primary user action**: single most important action or understanding
 5. **Design direction**: color strategy, scene sentence, anchors; note research-informed choices and winning probe direction if explore ran
 6. **Scope**: fidelity, breadth, interactivity, time intent
-7. **Layout strategy**: hierarchy, emphasis, information flow (not CSS) — structure encodes information, not fake 01/02/03 chrome
+7. **Layout strategy**: hierarchy, emphasis, information flow (not CSS) — structure encodes information, not fake 01/02/03 chrome; first-viewport checklist when marketing
 8. **Key states**: default, empty, loading, error, success, edge cases
-9. **Interaction model**: clicks, navigation, feedback, flow entry → completion; motion intent if any
+9. **Interaction model**: clicks, navigation, feedback, flow entry → completion; motion budget if any
 10. **Content requirements**: labels, microcopy, dynamic ranges
 11. **Component map**: PrimeVue + layout blocks per region (from wireframes)
 12. **`## Deferred wiring`**: UI shipped now vs backend/API later (see `surface-completeness.md`)
-13. **Open questions**: only genuinely unresolved items
+13. **Done gate**: logo-off brand test + `@visual-auditor --preset done` widths before ship
+14. **Open questions**: only genuinely unresolved items
 
 **Completeness:** Read `reference/surface-completeness.md`: map all regions and archetype affordances in the brief. Do not defer UI to "later" without still designing it; record wiring in **Deferred wiring**.
 

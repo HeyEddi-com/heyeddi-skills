@@ -1,7 +1,8 @@
 
 # Vocabulary: HeyEddi design
 
-- **Discover:** plain-language Q&A: no code; translates "enterprise view" into concrete requirements.
+- **Discover:** plain-language Q&A: no code; translates "enterprise view" into concrete requirements; first round pins subject/metaphor + hard rejects (`brief-language.md`).
+- **Brief language:** taste + subject + hard rejects up front — not adjective-only briefs; see `reference/brief-language.md`.
 - **Research:** web trend / reference gathering → `.heyeddi/designs/<feature>/research.md`.
 - **Explore:** concept images (GenerateImage) + optional Canvas + wireframes → `.heyeddi/designs/<feature>/wireframes/`; see `visual-tools.md`.
 - **Shape:** discover → research → explore → confirmed `brief.md`.
@@ -16,4 +17,5 @@
 - **Ambition gate:** decide polish vs `shape` before fixing; redesign phrases and template-like UI escalate (`critique.md`, `design-ambition.md`).
 - **Polish:** local refinement on existing routes **only** after critique gate says Stay; does not replace redesign.
 - **Register:** `product` (app UI) vs `brand` (marketing) in product brief.
+- **Done gate:** logo-off brand test + `@visual-auditor --preset done` (375/430/768/1024/1440/1920) before calling flagship done.
 - **Skill reports:** ship notes, drift audits → `.heyeddi/docs/`.

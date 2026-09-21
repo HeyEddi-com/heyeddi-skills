@@ -26,8 +26,8 @@ Non-git work may continue when prefs are incomplete. Never invent branch names, 
 | `@heyeddi-setup` | Incomplete `stack.json` prefs (hard for git/agent), or user asks for setup / preferences |
 | `@heyeddi-intake` | Greenfield / thin `product.md` |
 | `@heyeddi-product` | Specs, backlog, usefulness review |
-| `@heyeddi-design` | UI / design work (foundations always-on inside design) |
-| `@visual-auditor` | After UI changes |
+| `@heyeddi-design` | **Any** design / UI / look / feel talk (ALWAYS description). Load `brief-language.md`: subject + hard rejects before craft. Foundations always-on inside design. |
+| `@visual-auditor` | After UI changes; flagship done = `--preset done` (6 widths) |
 | `@ux-flow-auditor` | Task flows / friction |
 | `@pre-merge-gate` | Before merge or ship claim (includes setup + engineering + prose audits) |
 | PR / CI skills | Review or respond loops only |

@@ -2,6 +2,7 @@
 # Anti-patterns: HeyEddi design
 
 - NEVER skip discovery for vague briefs: ask before building.
+- NEVER craft on adjective-only briefs ("professional", "clean", "modern") without **subject/metaphor + hard rejects** — read `reference/brief-language.md`.
 - NEVER write Vue, Flutter, or component CSS in this skill — `@heyeddi-handoff` / `@design-handoff-flutter` implement; see `reference/implement-routing.md`.
 - NEVER stop after critique and ask whether to fix — chain implement + `@visual-auditor` automatically.
 - NEVER add OpenProps to a brownfield project that does not use it: follow `token-strategy.md`.
@@ -14,7 +15,9 @@
 - NEVER craft flagship routes without **Personas + Per-route intent** in `product.md`: run `@heyeddi-intake` or `discover` first.
 - NEVER skip **audience-fit** critique on marketing, dashboard, or settings: see `reference/audience-fit.md`.
 - NEVER ship flagship routes that look like **the last project with a name swap**: define and implement **Design signature** per `reference/design-ambition.md`.
-- NEVER ship marketing/flagship UI that reads as **generic AI chrome** (template KPI hero, Inter-only type, fake 01/02/03, purple gradient SaaS, cream+terracotta default, scattered motion): follow `reference/aesthetic-direction.md` and take **one justified aesthetic risk**.
+- NEVER ship marketing/flagship UI that reads as **generic AI chrome** (template KPI hero, Inter-only type, fake 01/02/03, purple gradient SaaS, cream+terracotta default, scattered motion, boxed/inset heroes, opaque slabs over washes): follow `reference/aesthetic-direction.md` + `brief-language.md` and take **one justified aesthetic risk**.
+- NEVER call flagship/marketing **done** without `@visual-auditor --preset done` (6 widths) and fixing what you see; logo-off brand test must pass.
+- NEVER put edge/link accent colors where they disappear on washed paper — edges must read on the plane.
 - NEVER treat "make it artistic / top notch / better design / redesign" as spacing-only polish: run critique ambition gate; escalate to `shape` when template-like or signature missing (`design-ambition.md`, `critique.md`).
 - NEVER answer redesign intent with hierarchy-unchanged token tweaks when the name-swap or scaffold test fails.
 - NEVER hand off to `@heyeddi-handoff` without a confirmed brief and Design signature: run `shape` first.

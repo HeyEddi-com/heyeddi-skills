@@ -32,8 +32,8 @@ When escalating: write the critique with `Recommended next step: shape`, then ru
 
 1. Run `load_context.py`: `.heyeddi/product.md`, `.heyeddi/design.md`, route/component paths.
 2. Read the target implementation files. Note drift from `design.md`.
-3. Run `@visual-auditor` at 375/768/1440 if dev server available — fold captures into critique.
-4. Compare against `surface-completeness.md`, `audience-fit.md`, `aesthetic-direction.md`, `design-ambition.md`, and `design.md`.
+3. Run `@visual-auditor` if dev server available — fold captures into critique. Fast: `375,768,1440`. Flagship done: `--preset done`.
+4. Compare against `surface-completeness.md`, `audience-fit.md`, `brief-language.md`, `aesthetic-direction.md`, `design-ambition.md`, and `design.md`.
 5. **Run ambition gate** (above). Record Escalate / Stay in the critique.
 6. **Write** `.heyeddi/docs/<feature>-critique.md` (kebab-case from route).
 
@@ -72,12 +72,13 @@ When escalating: write the critique with `Recommended next step: shape`, then ru
 Rubric table + PASS/REVISE per audience-fit.md.
 
 ## Aesthetic direction
-Checklist from aesthetic-direction.md.
+Checklist from aesthetic-direction.md + brief-language.md (subject, hard rejects, first viewport, edge contrast).
 
 ## Recommended next step
 - [ ] `shape` → craft → implement (ambition gate escalate / redesign intent)
 - [ ] stack implementer: P0/P1 code fixes (stay polish)
-- [ ] `@visual-auditor`: capture + contrast + fix
+- [ ] `@visual-auditor`: capture + contrast + fix (`--preset done` before ship)
+- [ ] Logo-off brand test
 - [ ] `polish`: design.md / brief updates if tokens need doc sync
 ```
 

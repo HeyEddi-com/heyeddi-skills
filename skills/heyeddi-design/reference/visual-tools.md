@@ -12,7 +12,7 @@ When Cursor Canvas is available, read `~/.cursor/skills-cursor/canvas/SKILL.md` 
 |------|----------------|----------------|
 | **Cursor `GenerateImage`** | 2–4 **direction probes** (mood, hierarchy, nav topology, type voice) | Final spec, accessibility proof, production assets |
 | **Cursor Canvas** (`.canvas.tsx`) | Direction comparison, brief review, token/type scale, critique summary, interactive wireframe map | Production Vue/Flutter, data charts, replacing `@visual-auditor` on live app |
-| **`@visual-auditor`** | Implemented UI at 375/768/1440 — fix in code | Greenfield concept before code exists |
+| **`@visual-auditor`** | Implemented UI — fast 375/768/1440; done `--preset done` (6 widths) — fix in code | Greenfield concept before code exists |
 | **Markdown / ASCII wireframes** | `designs/<feature>/wireframes/` — always write these too | Replacing probes when image tools work |
 
 ## When mandatory
@@ -65,7 +65,7 @@ Create `.canvas.tsx` in the workspace `canvases/` directory (see canvas skill fo
 | **Brief review** | Persona, route job, regions table, design signature, open questions |
 | **Token preview** | Semantic tokens from `design.md` / brief — surfaces, type scale, one CTA example |
 | **Critique dashboard** | P0/P1 table from critique report + fix direction (after critique, before implement) |
-| **Wireframe map** | Labeled regions per viewport (375 / 768 / 1440 intent) |
+| **Wireframe map** | Labeled regions per viewport (375 / 768 / 1440 intent; note 1024 hinge for side layouts) |
 
 Canvas rules for design:
 

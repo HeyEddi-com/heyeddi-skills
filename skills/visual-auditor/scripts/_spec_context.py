@@ -128,5 +128,8 @@ def load_route_context(
             "Colors follow design.md semantic tokens: not mockup PNG pixels",
             "Contrast errors from audit_contrast are fixed in code",
             "375px capture has no horizontal scroll or clipped CTAs",
+            "430px and 1024px captures checked on flagship done preset",
+            "Edges/links read on the plane (not washed out)",
+            "Logo-off brand test: still reads as this product",
         ],
     }

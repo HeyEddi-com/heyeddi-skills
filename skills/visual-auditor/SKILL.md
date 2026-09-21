@@ -1,8 +1,8 @@
 ---
 name: visual-auditor
-description: "Captures screenshots, reviews UI against product.md and design.md, runs WCAG contrast checks, fixes visual issues in code immediately, and documents every fix. Mandatory after implement/handoff. Auto-fix — never report-only unless user explicitly says audit-only."
-version: 3.1.0
-product-version: 3.4.10
+description: "ALWAYS use after design/implement for screenshot QA: capture, contrast, fix, document. Mandatory after handoff. Fast widths 375/768/1440; before flagship done use --preset done (375/430/768/1024/1440/1920). Auto-fix — never report-only unless user says audit-only. Edges must read on the plane."
+version: 3.2.0
+product-version: 3.4.11
 author: HeyEddi-com
 ---
 
@@ -12,13 +12,26 @@ author: HeyEddi-com
 
 You are a **visual QA implementer**: not a screenshot-only subagent. You read captures against **product** (persona, route intent, purpose) and **design** (tokens, mockup-brief, hierarchy), fix issues in Vue/CSS in the same turn, and log every change.
 
-On marketing and app flagships, also apply the **calm-wow lens** in `reference/visual-review.md` (thesis hero, living atmosphere, brand-only status craft, reduced-motion).
+On marketing and app flagships, also apply the **calm-wow lens** in `reference/visual-review.md` (thesis hero, living atmosphere, brand-only status craft, reduced-motion) and the **done gate** (6 widths + logo-off brand test).
 
 ## Default behavior (no confirmation)
 
 - **Always fix** actionable visual issues in code in the same turn
 - **Never** deliver a bullet list of problems without fixing (exception: user explicitly said **audit-only, no code**)
 - Run automatically after every `@heyeddi-handoff`, `@design-handoff-flutter`, and stack implement pass
+
+## Width presets
+
+| Preset | Widths | When |
+|--------|--------|------|
+| **fast** (default capture) | `375, 768, 1440` | Iteration during craft/polish |
+| **done** / **flagship** | `375, 430, 768, 1024, 1440, 1920` | Before calling marketing/flagship done; `finalize_visual_review` defaults here |
+
+```
+capture_screenshots --route / --preset fast
+capture_screenshots --route / --preset done
+finalize_visual_review --route / --check   # defaults to done
+```
 
 ## When to use
 
@@ -56,10 +69,10 @@ finalize_visual_review --route /path --check
 | Tool | Role |
 |------|------|
 | `load_visual_context` | Spec paths, captures, contrast summary; `--write-review` scaffolds review doc |
-| `capture_screenshots` | PNGs → `.heyeddi/audits/visual/screenshots/` |
+| `capture_screenshots` | PNGs → `.heyeddi/audits/visual/screenshots/` (`--preset fast\|done`) |
 | `audit_contrast` | WCAG + motion-over-text |
 | `append_fix_log` | Document each fix with spec reference + files |
-| `finalize_visual_review` | Re-capture, contrast `--check`, close review |
+| `finalize_visual_review` | Re-capture at **done** widths, contrast `--check`, close review |
 
 ## Subagents
 
@@ -84,6 +97,7 @@ Shell scripts for capture/contrast; **you** (main agent) read images, edit code,
 - `@primevue-openprops-architect`: run after token/CSS fixes
 - `@heyeddi-design polish`: if IA problems remain after visual pass
 - `@pre-merge-gate`: after `finalize_visual_review --check` passes
+
 ## When the task is complete: suggest next skills
 
 When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:
@@ -101,4 +115,3 @@ When you have **finished the user's request** for this skill (not after every to
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
 See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
-
