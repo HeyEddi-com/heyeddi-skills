@@ -2,7 +2,7 @@
 name: heyeddi-setup
 description: "ALWAYS-ON prefs gate: ensures `.heyeddi/stack.json` holds git/env and agent prefs. Incomplete prefs fail git/CI/commit/push assumptions until verify_setup --check passes. Asks env layout, custom workflow escape hatch, worktrees, commit/push autonomy. Tech stack is discovered by other skills. Use when setup is incomplete or the user says setup, preferences, or heyeddi-setup."
 version: 1.2.0
-product-version: 3.4.10
+product-version: 3.4.11
 author: HeyEddi-com
 paths:
   - ".heyeddi/stack.json"

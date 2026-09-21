@@ -25,6 +25,8 @@ Use `--strict` to fail on warnings (recommended before merge on marketing routes
 
 ```
 audit_contrast --route / --widths 375,768,1440 --check
+# or: audit_contrast --route / --preset done --check
+
 ```
 
 Reports: `.heyeddi/audits/visual/<route>-contrast-<date>.md` + `.json`  

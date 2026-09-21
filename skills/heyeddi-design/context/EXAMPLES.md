@@ -7,7 +7,16 @@
 I want an enterprise view for our admin app
 ```
 
-Agent runs **discover** → asks about users, density, nav, data → **shape** pipeline.
+Agent runs **discover** → first pins **subject/metaphor + hard rejects** (not "professional") → **shape** pipeline. See `brief-language.md`.
+
+## Named aesthetic up front
+
+```
+Design our marketing + app shell as an atlas desk for a core graph engine.
+Cool paper + deep ink + sea teal. Reject: dark Tailwind admin, Inter-default SaaS, inset hero cards.
+```
+
+Agent loads `brief-language.md`, fills Design signature, does not invent a random admin kit.
 
 ## Full shape flow
 

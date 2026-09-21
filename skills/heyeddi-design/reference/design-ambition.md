@@ -32,23 +32,35 @@ Before `craft` on any flagship route, define in `designs/<feature>/brief.md`:
 ## Design signature (this project only)
 
 - **Aesthetic energy:** (e.g. calm precision | warm human | bold editorial | dense utilitarian)
-- **Subject / page job:** one concrete subject + what this page must do
+- **Subject / metaphor:** one concrete world (cartographer's desk / instrument panel / …) — not "SaaS dashboard"
+- **Subject / page job:** what this page must do for whom
 - **Signature moment:** one screen/region that should feel unmistakably *this* product
 - **Aesthetic risk:** one bold, justified choice (type, hero, layout, motion) — not random ornament
-- **Borrow:** 2 named references: what specifically (not "like Linear")
-- **Avoid:** 2 tells that would make this look like our last scaffold, a competitor clone, or generic AI UI
-- **Memorable detail:** one concrete choice (type pairing, hero grid, stat treatment, settings card rhythm, nav pill style, …)
+- **Borrow:** 3 named references + what to steal (borrow X not Y)
+- **Hard rejects / Avoid:** explicit anti-defaults (fonts, palette kits, boxed heroes, opaque slabs, purple/cream AI looks, last scaffold tells)
+- **Hero composition:** full-bleed? brand loudest? one headline / lede / CTA group / visual?
+- **Typography roles:** logo/H1/H2 vs body; forbidden wordmark treatments
+- **Accent system:** brand/UI accent vs edge/data accent (edges read on the plane)
+- **Responsive contract:** desktop vs mobile stack order
+- **Token SSOT:** one token file; change brand/edge once
+- **Intensity dial:** marketing atmosphere vs quieter app shell (same language)
+- **Motion budget:** 2–3 intentional motions; reduced-motion
+- **Memorable detail:** one concrete choice (type pairing, hero degrade, graph edge color, …)
 ```
 
+Full working language and pasteable prompt: **`reference/brief-language.md`** (auto-load on any design talk).
+
 Re-read this section at **craft** and **polish**. If implementation could belong to another product with a name swap, **revise before calling done**. Also read `reference/aesthetic-direction.md` (hero as thesis, type personality, anti–generic-AI clusters).
+
 ## Discovery: ask when ambition is unclear
 
-Add to `discover` (2-3 questions per round):
+Add to `discover` (2-3 questions per round); **first round** prefers subject/metaphor + hard rejects over "make it professional":
 
+- **Subject / metaphor** + what this must **NOT** look like (hard rejects)
 - What should a user **remember** about this UI vs `{competitor}`?
-- **Aesthetic energy**: restrained precision, warm, bold, or utilitarian? Any reference that nails the feeling?
-- On the flagship route: what is the **one moment** we should nail (hero, first table load, settings save, sign-in trust)?
-- What must this **NOT** look like? (generic admin, template marketplace, previous project?)
+- **Aesthetic energy** + 3 references and what to steal from each?
+- On the flagship route: **one moment** to nail (hero, first table load, settings save, sign-in trust)?
+- Intensity dial, motion budget, responsive stack order?
 
 If the user says "top notch / artistic / impressive": treat that as **confirmation** of the default bar, not a license to skip `shape` or audience work.
 
@@ -64,10 +76,12 @@ After `modern-reference` + `aesthetic-direction` checks and before audience-fit:
 
 - [ ] **Signature moment** from brief is implemented and visible at 1440 and 375
 - [ ] **Aesthetic risk** from brief is visible and justified (Decision log)
+- [ ] **Hard rejects** honored (no rejected fonts/palette kits/hero patterns)
 - [ ] **Three PrimeVue tells removed** (default card padding mush, undifferentiated table, system-font sameness, flat gray shell: pick what applied)
 - [ ] **Competitor differentiation**: one layout or copy choice a clone would not make
 - [ ] **Decision log** cites persona + **specific** borrowed pattern + **this project's** memorable detail + aesthetic risk
-- [ ] Screenshot test: would a designer say "template" or "crafted for {product_name}"?
+- [ ] Screenshot test: `@visual-auditor --preset done` (`375,430,768,1024,1440,1920`); would a designer say "template" or "crafted for {product_name}"?
+- [ ] Logo-off test: removing the brand still reads as this product's world — not another startup
 
 If any fail → `@heyeddi-design polish` or revise in craft; do not hand off to `@heyeddi-handoff` with generic chrome.
 

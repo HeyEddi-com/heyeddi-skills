@@ -9,10 +9,12 @@ Read this file before `craft`, `polish`, `document`, or `@heyeddi-handoff` imple
 ## 1. Responsive (mobile-first)
 
 - **Mobile-first CSS**: base styles for narrow; enhance at breakpoints.
-- **Audit widths:** 375, 768, 1024, 1440 (match `@visual-auditor`).
+- **Audit widths (fast):** 375, 768, 1440 — iteration during craft/polish.
+- **Audit widths (done):** 375, 430, 768, 1024, 1440, 1920 — flagship/marketing before calling done (`@visual-auditor --preset done`). See `brief-language.md`.
 - **Fluid layouts**: no fixed desktop-only widths; forms and CTAs stack on small screens.
 - **Touch targets** ≥ 44×44px on coarse pointers.
 - **No horizontal scroll** on primary content at 375px unless intentional (data tables → scroll container with caption).
+- **Responsive contract** in the brief: state desktop vs mobile stack order (e.g. copy before visual on mobile).
 
 ## 2. Color scheme: system default
 
@@ -114,7 +116,7 @@ Only **brand** sections (Colors, Typography voice, Components, marketing registe
 
 ## Checklist before ship
 
-- [ ] 375 / 768 / 1440 visual pass
+- [ ] 375 / 768 / 1440 visual pass (fast); flagship done = 375 / 430 / 768 / 1024 / 1440 / 1920
 - [ ] Light + dark (system) checked
 - [ ] `en` + `es` strings present for new copy
 - [ ] Keyboard + focus on new interactive UI

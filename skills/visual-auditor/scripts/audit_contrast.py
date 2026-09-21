@@ -11,6 +11,7 @@ from pathlib import Path
 
 from _heyeddi_paths import visual_audit_dir
 from _skill_cli import emit, fail, resolve_project_root
+from _widths import FAST_WIDTHS, resolve_widths
 
 PROBE_JS = (Path(__file__).parent / "contrast_probe.js").read_text(encoding="utf-8")
 
@@ -77,14 +78,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Audit text contrast and motion-over-text risks")
     parser.add_argument("--route", default="/")
     parser.add_argument("--project-root", default=None)
-    parser.add_argument("--widths", default="375,768,1440")
+    parser.add_argument("--widths", default=None, help=f"Comma-separated widths (default: {FAST_WIDTHS})")
+    parser.add_argument(
+        "--preset",
+        default=None,
+        choices=["fast", "done", "flagship"],
+        help="fast=375,768,1440; done/flagship=375,430,768,1024,1440,1920",
+    )
     parser.add_argument("--fixture", default=None, help="Local HTML file for offline probe (file://)")
     parser.add_argument("--check", action="store_true", help="Exit 1 when error-level violations exist")
     parser.add_argument("--strict", action="store_true", help="Treat warnings as failures with --check")
     args = parser.parse_args()
 
     root = resolve_project_root(args.project_root)
-    widths = [int(w) for w in args.widths.split(",") if w.strip()]
+    try:
+        widths_str = resolve_widths(args.widths, args.preset)
+    except ValueError as exc:
+        fail(str(exc))
+    widths = [int(w) for w in widths_str.split(",") if w.strip()]
 
     try:
         from playwright.sync_api import sync_playwright  # noqa: PLC0415

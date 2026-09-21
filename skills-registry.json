@@ -1,5 +1,5 @@
 {
-  "version": "3.4.10",
+  "version": "3.4.11",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -49,7 +49,7 @@
     },
     {
       "name": "visual-auditor",
-      "description": "Screenshot review vs product/design spec, contrast audit, fix + document visual issues"
+      "description": "Screenshot QA at fast (3) or done (6) widths; contrast; fix + document"
     },
     {
       "name": "heyeddi-handoff",
@@ -85,7 +85,7 @@
     },
     {
       "name": "heyeddi-design",
-      "description": "Stack-agnostic design \u2014 briefs, critique, GenerateImage + Canvas during explore"
+      "description": "ALWAYS-ON for design/UI/look talk: briefs with subject+hard rejects, critique, craft; 6-width done gate"
     },
     {
       "name": "engineering-excellence",

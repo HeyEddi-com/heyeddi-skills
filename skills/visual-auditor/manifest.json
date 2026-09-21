@@ -1,6 +1,6 @@
 {
   "skill": "visual-auditor",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "tools": [
     {
       "name": "load_visual_context",
@@ -26,6 +26,7 @@
           "route": { "type": "string" },
           "project_root": { "type": "string" },
           "widths": { "type": "array", "items": { "type": "integer" } },
+          "preset": { "type": "string", "enum": ["fast", "done", "flagship"] },
           "check": { "type": "boolean" },
           "strict": { "type": "boolean" }
         },
@@ -43,6 +44,7 @@
           "route": { "type": "string" },
           "project_root": { "type": "string" },
           "widths": { "type": "array", "items": { "type": "integer" } },
+          "preset": { "type": "string", "enum": ["fast", "done", "flagship"] },
           "check": { "type": "boolean" },
           "strict": { "type": "boolean" },
           "fixture": { "type": "string" }
@@ -80,6 +82,7 @@
           "route": { "type": "string" },
           "project_root": { "type": "string" },
           "widths": { "type": "string" },
+          "preset": { "type": "string", "enum": ["fast", "done", "flagship"] },
           "strict": { "type": "boolean" },
           "skip_recapture": { "type": "boolean" },
           "check": { "type": "boolean" }

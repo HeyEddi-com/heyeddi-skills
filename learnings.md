@@ -1020,3 +1020,18 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Files:** `skills/heyeddi-design/SKILL.md`, `reference/critique.md`, `polish.md`, `design-ambition.md`, `context/ANTI_PATTERNS.md`, `VOCABULARY.md`, `EXAMPLES.md`, `manifest.json`
 
 **Notes:** Reinstall/sync skill into consumer `.agents/skills/` after publish; do not treat install trees as SSOT.
+
+## 2026-09-20 — Design briefs: named taste + hard rejects + 6-width done gate
+
+**Context:** First ships often landed as "random framework + dark mode" because briefs opened with adjectives ("professional", "clean") instead of named aesthetic + rejects. Three audit widths also missed large-phone, layout-hinge, and wide-stretch bugs.
+
+**Decision:**
+- **`heyeddi-design` v2.6.0** — ALWAYS-ON description for any design/look/feel talk. New `reference/brief-language.md` (auto-load): subject/metaphor, hard rejects, hero composition, type roles, accent vs edge, responsive contract, token SSOT, ask-next table, pasteable prompt. Design signature + discover/shape/ambition/aesthetic/ANTI_PATTERNS wired. Done = logo-off brand test + auditor `--preset done`.
+- **`visual-auditor` v3.2.0** — `fast` = `375,768,1440` (iteration); `done`/`flagship` = `375,430,768,1024,1440,1920`. `finalize_visual_review` defaults to done. Scripts: `_widths.py`, `--preset` on capture/contrast/finalize.
+
+**Process:**
+1. Any design talk → load `brief-language.md` first; pin taste + rejects before craft
+2. Iterate with fast widths; before flagship/marketing done → `--preset done` and fix
+3. Reinstall/sync skills into consumer `.agents/skills/` after publish
+
+**Files:** `skills/heyeddi-design/reference/brief-language.md`, `SKILL.md`, `discover.md`, `shape.md`, `design-ambition.md`, `aesthetic-direction.md`, `foundations.md`, `critique.md`, `ANTI_PATTERNS.md`, `VOCABULARY.md`, `EXAMPLES.md`, `manifest.json`; `skills/visual-auditor/` presets + docs; `skills-registry.json`

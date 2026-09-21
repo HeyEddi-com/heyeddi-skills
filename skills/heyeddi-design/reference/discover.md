@@ -16,15 +16,17 @@
 
 ## Translate plain language
 
-Users won't say "information architecture" or "Restrained color strategy." Map their words:
+Users won't say "information architecture" or "Restrained color strategy." Map their words. Read **`reference/brief-language.md`** — adjective-only briefs are incomplete.
 
 | User says | You clarify |
 |-----------|-------------|
 | "enterprise view" | B2B admin? density? data tables? sidebar nav? roles/permissions? |
-| "clean / modern" | Anchor products/brands, not adjectives: ask for 2-3 named references |
-| "like Notion / Linear / Salesforce" | What specifically: nav, density, typography, settings IA? |
+| "clean / modern / professional" | **Not enough.** Force subject/metaphor + hard rejects + 2–3 named references (what to steal). Never craft on the adjective alone. |
+| "like Notion / Linear / Salesforce" | What specifically: nav, density, typography, settings IA? Borrow X not Y. |
 | "login" / "sign in" | Apply **sign-in** archetype in `surface-completeness.md`: recovery links, remember me, SSO?, invite-only? |
-| "professional" | Register (product vs brand), scene sentence (who, where, lighting, mood) |
+| "wow" / "alive" / "impressive" | Intensity dial + calm-wow translation (`aesthetic-direction.md`); still need subject + rejects |
+
+**First-round priority (flagship / marketing):** in the first 2–3 questions, pin **subject/metaphor**, **hard rejects** ("do not look like X"), and **single page job**. Taste before chrome.
 
 ## Interview areas
 
@@ -42,11 +44,20 @@ Cover what's missing from `PRODUCT.md` / `DESIGN.md` / the user's prompt:
 - Edge cases: empty, error, first-time, power user
 - Dynamic content and update frequency
 
-### Design direction (skip if DESIGN.md answers)
+### Design direction (skip only if DESIGN.md + brief already answer — see `brief-language.md`)
+- **Subject / metaphor:** one concrete world (cartographer's desk, instrument panel, …) — not "SaaS dashboard"
+- **Hard rejects:** explicit anti-defaults (fonts, palette kits, boxed heroes, opaque slabs, purple/cream AI looks, …)
+- **Hero composition** (brand register): full-bleed? brand loudest? one headline / lede / CTA group / visual?
+- **Typography roles:** which faces for logo/H1/H2 vs body; what wordmark treatments are forbidden
+- **Accent system:** brand/UI accent vs edge/data accent (edges must read on the plane)
+- **Responsive contract:** desktop vs mobile stack order (e.g. copy before graph on mobile)
+- **Token SSOT:** one token file; change brand/edge once
 - **Color strategy:** Restrained / Committed / Full palette / Drenched
-- **Theme scene sentence:** one sentence: who, where, ambient light, mood (forces light vs dark)
-- **2-3 named anchor references** (specific products/brands, not "minimal")
-- **Ambition:** what should feel memorable vs competitors? What aesthetic energy fits this product?
+- **Theme scene sentence:** who, where, ambient light, mood
+- **3 references + what to steal** (borrow X not Y)
+- **Intensity dial:** marketing atmosphere vs quieter app shell, same language
+- **Motion budget:** 2–3 intentional motions; reduced-motion
+- **Ambition / aesthetic risk:** one justified bold choice; memorable vs competitors
 
 ### Scope
 - **Fidelity:** sketch / mid-fi / high-fi / production-ready
@@ -55,9 +66,9 @@ Cover what's missing from `PRODUCT.md` / `DESIGN.md` / the user's prompt:
 - **Time intent:** quick exploration vs ship-ready
 
 ### Constraints & anti-goals
-- Mobile/responsive requirements
+- Mobile/responsive requirements (state the stack-order contract)
 - Accessibility beyond WCAG AA?
-- What should this **NOT** be? Biggest risk if wrong?
+- What should this **NOT** be? Biggest risk if wrong? (hard rejects go here if not already named)
 
 ## Exit
 

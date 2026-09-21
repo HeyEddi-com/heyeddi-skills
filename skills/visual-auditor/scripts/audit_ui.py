@@ -12,18 +12,30 @@ from pathlib import Path
 
 from _heyeddi_paths import screenshot_dir, visual_audit_dir
 from _skill_cli import emit, resolve_project_root
+from _widths import FAST_WIDTHS, resolve_widths
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Visual audit screenshots + optional contrast check")
     parser.add_argument("--route", required=True)
     parser.add_argument("--project-root", default=None)
-    parser.add_argument("--widths", default="375,768,1440")
+    parser.add_argument("--widths", default=None, help=f"Comma-separated widths (default: {FAST_WIDTHS})")
+    parser.add_argument(
+        "--preset",
+        default=None,
+        choices=["fast", "done", "flagship"],
+        help="fast=375,768,1440; done/flagship=375,430,768,1024,1440,1920",
+    )
     parser.add_argument("--check", action="store_true", help="Run audit_contrast after capture; exit 1 on contrast errors")
     parser.add_argument("--strict", action="store_true", help="Pass --strict to contrast audit")
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
-    widths = [int(w) for w in args.widths.split(",") if w.strip()]
+    try:
+        widths_str = resolve_widths(args.widths, args.preset)
+    except ValueError as exc:
+        emit(str(exc))
+        sys.exit(2)
+    widths = [int(w) for w in widths_str.split(",") if w.strip()]
     base_url = os.environ.get(
         "DEV_SERVER_URL",
         os.environ.get("FLUTTER_WEB_URL", "http://localhost:5173"),
@@ -92,11 +104,13 @@ def main() -> None:
             "--project-root",
             str(root),
             "--widths",
-            args.widths,
+            widths_str,
             "--check",
         ]
         if args.strict:
             cmd.append("--strict")
+        if args.preset:
+            cmd.extend(["--preset", args.preset])
         result = subprocess.run(cmd, cwd=contrast_script.parent)
         if result.returncode != 0:
             sys.exit(result.returncode)

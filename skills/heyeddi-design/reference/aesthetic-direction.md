@@ -1,18 +1,20 @@
 # Aesthetic direction: distinctive craft (not template AI UI)
 
-**Date:** 2026-08-13
+**Date:** 2026-09-20
 
 Work as a design lead hired for a point of view the client could not get from a template. Make deliberate, product-specific choices about palette, type, layout, and motion — and take **one justified aesthetic risk**.
 
-Read during **`shape`**, **`craft`**, **`critique`**, and **`polish`**. Stay inside HeyEddi constraints: PrimeVue + `design.md` tokens (`token-strategy.md`), `.heyeddi/` briefs, and `PROSE_ANTI_SLOP.md` for copy.
+**Always pair with `reference/brief-language.md`:** name taste + subject + hard rejects up front — not "make it professional."
+
+Read during **`shape`**, **`craft`**, **`critique`**, and **`polish`**, and on any informal design talk. Stay inside HeyEddi constraints: PrimeVue + `design.md` tokens (`token-strategy.md`), `.heyeddi/` briefs, and `PROSE_ANTI_SLOP.md` for copy.
 
 ## Ground it in the subject
 
-Before pixels: name **one concrete subject**, **primary audience**, and the page's **single job**. State the choice in the brief.
+Before pixels: name **one concrete subject/metaphor**, **primary audience**, the page's **single job**, and **hard rejects**. State them in the brief.
 
 Distinctive choices come from the product's world — materials, instruments, artifacts, vernacular — not from a reusable “nice SaaS” kit. Prefer real content from `product.md` / brief over placeholder marketing mush.
 
-If the brief is vague, pin subject + job yourself (and say so) before inventing a look.
+If the brief is vague, pin subject + rejects yourself (and say so) before inventing a look. Adjective-only briefs ("professional", "clean") are incomplete.
 
 ## Design pillars
 
@@ -20,13 +22,15 @@ If the brief is vague, pin subject + job yourself (and say so) before inventing 
 
 Open with the most characteristic thing in the product's world: headline, image, animation, live demo, or interactive moment. Be deliberate.
 
+On marketing / brand register: **full-bleed atmosphere** by default; **brand as the loudest signal**; first viewport = brand + one headline + one lede + one CTA group + one visual — nothing else. No boxed/inset hero cards, no opaque panel over the wash unless the brief demands it.
+
 A big number + small label + supporting stats + gradient accent is the **template** answer — use it only if it is truly the best option for this brief.
 
 On app shells (dashboard/settings), the “hero” may be hierarchy: title treatment, first actionable region, or data density — still a thesis, not chrome.
 
 ### Typography carries personality
 
-Pair display and body deliberately. Set a clear type scale with intentional weights and spacing. Type treatment should be memorable, not a neutral delivery vehicle.
+Pair display and body deliberately. Set a clear type scale with intentional weights and spacing. Document **roles**: which faces for logo/H1/H2 vs quieter body. Type treatment should be memorable, not a neutral delivery vehicle.
 
 Avoid default stacks that erase identity (Inter / Roboto / Arial / system-ui as the whole brand). Prefer project faces from `design.md` / tokens; if none exist, choose and document them in the Decision log.
 
@@ -36,9 +40,13 @@ Numbering, eyebrows, dividers, and labels must encode something true about the c
 
 ### Motion with intent
 
-Use motion where it serves the subject: load sequence, scroll reveal, hover micro-interaction, ambient atmosphere. Prefer **one orchestrated moment** over scattered effects. Extra animation often reads as AI-generated.
+Use motion where it serves the subject: load sequence, scroll reveal, hover micro-interaction, ambient atmosphere. Prefer **2–3 intentional motions** (budgeted in the brief) over scattered effects. Extra animation often reads as AI-generated.
 
 Always respect `prefers-reduced-motion` (`foundations.md`).
+
+### Accent vs edge (contrast on the plane)
+
+Brand/UI accent and data/edge accent are different jobs. Edges and links must **read on the plane** — never put link/edge color on a washed paper region where it disappears. One token file: change brand/edge once, all surfaces update (`token-strategy.md`).
 
 ### Calm wow for B2B (studio craft → product calm)
 
@@ -112,20 +120,23 @@ Full copy rules: `context/PROSE_ANTI_SLOP.md` + `verify_prose.py`.
 
 ## Checklist (shape / craft / polish)
 
-- [ ] Subject, audience, and single page job stated  
-- [ ] Aesthetic energy + **one justified aesthetic risk** in Design signature  
-- [ ] Hero/thesis is not a default KPI/gradient template (unless brief demands it)  
-- [ ] Type pairing is deliberate and documented in tokens/`design.md`  
-- [ ] Structural chrome encodes real information  
-- [ ] Motion is intentional (or intentionally absent)  
-- [ ] If wow/alive was requested: calm-wow translation applied (not neon studio clone)  
-- [ ] Avoided generic AI look clusters unless brief asked for them  
-- [ ] Signature element is the one memorable thing; surroundings restrained  
-- [ ] Copy passes prose anti-slop  
+- [ ] Subject/metaphor, audience, single page job, and **hard rejects** stated (`brief-language.md`)
+- [ ] Aesthetic energy + **one justified aesthetic risk** in Design signature
+- [ ] Hero/thesis is not a default KPI/gradient template (unless brief demands it); first viewport checklist on marketing
+- [ ] Type roles deliberate; accent vs edge documented; token SSOT
+- [ ] Responsive contract (desktop vs mobile stack) stated and implemented
+- [ ] Structural chrome encodes real information
+- [ ] Motion budget 2–3 intentional (or intentionally absent); reduced-motion
+- [ ] If wow/alive was requested: calm-wow translation applied (not neon studio clone)
+- [ ] Avoided generic AI look clusters unless brief asked for them
+- [ ] Signature element is the one memorable thing; surroundings restrained
+- [ ] Copy passes prose anti-slop
+- [ ] Done gate: logo-off brand test + `@visual-auditor --preset done` (6 widths)
 
 ## Related
 
-- `design-ambition.md` — project signature and craft bar  
-- `modern-reference.md` — PrimeVue techniques and anti-admin-template  
-- `audience-design.md` — persona-tied direction  
+- `brief-language.md` — working language, pasteable prompt, ask-next table
+- `design-ambition.md` — project signature and craft bar
+- `modern-reference.md` — PrimeVue techniques and anti-admin-template
+- `audience-design.md` — persona-tied direction
 - `foundations.md` — a11y, responsive, reduced motion  
