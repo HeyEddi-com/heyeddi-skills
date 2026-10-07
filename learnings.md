@@ -1035,3 +1035,16 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 3. Reinstall/sync skills into consumer `.agents/skills/` after publish
 
 **Files:** `skills/heyeddi-design/reference/brief-language.md`, `SKILL.md`, `discover.md`, `shape.md`, `design-ambition.md`, `aesthetic-direction.md`, `foundations.md`, `critique.md`, `ANTI_PATTERNS.md`, `VOCABULARY.md`, `EXAMPLES.md`, `manifest.json`; `skills/visual-auditor/` presets + docs; `skills-registry.json`
+
+## 2026-10-07 — @heyeddi routes design to taste, then product
+
+**Context:** `heyeddi-design` kept shipping generic UI because it is a process skill. Taste has to be a one-pass partner, not another discover/shape pipeline.
+
+**Decision:** Hub **v3.5.0**.
+- Router folder is `skills/heyeddi` (`@heyeddi`). `heyeddi-orchestrator` is a deprecated alias.
+- `taste-penpot` owns look (one pass). Vendored Anthropic `frontend-design` (Apache-2.0) under `third-party/frontend-design/`.
+- `heyeddi-design` v2.7.0 records personas and those tokens, then hands off. It does not invent a second palette.
+- `.heyeddi/stack.json`: `design.taste` stays `on`; `design.penpot` is `auto` | `on` | `off` (stamped on write, not required for verify).
+- Design skills.sh mirror: pack `heyeddi-design-skills`, repo slug `HeyEddi-com/heyeddi-design-skills` (not the skill name). Publish with `./scripts/publish-design-pack-repo.sh`.
+
+**Process:** `@heyeddi` → `@taste-penpot` → `@heyeddi-design` → handoff. Reinstall skills after publish.

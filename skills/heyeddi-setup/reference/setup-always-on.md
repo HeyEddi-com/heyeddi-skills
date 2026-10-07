@@ -22,13 +22,13 @@ Non-git work (design critique, product specs, pure code edits without commit) ma
 
 ## Session start
 
-`@heyeddi-orchestrator` must treat failed `verify_setup --check` as a **hard route** to `@heyeddi-setup` before assuming project prefs.
+`@heyeddi` must treat failed `verify_setup --check` as a **hard route** to `@heyeddi-setup` before assuming project prefs.
 
 ## Who must bookend
 
 | Skill | When |
 |-------|------|
-| `@heyeddi-orchestrator` | Session start / ambiguous tasks: fail → setup first |
+| `@heyeddi` | Session start / ambiguous tasks: fail → setup first |
 | `@project-engineering` | Before scaffold claims about git/CI; before any commit |
 | `@flutter-engineering` | Same as project-engineering |
 | `@heyeddi-pr-respond` | Before commit + push |

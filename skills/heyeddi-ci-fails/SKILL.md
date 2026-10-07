@@ -2,7 +2,7 @@
 name: heyeddi-ci-fails
 description: "Diagnose and fix failing GitHub Checks on PR work by default: fetch evidence, write ephemeral ci-fails report, apply fixes, verify locally. Run automatically — do not wait for user to ask. Never merge without authorize merge. Companion to /heyeddi fails."
 version: 1.1.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -61,6 +61,6 @@ Also tell the user they can comment `/heyeddi fails` on the PR for hosted App an
 ## When complete
 
 ```bash
-python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py \
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
   --current-skill heyeddi-ci-fails --project-root .
 ```

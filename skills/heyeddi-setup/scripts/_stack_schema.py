@@ -13,6 +13,7 @@ SETUP_SCHEMA_VERSION = 1
 
 GIT_PRESETS = ("main_staging_dev", "main_dev", "custom")
 ASK_AUTO = ("ask", "auto")
+PENPOT_MODES = ("auto", "on", "off")
 
 # Env maps for presets (always include production + staging).
 PRESET_ENVIRONMENTS: dict[str, dict[str, str]] = {
@@ -64,6 +65,10 @@ DEFAULTS: dict[str, Any] = {
     "agent": {
         "commit": "ask",
         "push": "ask",
+    },
+    "design": {
+        "taste": "on",
+        "penpot": "auto",
     },
     "setup": {
         "version": SETUP_SCHEMA_VERSION,
@@ -117,6 +122,18 @@ QUESTIONS: tuple[dict[str, Any], ...] = (
         "choices": list(ASK_AUTO),
         "hints": {"ask": "confirm first", "auto": "push feature branches OK"},
         "group": "agent",
+    },
+    {
+        "id": "design.penpot",
+        "path": "design.penpot",
+        "prompt": "Use Penpot as the design source of truth?",
+        "choices": list(PENPOT_MODES),
+        "hints": {
+            "auto": "Use Penpot when it is connected; otherwise taste writes a spec (default)",
+            "on": "Prefer Penpot; still fall back to a written spec if it is not connected",
+            "off": "Never call Penpot. Taste still runs.",
+        },
+        "group": "design",
     },
 )
 
@@ -211,6 +228,14 @@ def validate_value(path: str, value: Any) -> str | None:
     if path in ("agent.commit", "agent.push"):
         if value not in ASK_AUTO:
             return f"{path} must be ask or auto"
+        return None
+    if path == "design.taste":
+        if value != "on":
+            return "design.taste stays on"
+        return None
+    if path == "design.penpot":
+        if value not in PENPOT_MODES:
+            return f"design.penpot must be one of {PENPOT_MODES}"
         return None
     if path == "setup.version":
         # bool is a subclass of int; reject True/False explicitly
@@ -351,6 +376,10 @@ def stamp_setup(data: dict[str, Any]) -> dict[str, Any]:
     out = deepcopy(data)
     set_path(out, "setup.version", SETUP_SCHEMA_VERSION)
     set_path(out, "setup.updated", date.today().isoformat())
+    if get_path(out, "design.taste") is None:
+        set_path(out, "design.taste", "on")
+    if get_path(out, "design.penpot") is None:
+        set_path(out, "design.penpot", "auto")
     return out
 
 

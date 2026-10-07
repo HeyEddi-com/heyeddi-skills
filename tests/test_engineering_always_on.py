@@ -11,7 +11,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 ENG_SCRIPTS = ROOT / "skills" / "engineering-excellence" / "scripts"
 PRE_MERGE = ROOT / "skills" / "pre-merge-gate" / "scripts" / "pre_merge_gate.py"
-ORCH_SCRIPTS = ROOT / "skills" / "heyeddi-orchestrator" / "scripts"
+ORCH_SCRIPTS = ROOT / "skills" / "heyeddi" / "scripts"
 
 sys.path.insert(0, str(ENG_SCRIPTS))
 sys.path.insert(0, str(ORCH_SCRIPTS))
@@ -198,7 +198,7 @@ def test_always_on_docs_exist() -> None:
     assert (
         ROOT / "skills" / "heyeddi-setup" / "reference" / "setup-always-on.md"
     ).is_file()
-    assert (ROOT / "skills" / "heyeddi-orchestrator" / "reference" / "always-on.md").is_file()
+    assert (ROOT / "skills" / "heyeddi" / "reference" / "always-on.md").is_file()
 
 
 def test_engineering_skill_declares_always_on() -> None:
@@ -223,7 +223,7 @@ def test_pipeline_includes_engineering_excellence_handoff_section() -> None:
 @pytest.mark.parametrize(
     "skill_name",
     [
-        "heyeddi-orchestrator",
+        "heyeddi",
         "heyeddi-handoff",
         "project-engineering",
         "flutter-engineering",

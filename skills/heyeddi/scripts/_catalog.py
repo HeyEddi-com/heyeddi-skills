@@ -111,7 +111,7 @@ STOP_WORDS = frozenset(
 )
 
 INDEX_VERSION = 1
-GENERATOR = "heyeddi-orchestrator@3.0.2"
+GENERATOR = "heyeddi@3.0.2"
 
 
 def skills_index_json(project_root: Path) -> Path:
@@ -140,7 +140,7 @@ def render_skills_index_md(catalog: dict[str, Any]) -> str:
     lines = [
         "# Skills index",
         "",
-        f"**Generated:** {generated} · **Maintained by:** `@heyeddi-orchestrator`",
+        f"**Generated:** {generated} · **Maintained by:** `@heyeddi`",
         "",
         "Cached catalog: read this instead of every `SKILL.md` at session start. "
         "Refresh after installing skills: `write_skills_index --project-root .`",

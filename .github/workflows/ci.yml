@@ -45,11 +45,13 @@ jobs:
           reg = {s['name'] for s in reg_doc['skills']}
           full = set(json.load(open('packs/heyeddi-skills.json'))['skills'])
           ci = set(json.load(open('packs/heyeddi-ci-skills.json'))['skills'])
+          design = set(json.load(open('packs/heyeddi-design-skills.json'))['skills'])
           assert full == reg, (full ^ reg)
           assert ci <= full
+          assert design <= full
           for name in full:
               assert (Path('skills') / name / 'SKILL.md').is_file(), name
-          print('ok: hub %s, full=%d, ci=%d' % (reg_doc['version'], len(full), len(ci)))
+          print('ok: hub %s, full=%d, ci=%d, design=%d' % (reg_doc['version'], len(full), len(ci), len(design)))
           "
 
       - name: pytest

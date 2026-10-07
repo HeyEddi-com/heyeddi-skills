@@ -2,7 +2,7 @@
 name: ux-flow-auditor
 description: "Traces user task flows with Playwright: click depth, step success, friction: and writes reports to .heyeddi/docs/ux-flows/. Use when measuring ease of use, clicks to complete a task, or onboarding friction. Not for static visual critique (use heyeddi-design critique) or layout screenshots (use visual-auditor)."
 version: 1.0.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -18,10 +18,10 @@ Task-oriented UX: how many clicks to achieve a goal, where users get stuck.
 Read **`reference/cross-pillar-handoff.md`**. Bookend every flow trace:
 
 ```
-@heyeddi-orchestrator  load_workflow_context --route /path
+@heyeddi  load_workflow_context --route /path
 trace_flow …
 update ux-flows report + friction notes
-@heyeddi-orchestrator  append_pillar_opinion --pillar ux …
+@heyeddi  append_pillar_opinion --pillar ux …
 → @heyeddi-product updates AC if needed; @heyeddi-design notes layout friction
 ```
 

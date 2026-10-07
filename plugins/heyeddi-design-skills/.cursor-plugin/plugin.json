@@ -1,0 +1,18 @@
+{
+  "name": "heyeddi-design-skills",
+  "displayName": "HeyEddi Design Skills",
+  "version": "1.0.0",
+  "description": "HeyEddi design pack. taste-penpot owns the look; heyeddi-design records product context and hands off. Published mirror: HeyEddi-com/heyeddi-design-skills.",
+  "author": {
+    "name": "HeyEddi",
+    "email": "eddi@heyeddi.com"
+  },
+  "homepage": "https://github.com/HeyEddi-com/heyeddi-skills",
+  "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
+  "license": "MIT",
+  "logo": "assets/logo.svg",
+  "keywords": ["heyeddi", "design", "agent-skills", "penpot", "cursor"],
+  "category": "developer-tools",
+  "tags": ["skills", "design", "heyeddi"],
+  "skills": "./skills/"
+}

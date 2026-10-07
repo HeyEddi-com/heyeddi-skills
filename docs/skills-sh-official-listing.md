@@ -36,7 +36,7 @@ npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 - Share the **repo** page URL (`skills.sh/heyeddi-com/heyeddi-skills`), not only the org page.
 - Pin a release tag in docs/README (`v3.0.5` or latest).
 - Add the install block to heyeddi.com, `.heyeddi/README.md` scaffold, and onboarding docs.
-- Use `@heyeddi-orchestrator` in demos so consumers install the full bundle.
+- Use `@heyeddi` in demos so consumers install the full bundle.
 
 ### Step 2 — GitHub repository topics
 

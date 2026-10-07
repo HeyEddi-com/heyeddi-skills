@@ -72,7 +72,7 @@ def _write_minimal_index(project_root: Path, skills_root: Path) -> dict[str, Any
         "skill_count": len(skills),
         "installed_count": len(skills),
         "skills": skills,
-        "note": "Minimal index from install-tree SKILL.md scan. Run @heyeddi-orchestrator sync for full catalog.",
+        "note": "Minimal index from install-tree SKILL.md scan. Run @heyeddi sync for full catalog.",
     }
     (heyeddi / "skills-index.json").write_text(
         json.dumps(catalog, indent=2) + "\n", encoding="utf-8"

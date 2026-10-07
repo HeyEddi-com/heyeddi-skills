@@ -4,7 +4,7 @@
 
 **HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) — free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.4.11** · 27 skills · [skills-registry.json](skills-registry.json)
+**Status:** **v3.5.0** · 27 skills · [skills-registry.json](skills-registry.json)
 
 ### Who this is for
 
@@ -113,7 +113,7 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 
 | Skill | Role |
 |-------|------|
-| `heyeddi-orchestrator` | Discover @skills and suggest pipelines from `skill-routing.json` |
+| `heyeddi` | Discover @skills and suggest pipelines from `skill-routing.json` |
 | `heyeddi-setup` | Ensure `.heyeddi/stack.json` has stack + git/tools/agent prefs |
 | `heyeddi-intake` | User prompt → `product.md`, mockups, intake JSON, routing |
 | `heyeddi-product` | PM review — stories, AC, usefulness; orchestrates UX/design/engineering research |

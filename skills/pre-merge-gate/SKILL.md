@@ -2,7 +2,7 @@
 name: pre-merge-gate
 description: Runs pre-merge checks (setup prefs + backend + frontend + engineering excellence + optional UI audit). Any FAIL exits 1 (hard stop). Use when QA approves a PR or before merge to main.
 version: 1.3.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -57,7 +57,7 @@ When you have **finished the user's request** for this skill (not after every to
 1. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill pre-merge-gate --project-root .
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill pre-merge-gate --project-root .
    ```
 
    Add `--route /path` if you worked a specific route.
@@ -66,4 +66,4 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.

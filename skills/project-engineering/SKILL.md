@@ -2,7 +2,7 @@
 name: project-engineering
 description: "Ensures HeyEddi projects have the right engineering stack: Vue (Vite/Vitest), FastAPI backend, or Firebase tooling. Audits gaps, scaffolds as needed, installs deps, runs tests, documents local dev servers. Use when the repo is thin or before design/feature work on any HeyEddi app."
 version: 1.1.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 paths:
   - "package.json"
@@ -116,7 +116,7 @@ When you have **finished the user's request** for this skill (not after every to
 1. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill project-engineering --project-root .
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill project-engineering --project-root .
    ```
 
    Add `--route /path` if you worked a specific route.
@@ -125,5 +125,5 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.
 

@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SCRIPTS = REPO_ROOT / "skills" / "heyeddi-orchestrator" / "scripts"
+SCRIPTS = REPO_ROOT / "skills" / "heyeddi" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 from _auto_sync import (  # noqa: E402
@@ -42,7 +42,7 @@ def test_ensure_heyeddi_writes_minimal_index(tmp_path: Path) -> None:
     assert data["generator"] == "heyeddi-auto-sync-minimal"
     assert data["skill_count"] >= 1
     names = {s["name"] for s in data["skills"]}
-    assert "heyeddi-orchestrator" in names
+    assert "heyeddi" in names
 
 
 def test_ensure_heyeddi_skips_write_when_index_exists(tmp_path: Path) -> None:

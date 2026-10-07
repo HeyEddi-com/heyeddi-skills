@@ -5,8 +5,8 @@
     "email": "eddi@heyeddi.com"
   },
   "metadata": {
-    "description": "HeyEddi open agent toolkit \u2014 full pack plus CI plugin; CI skills.sh package is HeyEddi-com/heyeddi-ci-skills (ci.heyeddi.com)",
-    "version": "3.4.10",
+    "description": "HeyEddi open agent toolkit \u2014 full pack, design pack, and CI plugin. skills.sh mirrors: heyeddi-design-skills and heyeddi-ci-skills.",
+    "version": "3.5.0",
     "pluginRoot": "plugins"
   },
   "plugins": [
@@ -19,7 +19,12 @@
       "name": "heyeddi-ci-skills",
       "source": "heyeddi-ci-skills",
       "description": "HeyEddi CI only (ci.heyeddi.com) \u2014 eddi-ci.yaml, respond, fails, Spot runners, guide"
+    },
+    {
+      "name": "heyeddi-design-skills",
+      "source": "heyeddi-design-skills",
+      "description": "HeyEddi design pack \u2014 taste-penpot owns the look; heyeddi-design records product context and hands off"
     }
   ],
-  "version": "3.4.10"
+  "version": "3.5.0"
 }

@@ -1,0 +1,228 @@
+{
+  "skill": "heyeddi",
+  "version": "3.4.0",
+  "tools": [
+    {
+      "name": "sync",
+      "description": "Full .heyeddi/ sync: refresh skills index, init workflow if missing, detect hub updates (ask before install).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "hub_root": { "type": "string" },
+          "skip_workflow": { "type": "boolean" },
+          "skip_update_check": { "type": "boolean" },
+          "force_update_check": { "type": "boolean" },
+          "dry_run": { "type": "boolean" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/sync.py",
+      "readonly": false
+    },
+    {
+      "name": "check_skills_update",
+      "description": "Compare installed hub version to latest release. Never auto-installs; ask user to approve npx skills add.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "hub_root": { "type": "string" },
+          "repo": { "type": "string" },
+          "latest": { "type": "string", "description": "Override latest version (offline/evals)" },
+          "force": { "type": "boolean" },
+          "dismiss": { "type": "boolean" },
+          "disable": { "type": "boolean", "description": "Kill switch: stop update checks" },
+          "enable": { "type": "boolean" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/check_skills_update.py",
+      "readonly": false
+    },
+    {
+      "name": "write_skills_index",
+      "description": "Scan installed skills and write .heyeddi/skills-index.json + skills-index.md.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string"
+          },
+          "hub_root": {
+            "type": "string"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_root"
+        ]
+      },
+      "script": "scripts/write_skills_index.py",
+      "readonly": false
+    },
+    {
+      "name": "load_catalog",
+      "description": "Load skills catalog from .heyeddi/skills-index.json (or scan+write if missing).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string"
+          },
+          "hub_root": {
+            "type": "string"
+          },
+          "refresh": {
+            "type": "boolean"
+          },
+          "no_write": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_root"
+        ]
+      },
+      "script": "scripts/load_catalog.py",
+      "readonly": true
+    },
+    {
+      "name": "suggest_skills",
+      "description": "Rank skills for a user prompt using cached index; merges skill-routing.json when present.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string"
+          },
+          "user_prompt": {
+            "type": "string"
+          },
+          "prompt_file": {
+            "type": "string"
+          },
+          "hub_root": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "refresh": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_root"
+        ]
+      },
+      "script": "scripts/suggest_skills.py",
+      "readonly": true
+    },
+    {
+      "name": "suggest_next_skill",
+      "description": "After a skill finishes, return the next @skill and concrete command (uses skill-routing.json when present).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "hub_root": { "type": "string" },
+          "current_skill": { "type": "string" },
+          "route": { "type": "string" },
+          "mode": { "type": "string", "description": "Sub-command just finished (shape, craft, audit, sync, …)" }
+        },
+        "required": ["project_root", "current_skill"]
+      },
+      "script": "scripts/suggest_next_skill.py",
+      "readonly": true
+    },
+    {
+      "name": "init_workflow_sync",
+      "description": "Scaffold .heyeddi/docs/workflow/ for product+UX+design cross-pillar opinions.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string"
+          },
+          "force": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_root"
+        ]
+      },
+      "script": "scripts/init_workflow_sync.py",
+      "readonly": false
+    },
+    {
+      "name": "load_workflow_context",
+      "description": "Load sibling pillar opinions and checklist for a route.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "feature": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_root"
+        ]
+      },
+      "script": "scripts/load_workflow_context.py",
+      "readonly": true
+    },
+    {
+      "name": "append_pillar_opinion",
+      "description": "Record pillar opinion and request sibling product/UX/design responses.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string"
+          },
+          "pillar": {
+            "type": "string",
+            "enum": [
+              "product",
+              "ux",
+              "design"
+            ]
+          },
+          "route": {
+            "type": "string"
+          },
+          "opinion": {
+            "type": "string"
+          },
+          "docs_updated": {
+            "type": "string"
+          },
+          "request_pillars": {
+            "type": "string"
+          },
+          "feature": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_root",
+          "pillar",
+          "route",
+          "opinion"
+        ]
+      },
+      "script": "scripts/append_pillar_opinion.py",
+      "readonly": false
+    }
+  ]
+}

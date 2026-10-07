@@ -1,8 +1,8 @@
 ---
 name: heyeddi-design
-description: "ALWAYS use when the user talks about design, UI, UX, look/feel, branding, marketing pages, heroes, landing, dashboards, settings, login, polish, critique, craft, redesign, 'make it professional/clean/modern/better', 'looks bad', or visual direction. Before any craft: name subject/metaphor + hard rejects (not vague adjectives) per brief-language.md. Briefs require taste, anti-defaults, hero composition, type roles, accent vs edge, responsive contract, token SSOT, one aesthetic risk. Done only after 6-width screenshot gate. Better design / redesign escalates to shape (not polish-only). Implementation via @heyeddi-handoff or @design-handoff-flutter."
-version: 2.6.0
-product-version: 3.4.11
+description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff requests AFTER taste-penpot has chosen the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Screenshot gate still applies before done."
+version: 2.7.0
+product-version: 3.5.0
 author: HeyEddi-com
 ---
 
@@ -10,11 +10,9 @@ author: HeyEddi-com
 
 **Stack-agnostic UI design** for HeyEddi apps: discovery, briefs, critique, and design-system documentation. **Implementation** (Vue, Flutter, CSS in components) belongs to stack skills — see `reference/implement-routing.md`.
 
-**Auto-pickup:** Any design / look / feel talk → this skill. In the same turn, read **`reference/brief-language.md`**. Do not wait for `@heyeddi-design` or the word "brief."
+**Team:** `@taste-penpot` owns the look in one pass (Anthropic frontend-design + tokens). This skill owns product fit and implementation handoff. Read `reference/design-team.md` before any design turn. Do not author a second palette or restart discover → research → explore to find a look.
 
-**Calm wow:** when users ask for modern / wow / living UI, read `reference/modern-reference.md` and `reference/aesthetic-direction.md` (**Calm wow for B2B**) before shaping.
-
-**You do not need design vocabulary from the user.** Plain intent ("enterprise view for our app") is enough — but **translate or ask** until **subject/metaphor + hard rejects** are named. Never craft on "make it professional" alone.
+**Auto-pickup:** Design talk still loads this skill, and it immediately loads `@taste-penpot` if that pass has not already produced tokens. Then record those tokens. `reference/brief-language.md` is product language for the brief, not a second art direction.
 
 ## Design vs implement (mandatory split)
 
@@ -54,9 +52,9 @@ Do not run visual capture inline during handoff turns.
 Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, **polish**, **shape** (confirmed brief):
 
 ```
-@heyeddi-orchestrator  load_workflow_context --route /path
+@heyeddi  load_workflow_context --route /path
 … design work + Decision log in design.md …
-@heyeddi-orchestrator  append_pillar_opinion --pillar design …
+@heyeddi  append_pillar_opinion --pillar design …
 → @heyeddi-product scope check; @ux-flow-auditor flow note if IA affects tasks
 ```
 
@@ -127,7 +125,7 @@ See `context/VOCABULARY.md`, `context/ANTI_PATTERNS.md`, `context/PROSE_ANTI_SLO
 ## When the task is complete: suggest next skills
 
 ```bash
-python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py \
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
   --current-skill heyeddi-design --project-root .
 ```
 

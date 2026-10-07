@@ -8,7 +8,7 @@ from typing import Any
 from _catalog import load_routing
 
 ORCHESTRATOR_SCRIPT = (
-    ".agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py"
+    ".agents/skills/heyeddi/scripts/suggest_next_skill.py"
 )
 
 # Default pipeline when skill-routing.json is absent or exhausted.
@@ -20,11 +20,16 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "why": "Validate product.md and backlog before design or scaffold.",
     },
     "heyeddi-product": {
-        "skill": "heyeddi-design",
-        "prompt": "@heyeddi-design shape <route> from product.md personas and route intent",
-        "why": "Turn product intent into a confirmed design brief before craft or handoff.",
+        "skill": "taste-penpot",
+        "prompt": "@taste-penpot design <route> in one pass from product.md, then @heyeddi-design records the tokens",
+        "why": "Look comes from taste before product handoff.",
     },
-    "heyeddi-orchestrator": {
+    "taste-penpot": {
+        "skill": "heyeddi-design",
+        "prompt": "@heyeddi-design record the taste-penpot tokens for <route> and hand off. Do not invent a second palette.",
+        "why": "Product docs and stack handoff consume the look that taste already chose.",
+    },
+    "heyeddi": {
         "skill": "heyeddi-setup",
         "prompt": "@heyeddi-setup: confirm stack + git/tools/agent prefs in .heyeddi/stack.json",
         "why": "Working prefs should exist before intake or scaffold.",
@@ -137,7 +142,7 @@ MODE_NEXT: dict[str, dict[str, dict[str, str]]] = {
             "why": "Holistic PM review is complete: confirm gates before ship.",
         },
     },
-    "heyeddi-orchestrator": {
+    "heyeddi": {
         "sync": {
             "skill": "heyeddi-intake",
             "prompt": "@heyeddi-intake: continue product intake for this project",
@@ -159,8 +164,8 @@ MODE_NEXT: dict[str, dict[str, dict[str, str]]] = {
 }
 
 DONE_NEXT: dict[str, str] = {
-    "skill": "heyeddi-orchestrator",
-    "prompt": "@heyeddi-orchestrator: what skill should handle: <describe next task>",
+    "skill": "heyeddi",
+    "prompt": "@heyeddi: what skill should handle: <describe next task>",
     "why": "Pipeline step complete: orchestrator picks the next @skill.",
 }
 
@@ -430,7 +435,7 @@ def suggest_next_skill(
     next_step.pop("command", None)
 
     helper = (
-        f"python {ORCHESTRATOR_SCRIPT} --current-skill {skill or 'heyeddi-orchestrator'} "
+        f"python {ORCHESTRATOR_SCRIPT} --current-skill {skill or 'heyeddi'} "
         f"--project-root ."
     )
     if current_route:

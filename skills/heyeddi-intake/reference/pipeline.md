@@ -49,8 +49,8 @@ verify_intake --check
 
 ```
 @heyeddi-product       init_product_docs → audit_product → write_feature_spec (per route)
-@heyeddi-orchestrator    init_workflow_sync
-@heyeddi-orchestrator    write_skills_index
+@heyeddi    init_workflow_sync
+@heyeddi    write_skills_index
 @project-engineering scaffold_stack
 @heyeddi-design document → shape → craft (per routing)
 @heyeddi-handoff (settings or wireframe routes)

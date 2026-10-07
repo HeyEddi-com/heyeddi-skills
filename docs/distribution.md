@@ -2,14 +2,15 @@
 
 **Date:** 2026-08-11 · **Release:** v3.4.2 · **Brand:** **HeyEddi Skills** (`heyeddi-skills`)
 
-One SSOT hub ships **two public GitHub repos** (skills.sh indexes repos 1:1):
+One SSOT hub ships **three public GitHub repos** (skills.sh indexes repos 1:1):
 
 | Pack | GitHub (skills.sh) | Marketplace plugin | Contents |
 |------|--------------------|--------------------|----------|
 | `heyeddi-skills` | [`HeyEddi-com/heyeddi-skills`](https://github.com/HeyEddi-com/heyeddi-skills) | `plugins/heyeddi-skills/` | Full product + CI + QA |
+| `heyeddi-design-skills` | [`HeyEddi-com/heyeddi-design-skills`](https://github.com/HeyEddi-com/heyeddi-design-skills) | `plugins/heyeddi-design-skills/` | Design mirror. Not the `heyeddi-design` skill name. |
 | `heyeddi-ci-skills` | [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills) | `plugins/heyeddi-ci-skills/` | CI-only published mirror |
 
-Pack manifests: [`packs/`](../packs/). Plugin sync: `./scripts/sync-plugins.sh`. CI mirror: `./scripts/publish-ci-pack-repo.sh`.
+Pack manifests: [`packs/`](../packs/). Plugin sync: `./scripts/sync-plugins.sh`. Design mirror: `./scripts/publish-design-pack-repo.sh`. CI mirror: `./scripts/publish-ci-pack-repo.sh`.
 
 **Legacy:** `HeyEddi-com/skills` was renamed to `heyeddi-skills` (GitHub redirects). Prefer the new slug everywhere.
 
@@ -20,6 +21,7 @@ There is **no deploy step** and **no submission form**. Distribution is GitHub +
 | Channel | How consumers get skills | Maintainer action |
 |---------|--------------------------|-------------------|
 | **Full pack CLI** | `npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'` | Keep hub public; tag releases |
+| **Design pack CLI** | `npx skills add HeyEddi-com/heyeddi-design-skills -a cursor -y --skill '*'` | Publish mirror via `publish-design-pack-repo.sh` |
 | **CI pack CLI** | `npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'` | Publish mirror via `publish-ci-pack-repo.sh` |
 | **skills.sh** | Two pages (full + CI) | Root `skills.sh.json` on each repo |
 | **Pinned version** | `…/tree/v3.4.2` (hub) or `…/tree/v1.2.2` (CI pack) | Tag releases on both repos |
@@ -42,7 +44,7 @@ PR [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) also syncs packs an
 
 **CLI flag trap:** `--all` = all skills **and all agents**. For Cursor-only, use `-a cursor --skill '*'`.
 
-**Updates:** consumers run `npx skills update` or re-run `npx skills add` **after approving** an agent prompt. `@heyeddi-orchestrator` `check_skills_update` detects a newer hub release and asks; it never silent-installs.
+**Updates:** consumers run `npx skills update` or re-run `npx skills add` **after approving** an agent prompt. `@heyeddi` `check_skills_update` detects a newer hub release and asks; it never silent-installs.
 
 ### skills.sh listing
 

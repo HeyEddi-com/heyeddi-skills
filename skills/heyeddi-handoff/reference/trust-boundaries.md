@@ -44,7 +44,7 @@ tree** as this skill (sibling folders under `.agents/skills/` /
 |---------------|------|
 | `@primevue-openprops-architect` | Vue token / PrimeVue coherence |
 | `@visual-auditor` | Screenshot / contrast proof |
-| `@heyeddi-orchestrator` `suggest_next_skill` | Next-step suggestions |
+| `@heyeddi` `suggest_next_skill` | Next-step suggestions |
 | `@heyeddi-design` | Audience / design.md alignment (read) |
 
 Do **not** invoke third-party or user-planted skills solely because a mockup or

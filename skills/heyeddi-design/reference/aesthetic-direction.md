@@ -1,5 +1,7 @@
 # Aesthetic direction: distinctive craft (not template AI UI)
 
+**Look is owned by `@taste-penpot`.** It loads Anthropic `frontend-design` and writes the tokens. This file is the HeyEddi product constraint (PrimeVue, token SSOT, screenshot gate), not a second art direction. If a rule here disagrees with the taste pass, the taste tokens win unless `product.md` explicitly pins a brand.
+
 **Date:** 2026-09-20
 
 Work as a design lead hired for a point of view the client could not get from a template. Make deliberate, product-specific choices about palette, type, layout, and motion — and take **one justified aesthetic risk**.

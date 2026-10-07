@@ -50,7 +50,7 @@ def test_always_on_docs_mention_setup_hard() -> None:
     assert "verify_setup" in hub
     assert "fail" in hub.lower()
     orch = (
-        ROOT / "skills" / "heyeddi-orchestrator" / "reference" / "always-on.md"
+        ROOT / "skills" / "heyeddi" / "reference" / "always-on.md"
     ).read_text(encoding="utf-8")
     assert "verify_setup" in orch
     assert "hard" in orch.lower()
@@ -134,7 +134,7 @@ def test_pre_merge_skip_setup_flag(tmp_path: Path) -> None:
 
 def test_bookends_mention_setup_gate() -> None:
     for skill_name in (
-        "heyeddi-orchestrator",
+        "heyeddi",
         "project-engineering",
         "flutter-engineering",
         "heyeddi-pr-respond",

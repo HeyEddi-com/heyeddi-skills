@@ -2,7 +2,7 @@
 name: heyeddi-intake
 description: "Translates vague user prompts into HeyEddi product docs (personas, route intent, voice), route-specific handoff artifacts (wireframes, user mockups, or briefs), and skill-routing under .heyeddi/. Use first on new projects before @heyeddi-design, @heyeddi-handoff, or @flutter-engineering. Never hand-write product.md: use write_product."
 version: 1.3.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 paths:
   - ".heyeddi/**"
@@ -81,7 +81,7 @@ When you have **finished the user's request** for this skill (not after every to
 1. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill heyeddi-intake --project-root .
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-intake --project-root .
    ```
 
    Add `--route /path` if you worked a specific route.
@@ -90,7 +90,7 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.
 
 ## Related
 
@@ -99,4 +99,4 @@ See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
 - `reference/mockup-strategy.md`: when wireframe vs ingest vs AI PNG
 - `reference/ai-mockup-images.md`: AI generation workflow (no bundled PNGs)
 - `reference/mockup-quality.md`: quality bar per format
-- `@heyeddi-orchestrator`: `write_skills_index` after intake (integration eval)
+- `@heyeddi`: `write_skills_index` after intake (integration eval)
