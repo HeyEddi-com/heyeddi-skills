@@ -8,14 +8,14 @@ These guards run on **every chat** that plans or changes work. They are not opti
 
 | Guard | Role | Fail rule |
 |-------|------|-----------|
-| **`@heyeddi-orchestrator`** | Session start + ambiguous tasks: sync `.heyeddi/`, rank skills, route. Do not freestyle the pipeline. | Soft: must load catalog / follow routing before multi-step work |
+| **`@heyeddi`** | Session start + ambiguous tasks: sync `.heyeddi/`, rank skills, route. Do not freestyle the pipeline. | Soft: must load catalog / follow routing before multi-step work |
 | **`@heyeddi-setup`** | **Prefs gate** before git/CI/commit/push or agent autonomy assumptions (`verify_setup --check`). | **Incomplete prefs fail** those actions; run setup until check passes |
 | **`@engineering-excellence`** | **Plan gate** before coding; **change gate** after edits (`audit_engineering --check`). | **Errors fail**; warns stay advisory |
 | **Prose anti-slop** | Any user-facing or `.heyeddi` prose: `verify_prose --check` / `context/PROSE_ANTI_SLOP.md` | Fail on em/en dashes and high-signal filler |
 
 Plus **clarify-before-act** ([clarify-before-act.md](clarify-before-act.md)): ask when product/design/stack intent is missing. Never guess.
 
-Plus **host surfaces** (`@heyeddi-orchestrator` → `reference/host-surfaces.md`): prefer this session's native plan / data / visual tools when listed; never require IDE-only surfaces on CLI or Cloud Run.
+Plus **host surfaces** (`@heyeddi` → `reference/host-surfaces.md`): prefer this session's native plan / data / visual tools when listed; never require IDE-only surfaces on CLI or Cloud Run.
 
 Non-git work may continue when prefs are incomplete. Never invent branch names, PR bases, or auto-commit/push until `verify_setup --check` passes.
 
@@ -26,7 +26,8 @@ Non-git work may continue when prefs are incomplete. Never invent branch names, 
 | `@heyeddi-setup` | Incomplete `stack.json` prefs (hard for git/agent), or user asks for setup / preferences |
 | `@heyeddi-intake` | Greenfield / thin `product.md` |
 | `@heyeddi-product` | Specs, backlog, usefulness review |
-| `@heyeddi-design` | **Any** design / UI / look / feel talk (ALWAYS description). Load `brief-language.md`: subject + hard rejects before craft. Foundations always-on inside design. |
+| `@taste-penpot` | Design look. One pass. Loaded with `@heyeddi-design`. Penpot only when `design.penpot` is `on` or `auto` and Penpot is connected. |
+| `@heyeddi-design` | Product side of design: personas, `design.md`, handoff. Consumes taste tokens. Does not invent a second look. |
 | `@visual-auditor` | After UI changes; flagship done = `--preset done` (6 widths) |
 | `@ux-flow-auditor` | Task flows / friction |
 | `@pre-merge-gate` | Before merge or ship claim (includes setup + engineering + prose audits) |
@@ -48,5 +49,5 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 
 - `@heyeddi-setup` → `reference/setup-always-on.md`
 - `@engineering-excellence` → `reference/engineering-always-on.md`
-- `@heyeddi-orchestrator` → `reference/always-on.md` · `reference/host-surfaces.md`
+- `@heyeddi` → `reference/always-on.md` · `reference/host-surfaces.md`
 - `@pre-merge-gate` runs `verify_setup --check`, `audit_engineering --check`, and `verify_prose --check` by default

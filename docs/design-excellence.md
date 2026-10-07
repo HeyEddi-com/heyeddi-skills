@@ -9,7 +9,7 @@ How HeyEddi skills produce **world-class, audience-driven** UI — not generic �
 | Layer | Artifact / skill | What it does |
 |-------|------------------|--------------|
 | **1. Intake** | `@heyeddi-intake` → `product.md` | Personas, per-route intent, competitors, voice |
-| **2. Routing** | `skill-routing.json`, `@heyeddi-orchestrator` | Which skill runs per route; skills index cache |
+| **2. Routing** | `skill-routing.json`, `@heyeddi` | Which skill runs per route; skills index cache |
 | **3. Discovery** | `@heyeddi-design discover` + **`brief-language.md`** | Pin subject/metaphor + hard rejects (not adjectives); purpose, audience, scene |
 | **4. Research** | `designs/<feature>/research.md` | Category + competitor + audience-specific trends |
 | **5. Direction** | `audience-design.md` + `modern-reference.md` + `aesthetic-direction.md` | Map persona → aesthetic; technique execution |

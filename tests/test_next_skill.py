@@ -8,14 +8,14 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "skills" / "heyeddi-orchestrator" / "scripts"
+SCRIPTS = ROOT / "skills" / "heyeddi" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 from _next_skill import suggest_next_skill  # noqa: E402
 
 
 def test_orchestrator_suggests_setup(tmp_path: Path) -> None:
-    result = suggest_next_skill(tmp_path, current_skill="heyeddi-orchestrator")
+    result = suggest_next_skill(tmp_path, current_skill="heyeddi")
     assert result["next"]["skill"] == "heyeddi-setup"
     assert "@heyeddi-setup" in result["next"]["prompt"]
 
@@ -82,7 +82,7 @@ def test_pipeline_skills_have_handoff_section() -> None:
         "heyeddi-setup",
         "heyeddi-intake",
         "heyeddi-product",
-        "heyeddi-orchestrator",
+        "heyeddi",
         "heyeddi-design",
         "heyeddi-handoff",
         "design-handoff-flutter",

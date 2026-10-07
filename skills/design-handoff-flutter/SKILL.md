@@ -2,7 +2,7 @@
 name: design-handoff-flutter
 description: "Implements Flutter screens from designer screenshots and handoff notes using Material 3. Two-pass workflow: mockup-brief with Implementation spec, then AppShell + route screens. Use when approved mockups exist for a HeyEddi Flutter app."
 version: 1.1.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 disable-model-invocation: true
 paths:
@@ -61,7 +61,7 @@ When you have **finished the user's request** for this skill (not after every to
 1. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill design-handoff-flutter --project-root .
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill design-handoff-flutter --project-root .
    ```
 
    Add `--route /path` if you worked a specific route.
@@ -70,5 +70,5 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.
 

@@ -2,7 +2,7 @@
 name: visual-auditor
 description: "ALWAYS use after design/implement for screenshot QA: capture, contrast, fix, document. Mandatory after handoff. Fast widths 375/768/1440; before flagship done use --preset done (375/430/768/1024/1440/1920). Auto-fix — never report-only unless user says audit-only. Edges must read on the plane."
 version: 3.2.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 ---
 
@@ -105,7 +105,7 @@ When you have **finished the user's request** for this skill (not after every to
 1. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill visual-auditor --project-root .
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill visual-auditor --project-root .
    ```
 
    Add `--route /path` if you worked a specific route.
@@ -114,4 +114,4 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.

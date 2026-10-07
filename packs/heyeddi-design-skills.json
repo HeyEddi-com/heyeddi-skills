@@ -1,0 +1,15 @@
+{
+  "pack": "heyeddi-design-skills",
+  "displayName": "HeyEddi Design Skills",
+  "description": "Design pack: taste-penpot owns the look; heyeddi-design records product context and hands off.",
+  "plugin": "heyeddi-design-skills",
+  "version": "1.0.0",
+  "skills": [
+    "taste-penpot",
+    "heyeddi-design",
+    "heyeddi-handoff",
+    "design-handoff-flutter",
+    "visual-auditor",
+    "design-system-generalizer"
+  ]
+}

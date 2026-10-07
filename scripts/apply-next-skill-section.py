@@ -12,7 +12,7 @@ SKILLS = ROOT / "skills"
 PIPELINE_SKILLS = {
     "heyeddi-intake",
     "heyeddi-product",
-    "heyeddi-orchestrator",
+    "heyeddi",
     "heyeddi-design",
     "heyeddi-handoff",
     "design-handoff-flutter",
@@ -29,7 +29,7 @@ OLD_HEADINGS = (
     "## End every turn - next skill",
 )
 NEW_HEADING = "## When the task is complete: suggest next skills"
-ORCH = ".agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py"
+ORCH = ".agents/skills/heyeddi/scripts/suggest_next_skill.py"
 
 
 def section_for(skill_name: str) -> str:
@@ -50,7 +50,7 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.
 """
 
 

@@ -1,0 +1,18 @@
+taste-penpot skill
+
+This product includes Anthropic frontend-design
+(https://github.com/anthropics/skills/tree/main/skills/frontend-design),
+Apache License 2.0. Unmodified files:
+third-party/frontend-design/SKILL.md and LICENSE.txt.
+
+This product includes material derived from Impeccable
+(https://github.com/pbakaus/impeccable), Copyright 2025 Paul Bakaus,
+licensed under the Apache License, Version 2.0
+(http://www.apache.org/licenses/LICENSE-2.0). The material was rewritten,
+condensed and modified; see "Credits and licence" in SKILL.md.
+
+Portions are adapted from MIT-licensed works:
+- interface-design, Copyright (c) 2026 Damola Akinleye
+  (https://github.com/Dammyjay93/interface-design)
+- taste-skill, Copyright (c) 2026 Leonxlnx
+  (https://github.com/Leonxlnx/taste-skill)

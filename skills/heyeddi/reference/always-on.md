@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-08
 
-`@heyeddi-orchestrator` is **always on** as the router bookend for every chat.
+`@heyeddi` is **always on** as the router bookend for every chat.
 
 ## Required
 

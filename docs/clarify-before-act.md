@@ -16,7 +16,7 @@ Every skill follows this order when information is missing:
 
 Before step 5 when planning or coding:
 
-1. **`@heyeddi-orchestrator`** — route if session start or task is ambiguous
+1. **`@heyeddi`** — route if session start or task is ambiguous
 2. **`@engineering-excellence`** — `check_engineering_plan --check` before implement; `audit_engineering --check` after edits (errors fail; warns advisory)
 3. **Prose anti-slop** — `verify_prose --check` when user-facing or `.heyeddi` prose changes
 
@@ -41,5 +41,5 @@ See `docs/always-on-skills.md`.
 - Guessing API field names → sync OpenAPI instead
 - Dumping 10 questions at once → 2–3 per round
 - Skipping `product.md` personas on design work → run `@heyeddi-intake` or `@heyeddi-design discover`
-- Auto-updating installed skills without approval → detect with `@heyeddi-orchestrator` `check_skills_update`, then ask
+- Auto-updating installed skills without approval → detect with `@heyeddi` `check_skills_update`, then ask
 - Skipping engineering excellence on a coding chat → always-on plan + change gates

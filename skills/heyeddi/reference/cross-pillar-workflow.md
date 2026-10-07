@@ -17,10 +17,10 @@ One feature route is owned by **three pillars**. They stay connected through `.h
 ## Mandatory session bookends (every pillar)
 
 ```
-@heyeddi-orchestrator  init_workflow_sync          (once per project)
-@heyeddi-orchestrator  load_workflow_context --route /path
+@heyeddi  init_workflow_sync          (once per project)
+@heyeddi  load_workflow_context --route /path
 … pillar work + update primary docs …
-@heyeddi-orchestrator  append_pillar_opinion --pillar <product|ux|design> …
+@heyeddi  append_pillar_opinion --pillar <product|ux|design> …
 → siblings MUST respond before route is "done"
 ```
 

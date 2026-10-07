@@ -5,7 +5,7 @@
 Product, UX, and design are **one loop**. See:
 
 - Hub: `docs/cross-pillar-workflow.md`
-- Skill: `@heyeddi-orchestrator` → `reference/cross-pillar-workflow.md`
+- Skill: `@heyeddi` → `reference/cross-pillar-workflow.md`
 
 ## Every session
 

@@ -1,11 +1,15 @@
 {
-  "version": "3.4.11",
+  "version": "3.5.0",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
     {
+      "name": "heyeddi",
+      "description": "ALWAYS-ON router @heyeddi: pick the skill, sync .heyeddi/, send design to taste-penpot then heyeddi-design"
+    },
+    {
       "name": "heyeddi-orchestrator",
-      "description": "Discover available @skills and suggest which to invoke; reads skill-routing.json"
+      "description": "Deprecated alias for @heyeddi"
     },
     {
       "name": "heyeddi-product",
@@ -86,6 +90,10 @@
     {
       "name": "heyeddi-design",
       "description": "ALWAYS-ON for design/UI/look talk: briefs with subject+hard rejects, critique, craft; 6-width done gate"
+    },
+    {
+      "name": "taste-penpot",
+      "description": "One-pass design taste; Penpot when connected; partners with heyeddi-design"
     },
     {
       "name": "engineering-excellence",

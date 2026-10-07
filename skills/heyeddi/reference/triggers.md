@@ -1,4 +1,4 @@
-# Triggers for @heyeddi-orchestrator
+# Triggers for @heyeddi
 which skill
 what skill
 available skills

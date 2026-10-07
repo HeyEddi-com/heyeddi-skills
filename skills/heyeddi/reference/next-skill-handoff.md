@@ -16,7 +16,7 @@ When a **pipeline skill** finishes the user's requested work, suggest what `@ski
 2. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py \
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
      --current-skill <skill-you-finished> \
      --project-root .
    ```
@@ -52,17 +52,17 @@ The **Prompt** is the main deliverable: natural language with `@skill` and sub-c
 | `@design-handoff-flutter` | `@engineering-excellence audit_engineering --check after Flutter handoff` |
 | `@engineering-excellence` | `@visual-auditor review and fix <route>` |
 | `@visual-auditor` | `@pre-merge-gate run the merge readiness checklist` |
-| `@heyeddi-orchestrator sync` | `@heyeddi-setup: confirm stack + prefs in stack.json` |
+| `@heyeddi sync` | `@heyeddi-setup: confirm stack + prefs in stack.json` |
 
 ## Priority order
 
 1. **`--mode`** sub-command chain (e.g. design `shape` → `craft`)
 2. **`.heyeddi/docs/intake/skill-routing.json`**: next route
 3. **Default pipeline** in `_next_skill.py`
-4. **Fallback**: `@heyeddi-orchestrator`
+4. **Fallback**: `@heyeddi`
 
 ## Pipeline skills
 
-`heyeddi-setup`, `heyeddi-intake`, `heyeddi-product`, `heyeddi-orchestrator`, `heyeddi-design`, `heyeddi-handoff`, `design-handoff-flutter`, `project-engineering`, `flutter-engineering`, `engineering-excellence`, `visual-auditor`, `pre-merge-gate`, `heyeddi-pr-review`, `heyeddi-pr-respond`
+`heyeddi-setup`, `heyeddi-intake`, `heyeddi-product`, `heyeddi`, `heyeddi-design`, `heyeddi-handoff`, `design-handoff-flutter`, `project-engineering`, `flutter-engineering`, `engineering-excellence`, `visual-auditor`, `pre-merge-gate`, `heyeddi-pr-review`, `heyeddi-pr-respond`
 
 Utility skills (`verify-build`, `backend-type-bridger`, …) are mid-pipeline: no handoff unless that was the whole user request.

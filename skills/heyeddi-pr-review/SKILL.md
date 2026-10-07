@@ -2,7 +2,7 @@
 name: heyeddi-pr-review
 description: "Reviews submitted PRs using only committed changes: product fit, docs drift, engineering quality, test coverage, and pre-merge gate. Use when approving a PR, doing reviewer QA, or self-checking before requesting review. Not for replying to review comments (use heyeddi-pr-respond)."
 version: 1.1.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -81,7 +81,7 @@ When you have **finished the user's request** for this skill (not after every to
 1. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill heyeddi-pr-review --project-root .
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-pr-review --project-root .
    ```
 
    Add `--route /path` if you worked a specific route.
@@ -90,5 +90,5 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.
 

@@ -3,8 +3,9 @@
   "displayName": "HeyEddi Skills",
   "description": "HeyEddi open agent toolkit \u2014 opinionated product, design, engineering, QA, and PR skills (Vue/FastAPI/Firebase + Flutter).",
   "plugin": "heyeddi-skills",
-  "version": "3.4.11",
+  "version": "3.5.0",
   "skills": [
+    "heyeddi",
     "heyeddi-orchestrator",
     "heyeddi-product",
     "heyeddi-intake",
@@ -26,6 +27,7 @@
     "backend-type-bridger",
     "composable-patterns",
     "heyeddi-design",
+    "taste-penpot",
     "engineering-excellence",
     "ux-flow-auditor",
     "heyeddi-ci-config",

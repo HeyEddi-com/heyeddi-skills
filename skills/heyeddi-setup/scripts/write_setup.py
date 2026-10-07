@@ -50,7 +50,7 @@ def main() -> None:
     patch = _parse_json(args.json)
     current = load_stack(root)
 
-    nested_keys = {"git", "agent", "setup", "frontend", "backends", "tools"}
+    nested_keys = {"git", "agent", "setup", "design", "frontend", "backends", "tools"}
     answer_like = bool(patch) and all(
         isinstance(k, str)
         and (
@@ -68,6 +68,7 @@ def main() -> None:
             }
             or k.startswith("git.")
             or k.startswith("agent.")
+            or k.startswith("design.")
         )
         for k in patch
     )

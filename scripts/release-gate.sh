@@ -35,7 +35,7 @@ uv run poe test
 
 echo "==> 4/4 agent evals"
 if $QUICK; then
-  uv run python scripts/run-evals.py --keep-sandbox --judge-timeout 900 heyeddi-orchestrator-suggest
+  uv run python scripts/run-evals.py --keep-sandbox --judge-timeout 900 heyeddi-suggest
 else
   # --all defaults to continue-on-error so one flake does not abort the suite
   uv run python scripts/run-evals.py --all --keep-sandbox --judge-timeout 900

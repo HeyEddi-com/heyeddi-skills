@@ -2,7 +2,7 @@
 name: heyeddi-setup
 description: "ALWAYS-ON prefs gate: ensures `.heyeddi/stack.json` holds git/env and agent prefs. Incomplete prefs fail git/CI/commit/push assumptions until verify_setup --check passes. Asks env layout, custom workflow escape hatch, worktrees, commit/push autonomy. Tech stack is discovered by other skills. Use when setup is incomplete or the user says setup, preferences, or heyeddi-setup."
 version: 1.2.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 paths:
   - ".heyeddi/stack.json"
@@ -52,6 +52,7 @@ Non-git work may continue. Never invent branch names, PR bases, or auto-commit/p
 | 3 | Git worktrees for parallel features? | yes / no |
 | 4 | Agent may commit without asking? | `ask` / `auto` |
 | 5 | Agent may push without asking? | `ask` / `auto` |
+| 6 | Penpot as design source? | `auto` (default) / `on` / `off`. Taste always stays on. |
 
 ### Presets (always production + staging)
 
@@ -89,7 +90,7 @@ Read `.heyeddi/stack.json` before git/commit/push (only after `verify_setup --ch
 ## When the task is complete: suggest next skills
 
 ```bash
-python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill heyeddi-setup --project-root .
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-setup --project-root .
 ```
 
 Include the script's **`### Next step`** block in your final reply.
@@ -98,6 +99,6 @@ Include the script's **`### Next step`** block in your final reply.
 
 - `reference/setup-always-on.md` — hard gate policy
 - `reference/stack-schema.md` — key list
-- `@heyeddi-orchestrator` — hard-route setup when prefs incomplete
+- `@heyeddi` — hard-route setup when prefs incomplete
 - `@pre-merge-gate` — runs `verify_setup --check`
 - `@project-engineering` / `@flutter-engineering` — discover and write tech into `stack.json`

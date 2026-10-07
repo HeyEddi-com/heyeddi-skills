@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-02
 
-Use host / agent tooling to **show** design direction — not only describe it in chat. This skill authorizes visual output during `explore`, `shape`, and `critique` without waiting for the user to say "generate an image." Prefer whatever this session lists; degrade when missing. See `@heyeddi-orchestrator` → `reference/host-surfaces.md`.
+Use host / agent tooling to **show** design direction — not only describe it in chat. This skill authorizes visual output during `explore`, `shape`, and `critique` without waiting for the user to say "generate an image." Prefer whatever this session lists; degrade when missing. See `@heyeddi` → `reference/host-surfaces.md`.
 
 When Cursor Canvas is available, read `~/.cursor/skills-cursor/canvas/SKILL.md` before writing any `.canvas.tsx`.
 

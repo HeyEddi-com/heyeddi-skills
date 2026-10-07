@@ -2,7 +2,7 @@
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback — human reviewers, HeyEddi CI, inline threads. Auto-fix, commit+push, in-thread replies, CI check first — never ask before fixing or posting. One skill for every review source."
 version: 2.1.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -119,6 +119,6 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 When you have **finished the user's request** for this skill, suggest what to run next:
 
 ```bash
-python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py \
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
   --current-skill heyeddi-pr-respond --project-root .
 ```

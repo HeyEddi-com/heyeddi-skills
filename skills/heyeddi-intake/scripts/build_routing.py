@@ -94,7 +94,7 @@ def build_routing(root: Path, data: dict) -> dict:
         "routes": routes_out,
         "scaffold": [scaffold_skill, "scaffold_stack --stack full"],
         "post_intake": [
-            "@heyeddi-orchestrator write_skills_index",
+            "@heyeddi write_skills_index",
             "@heyeddi-design document",
         ],
     }

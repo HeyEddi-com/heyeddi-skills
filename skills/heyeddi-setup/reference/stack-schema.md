@@ -26,6 +26,10 @@ Setup owns **git/env + agent** prefs. Tech (`frontend`, `backends`, ports, packa
     "commit": "ask",
     "push": "ask"
   },
+  "design": {
+    "taste": "on",
+    "penpot": "auto"
+  },
   "setup": {
     "version": 1,
     "updated": "2026-09-06"
@@ -58,6 +62,15 @@ Setup owns **git/env + agent** prefs. Tech (`frontend`, `backends`, ports, packa
 | `setup.version` / `setup.updated` | stamped by write_setup |
 
 Optional: `git.environments.dev` (present on `main_staging_dev`).
+
+## Design prefs (stamped on write, not required to pass verify)
+
+| Path | Values |
+|------|--------|
+| `design.taste` | `on` only. `@taste-penpot` always owns look. |
+| `design.penpot` | `auto` (default) \| `on` \| `off` |
+
+Missing keys mean the same as the defaults: taste on, Penpot when connected. `write_setup` fills them. Do not quiz which of the 27 skills to install. `@heyeddi` sees which packs are installed (`heyeddi-skills`, `heyeddi-ci-skills`, `heyeddi-design-skills`).
 
 ## Custom workflow
 

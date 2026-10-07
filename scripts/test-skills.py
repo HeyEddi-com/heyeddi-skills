@@ -114,7 +114,7 @@ def validate_structure(skill_dir: Path, report: RunReport) -> None:
     if not fm.get("deprecated") and name in {
         "heyeddi-intake",
         "heyeddi-product",
-        "heyeddi-orchestrator",
+        "heyeddi",
         "heyeddi-design",
         "heyeddi-handoff",
         "design-handoff-flutter",
@@ -229,7 +229,7 @@ def default_args_for_tool(tool_name: str, skill_name: str, fixture_root: Path) -
     if tool_name == "diff_violations":
         args["golden"] = "/settings"
         args["target"] = "/settings"
-    if tool_name == "sync" and skill_name == "heyeddi-orchestrator":
+    if tool_name == "sync" and skill_name == "heyeddi":
         args["skip_update_check"] = True
     if tool_name == "check_skills_update":
         args["latest"] = "99.0.0"

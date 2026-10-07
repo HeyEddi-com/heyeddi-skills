@@ -2,7 +2,7 @@
 name: engineering-excellence
 description: "ALWAYS-ON: audits plans and code for KISS, YAGNI, DRY, SOLID, and testability; maintains .heyeddi/docs/engineering/. Use on every chat that plans or changes code, before merge, refactor, ADRs, or reuse-catalog work. Not for visual UX (ux-flow-auditor) or full CI (pre-merge-gate includes this audit)."
 version: 1.1.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 ---
 
@@ -68,7 +68,7 @@ Design decisions stay in `.heyeddi/design.md` Decision log: do not mix.
 
 ## Chain
 
-- `@heyeddi-orchestrator`: always-on router before this skill when the task is ambiguous
+- `@heyeddi`: always-on router before this skill when the task is ambiguous
 - `@project-engineering`: scaffold first
 - `@composable-patterns` / `@backend-type-bridger`: after architecture notes exist
 - `@pre-merge-gate`: final CI; includes `audit_engineering --check`
@@ -80,7 +80,7 @@ When you have **finished the user's request** for this skill (not after every to
 1. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill engineering-excellence --project-root .
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill engineering-excellence --project-root .
    ```
 
    Add `--route /path` if you worked a specific route.
@@ -89,4 +89,4 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode audit` when the change-gate audit just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.

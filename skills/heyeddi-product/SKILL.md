@@ -2,7 +2,7 @@
 name: heyeddi-product
 description: "Product leadership: user stories, acceptance criteria, backlog, holistic reviews. Verifies the product works and is useful; delegates UX flow, design critique, visual contrast, and engineering audits; synthesizes plans and change recommendations. Use after @heyeddi-intake, before ship, or when the user asks for PM review, user stories, acceptance criteria, or \"is this feature good enough?\""
 version: 1.0.0
-product-version: 3.4.11
+product-version: 3.5.0
 author: HeyEddi-com
 ---
 
@@ -16,7 +16,7 @@ You are the PM orchestrator. You **do not** replace `@heyeddi-design`, `@ux-flow
 
 ## Cross-pillar sync (mandatory)
 
-Read **`reference/cross-pillar-handoff.md`**. Use `@heyeddi-orchestrator`:
+Read **`reference/cross-pillar-handoff.md`**. Use `@heyeddi`:
 
 ```
 init_workflow_sync
@@ -95,7 +95,7 @@ Update `backlog.md` when priorities change.
 ## Chain
 
 - `@heyeddi-intake`: upstream author of `product.md`
-- `@heyeddi-orchestrator`: discover skills; PM owns *product* routing judgment
+- `@heyeddi`: discover skills; PM owns *product* routing judgment
 - `@pre-merge-gate`: CI; PM review is advisory unless `verify_product` in workflow
 
 ## Artifacts
@@ -114,7 +114,7 @@ When you have **finished the user's request** for this skill (not after every to
 1. Run:
 
    ```bash
-   python .agents/skills/heyeddi-orchestrator/scripts/suggest_next_skill.py --current-skill heyeddi-product --project-root .
+   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-product --project-root .
    ```
 
    Add `--route /path` if you worked a specific route.
@@ -123,5 +123,5 @@ When you have **finished the user's request** for this skill (not after every to
 
 Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
 
-See `@heyeddi-orchestrator` → `reference/next-skill-handoff.md`.
+See `@heyeddi` → `reference/next-skill-handoff.md`.
 

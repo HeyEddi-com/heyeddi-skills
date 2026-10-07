@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-SCRIPTS = REPO / "skills" / "heyeddi-orchestrator" / "scripts"
+SCRIPTS = REPO / "skills" / "heyeddi" / "scripts"
 
 
 def _run(*extra: str, project: Path) -> dict:
