@@ -46,7 +46,7 @@ export default defineConfig({
 ```js
 // src/main.js
 import { createApp } from 'vue';
-import App from './App.vue';
+import App from "@/App.vue";
 
 // 1. Quasar core base & icon assets (Loads FIRST to apply foundational resets)
 import { Quasar, Dialog, Notify } from 'quasar';
