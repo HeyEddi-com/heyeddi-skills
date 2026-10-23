@@ -1,8 +1,10 @@
 
 # Vocabulary: PrimeVue + project tokens
 
-- **Token source:** detect from `package.json` (`open-props`), `tokens.css`, `.heyeddi/design.md`: see `heyeddi-design/reference/token-strategy.md`.
-- **Semantic vars:** `var(--surface-1)`, `var(--text-1)`, `var(--brand)`, `var(--font-sans)`: from project `tokens.css`, OpenProps-backed or custom.
+Compatibility skill. Component and color decisions live in `@vue-design-system`.
+
+- **Token source:** `src/assets/design-tokens.css` via `@aura-design-tokens` (`--app-*`, `--p-*`, `--q-*`).
+- **Semantic vars:** `var(--app-bg)`, `var(--app-surface-card)`, `var(--app-border)`, `var(--app-text-main)`, `var(--app-text-muted)`.
 - **OpenProps (when present):** prefer aliases in `:root` over raw OpenProps names in components.
 - PrimeVue components in use: Button, DataTable, Dialog, InputText, Card, Panel, Toast.
 - **Card slots:** `#title`, `#subtitle`, `#content` (required for body), `#footer`: never rely on default slot.

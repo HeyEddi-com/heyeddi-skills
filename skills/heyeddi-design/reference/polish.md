@@ -13,7 +13,7 @@
 3b. Re-check `reference/brief-language.md` + `reference/aesthetic-direction.md`: thesis, type, motion, hard rejects, generic AI looks; sharpen **one** aesthetic risk rather than adding ornament.
 4. Run **`@visual-auditor`** full fix loop: capture → review vs product + design → fix code → `append_fix_log` → `finalize_visual_review --check` (defaults to **done** 6 widths on flagship).
 5. Fix remaining P0/P1 from critique not covered by visual auditor; align tokens with `design.md`.
-6. Re-run `@primevue-openprops-architect` validation.
+6. Re-run `@vue-design-system` for the surface, then `validate_vue.py` from `@primevue-openprops-architect`.
 7. Re-run `@visual-auditor` `finalize_visual_review --check` if tokens/CSS changed again.
 8. **Append** to **Decision log** in `.heyeddi/design.md`: reference critique findings + what you fixed (`reference/design-talk.md`).
 

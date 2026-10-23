@@ -38,9 +38,16 @@
     },
     {
       "title": "Design & QA",
-      "description": "Flutter handoff, PrimeVue tokens, design-system spread, UX flow traces, and visual review with WCAG contrast.",
+      "description": "Vue 3 design system (Quasar, PrimeVue Aura, motion, tokens, CLI), Penpot API MCP visuals, Flutter handoff, and visual review.",
       "skills": [
         "taste-penpot",
+        "vue-design-system",
+        "quasar-foundation",
+        "primevue-aura",
+        "motion-physics",
+        "cli-interface-design",
+        "aura-design-tokens",
+        "visual-verification",
         "design-handoff-flutter",
         "primevue-openprops-architect",
         "design-system-generalizer",

@@ -2,7 +2,7 @@
 name: heyeddi-design
 description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff requests AFTER taste-penpot has chosen the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Screenshot gate still applies before done."
 version: 2.7.0
-product-version: 3.5.0
+product-version: 3.6.0
 author: HeyEddi-com
 ---
 
@@ -20,7 +20,7 @@ author: HeyEddi-com
 |-------|-------|----------|
 | Design (this skill) | `@heyeddi-design` | Briefs, wireframes, critique, `design.md`, IA, aesthetic direction |
 | Implement (stack) | `@heyeddi-handoff`, `@design-handoff-flutter` | Production UI code in Vue / Flutter |
-| Enforce (stack) | `@primevue-openprops-architect` | Vue tokens + PrimeVue guardrails |
+| Enforce (stack) | `@vue-design-system` | Quasar shell, PrimeVue Aura, motion, tokens, CLI |
 | Verify (agnostic) | `@visual-auditor`, `@ux-flow-auditor` | Screenshots, contrast, flows, **fixes** |
 
 Read **`reference/implement-routing.md`** every session that ends in shipped UI.

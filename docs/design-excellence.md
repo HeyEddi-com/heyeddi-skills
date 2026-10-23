@@ -17,7 +17,7 @@ How HeyEddi skills produce **world-class, audience-driven** UI — not generic �
 | **7. Brief** | `designs/<feature>/brief.md` | Confirmed contract — Design signature (taste, rejects, hero, type, accent, responsive, SSOT) |
 | **8. Craft / handoff** | `@heyeddi-design craft`, `@heyeddi-handoff` | Build from brief + DESIGN.md |
 | **9. Audience-fit critique** | `audience-fit.md` | “Would Alex trust this?” gate |
-| **10. Polish + visual proof** | `@visual-auditor` (`--preset done` on flagship), `@primevue-openprops-architect` | 6-width proof, logo-off brand test, token compliance |
+| **10. Polish + visual proof** | `@visual-auditor` (`--preset done` on flagship), `@vue-design-system` | 6-width proof, logo-off brand test, token compliance |
 
 Skip a layer → cap quality at that layer.
 

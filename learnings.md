@@ -1048,3 +1048,29 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - Design skills.sh mirror: pack `heyeddi-design-skills`, repo slug `HeyEddi-com/heyeddi-design-skills` (not the skill name). Publish with `./scripts/publish-design-pack-repo.sh`.
 
 **Process:** `@heyeddi` → `@taste-penpot` → `@heyeddi-design` → handoff. Reinstall skills after publish.
+
+## 2026-10-22 — Vue design system and Penpot API MCP
+
+**Context:** Vue UI was still routed through PrimeVue plus optional OpenProps, and Penpot visuals used the browser plugin MCP (`@penpot/mcp`, `execute_code`).
+
+**Decision:** `@vue-design-system` routes implementation. Vue 3 Composition API only. No React, no Tailwind, no Bootstrap.
+
+- App shell, drawers, mobile gestures, Capacitor/Tauri: `@quasar-foundation`
+- Dense data, forms, overlays: `@primevue-aura` (Aura preset, Quasar CSS first)
+- Motion: `@motion-physics` (`@vueuse/motion` springs; no linear spatial easing)
+- Terminal: `@cli-interface-design` (`@clack/prompts`, `consola`, `picocolors`)
+- Color: `@aura-design-tokens` (`--app-*` bridge to `--p-*` and `--q-*`)
+- Designer visuals and demos: `@taste-penpot` via **Penpot API MCP** (`penpot-api` / `penpot-api-mcp`). Do not use the plugin MCP. The API server reads, searches, and exports; demos are a brief plus an export, not `execute_code`.
+- `@primevue-openprops-architect` stays as a compatibility name and still runs `validate_vue.py`.
+
+**Process:** `@heyeddi` → `@taste-penpot` (API MCP) → `@heyeddi-design` → `@heyeddi-handoff` → `@vue-design-system` and the matching child skill.
+
+**Notes:** MCP config for PrimeVue and Quasar is stdio `npx`. Penpot API MCP is HTTP on `127.0.0.1:3051`. Never print `PENPOT_ACCESS_TOKEN`.
+
+## 2026-10-22 — Visual verification and CLI stdout
+
+**Context:** The Vue design system could route components but could not see the rendered page. PrimeVue and Quasar MCP servers do not render pixels. CLI skills stopped at the source file.
+
+**Decision:** `@visual-verification` runs after GUI motion. It screenshots `http://localhost:5173` with the Playwright MCP (`@playwright/mcp`: `browser_navigate`, `browser_resize`, `browser_take_screenshot`) at 1440×900 and 390×844, then fixes overlap, wrap, padding, and unstyled type before done. Not Puppeteer. `@visual-auditor` still records the review. `@cli-interface-design` runs the script and reads ANSI stdout instead of using a browser.
+
+**Process:** GUI → `@motion-physics` → `@visual-verification` → `@visual-auditor`. CLI → run → read stdout.
