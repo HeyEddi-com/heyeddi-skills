@@ -1,9 +1,9 @@
 ---
 name: heyeddi-orchestrator
-description: "Deprecated alias for @heyeddi. If this skill loads, stop and follow skills/heyeddi/SKILL.md (installed as @heyeddi). Same router: design talk goes to @taste-penpot then @heyeddi-design."
+description: "Deprecated alias for @heyeddi. If this skill loads, stop and follow skills/heyeddi/SKILL.md (installed as @heyeddi). Same router: design talk goes to @taste-penpot then @heyeddi-design; Vue UI follows @vue-design-system."
 deprecated: true
 version: 1.0.0
-product-version: 3.5.0
+product-version: 3.6.0
 author: HeyEddi-com
 ---
 

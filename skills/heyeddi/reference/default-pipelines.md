@@ -11,7 +11,8 @@ Agents should run these chains **automatically** — do not ask the user for con
 @heyeddi-design shape    → confirmed brief.md
 <stack implementer>      → @heyeddi-handoff (vue) or @design-handoff-flutter
 @engineering-excellence  → plan gate before code; audit_engineering --check after
-@primevue-openprops-architect   (vue)
+@vue-design-system              (vue: Quasar, PrimeVue Aura, motion, tokens)
+@visual-verification     (vue GUI: Playwright MCP screenshot, fix)
 @visual-auditor          → fix, not report-only
 @ux-flow-auditor         → flagship routes
 @pre-merge-gate          → includes engineering + prose audits

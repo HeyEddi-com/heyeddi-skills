@@ -21,10 +21,13 @@ Read `.heyeddi/stack.json` → `frontend` (fallback: `package.json` → Vue; `pu
 
 ```
 <stack implementer>
-→ @primevue-openprops-architect   (Vue only, when editing .vue/.css)
+→ @vue-design-system              (Vue: Quasar shell, PrimeVue Aura, motion, tokens, or CLI)
+→ @visual-verification            (Vue GUI: Playwright MCP screenshot of localhost:5173, fix, then continue)
 → @visual-auditor                 (always: capture, contrast, fix, document)
 → @ux-flow-auditor                (flagship routes: task completes in click budget)
 ```
+
+`@primevue-openprops-architect` is a compatibility name. If it loads, follow `@vue-design-system`. Do not add OpenProps, Tailwind, or React.
 
 ## Design skill boundaries
 
@@ -34,7 +37,8 @@ Read `.heyeddi/stack.json` → `frontend` (fallback: `package.json` → Vue; `pu
 | `design.md` Decision log | `@heyeddi-design` |
 | `.vue`, `.dart`, `.tsx` files | Stack implementer |
 | Token/CSS in `tokens.css` | Stack implementer (Vue); design approves in Decision log |
-| Screenshot QA fixes | `@visual-auditor` |
+| Live screenshot self-check | `@visual-verification` |
+| Recorded screenshot QA | `@visual-auditor` |
 
 ## `craft` sub-command (design)
 

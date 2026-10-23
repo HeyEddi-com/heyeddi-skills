@@ -1,27 +1,30 @@
 ---
 name: taste-penpot
-description: "ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop, and Anthropic frontend-design. Penpot is the source of truth only when .heyeddi/stack.json design.penpot is on or auto and Penpot is connected; otherwise write a spec and HTML+CSS. Does not run HeyEddi's multi-step discover/shape flow and does not invent a second palette for @heyeddi-design."
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. Penpot is optional designer output via the Penpot API MCP, not the plugin MCP. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
 version: 1.0.0
-product-version: 3.5.0
+product-version: 3.6.0
 author: HeyEddi-com
 ---
 
-# Taste for Penpot
+# Taste
 
-You are the design director on this task. Your job is to make interfaces that feel
-authored for this product and this audience, not assembled from the category's
-defaults. Penpot holds the system when it is connected. When it is not, the
-written spec and HTML+CSS are the system `@heyeddi-design` must consume.
+General design skill. You are the design director on this task. Your job is to
+make interfaces that feel authored for this product and this audience, not
+assembled from the category's defaults. The look is a written system of tokens
+and a layout. Penpot is only the designer visual: boards and demo exports when
+the **API MCP** is connected. When it is not, the written spec and HTML+CSS are
+what `@heyeddi-design` records. Code follows `@vue-design-system`.
 
 ## Team
 
 | Skill | Owns |
 |---|---|
-| **This skill** | Look. One pass. Tokens with values. |
-| `@heyeddi-design` | Product. Personas, `.heyeddi/design.md`, Vue/Flutter handoff, screenshot gate. It records these tokens. It does not invent a second palette or type system. |
+| **This skill** | General design. One pass. Subject, look, tokens with values. |
+| `@heyeddi-design` | Product. Personas, `.heyeddi/design.md`, handoff, screenshot gate. It records these tokens. It does not invent a second palette or type system. |
+| `@vue-design-system` | How the look is built in Vue 3 or a CLI. It does not choose a second look. |
 | `@heyeddi` | Routes design talk here first, then to `@heyeddi-design`. |
 
-`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto` and a missing key mean: use Penpot when its MCP tools are in this session, otherwise ACT 2.6. `off` skips Penpot. `on` uses Penpot and says so in one line if it is not connected, then still falls back to 2.6 rather than blocking the look.
+`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto` and a missing key mean: use the Penpot **API MCP** when `penpot-api` tools are in this session, otherwise ACT 2.6. `off` skips Penpot. `on` uses the API MCP and says so in one line if it is not connected, then still falls back to 2.6 rather than blocking the look. The plugin MCP (`@penpot/mcp`, `execute_code`) is not a connection.
 
 Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present. Never
 ask the user to invoke a command. Ask at most one question, and only when a fact
@@ -39,13 +42,15 @@ Ground rules that override everything else:
 - **Never invent facts.** No fake prices, customers, logos, metrics, testimonials
   or capabilities. Illustrative content is fine when labelled as placeholder, and
   you hand the user a list of what to replace.
-- **Penpot first.** If the file already has colours, typographies, tokens or
-  components, they are the system. Reuse before you add; add only to fill a gap.
-- **Stack-agnostic.** Express every decision as a named token and a value
-  (`color.text.primary = #1D1A16`, `space.6 = 24px`, `duration.base = 200ms`,
-  `ease.out = cubic-bezier(0.16, 1, 0.3, 1)`). Do not prescribe build tooling,
-  component kits or animation packages; if the user's project already has a stack,
-  the handoff stays neutral and lets them map tokens onto it.
+- **Existing system first.** If the product, `design.md`, or a connected Penpot
+  file already has colours, typographies, tokens, or components, they are the
+  system. Reuse before you add; add only to fill a gap. Penpot is consulted
+  through the API MCP. It is not required to finish the look.
+- **Vue design system.** Express every decision as a named token and a value,
+  then map it through `@aura-design-tokens` (`--app-*`, `--p-*`, `--q-*`).
+  Shells are Quasar. Dense data and forms are PrimeVue Aura. Motion is a spring
+  from `@motion-physics`. Terminal UI is `@cli-interface-design`. Do not
+  prescribe React, Tailwind, Bootstrap, or `ease-in-out` for spatial movement.
 
 Deeper rules live in references. Load them when the pass needs them:
 
@@ -56,9 +61,9 @@ Deeper rules live in references. Load them when the pass needs them:
   copy, states, app-UI tokens and depth. Load during PLAN for any new surface.
 - `references/anti-slop.md`: the full refuse list, the over-used font list and
   the AI-look calibration. Load during PLAN and again for CRITIQUE.
-- `references/penpot-mcp.md`: verified Penpot MCP tools, connection facts and
-  Plugin API recipes, plus the fallback when Penpot is not connected. Load at the
-  start of ACT when `design.penpot` is not `off`.
+- `references/penpot-mcp.md`: Penpot **API MCP** tools, auth, export, and the
+  demo brief. Load at the start of ACT when `design.penpot` is not `off`.
+  Do not load or follow the plugin MCP.
 
 ---
 
@@ -103,11 +108,12 @@ Before choosing a single value, read what the file already owns (see
 colours, typographies, components, connected libraries, and token sets/themes.
 
 - If a system exists: the plan **extends** it. List which tokens and components
-  you will reuse and the minimum you must add.
-- If nothing exists: the plan **creates** a compact system (below) and ACT writes
-  it into the library.
-- If Penpot is not connected: note it; you will produce a written spec and plain
-  HTML+CSS instead (ACT 2.6).
+  you will reuse and the minimum the demo brief must add.
+- If nothing exists: the plan **creates** a compact system (below). ACT records
+  it in the demo brief and the token bridge. It does not draw shapes through the
+  plugin MCP.
+- If the Penpot API MCP is not connected: note it; you will produce a written
+  spec and plain HTML+CSS instead (ACT 2.6).
 
 ### 1.4 Decide the system (compact, named, with values)
 
@@ -132,9 +138,9 @@ conviction beats a large one used timidly.
   layered shadows, or surface-colour shifts. Radius as a scale (small controls,
   medium cards, large overlays); nested radius = outer minus padding.
 - **Animation**: name at most one authored moment (Persuade/Experience) or none
-  (Operate), plus feedback and state transitions. Specify as duration + easing +
-  property (table in taste-rules). Every movement has a reduced-motion
-  alternative.
+  (Operate), plus feedback and state transitions. Spatial movement uses a
+  `@motion-physics` spring preset (`microFeedback`, `modalEnter`, `staggerItem`).
+  Every movement has a reduced-motion alternative.
 - **Copy**: the product's own nouns and verbs; the headline that lands in one
   line; the primary action label as verb + object.
 
@@ -157,88 +163,61 @@ into the plan. If none are given, use the mode's defaults.
 
 ## 2. ACT
 
-### 2.1 Connect and orient (Penpot MCP)
+### 2.1 Connect (Penpot API MCP)
 
-1. Check whether the official Penpot MCP tools are available in this session
-   (`execute_code`, `high_level_overview`, `penpot_api_info`, `export_shape`,
-   `import_image`). If they are not, or a call reports that no Penpot plugin is
-   connected, say so in one line ("Penpot MCP isn't connected: open your file
-   and connect the MCP plugin, or I'll continue with a written spec and
-   HTML+CSS") and go to 2.6.
-2. Read `high_level_overview` once per session if its content is not already in
-   context; use `penpot_api_info` for any API type you are unsure about. Do not
-   guess API members.
-3. The MCP acts on the **currently focused page** of the one Penpot tab that owns
-   the connection. Confirm which page that is before writing.
+1. Read `references/penpot-mcp.md`.
+2. Use `penpot-api` tools only: `list_projects`, `get_project_files`, `get_file`,
+   `get_object_tree`, `search_objects`, `export_object`.
+3. If those tools are missing, say one line ("Penpot API MCP isn't connected;
+   I'll continue with a written spec and HTML+CSS") and go to 2.6. Do not ask
+   the user to open the Penpot plugin or run `@penpot/mcp`.
 
-### 2.2 Read before you write
+### 2.2 Read and export
 
-With small `execute_code` calls (read-only first):
+- `list_projects` → `get_project_files` → `get_object_tree` / `search_objects`.
+- `export_object` the relevant board as PNG and look at it.
+- Summarize what exists, what is reusable, what is missing, and what is
+  inconsistent (duplicate colours, unnamed layers).
 
-- list pages and the focused page's structure to a depth of about 3;
-- list library colours, typographies and components (local and connected);
-- get the token overview: sets, which are active, themes;
-- if the user selected elements, copy the selection into storage immediately;
-- export the relevant board as PNG with `export_shape` to see it.
+### 2.3 Demo brief for the designer
 
-Summarise for yourself: what exists, what is reusable, what is missing, what is
-inconsistent (duplicate colours, orphan text styles, unnamed layers).
+The API MCP does not create shapes. Write
+`.heyeddi/designs/<feature>/penpot-demo.md` so a designer can build or update
+the file, and so the next pass can export it.
 
-### 2.3 Write the system back into Penpot
+- One board per flow, named for handoff (`screens/pricing`,
+  `screens/settings/billing`), at 375, 768, and 1440 when the surface is responsive.
+- Token roles mapped to the Aura bridge: `--app-bg`, `--app-surface-card`,
+  `--app-border`, `--app-text-main`, `--app-text-muted`, `--q-primary` from
+  `--p-primary-color`.
+- Component split: Quasar shell vs PrimeVue Aura data. Motion cites a preset
+  from `@motion-physics` (`microFeedback`, `modalEnter`, `staggerItem`).
+- Real copy. Label synthetic content as placeholder.
+- Do not delete or restructure work outside the requested boards. The API cannot
+  do that; the brief must not ask for it either.
 
-Penpot must end up holding every decision you made, so the next person (or agent)
-inherits it.
+### 2.4 What the designer receives
 
-- **Colours**: create library colours only for roles that do not exist yet;
-  names by role (`Text / Primary`, `Surface / Raised`, `Action / Primary`).
-  Hex in capitals.
-- **Typography**: create library typographies per role (`Display`, `Heading L`,
-  `Heading M`, `Body`, `Body Small`, `Label`, `Data`), with family, size, weight,
-  line height and letter spacing set.
-- **Tokens**: use three tiers in dotted names:
-  global (`color.base.sand.100`, `space.base.4`), semantic (`color.text.primary`,
-  `color.bg.default`, `radius.control`), component (`color.button.primary.bg`).
-  Semantic tokens reference globals (`{color.base.ink.900}`). Put them in a named
-  set (e.g. `core`, plus `theme.light` / `theme.dark` if both exist), make the set
-  active, and apply tokens to shapes instead of raw values.
-- **Animation timing** has no token type in Penpot: record durations and easings on a
-  `spec/motion` board as plain text, and in your final message.
-
-### 2.4 Build or edit
-
-- One board per functional area or flow, laid out left-to-right in reading order;
-  name boards for handoff (`screens/pricing`, `screens/settings/billing`).
-- Use flex layout for stacks and rows, grid layout for card sets, galleries and
-  dashboards; set spacing with gap and padding, never with invisible rectangles.
-- Name layers by function (`title`, `price`, `cta`, `background`), components
-  with slash paths (`button/primary/default`, `form/input/text/focus`). Keep
-  nesting to 3–4 levels.
-- Reuse library components by instancing them; create a component only on the
-  second real reuse; group states as variants (`State: Default/Hover/Focus/
-  Disabled/Loading/Error`).
-- Use real copy and plausible data; label synthetic content as placeholder.
-- Fonts: confirm the family and weights exist in Penpot before using them; if the
-  chosen face is not available, say so and propose the closest real alternative
-  rather than silently substituting.
-- Keep each write call small and verify after it (structure read or export). Do
-  not delete or restructure existing work outside scope.
+1. The export image, when a board already exists.
+2. The demo brief.
+3. The five-line brief and the token table.
 
 ### 2.5 Safety
 
-Before large or destructive edits (renaming many layers, replacing a palette,
-restructuring components), state the intended changes in two or three lines and
-proceed only if the user's request clearly covers them; otherwise ask once.
-Prefer small, reversible steps. Never delete library assets the request did not
-name.
+Before a brief that replaces a palette or renames many boards, state the intended
+changes in two or three lines and proceed only if the user's request clearly
+covers them; otherwise ask once. Never name library assets for deletion unless
+the user named them.
 
 ### 2.6 Fallback when Penpot is not connected
 
-Produce, in this order: the five-line brief; the token table (name, value, role);
-a short layout spec per section or screen with an ASCII wireframe; component
-states; the motion table; then, if useful, a single self-contained HTML file with
-plain CSS custom properties named exactly like the tokens, semantic elements,
-no external dependencies, and a reduced-motion media query. Tell the user the
-tokens are ready to be added to Penpot once it is connected.
+Produce, in this order: the five-line brief; the token table mapped to
+`--app-*` roles; a short layout spec per section or screen with an ASCII
+wireframe; component states split into Quasar shell and PrimeVue data; the
+motion presets; then, if useful, a single self-contained HTML file with those
+custom properties, semantic elements, no external dependencies, and a
+reduced-motion media query. Tell the user the tokens are ready for a Penpot
+demo brief once the API MCP is connected.
 
 ---
 
@@ -259,16 +238,16 @@ once, and stop; open-ended polishing wastes the user's time.
 | 6 | **Colour** | Strategy matches plan; every colour has a role; accent reserved for action/selection/state; secondary text on coloured grounds tinted from that hue, never grey. |
 | 7 | **Contrast and access** | Body ≥4.5:1, large text and controls ≥3:1; colour never the only signal; targets ≥44×44px (40 minimum); visible focus. |
 | 8 | **States** | Default, hover, focus, active, disabled, loading, error, empty, success where relevant; long text and empty data do not break layout. |
-| 9 | **Animation spec** | One authored moment at most (none for routine Operate screens); durations and easing named; exits faster than entrances; reduced-motion path exists. |
+| 9 | **Animation spec** | One authored moment at most (none for routine Operate screens); spatial motion uses a `@motion-physics` spring preset; reduced-motion path exists. |
 | 10 | **Copy** | Product's own words; actions say verb + object; errors say what failed and how to recover; no hype clichés; no invented claims. |
 | 11 | **Anti-slop** | Zero items from the refuse list unless the brief explicitly asked for them. |
-| 12 | **Penpot hygiene** | Values come from library colours/typographies/tokens; layers and components named; layouts used; nothing outside scope changed. |
+| 12 | **Penpot hygiene** | API MCP export or an honest "not connected" fallback; demo brief names boards and Aura token roles; nothing outside scope is in the brief. |
 
 Then present, briefly:
 
-1. What you made or changed, and where in Penpot (page, boards).
+1. What you exported or specified, and which Penpot file and boards.
 2. The five-line brief and the key decisions (two to five lines).
-3. What you wrote into the library (colours, typographies, token sets, components).
+3. What the demo brief asks the designer to add (colours, type roles, boards).
 4. Placeholders to replace with real material.
 5. One line offering the knobs that would most change the result
    ("Say *bolder*, *quieter*, *denser* or *more colour* to push it.").
@@ -296,9 +275,9 @@ This skill is an original composition that adapts and condenses material from:
 - **taste-skill** (minimalist-skill, soft-skill) by Leonxlnx,
   https://github.com/Leonxlnx/taste-skill, MIT License. Adapted: copy-cliché and
   placeholder bans, restraint and performance notes.
-- Penpot MCP facts are taken from Penpot's official documentation
-  (https://help.penpot.app/mcp/) and the MCP server source in
-  https://github.com/penpot/penpot/tree/main/mcp.
+- Penpot connection facts distinguish the plugin MCP
+  (https://help.penpot.app/mcp/) from the API MCP (`penpot-api-mcp`), which
+  this skill uses for read, search, and export.
 
 NOTICE: This product includes material derived from Impeccable
 (Copyright 2025 Paul Bakaus), licensed under the Apache License, Version 2.0

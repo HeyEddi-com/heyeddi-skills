@@ -109,6 +109,41 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "prompt": "@heyeddi-ci-guide confirm Spot claim rules (evidence before execution claims) and list next CI skills",
         "why": "Runners wired: restate evidence rule and point at fails/respond.",
     },
+    "vue-design-system": {
+        "skill": "visual-verification",
+        "prompt": "@visual-verification screenshot <route> on the Vite server and fix what you see",
+        "why": "GUI code is written: self-correct from a live screenshot before the recorded review.",
+    },
+    "quasar-foundation": {
+        "skill": "motion-physics",
+        "prompt": "@motion-physics apply spring presets to the Quasar shell on <route>",
+        "why": "Shell exists: entry and press feedback use the shared springs.",
+    },
+    "primevue-aura": {
+        "skill": "motion-physics",
+        "prompt": "@motion-physics apply modalEnter and staggerItem on <route>",
+        "why": "Data surface exists: dialogs and lists use the shared springs.",
+    },
+    "motion-physics": {
+        "skill": "visual-verification",
+        "prompt": "@visual-verification screenshot <route> on the Vite server and fix what you see",
+        "why": "Motion is set: look at the rendered page and fix layout defects.",
+    },
+    "aura-design-tokens": {
+        "skill": "visual-verification",
+        "prompt": "@visual-verification screenshot <route> on the Vite server and fix what you see",
+        "why": "Token bridge is in place: confirm the rendered surfaces.",
+    },
+    "visual-verification": {
+        "skill": "visual-auditor",
+        "prompt": "@visual-auditor review and fix <route> against product.md and design.md",
+        "why": "Live screenshot loop is done: record the review.",
+    },
+    "cli-interface-design": {
+        "skill": "engineering-excellence",
+        "prompt": "@engineering-excellence audit_engineering --check after the CLI flow",
+        "why": "Terminal UI is in place: engineering change gate next.",
+    },
 }
 
 # Overrides when the finishing skill used a specific sub-command (e.g. design shape → craft).

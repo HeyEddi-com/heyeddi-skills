@@ -42,7 +42,7 @@ tree** as this skill (sibling folders under `.agents/skills/` /
 
 | Allowed chain | Role |
 |---------------|------|
-| `@primevue-openprops-architect` | Vue token / PrimeVue coherence |
+| `@vue-design-system` | Quasar shell, PrimeVue Aura, motion, tokens |
 | `@visual-auditor` | Screenshot / contrast proof |
 | `@heyeddi` `suggest_next_skill` | Next-step suggestions |
 | `@heyeddi-design` | Audience / design.md alignment (read) |

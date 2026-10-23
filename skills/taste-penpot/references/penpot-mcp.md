@@ -1,191 +1,71 @@
-# Penpot MCP: verified facts and recipes
+# Penpot API MCP
 
-Load at the start of ACT. Facts below were checked against Penpot's official
-documentation (https://help.penpot.app/mcp/, source:
-https://github.com/penpot/penpot/blob/main/docs/mcp/index.md) and the official
-MCP server source (https://github.com/penpot/penpot/tree/main/mcp, including
-`packages/server/data/initial_instructions.md`, which the `high_level_overview`
-tool returns). When anything here disagrees with what `high_level_overview` or
-`penpot_api_info` returns in the session, trust the live tool.
+Load at the start of ACT when `design.penpot` is not `off`.
 
----
+Designer visuals and demos use the **Penpot API MCP** (`penpot-api` / `penpot-api-mcp`). That server talks to the Penpot REST API. It does not need a browser tab.
 
-## 1. How it works
+Do **not** use the plugin MCP:
 
-- Three parts: the **MCP server** (exposes tools to your client), the **Penpot
-  MCP plugin** running inside the open Penpot file (bridges the server to the
-  file over WebSocket), and the **MCP client** (your agent).
-- The agent works by sending JavaScript to `execute_code`, which runs in the
-  Penpot plugin context using the Penpot Plugin API (`penpot` object plus a
-  `penpotUtils` helper object and a persistent `storage` object for keeping
-  values between calls).
-- MCP always acts on the **currently focused page** in the one browser tab that
-  owns the MCP connection. If the user switches page, the context follows.
-- The plugin runs in the browser tab. If the tab sleeps or unloads, calls fail
-  until the tab is focused again and reconnects.
+- package `@penpot/mcp`
+- tools `execute_code`, `high_level_overview`, `penpot_api_info`, `export_shape`, `import_image`
+- a Penpot plugin window, WebSocket session, or `http://localhost:4401/mcp`
 
-## 2. Tools (local server)
+If those plugin tools are the only Penpot tools in the session, say so in one line and continue with ACT 2.6. Do not draw through them.
 
-| Tool | What it does |
-|---|---|
-| `execute_code` | Runs JavaScript in the Penpot plugin context: query, create, modify. |
-| `high_level_overview` | Returns the usage instructions for the Penpot tools and API. Read once per session. |
-| `penpot_api_info` | Returns API documentation for a given type and its members. |
-| `export_shape` | Exports a shape (or its image fill) as PNG or SVG, so you can look at it; locally it can also save to a file. |
-| `import_image` | Imports a local image file into Penpot as a rectangle with an image fill. |
+## Configure
 
-Remote (hosted) mode has no local file-system access: `import_image` from local
-paths is unavailable and `export_shape` cannot write to local paths.
+The API server is HTTP-only. Default listen address is `http://127.0.0.1:3051/mcp`.
 
-## 3. Connecting (tell the user only if it is not connected)
-
-- **Hosted (remote)**: Penpot → Your account → Integrations → MCP Server →
-  enable, generate an MCP key (shown once; treat it like a password), copy the
-  server URL (`https://<penpot-domain>/mcp/stream?userToken=…`), add it to the
-  MCP client. Then in the design file: **File → MCP Server → Connect**.
-- **Local**: run `npx @penpot/mcp@stable` (Node.js 22 tested; 20 should work) and
-  keep it running; in Penpot open a file, **Plugins → Load from URL**
-  `http://localhost:4400/manifest.json`, run the plugin, click **Connect to MCP
-  server** and keep the plugin window open. Client endpoint:
-  `http://localhost:4401/mcp`. Clients without HTTP transport can use the
-  `mcp-remote` proxy. Some Chromium-based browsers block https → localhost; allow
-  local network access or use another browser.
-- Never ask for, print or store the user's MCP key.
-
-## 4. Read recipes (run before any write)
-
-```js
-// pages and focused page structure
-return { pages: penpotUtils.getPages(),
-         page: penpotUtils.shapeStructure(penpot.root, 3) };
+```bash
+# PENPOT_ACCESS_TOKEN must already be in the environment. Do not print it.
+uvx --from penpot-api-mcp python -m penpot_api_mcp start --force
 ```
 
-```js
-// library inventory (local + connected)
-const lib = penpot.library.local;
-const pick = l => ({
-  name: l.name,
-  colors: l.colors.map(c => ({ name: c.name, color: c.color, opacity: c.opacity })),
-  typographies: l.typographies.map(t => ({ name: t.name, fontFamily: t.fontFamily,
-    fontSize: t.fontSize, fontWeight: t.fontWeight, lineHeight: t.lineHeight,
-    letterSpacing: t.letterSpacing })),
-  components: l.components.map(c => c.name) });
-return { local: pick(lib), connected: penpot.library.connected.map(pick) };
+```json
+{
+  "mcpServers": {
+    "penpot-api": {
+      "type": "http",
+      "url": "http://127.0.0.1:3051/mcp"
+    }
+  }
+}
 ```
 
-```js
-// tokens: set name -> type -> token names, plus active state
-return { overview: penpotUtils.tokenOverview(),
-         sets: penpot.library.local.tokens.sets.map(s => ({ name: s.name, active: s.active })) };
-```
+| Variable | Role |
+|----------|------|
+| `PENPOT_ACCESS_TOKEN` | Preferred auth. Never write it into the repo, a skill file, or chat. |
+| `PENPOT_EMAIL` + `PENPOT_PASSWORD` | Fallback only when a token is not available. Do not ask the user to paste a password into chat. |
+| `PENPOT_BASE_URL` | Self-hosted API. Default `https://design.penpot.app/api`. |
 
-```js
-// selection: copy immediately, it may change
-storage.sel = penpot.selection;
-return storage.sel.map(s => penpotUtils.shapeStructure(s, 2));
-```
+## Tools
 
-Then `export_shape` the relevant board as PNG and look at it.
+| Tool | Use |
+|------|-----|
+| `list_projects` | Find the designer's project. |
+| `get_project_files` | List files in that project. |
+| `get_file` | Read file content, including tokens and pages when the payload includes them. |
+| `get_object_tree` | Hierarchy for the focused file. |
+| `search_objects` | Find a board or component by name or type. |
+| `export_object` | PNG or SVG for a designer review or a demo still. |
 
-## 5. Write recipes
+Trust the live tool schema if it disagrees with this table.
 
-Library colour and typography (hex in capitals):
+## Read, then export
 
-```js
-const c = penpot.library.local.createColor();
-c.name = 'Text / Primary'; c.color = '#1D1A16';
-const t = penpot.library.local.createTypography();
-t.name = 'Body';
-t.setFont(penpot.fonts.findByName('<Family Name>'));   // confirm it exists first
-t.fontSize = '16'; t.lineHeight = '1.5'; t.fontWeight = '400'; t.letterSpacing = '0';
-```
+1. `list_projects`, then `get_project_files`.
+2. `get_object_tree` and `search_objects` before assuming a board is missing.
+3. `export_object` the board the user cares about and look at the image.
+4. Summarize what exists, what can be reused, and what is inconsistent.
 
-Check the font first: `penpot.fonts.findByName(name)` returns null when missing;
-`.variants.map(v => v.fontWeight)` lists available weights.
+## Demos
 
-Tokens (three tiers, semantic references global):
+`penpot-api-mcp` 0.4.3 reads, searches, and exports. It does not create shapes. A demo is:
 
-```js
-const cat = penpot.library.local.tokens;
-const set = cat.sets.find(s => s.name === 'core') || cat.addSet({ name: 'core' });
-if (!set.active) set.toggleActive();
-set.addToken({ type: 'color', name: 'color.base.ink.900', value: '#1D1A16' });
-set.addToken({ type: 'color', name: 'color.text.primary', value: '{color.base.ink.900}' });
-set.addToken({ type: 'spacing', name: 'space.6', value: '24' });
-set.addToken({ type: 'borderRadius', name: 'radius.control', value: '6' });
-```
+1. An export of the current board when the file exists.
+2. `.heyeddi/designs/<feature>/penpot-demo.md` describing the boards to add or change: name, width (375 / 768 / 1440), regions, and token roles mapped to the Aura bridge (`--app-bg`, `--app-surface-card`, `--app-text-main`, `--q-primary` ← `--p-primary-color`).
+3. A note that the designer applies the demo in Penpot. The next pass exports it. Do not switch to the plugin MCP to draw it.
 
-Token types available: color, dimension, spacing, typography, shadow, opacity,
-borderRadius, borderWidth, fontWeights, fontSizes, fontFamilies, letterSpacing,
-textDecoration, textCase. There is no duration/easing type: keep motion specs on a
-`spec/motion` board as text and in your message.
+## Fallback
 
-Apply tokens to shapes (asynchronous; check `shape.tokens` afterwards):
-
-```js
-const tok = penpotUtils.findTokenByName('color.text.primary');
-shape.applyToken(tok, ['fill']);          // e.g. 'fill', 'strokeColor', 'rowGap',
-                                          // 'paddingLeft', 'borderRadiusTopLeft', 'typography'
-```
-
-Boards, layout, text, components:
-
-```js
-const board = penpot.createBoard();
-board.name = 'screens/pricing';
-board.resize(1440, 900);
-const flex = board.addFlexLayout();       // board.addGridLayout() for grids
-flex.dir = 'column'; flex.rowGap = 24;
-flex.topPadding = 96; flex.bottomPadding = 96;
-flex.leftPadding = 64; flex.rightPadding = 64;
-const title = penpot.createText('Plan by the hour, not the month');
-title.name = 'title';
-board.appendChild(title);                 // append in visual order
-```
-
-- Adding flex layout to a board that already has children: use
-  `penpotUtils.addFlexLayout(container, dir)` to keep their visual order.
-- A layout container that should hug its content: set the layout's sizing,
-  e.g. `board.flex.verticalSizing = "auto"` (same for `horizontalSizing`).
-- After `resize()` on text, set `growType` back to `"auto-width"` or
-  `"auto-height"`.
-- Read results of a change in the same call only after
-  `await penpot.waitForLayoutUpdate()`.
-- Component from shapes: `penpot.library.local.createComponent([shape])`, then set
-  `.name = 'button/primary/default'`. Instance with `component.instance()`.
-- Variants: `penpotUtils.createVariantContainer([{ shape, properties: { State: 'Default' } }, …])`.
-- Fills are replaced whole: `shape.fills = [{ fillColor: '#1D1A16', fillOpacity: 1 }]`
-  (setting a raw value removes a token binding).
-- `remove()` permanently deletes; do not use it to move shapes (use
-  `appendChild` on the new parent).
-
-Handoff helpers: `penpot.generateStyle(shapes, { type: 'css', withChildren: true })`
-and `penpot.generateMarkup(shapes, { type: 'html' })` produce CSS and HTML/SVG
-from the design, useful when the user wants code that matches Penpot exactly.
-
-## 6. Working discipline
-
-- Read-only first, then small writes; verify each write with a structure read or
-  `export_shape`.
-- Keep individual `execute_code` calls small; split large builds into several
-  calls and re-read state between them.
-- Do not log what you also return (it duplicates output).
-- Describe intended changes before broad renames, palette swaps or restructures.
-- Name layers by function, components with slash paths, boards for handoff.
-- Base spacing unit (4 or 8) everywhere; no hard values where a token exists.
-
-## 7. Fallback: Penpot not connected
-
-Say so in one line and continue with:
-
-1. The five-line brief.
-2. Token table: `name | value | role` (colour, type, space, radius, shadow,
-   duration, easing).
-3. Per section or screen: purpose, layout (ASCII wireframe), components and states.
-4. Animation table: element, trigger, property, duration, easing, reduced-motion
-   alternative.
-5. Optionally one self-contained HTML file: semantic elements, plain CSS with
-   custom properties named after the tokens (`--color-text-primary`), no external
-   dependencies or build step, a `prefers-reduced-motion` block, visible focus
-   styles, and real copy.
-6. A note that the tokens can be written into Penpot once the plugin is connected.
+If `penpot-api` is not connected, say so in one line and follow ACT 2.6 in `SKILL.md`. The written spec and HTML+CSS use the same token roles. Implementation still follows `@vue-design-system`.

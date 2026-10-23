@@ -70,7 +70,7 @@ Optional: `git.environments.dev` (present on `main_staging_dev`).
 | `design.taste` | `on` only. `@taste-penpot` always owns look. |
 | `design.penpot` | `auto` (default) \| `on` \| `off` |
 
-Missing keys mean the same as the defaults: taste on, Penpot when connected. `write_setup` fills them. Do not quiz which of the 27 skills to install. `@heyeddi` sees which packs are installed (`heyeddi-skills`, `heyeddi-ci-skills`, `heyeddi-design-skills`).
+Missing keys mean the same as the defaults: taste on, Penpot when connected. `write_setup` fills them. Do not quiz which of the 36 skills to install. `@heyeddi` sees which packs are installed (`heyeddi-skills`, `heyeddi-ci-skills`, `heyeddi-design-skills`).
 
 ## Custom workflow
 

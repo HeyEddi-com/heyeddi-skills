@@ -1,10 +1,11 @@
+# Penpot mode
 
-# Penpot mode (stub: Phase 6)
+Designer visuals and demos use the **Penpot API MCP** (`penpot-api`).
 
-Future integration:
+- Read, search, and export with `list_projects`, `get_project_files`, `get_file`, `get_object_tree`, `search_objects`, `export_object`.
+- Write the demo contract to `.heyeddi/designs/<feature>/penpot-demo.md` (`@taste-penpot`).
+- Do not use the plugin MCP (`@penpot/mcp`, `execute_code`, a browser plugin session).
 
-- v2: Penpot PNG/SVG export in `designs/`
-- v3: Penpot REST API fetch
-- v4: Penpot MCP for live tokens and components
+Implementation of the exported layout still follows `@vue-design-system`: Quasar for the shell, PrimeVue Aura for data, `@aura-design-tokens` for color, `@motion-physics` for springs.
 
-Not available in v1. Use screenshot mode instead.
+Screenshot mode remains valid when no Penpot file is connected.

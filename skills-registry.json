@@ -1,11 +1,11 @@
 {
-  "version": "3.5.0",
+  "version": "3.6.0",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
     {
       "name": "heyeddi",
-      "description": "ALWAYS-ON router @heyeddi: pick the skill, sync .heyeddi/, send design to taste-penpot then heyeddi-design"
+      "description": "ALWAYS-ON router @heyeddi: pick the skill, sync .heyeddi/, send design to taste-penpot then heyeddi-design; Vue UI uses vue-design-system"
     },
     {
       "name": "heyeddi-orchestrator",
@@ -45,7 +45,35 @@
     },
     {
       "name": "primevue-openprops-architect",
-      "description": "PrimeVue + OpenProps guardrails"
+      "description": "Compatibility name. Follow vue-design-system; do not add OpenProps"
+    },
+    {
+      "name": "vue-design-system",
+      "description": "Routes Vue 3 UI and CLI to Quasar, PrimeVue Aura, spring motion, tokens, or terminal design"
+    },
+    {
+      "name": "quasar-foundation",
+      "description": "Quasar shells, drawers, mobile gestures, Capacitor and Tauri frames"
+    },
+    {
+      "name": "primevue-aura",
+      "description": "PrimeVue Aura data grids, forms, and overlays without Tailwind"
+    },
+    {
+      "name": "motion-physics",
+      "description": "Spring micro-interactions with @vueuse/motion"
+    },
+    {
+      "name": "cli-interface-design",
+      "description": "Terminal UI with clack prompts, consola, and picocolors"
+    },
+    {
+      "name": "aura-design-tokens",
+      "description": "CSS custom properties bridging PrimeVue Aura and Quasar"
+    },
+    {
+      "name": "visual-verification",
+      "description": "Playwright MCP screenshots of the Vite server; fix layout before the recorded visual review"
     },
     {
       "name": "verify-build",
@@ -93,7 +121,7 @@
     },
     {
       "name": "taste-penpot",
-      "description": "One-pass design taste; Penpot when connected; partners with heyeddi-design"
+      "description": "General design skill: one-pass look and tokens. Penpot API MCP is optional designer output"
     },
     {
       "name": "engineering-excellence",

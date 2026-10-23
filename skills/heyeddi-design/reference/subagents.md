@@ -11,7 +11,7 @@
 | `craft` (full route) | `generalPurpose` | no | Confirmed brief + `design.md`; one route; surface-completeness |
 | `polish` | `generalPurpose` | no | After critique exists; target route only |
 | `document` (scan codebase) | `explore` | yes | Extract tokens/components for `design.md` |
-| `validate_vue` / npm test / build | `shell` | no | `@primevue-openprops-architect` scripts |
+| `validate_vue` / npm test / build | `shell` | no | `@vue-design-system` chooses primitives; `validate_vue.py` stays on `@primevue-openprops-architect` |
 | Visual proof | `shell` | yes | `@visual-auditor`: **always delegate**, never inline Playwright |
 
 ## Flow examples

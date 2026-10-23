@@ -2,7 +2,7 @@
 name: visual-auditor
 description: "ALWAYS use after design/implement for screenshot QA: capture, contrast, fix, document. Mandatory after handoff. Fast widths 375/768/1440; before flagship done use --preset done (375/430/768/1024/1440/1920). Auto-fix — never report-only unless user says audit-only. Edges must read on the plane."
 version: 3.2.0
-product-version: 3.5.0
+product-version: 3.6.0
 author: HeyEddi-com
 ---
 
@@ -94,7 +94,7 @@ Shell scripts for capture/contrast; **you** (main agent) read images, edit code,
 
 ## Chain
 
-- `@primevue-openprops-architect`: run after token/CSS fixes
+- `@vue-design-system`: run after token/CSS fixes (Quasar, PrimeVue Aura, motion)
 - `@heyeddi-design polish`: if IA problems remain after visual pass
 - `@pre-merge-gate`: after `finalize_visual_review --check` passes
 

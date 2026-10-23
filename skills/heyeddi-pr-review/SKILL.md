@@ -2,7 +2,7 @@
 name: heyeddi-pr-review
 description: "Reviews submitted PRs using only committed changes: product fit, docs drift, engineering quality, test coverage, and pre-merge gate. Use when approving a PR, doing reviewer QA, or self-checking before requesting review. Not for replying to review comments (use heyeddi-pr-respond)."
 version: 1.1.0
-product-version: 3.5.0
+product-version: 3.6.0
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -40,7 +40,7 @@ audit_pr_changes --pr <N>              → engineering + test gaps on changed fi
 load_product_context                   → @heyeddi-product (read JSON; scope to touched routes)
 check_features                         → AC vs code when routes touched
 conditional delegates (changed paths):
-  **/*.vue                             → @visual-auditor, @no-duplicate-ui, @primevue-openprops-architect
+  **/*.vue                             → @visual-auditor, @no-duplicate-ui, @vue-design-system
   **/composables/**                    → @composable-patterns
   backend/**                           → @engineering-excellence audit_engineering
 pre_merge_gate                         → tests, build, types (hard gate)

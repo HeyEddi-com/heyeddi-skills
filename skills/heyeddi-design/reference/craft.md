@@ -33,7 +33,7 @@ If no brief, **stop and run `shape`**.
 The stack skill:
 
 - Builds shell + route from brief/mockups
-- Runs `@primevue-openprops-architect` (Vue)
+- Runs `@vue-design-system` (Vue: Quasar, PrimeVue Aura, motion, tokens)
 - Runs full `@visual-auditor` fix loop
 - Runs `reference/audience-fit.md` on flagship routes
 

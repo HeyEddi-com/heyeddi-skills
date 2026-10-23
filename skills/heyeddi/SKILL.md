@@ -1,8 +1,8 @@
 ---
 name: heyeddi
-description: "ALWAYS-ON router named @heyeddi. Discovers skills, syncs .heyeddi/, and decides what to run. Design talk goes to @taste-penpot first (look, one pass) then @heyeddi-design (product, handoff). @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
+description: "ALWAYS-ON router named @heyeddi. Discovers skills, syncs .heyeddi/, and decides what to run. Design talk goes to @taste-penpot first (look, Penpot API MCP) then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
 version: 3.4.0
-product-version: 3.5.0
+product-version: 3.6.0
 author: HeyEddi-com
 ---
 
@@ -19,7 +19,7 @@ Routes work to the right `@skill`, refreshes `.heyeddi/`, and **keeps product, U
 - **Every session start** on a HeyEddi project (`.heyeddi/` present or greenfield app request)
 - User asks "what skills do we have?" or "which skill should handle this?"
 - Before a multi-step pipeline (intake → scaffold → design → handoff → QA)
-- **Design / look / polish:** `@taste-penpot` first (one pass, tokens), then `@heyeddi-design` to record product context and hand off. Do not let `@heyeddi-design` invent a second look.
+- **Design / look / polish:** `@taste-penpot` first (one pass, tokens; Penpot API MCP for designer visuals), then `@heyeddi-design` to record product context and hand off. Vue implementation follows `@vue-design-system`. Do not let `@heyeddi-design` invent a second look.
 - **Any time one pillar runs**: bookend with `load_workflow_context` / `append_pillar_opinion`
 - After `@heyeddi-intake`: confirm `skill-routing.json` before downstream work
 
