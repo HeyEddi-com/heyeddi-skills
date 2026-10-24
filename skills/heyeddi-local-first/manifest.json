@@ -1,0 +1,20 @@
+{
+  "skill": "heyeddi-local-first",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "classify_command",
+      "description": "Hard gate for every agent. Exit 1 on terraform apply and other live cloud mutations. Plan exits 0 and must be summarized.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": { "type": "string", "description": "Shell command to classify" },
+          "cwd": { "type": "string", "description": "Working directory for script inspection" }
+        },
+        "required": ["command"]
+      },
+      "script": "scripts/classify_command.py",
+      "readonly": true
+    }
+  ]
+}

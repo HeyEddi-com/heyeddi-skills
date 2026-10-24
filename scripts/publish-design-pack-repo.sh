@@ -70,7 +70,7 @@ data = {
     "groupings": [
         {
             "title": "HeyEddi Design",
-            "description": "Taste owns the look in one pass. heyeddi-design records product context and hands off to code.",
+            "description": "Taste owns the look. vue-design-system builds Vue 3 UI. Playwright MCP verifies the live page.",
             "skills": skills,
         }
     ],
@@ -131,11 +131,18 @@ npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 
 | Skill | Role |
 |-------|------|
-| \`@taste-penpot\` | Look. One pass. Penpot when connected. |
+| \`@taste-penpot\` | General design skill. Penpot API MCP for designer visuals. |
+| \`@vue-design-system\` | Vue 3 router: Quasar, PrimeVue Aura, motion, tokens, CLI |
+| \`@quasar-foundation\` | App shell, drawers, mobile and desktop frames |
+| \`@primevue-aura\` | Dense data, forms, overlays |
+| \`@motion-physics\` | Spring motion presets |
+| \`@cli-interface-design\` | Terminal UI; run the script and read stdout |
+| \`@aura-design-tokens\` | \`--app-*\` bridge to PrimeVue and Quasar tokens |
+| \`@visual-verification\` | Live Playwright MCP screenshots |
 | \`@heyeddi-design\` | Product context, design.md, handoff |
-| \`@heyeddi-handoff\` | Vue implementation |
+| \`@heyeddi-handoff\` | Handoff into the Vue design system |
 | \`@design-handoff-flutter\` | Flutter implementation |
-| \`@visual-auditor\` | Screenshots and contrast |
+| \`@visual-auditor\` | Recorded screenshots and contrast |
 | \`@design-system-generalizer\` | Token and component spread |
 
 ## Hub maintainer

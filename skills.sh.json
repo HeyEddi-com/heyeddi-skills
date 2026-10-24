@@ -26,6 +26,7 @@
         "dart-type-bridger",
         "composable-patterns",
         "flutter-patterns",
+        "heyeddi-local-first",
         "engineering-excellence",
         "heyeddi-ci-config",
         "heyeddi-ci-guide",

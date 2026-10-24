@@ -4,7 +4,7 @@
 
 **HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) — free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.6.0** · 36 skills · [skills-registry.json](skills-registry.json)
+**Status:** **v3.7.0** · 37 skills · [skills-registry.json](skills-registry.json)
 
 ### Who this is for
 
@@ -134,6 +134,7 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `dart-type-bridger` | OpenAPI / Firestore → Dart model stubs |
 | `composable-patterns` | Vue composables for FastAPI / Firebase access |
 | `flutter-patterns` | Riverpod repositories — Dio + Firebase patterns |
+| `heyeddi-local-first` | Local Terraform and config first. `terraform plan` warns. `classify_command.py --check` exits 1 on apply and other live cloud writes |
 | `engineering-excellence` | KISS/YAGNI/DRY/SOLID audits + `.heyeddi/docs/engineering/` |
 | `heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract (Reviewer + optional Spot; GHA-first) |
 | `heyeddi-ci-guide` | HeyEddi CI commands, auth matrix, Spot runners, feedback paths |

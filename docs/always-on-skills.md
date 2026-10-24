@@ -1,6 +1,6 @@
 # Always-on skills (every chat)
 
-**Date:** 2026-09-08
+**Date:** 2026-10-23
 
 These guards run on **every chat** that plans or changes work. They are not optional suggestions.
 
@@ -10,6 +10,7 @@ These guards run on **every chat** that plans or changes work. They are not opti
 |-------|------|-----------|
 | **`@heyeddi`** | Session start + ambiguous tasks: sync `.heyeddi/`, rank skills, route. Do not freestyle the pipeline. | Soft: must load catalog / follow routing before multi-step work |
 | **`@heyeddi-setup`** | **Prefs gate** before git/CI/commit/push or agent autonomy assumptions (`verify_setup --check`). | **Incomplete prefs fail** those actions; run setup until check passes |
+| **`@heyeddi-local-first`** | Infra and account changes stay in the repo. `terraform plan` is allowed and must be summarized. `classify_command.py --check` exits 1 on apply and other live cloud writes. | **Exit 1** means do not run the command |
 | **`@engineering-excellence`** | **Plan gate** before coding; **change gate** after edits (`audit_engineering --check`). | **Errors fail**; warns stay advisory |
 | **Prose anti-slop** | Any user-facing or `.heyeddi` prose: `verify_prose --check` / `context/PROSE_ANTI_SLOP.md` | Fail on em/en dashes and high-signal filler |
 
@@ -39,14 +40,16 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 
 1. **Orchestrator** — if session start or task is ambiguous: `load_catalog` / `suggest_skills` (or read skills-index); follow `skill-routing.json` when present.
 2. **Setup (hard)** — before git/CI/agent assumptions: `verify_setup --check`. On fail: `@heyeddi-setup` until pass. Honor existing keys when complete.
-3. **Plan gate** — before implementing: `check_engineering_plan --check` (docs ready + plan smells); read `reuse-catalog.md`.
-4. **Work** — follow the routed `@skill`.
-5. **Change gate** — after code changes: `audit_engineering --check` (errors only).
-6. **Prose** — if copy or `.heyeddi` docs changed: `verify_prose --check`.
-7. **Ship** — `@pre-merge-gate` before merge-ready claims.
+3. **Local first** — for Terraform, gcloud, Firebase, Kubernetes, or Google account changes: `classify_command.py --check` before the command. Exit 1: do not run it. Plan: run it and warn.
+4. **Plan gate** — before implementing: `check_engineering_plan --check` (docs ready + plan smells); read `reuse-catalog.md`.
+5. **Work** — follow the routed `@skill`.
+6. **Change gate** — after code changes: `audit_engineering --check` (errors only).
+7. **Prose** — if copy or `.heyeddi` docs changed: `verify_prose --check`.
+8. **Ship** — `@pre-merge-gate` before merge-ready claims.
 
 ## Related
 
+- `@heyeddi-local-first` → `reference/process.md`
 - `@heyeddi-setup` → `reference/setup-always-on.md`
 - `@engineering-excellence` → `reference/engineering-always-on.md`
 - `@heyeddi` → `reference/always-on.md` · `reference/host-surfaces.md`
