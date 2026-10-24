@@ -90,7 +90,8 @@ If any fail → `@heyeddi-design polish` or revise in craft; do not hand off to 
 | User says | Default path |
 |-----------|--------------|
 | polish, tweak, fix spacing, looks bad (minor) | critique → polish-path **if** ambition gate Stay |
-| better design, make it better, redesign, new look, overhaul, wow, top notch | critique → **shape** when gate Escalate (usual) → craft → implement |
+| from scratch, redesign, new look, overhaul (app, pages, or one page) | `@taste-penpot` `references/code-to-design.md` → audit + proposal + Penpot boards. No Vue edits until the user asks to build |
+| better design, make it better, wow, top notch on one route | critique → **shape** when gate Escalate (usual) → craft → implement |
 | design a new … | discover / shape |
 
 **Never** answer redesign intent with hierarchy-unchanged spacing/token diffs. If the name-swap or template test fails, **shape** is mandatory even when the user also said "fix it".

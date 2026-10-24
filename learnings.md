@@ -1092,3 +1092,11 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Decision:** `@heyeddi-local-first` is the gate, same shape as `verify_setup --check`. Every agent runs `classify_command.py --check` before Terraform, gcloud, Firebase, Kubernetes, or Google account commands. Exit 1 means do not run the command. `terraform plan` exits 0 and the agent must warn from the plan. `@heyeddi` lists this next to setup and engineering.
 
 **Process:** Edit the repo, checker, plan, warn, stop. Live apply stays in Cloud Build `terraform-release` after review, or in a terminal the human runs.
+
+## 2026-10-23 — Code-to-design, zcube Penpot, morph, and depth
+
+**Context:** Asking an agent to redesign an app from scratch kept the current look. Skills were design-to-code. The read-only Penpot API MCP could not create boards across projects.
+
+**Decision:** A from-scratch, redesign, new-look, or overhaul request loads `@taste-penpot` `references/code-to-design.md` first. Scope is the whole app, the named pages, or one page. The pass inventories routes, components, CSS, and lazy loading, writes fixes, and proposes a new look. It does not edit Vue until the user asks to build. Designer boards use `npx -y penpot-mcp-server` (`@zcubekr/penpot-mcp-server`). Delete tools stay off unless the user named that exact target. `@layout-morph` is Quasar `v-morph` for a shared element in one view. `@fancy-ui-craft` is spotlight, glass, one TresJS accent, and a local dotLottie, only where depth was requested. Colors stay in `design-tokens.css`.
+
+**Process:** Audit → proposal → Penpot boards → stop. Build is a later request and follows `@vue-design-system` for the scoped pages only.

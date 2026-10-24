@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. Penpot is optional designer output via the Penpot API MCP, not the plugin MCP. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot is optional designer output via zcube/penpot-mcp-server, not the plugin MCP. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
 version: 1.0.0
-product-version: 3.7.0
+product-version: 3.8.0
 author: HeyEddi-com
 ---
 
@@ -24,7 +24,7 @@ what `@heyeddi-design` records. Code follows `@vue-design-system`.
 | `@vue-design-system` | How the look is built in Vue 3 or a CLI. It does not choose a second look. |
 | `@heyeddi` | Routes design talk here first, then to `@heyeddi-design`. |
 
-`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto` and a missing key mean: use the Penpot **API MCP** when `penpot-api` tools are in this session, otherwise ACT 2.6. `off` skips Penpot. `on` uses the API MCP and says so in one line if it is not connected, then still falls back to 2.6 rather than blocking the look. The plugin MCP (`@penpot/mcp`, `execute_code`) is not a connection.
+`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto` and a missing key mean: use the Penpot MCP (`penpot`, `@zcubekr/penpot-mcp-server`) when those tools are in this session, otherwise ACT 2.6. `off` skips Penpot. `on` uses that server and says so in one line if it is not connected, then still falls back to 2.6 rather than blocking the look. The plugin MCP (`@penpot/mcp`, `execute_code`) is not a connection. The read-only `penpot-api-mcp` server is not a connection either.
 
 Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present. Never
 ask the user to invoke a command. Ask at most one question, and only when a fact
@@ -44,8 +44,12 @@ Ground rules that override everything else:
   you hand the user a list of what to replace.
 - **Existing system first.** If the product, `design.md`, or a connected Penpot
   file already has colours, typographies, tokens, or components, they are the
-  system. Reuse before you add; add only to fill a gap. Penpot is consulted
-  through the API MCP. It is not required to finish the look.
+  system. Reuse before you add; add only to fill a gap. This rule does **not**
+  apply when the user asked to redesign, start from scratch, or replace the
+  look. Then the current visual system is a hard reject for the pages in scope.
+  Routes, behavior, and real copy stay. Load `references/code-to-design.md`
+  before PLAN. Penpot is the zcube server in `references/penpot-mcp.md`. It is
+  not required to finish the look.
 - **Vue design system.** Express every decision as a named token and a value,
   then map it through `@aura-design-tokens` (`--app-*`, `--p-*`, `--q-*`).
   Shells are Quasar. Dense data and forms are PrimeVue Aura. Motion is a spring
@@ -61,9 +65,13 @@ Deeper rules live in references. Load them when the pass needs them:
   copy, states, app-UI tokens and depth. Load during PLAN for any new surface.
 - `references/anti-slop.md`: the full refuse list, the over-used font list and
   the AI-look calibration. Load during PLAN and again for CRITIQUE.
-- `references/penpot-mcp.md`: Penpot **API MCP** tools, auth, export, and the
-  demo brief. Load at the start of ACT when `design.penpot` is not `off`.
-  Do not load or follow the plugin MCP.
+- `references/code-to-design.md`: analyze an existing app, then propose a
+  redesign for the whole product, some pages, or one page. Load before PLAN
+  when the user wants a redesign or a from-scratch look. Do not edit Vue in
+  that pass.
+- `references/penpot-mcp.md`: zcube Penpot MCP (`penpot-mcp-server`). Several
+  projects, create files and frames. Load at the start of ACT when
+  `design.penpot` is not `off`. Do not load the plugin MCP or `penpot-api-mcp`.
 
 ---
 
@@ -104,16 +112,16 @@ the category alone, choose again.
 ### 1.3 Check Penpot before deciding anything
 
 Before choosing a single value, read what the file already owns (see
-`references/penpot-mcp.md` for how): pages, the focused page's structure, library
-colours, typographies, components, connected libraries, and token sets/themes.
+`references/penpot-mcp.md`): `list_projects`, `list_files`, `get_file`.
 
-- If a system exists: the plan **extends** it. List which tokens and components
-  you will reuse and the minimum the demo brief must add.
-- If nothing exists: the plan **creates** a compact system (below). ACT records
-  it in the demo brief and the token bridge. It does not draw shapes through the
-  plugin MCP.
-- If the Penpot API MCP is not connected: note it; you will produce a written
-  spec and plain HTML+CSS instead (ACT 2.6).
+- If this is a redesign or from-scratch request: do not extend the current
+  palette. Follow `references/code-to-design.md`. The audit is written before
+  the new tokens.
+- If a system exists and the user did not ask to replace it: the plan
+  **extends** it. List which tokens and components you will reuse.
+- If nothing exists: the plan **creates** a compact system (below).
+- If the Penpot MCP is not connected: note it; you will produce a written spec
+  and plain HTML+CSS instead (ACT 2.6).
 
 ### 1.4 Decide the system (compact, named, with values)
 
@@ -163,27 +171,28 @@ into the plan. If none are given, use the mode's defaults.
 
 ## 2. ACT
 
-### 2.1 Connect (Penpot API MCP)
+### 2.1 Connect (Penpot MCP)
 
 1. Read `references/penpot-mcp.md`.
-2. Use `penpot-api` tools only: `list_projects`, `get_project_files`, `get_file`,
-   `get_object_tree`, `search_objects`, `export_object`.
-3. If those tools are missing, say one line ("Penpot API MCP isn't connected;
-   I'll continue with a written spec and HTML+CSS") and go to 2.6. Do not ask
-   the user to open the Penpot plugin or run `@penpot/mcp`.
+2. Use the `penpot` server (`penpot-mcp-server`): `list_teams`, `list_projects`,
+   `list_files`, `get_file`, `create_file`, `add_page`, `create_frame`,
+   `create_text`, `create_rectangle`, `export_shape`.
+3. If those tools are missing, say one line ("Penpot MCP isn't connected;
+   I'll continue with a written spec and HTML+CSS") and go to 2.6. Do not use
+   `@penpot/mcp` or `penpot-api-mcp`.
 
 ### 2.2 Read and export
 
-- `list_projects` → `get_project_files` → `get_object_tree` / `search_objects`.
-- `export_object` the relevant board as PNG and look at it.
-- Summarize what exists, what is reusable, what is missing, and what is
-  inconsistent (duplicate colours, unnamed layers).
+- `list_projects` → `list_files` → `get_file` for the app's project.
+- Create the missing page and frames for the scope, then `export_shape` and look at the PNG.
+- On a redesign, the current palette is not reusable. Summarize what stays
+  (routes, copy, behavior) and what the new boards replace.
 
 ### 2.3 Demo brief for the designer
 
-The API MCP does not create shapes. Write
-`.heyeddi/designs/<feature>/penpot-demo.md` so a designer can build or update
-the file, and so the next pass can export it.
+Create the boards with the Penpot MCP, and also write
+`.heyeddi/designs/<feature>/penpot-demo.md` so the handoff survives if the
+server disconnects.
 
 - One board per flow, named for handoff (`screens/pricing`,
   `screens/settings/billing`), at 375, 768, and 1440 when the surface is responsive.
@@ -193,21 +202,21 @@ the file, and so the next pass can export it.
 - Component split: Quasar shell vs PrimeVue Aura data. Motion cites a preset
   from `@motion-physics` (`microFeedback`, `modalEnter`, `staggerItem`).
 - Real copy. Label synthetic content as placeholder.
-- Do not delete or restructure work outside the requested boards. The API cannot
-  do that; the brief must not ask for it either.
+- Do not delete projects, files, pages, or shapes unless the user named that
+  exact target. A redesign adds the boards in scope.
 
 ### 2.4 What the designer receives
 
-1. The export image, when a board already exists.
+1. The export image from the board you created or updated.
 2. The demo brief.
 3. The five-line brief and the token table.
 
 ### 2.5 Safety
 
-Before a brief that replaces a palette or renames many boards, state the intended
-changes in two or three lines and proceed only if the user's request clearly
-covers them; otherwise ask once. Never name library assets for deletion unless
-the user named them.
+A from-scratch or redesign request already covers a new palette for the pages
+in scope. State that palette in the proposal and continue. For any other task,
+state a palette replacement in two or three lines and ask once if the request
+did not cover it. Never delete a library asset unless the user named it.
 
 ### 2.6 Fallback when Penpot is not connected
 
@@ -217,7 +226,7 @@ wireframe; component states split into Quasar shell and PrimeVue data; the
 motion presets; then, if useful, a single self-contained HTML file with those
 custom properties, semantic elements, no external dependencies, and a
 reduced-motion media query. Tell the user the tokens are ready for a Penpot
-demo brief once the API MCP is connected.
+demo brief once `penpot-mcp-server` is connected.
 
 ---
 
@@ -276,8 +285,9 @@ This skill is an original composition that adapts and condenses material from:
   https://github.com/Leonxlnx/taste-skill, MIT License. Adapted: copy-cliché and
   placeholder bans, restraint and performance notes.
 - Penpot connection facts distinguish the plugin MCP
-  (https://help.penpot.app/mcp/) from the API MCP (`penpot-api-mcp`), which
-  this skill uses for read, search, and export.
+  (https://help.penpot.app/mcp/) from zcube/penpot-mcp-server
+  (https://github.com/zcube/penpot-mcp-server), which this skill uses to list
+  projects and create boards.
 
 NOTICE: This product includes material derived from Impeccable
 (Copyright 2025 Paul Bakaus), licensed under the Apache License, Version 2.0

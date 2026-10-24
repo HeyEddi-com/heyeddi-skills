@@ -129,6 +129,16 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "prompt": "@visual-verification screenshot <route> on the Vite server and fix what you see",
         "why": "Motion is set: look at the rendered page and fix layout defects.",
     },
+    "layout-morph": {
+        "skill": "fancy-ui-craft",
+        "prompt": "@fancy-ui-craft add depth only if this surface needs it, otherwise stop",
+        "why": "The shared element moves. Depth is optional and comes next only when requested.",
+    },
+    "fancy-ui-craft": {
+        "skill": "visual-verification",
+        "prompt": "@visual-verification screenshot <route> on the Vite server and fix what you see",
+        "why": "Depth is in place: confirm contrast and that the effect does not crowd the task.",
+    },
     "aura-design-tokens": {
         "skill": "visual-verification",
         "prompt": "@visual-verification screenshot <route> on the Vite server and fix what you see",

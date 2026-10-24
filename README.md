@@ -4,7 +4,7 @@
 
 **HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) — free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.7.0** · 37 skills · [skills-registry.json](skills-registry.json)
+**Status:** **v3.8.0** · 39 skills · [skills-registry.json](skills-registry.json)
 
 ### Who this is for
 
@@ -122,6 +122,8 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `quasar-foundation` | App shells, drawers, mobile gestures, Capacitor and Tauri |
 | `primevue-aura` | Dense data, forms, and overlays with the Aura preset |
 | `motion-physics` | Spring micro-interactions with `@vueuse/motion` |
+| `layout-morph` | Shared-element morphs with Quasar `v-morph` |
+| `fancy-ui-craft` | Spotlight, glass, one TresJS accent, local dotLottie |
 | `cli-interface-design` | Terminal UI with clack, consola, and picocolors |
 | `aura-design-tokens` | CSS variables bridging PrimeVue Aura and Quasar |
 | `visual-verification` | Playwright MCP screenshots of the Vite server; fix before the recorded review |

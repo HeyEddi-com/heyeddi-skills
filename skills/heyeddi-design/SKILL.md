@@ -2,7 +2,7 @@
 name: heyeddi-design
 description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff requests AFTER taste-penpot has chosen the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Screenshot gate still applies before done."
 version: 2.7.0
-product-version: 3.7.0
+product-version: 3.8.0
 author: HeyEddi-com
 ---
 
@@ -93,15 +93,16 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 
 ## Routing rules
 
-1. **Better design / redesign intent** ("better design", "make it better", "redesign", "new look", "overhaul", "major improvement", "wow", "top notch" on an existing route): load `reference/critique.md` **ambition gate** → if escalate → `reference/shape.md` then `craft` (not polish-only). See `reference/design-ambition.md` § Improve vs redesign.
-2. **Existing UI: local fix** ("critique", "looks bad", "fix this page", "polish"): load `reference/critique.md` → run ambition gate → polish-path implement + `@visual-auditor` **only if** gate says stay local. Do **not** ask.
-3. **No sub-command, vague greenfield**: load `reference/discover.md` + `brief-language.md`.
-4. **Sub-command matches table**: load `reference/<command>.md` (+ `brief-language.md` for shape/craft/critique/polish).
-5. **`craft` without confirmed brief**: run **`shape`** first (brief must include subject + hard rejects).
-5b. **Flagship routes** without personas: `@heyeddi-intake` or `discover` first.
-6. **`polish` without critique this session**: run **critique** first (including ambition gate).
-7. **Screenshots / approved mockups**: `@heyeddi-handoff` (implement), not design `craft` code.
-8. **Never invoke impeccable**: this skill replaces it.
+1. **Redesign, from scratch, new look, or overhaul** of an existing app, some pages, or one page: `@taste-penpot` loads `references/code-to-design.md` first. Write `.heyeddi/designs/<feature>/code-audit.md` and `redesign.md`. Draw the scoped boards. Copy the new tokens into `.heyeddi/design.md`. Do not edit `.vue` files in this pass unless the user also asked to implement. When they ask to build, `craft` covers only those pages.
+2. **Better design on one existing route** ("better design", "make it better", "major improvement", "wow", "top notch") without a from-scratch or whole-app redesign: load `reference/critique.md` **ambition gate** → if escalate → `reference/shape.md` then `craft` (not polish-only). See `reference/design-ambition.md` § Improve vs redesign.
+3. **Existing UI: local fix** ("critique", "looks bad", "fix this page", "polish"): load `reference/critique.md` → run ambition gate → polish-path implement + `@visual-auditor` **only if** gate says stay local. Do **not** ask.
+4. **No sub-command, vague greenfield**: load `reference/discover.md` + `brief-language.md`.
+5. **Sub-command matches table**: load `reference/<command>.md` (+ `brief-language.md` for shape/craft/critique/polish).
+6. **`craft` without confirmed brief**: run **`shape`** first (brief must include subject + hard rejects).
+6b. **Flagship routes** without personas: `@heyeddi-intake` or `discover` first.
+7. **`polish` without critique this session**: run **critique** first (including ambition gate).
+8. **Screenshots / approved mockups**: `@heyeddi-handoff` (implement), not design `craft` code.
+9. **Never invoke impeccable**: this skill replaces it.
 
 ## Artifacts
 
@@ -113,6 +114,8 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 | Design system | `.heyeddi/design.md` |
 | Product context | `.heyeddi/product.md` |
 | Critiques, audits | `.heyeddi/docs/` |
+| Code-to-design audit | `.heyeddi/designs/<feature>/code-audit.md` |
+| Redesign proposal | `.heyeddi/designs/<feature>/redesign.md` |
 
 Use kebab-case for `<feature>`.
 

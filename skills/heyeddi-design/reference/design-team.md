@@ -8,4 +8,4 @@
 
 This skill does not run a second aesthetic search. If taste tokens are missing, load `@taste-penpot` and use its result. `@vue-design-system` maps those tokens onto Vue 3: Quasar shells, PrimeVue Aura data, spring motion, and the Aura token bridge. They do not replace the look.
 
-Penpot is the designer visual and demo surface. `.heyeddi/stack.json` `design.penpot`: `auto` (default), `on`, or `off`. `design.taste` stays `on`. Connection is the Penpot API MCP (`penpot-api`), not the plugin MCP.
+Penpot is the designer visual and demo surface. `.heyeddi/stack.json` `design.penpot`: `auto` (default), `on`, or `off`. `design.taste` stays `on`. Connection is zcube/penpot-mcp-server (`penpot`), not the plugin MCP and not `penpot-api-mcp`. A redesign or from-scratch request starts in `@taste-penpot` `references/code-to-design.md`.

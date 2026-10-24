@@ -2,7 +2,7 @@
 name: motion-physics
 description: "Spring micro-interactions for Vue 3 using @vueuse/motion. Use when introducing cards, dialogs, lists, hover, or press feedback. Forbids linear spatial easing, long staggers, and looping motion unless a loading state was requested."
 version: 1.0.0
-product-version: 3.7.0
+product-version: 3.8.0
 author: HeyEddi-com
 ---
 
@@ -10,7 +10,7 @@ author: HeyEddi-com
 
 Replaces generic fade and slide effects with spring physics from `@vueuse/motion`.
 
-Do not invent transition coordinates. Use the three presets below. Shell and data components stay in `@quasar-foundation` and `@primevue-aura`.
+Do not invent transition coordinates. Use the three presets below. Shell and data components stay in `@quasar-foundation` and `@primevue-aura`. A card that grows into its detail in the same view is `@layout-morph` (Quasar `v-morph`), not a spring on position.
 
 ## When the agent activates this skill
 

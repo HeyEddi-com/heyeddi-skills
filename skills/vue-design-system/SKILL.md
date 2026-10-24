@@ -1,8 +1,8 @@
 ---
 name: vue-design-system
-description: "Routes Vue 3 UI and CLI work to Quasar shells, PrimeVue Aura, spring motion, CSS tokens, visual verification, or terminal UI. No React, no Tailwind, no Bootstrap. GUI work ends in a Playwright MCP screenshot of the Vite server. CLI work ends by running the script and reading stdout."
+description: "Routes Vue 3 UI and CLI work to Quasar shells, PrimeVue Aura, spring motion, shared-element morphs, depth effects, CSS tokens, visual verification, or terminal UI. No React, no Tailwind, no Bootstrap. GUI work ends in a Playwright MCP screenshot of the Vite server. CLI work ends by running the script and reading stdout."
 version: 1.0.0
-product-version: 3.7.0
+product-version: 3.8.0
 author: HeyEddi-com
 ---
 
@@ -21,12 +21,14 @@ Load this skill before writing interface code when the prompt is a screen, shell
 | App framing, drawers, tabs, mobile or desktop shell | `@quasar-foundation` | `@aura-design-tokens` |
 | Tables, trees, pickers, SaaS forms, overlays | `@primevue-aura` | `@motion-physics` |
 | Micro-interactions and transitions | `@motion-physics` | `@aura-design-tokens` |
+| A card or row that expands in the same view | `@layout-morph` | `@quasar-foundation` |
+| Spotlight, glass, one 3D accent, or a local Lottie | `@fancy-ui-craft` | `@motion-physics` |
 | Terminal, CLI, dev tools | `@cli-interface-design` | Terminal execution (run the script, read ANSI stdout) |
 | Theming and color | `@aura-design-tokens` | `@quasar-foundation` |
 | Visual QA of the live page | `@visual-verification` | Playwright MCP |
 | Designer boards, demo exports | `@taste-penpot` | `@aura-design-tokens` |
 
-After either GUI branch, load `@motion-physics`, then `@visual-verification`.
+After either GUI branch, load `@motion-physics`, then `@layout-morph` only when a shared element moves, then `@fancy-ui-craft` only when depth was requested, then `@visual-verification`.
 
 ## Routing
 
@@ -39,6 +41,8 @@ Agent prompt
     │     └─ Data-dense / form UI       → @primevue-aura
     │           tables, trees, pickers, SaaS dashboards
     │     then @motion-physics
+    │     then @layout-morph        when a shared element moves
+    │     then @fancy-ui-craft      when the page needs depth
     │     then @visual-verification
     │           Vite HMR, Playwright MCP screenshot, fix what you see
     │
@@ -54,6 +58,8 @@ Packages:
 | App framing and native packaging | `quasar-foundation` | `aura-design-tokens` | `quasar`, `@quasar/extras` |
 | Complex tables, forms, overlays | `primevue-aura` | `motion-physics` | `primevue`, `@primevue/themes` |
 | Micro-interactions | `motion-physics` | `aura-design-tokens` | `@vueuse/motion` |
+| Shared-element morph | `layout-morph` | `quasar-foundation` | Quasar `v-morph` (gsap only across routes) |
+| Spotlight, glass, 3D, Lottie | `fancy-ui-craft` | `motion-physics` | `@vueuse/core`, `@tresjs/core`, `@lottiefiles/dotlottie-vue` |
 | Visual QA and screenshot inspection | `visual-verification` | Playwright MCP | `@playwright/mcp` |
 | Terminal / CLI | `cli-interface-design` | Terminal execution | `@clack/prompts`, `consola`, `picocolors` |
 | Theming | `aura-design-tokens` | `quasar-foundation` | CSS custom properties |
@@ -62,10 +68,10 @@ Packages:
 
 1. Classify the prompt: visual UI or terminal. A GUI screen that also has a CLI is two skills, in that order.
 2. Read the primary skill's `SKILL.md` and its component table before choosing a component.
-3. Read the supporting skill. GUI work also reads `@motion-physics`, `@aura-design-tokens`, and then `@visual-verification`.
+3. Read the supporting skill. GUI work also reads `@motion-physics`, `@aura-design-tokens`, then `@layout-morph` only when a shared element moves, then `@fancy-ui-craft` only when depth was requested, then `@visual-verification`.
 4. App bootstrap (Vite plugin order, `main.js` load order) lives in `@primevue-aura`. Quasar CSS loads first. PrimeVue Aura loads second. Motion loads third.
 5. Map colors through `@aura-design-tokens`. Do not write raw hex in components.
-6. Designer visuals and Penpot demos: `@taste-penpot` using the **Penpot API MCP** (`penpot-api`). Do not use the plugin MCP (`@penpot/mcp`, `execute_code`, a connected browser plugin).
+6. Designer visuals and Penpot demos: `@taste-penpot` using **zcube/penpot-mcp-server** (`npx -y penpot-mcp-server`). A redesign or from-scratch request loads `references/code-to-design.md` first. Do not use the plugin MCP (`@penpot/mcp`, `execute_code`) or the read-only `penpot-api-mcp` server.
 
 ## Agent directives
 
@@ -112,10 +118,11 @@ Desktop is 1440×900. Mobile is 390×844. Details are in `@visual-verification`.
   - Dialogs and overlays: `{ type: 'spring', stiffness: 280, damping: 22 }`
 - Avoid linear transitions, unmotivated continuous bounces, and stagger delays over 40ms.
 - Prefer the named presets in `@motion-physics` when they match the moment.
+- A shared element that grows in the same view uses Quasar `v-morph` via `@layout-morph`, not a spring on position.
 
 ## MCP servers
 
-PrimeVue and Quasar run offline over stdio. Penpot designer access uses the API MCP (HTTP), not `@penpot/mcp`.
+PrimeVue, Quasar, Playwright, and Penpot run over stdio. Penpot is `@zcubekr/penpot-mcp-server`, not `@penpot/mcp`.
 
 ```json
 {
@@ -132,15 +139,19 @@ PrimeVue and Quasar run offline over stdio. Penpot designer access uses the API 
       "command": "npx",
       "args": ["-y", "@playwright/mcp@latest"]
     },
-    "penpot-api": {
-      "type": "http",
-      "url": "http://127.0.0.1:3051/mcp"
+    "penpot": {
+      "command": "npx",
+      "args": ["-y", "penpot-mcp-server"],
+      "env": {
+        "PENPOT_API_URL": "https://design.penpot.app",
+        "PENPOT_ACCESS_TOKEN": ""
+      }
     }
   }
 }
 ```
 
-Start Penpot API MCP only when a designer visual or demo export is in scope. See `@taste-penpot` → `references/penpot-mcp.md`. Never print `PENPOT_ACCESS_TOKEN`.
+Start the Penpot server only when a designer visual, a redesign, or a demo export is in scope. Leave `PENPOT_ACCESS_TOKEN` empty in config examples. The environment supplies it. Never print it. See `@taste-penpot` → `references/penpot-mcp.md`.
 
 `@primevue-openprops-architect` is a compatibility name. If it loads, follow this skill. Do not add OpenProps unless the project already depends on `open-props`.
 

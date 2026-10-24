@@ -2,7 +2,7 @@
 name: heyeddi-local-first
 description: "ALWAYS-ON local-first gate for every agent. Prepare Terraform and config locally. terraform plan is allowed and must be summarized as a warning. classify_command.py --check exits 1 on terraform apply and other live cloud mutations. Use on any infra, Terraform, gcloud, Firebase, Kubernetes, or Google account change."
 version: 1.0.0
-product-version: 3.7.0
+product-version: 3.8.0
 author: HeyEddi-com
 ---
 

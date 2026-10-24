@@ -39,13 +39,15 @@
     },
     {
       "title": "Design & QA",
-      "description": "Vue 3 design system (Quasar, PrimeVue Aura, motion, tokens, CLI), Penpot API MCP visuals, Flutter handoff, and visual review.",
+      "description": "Vue 3 design system (Quasar, PrimeVue Aura, motion, morph, depth, tokens, CLI), zcube Penpot MCP visuals, code-to-design, Flutter handoff, and visual review.",
       "skills": [
         "taste-penpot",
         "vue-design-system",
         "quasar-foundation",
         "primevue-aura",
         "motion-physics",
+        "layout-morph",
+        "fancy-ui-craft",
         "cli-interface-design",
         "aura-design-tokens",
         "visual-verification",

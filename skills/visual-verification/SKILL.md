@@ -2,7 +2,7 @@
 name: visual-verification
 description: "Visual self-correction for Vue UI through the Playwright MCP. After a layout or dashboard change, screenshot the Vite dev server and fix overlap, wrap, padding, and unstyled type before done. Uses browser_navigate, browser_resize, and browser_take_screenshot. Not Puppeteer. Not a substitute for @visual-auditor's recorded review."
 version: 1.0.0
-product-version: 3.7.0
+product-version: 3.8.0
 author: HeyEddi-com
 ---
 
