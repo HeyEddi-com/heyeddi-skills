@@ -2,7 +2,7 @@
 name: taste-penpot
 description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. Penpot is optional designer output via the Penpot API MCP, not the plugin MCP. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
 version: 1.0.0
-product-version: 3.6.0
+product-version: 3.7.0
 author: HeyEddi-com
 ---
 

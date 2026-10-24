@@ -2,7 +2,7 @@
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. Discovers skills, syncs .heyeddi/, and decides what to run. Design talk goes to @taste-penpot first (look, Penpot API MCP) then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
 version: 3.4.0
-product-version: 3.6.0
+product-version: 3.7.0
 author: HeyEddi-com
 ---
 
@@ -28,10 +28,11 @@ Routes work to the right `@skill`, refreshes `.heyeddi/`, and **keeps product, U
 After routing, enforce:
 
 1. **`@heyeddi-setup`** prefs gate (`verify_setup --check`) before git/CI/commit/push or agent autonomy — incomplete prefs **fail** those actions; route setup until pass (`reference/setup-always-on.md` on that skill)
-2. **`@engineering-excellence`** plan gate before coding; change gate (`audit_engineering --check`) after edits — errors fail; warns advisory
-3. **Prose anti-slop** when copy or `.heyeddi` docs change (`verify_prose --check`)
-4. **Clarify-before-act** when product/design/stack intent is missing
-5. **Host surfaces** — prefer this session's native plan / data / visual tools when listed; degrade to `.heyeddi` / scripts otherwise (`reference/host-surfaces.md`)
+2. **`@heyeddi-local-first`** for infra or account changes: edit locally, run `classify_command.py --check`, then `terraform plan` and warn. Exit 1 means do not run the command.
+3. **`@engineering-excellence`** plan gate before coding; change gate (`audit_engineering --check`) after edits — errors fail; warns advisory
+4. **Prose anti-slop** when copy or `.heyeddi` docs change (`verify_prose --check`)
+5. **Clarify-before-act** when product/design/stack intent is missing
+6. **Host surfaces** — prefer this session's native plan / data / visual tools when listed; degrade to `.heyeddi` / scripts otherwise (`reference/host-surfaces.md`)
 
 ## Automatic `.heyeddi/` upkeep
 

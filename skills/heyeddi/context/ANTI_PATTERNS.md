@@ -8,6 +8,7 @@
 - **Hardcoding skill list in chat**: run `load_catalog` so descriptions stay in sync with registry.
 - **Central trigger map in orchestrator**: each skill owns optional `reference/triggers.md` instead.
 - **Skipping engineering excellence**: after routing, plan/change gates are mandatory (see `docs/always-on-skills.md`).
+- **Live infra from the agent**: before Terraform, gcloud, Firebase, Kubernetes, or Google account changes, run `@heyeddi-local-first` `classify_command.py --check`. Exit 1 means do not run the command. `terraform plan` is allowed and must be summarized.
 - **Silent skills self-update**: never run `npx skills add` / `npx skills update` without explicit user approval after `check_skills_update` reports `ask_user`.
 - **Assuming host tools**: never require canvas / plan UI / image gen / browser when the session tool list lacks them; degrade per `reference/host-surfaces.md`.
 - NEVER ship AI prose slop (em/en dashes, delve/leverage/tapestry, "Certainly!", "it is important to note", emoji theater); follow `context/PROSE_ANTI_SLOP.md` fully

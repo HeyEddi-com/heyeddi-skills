@@ -1,5 +1,5 @@
 {
-  "version": "3.6.0",
+  "version": "3.7.0",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -122,6 +122,10 @@
     {
       "name": "taste-penpot",
       "description": "General design skill: one-pass look and tokens. Penpot API MCP is optional designer output"
+    },
+    {
+      "name": "heyeddi-local-first",
+      "description": "ALWAYS-ON local-first gate for every agent: terraform plan is allowed and must be summarized; classify_command.py --check exits 1 on apply and other live cloud mutations"
     },
     {
       "name": "engineering-excellence",

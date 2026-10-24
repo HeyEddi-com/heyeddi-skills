@@ -1074,3 +1074,21 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Decision:** `@visual-verification` runs after GUI motion. It screenshots `http://localhost:5173` with the Playwright MCP (`@playwright/mcp`: `browser_navigate`, `browser_resize`, `browser_take_screenshot`) at 1440×900 and 390×844, then fixes overlap, wrap, padding, and unstyled type before done. Not Puppeteer. `@visual-auditor` still records the review. `@cli-interface-design` runs the script and reads ANSI stdout instead of using a browser.
 
 **Process:** GUI → `@motion-physics` → `@visual-verification` → `@visual-auditor`. CLI → run → read stdout.
+
+## 2026-10-23 — Local-first gate for Terraform and live cloud writes
+
+**Context:** An agent was asked to prepare a calendar-account change and instead started changing live Google resources. Prompt text that says "do not apply" did not stop it.
+
+**Decision:** `@heyeddi-local-first` is always on for infra and account work. `terraform plan` (and OpenTofu plan, Pulumi preview, Ansible check) is allowed, and the agent must warn from the plan. The Cursor user hook denies `terraform apply` / `destroy` / `import` / state edits, mutating `gcloud`, GAM writes, Firebase deploy, kubectl/helm/aws writes, and the same commands hidden in `bash -c`, `python -c`, command substitution, or a local script. Google API writes via curl are denied. Reads stay allowed.
+
+**Process:** Edit the repo, run `terraform plan`, warn, stop. Live apply stays in Cloud Build `terraform-release` after review, or in a terminal the human runs. Install the hook with `python3 skills/heyeddi-local-first/scripts/install_user_hook.py` (`~/.cursor/hooks.json`, fail closed).
+
+**Notes:** The hook does not wrap the human's own shell. There is no agent bypass flag.
+
+## 2026-10-23 — Local-first gate lives in the skill, for every agent
+
+**Context:** The first cut installed a Cursor user hook (`~/.cursor/hooks.json`). That only blocks Cursor. The request was to put the gate in the HeyEddi skills so every agent that loads them follows it.
+
+**Decision:** `@heyeddi-local-first` is the gate, same shape as `verify_setup --check`. Every agent runs `classify_command.py --check` before Terraform, gcloud, Firebase, Kubernetes, or Google account commands. Exit 1 means do not run the command. `terraform plan` exits 0 and the agent must warn from the plan. `@heyeddi` lists this next to setup and engineering.
+
+**Process:** Edit the repo, checker, plan, warn, stop. Live apply stays in Cloud Build `terraform-release` after review, or in a terminal the human runs.

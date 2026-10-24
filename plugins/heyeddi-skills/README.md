@@ -23,4 +23,4 @@ npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 
 ## Components
 
-36 skills — see [skills-registry.json](../../skills-registry.json) and the [hub README](../../README.md).
+37 skills — see [skills-registry.json](../../skills-registry.json) and the [hub README](../../README.md).
