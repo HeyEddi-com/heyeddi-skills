@@ -2,7 +2,7 @@
 name: aura-design-tokens
 description: "Synchronizes PrimeVue Aura, Quasar, and custom CSS through CSS custom properties. Use for themes, color, surfaces, radii, and dark mode. No Tailwind utility classes and no raw hex in components."
 version: 1.0.0
-product-version: 3.7.0
+product-version: 3.8.0
 author: HeyEddi-com
 ---
 
@@ -30,6 +30,10 @@ Add this to the primary stylesheet (`src/assets/design-tokens.css`) and import i
   --app-border: var(--p-content-border-color, #e2e8f0);
   --app-text-main: var(--p-text-color, #0f172a);
   --app-text-muted: var(--p-text-muted-color, #64748b);
+  --app-spotlight: color-mix(in srgb, var(--p-primary-color, #0ea5e9) 14%, transparent);
+  --app-glass: color-mix(in srgb, var(--app-surface-card) 72%, transparent);
+  --app-glass-border: color-mix(in srgb, var(--app-text-main) 12%, transparent);
+  --app-glass-rim: color-mix(in srgb, white 70%, transparent);
 
   /* Primary brand bridge (Synchronizes Quasar & PrimeVue) */
   --q-primary: var(--p-primary-color, #0ea5e9);
@@ -43,6 +47,10 @@ Add this to the primary stylesheet (`src/assets/design-tokens.css`) and import i
   --app-border: var(--p-surface-800, #1f2937);
   --app-text-main: var(--p-surface-50, #f9fafb);
   --app-text-muted: var(--p-surface-400, #9ca3af);
+  --app-spotlight: color-mix(in srgb, var(--p-primary-color, #38bdf8) 18%, transparent);
+  --app-glass: color-mix(in srgb, var(--app-surface-card) 55%, transparent);
+  --app-glass-border: color-mix(in srgb, white 16%, transparent);
+  --app-glass-rim: color-mix(in srgb, white 28%, transparent);
 
   /* Quasar dark surface sync */
   --q-dark: var(--app-bg);
@@ -59,7 +67,7 @@ body {
 }
 ```
 
-Fallbacks exist only inside this file, so a missing Aura variable still paints. Components reference `var(--app-bg)`, `var(--app-surface-card)`, `var(--app-border)`, `var(--app-text-main)`, and `var(--app-text-muted)`.
+Fallbacks exist only inside this file, so a missing Aura variable still paints. Components reference `var(--app-bg)`, `var(--app-surface-card)`, `var(--app-border)`, `var(--app-text-main)`, `var(--app-text-muted)`, and, for depth, `var(--app-spotlight)`, `var(--app-glass)`, `var(--app-glass-border)`, and `var(--app-glass-rim)`.
 
 ## Instructions
 

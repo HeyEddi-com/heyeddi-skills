@@ -1,71 +1,78 @@
-# Penpot API MCP
+# Penpot MCP
 
 Load at the start of ACT when `design.penpot` is not `off`.
 
-Designer visuals and demos use the **Penpot API MCP** (`penpot-api` / `penpot-api-mcp`). That server talks to the Penpot REST API. It does not need a browser tab.
+Designer visuals use **zcube/penpot-mcp-server** (`@zcubekr/penpot-mcp-server`). It talks to the Penpot API, can open more than one project, and can create files, pages, and frames. It does not need a browser tab.
 
 Do **not** use the plugin MCP:
 
 - package `@penpot/mcp`
-- tools `execute_code`, `high_level_overview`, `penpot_api_info`, `export_shape`, `import_image`
-- a Penpot plugin window, WebSocket session, or `http://localhost:4401/mcp`
+- tools `execute_code`, `high_level_overview`, `penpot_api_info`
+- a Penpot plugin window or `http://localhost:4401/mcp`
 
-If those plugin tools are the only Penpot tools in the session, say so in one line and continue with ACT 2.6. Do not draw through them.
+Do **not** use the older read-only server `penpot-api-mcp`. If that is the only Penpot server connected, say so in one line and continue with ACT 2.6.
 
 ## Configure
 
-The API server is HTTP-only. Default listen address is `http://127.0.0.1:3051/mcp`.
+`PENPOT_ACCESS_TOKEN` must already be in the environment. Never print it, and never write it into a repo, a skill, or chat.
 
 ```bash
-# PENPOT_ACCESS_TOKEN must already be in the environment. Do not print it.
-uvx --from penpot-api-mcp python -m penpot_api_mcp start --force
+npx -y penpot-mcp-server
 ```
 
 ```json
 {
   "mcpServers": {
-    "penpot-api": {
-      "type": "http",
-      "url": "http://127.0.0.1:3051/mcp"
+    "penpot": {
+      "command": "npx",
+      "args": ["-y", "penpot-mcp-server"],
+      "env": {
+        "PENPOT_API_URL": "https://design.penpot.app",
+        "PENPOT_ACCESS_TOKEN": ""
+      }
     }
   }
 }
 ```
 
+Leave the token value empty in any example. The running environment supplies it.
+
 | Variable | Role |
 |----------|------|
-| `PENPOT_ACCESS_TOKEN` | Preferred auth. Never write it into the repo, a skill file, or chat. |
-| `PENPOT_EMAIL` + `PENPOT_PASSWORD` | Fallback only when a token is not available. Do not ask the user to paste a password into chat. |
-| `PENPOT_BASE_URL` | Self-hosted API. Default `https://design.penpot.app/api`. |
+| `PENPOT_ACCESS_TOKEN` | Auth. Never echo it. |
+| `PENPOT_API_URL` | Penpot origin. Default `https://design.penpot.app`. |
 
-## Tools
+## Tools for this skill
+
+Trust the live tool schema if a name differs.
 
 | Tool | Use |
 |------|-----|
-| `list_projects` | Find the designer's project. |
-| `get_project_files` | List files in that project. |
-| `get_file` | Read file content, including tokens and pages when the payload includes them. |
-| `get_object_tree` | Hierarchy for the focused file. |
-| `search_objects` | Find a board or component by name or type. |
-| `export_object` | PNG or SVG for a designer review or a demo still. |
+| `list_teams` | See which teams the token can access. |
+| `list_projects` | List projects. Pick the one for this app. |
+| `search_projects` | Find a project by name when the list is long. |
+| `list_files` | Files in the chosen project. |
+| `get_file` | Read a file before adding boards. |
+| `create_project` | Only when this app has no project yet. |
+| `create_file` | A file for this feature when none exists. |
+| `add_page` | One page per flow in scope. |
+| `create_frame` | A board at 375, 768, or 1440. |
+| `create_text` | Real copy. Label placeholders. |
+| `create_rectangle` | Regions that map to Quasar shell or PrimeVue content. |
+| `export_shape` | PNG of the board for the critique pass. |
 
-Trust the live tool schema if it disagrees with this table.
+## Several projects
 
-## Read, then export
+`list_projects` can return more than one project. Choose the project whose name matches the app. Do not write boards into a different product's file. When two projects could match, say which one you will use and continue.
 
-1. `list_projects`, then `get_project_files`.
-2. `get_object_tree` and `search_objects` before assuming a board is missing.
-3. `export_object` the board the user cares about and look at the image.
-4. Summarize what exists, what can be reused, and what is inconsistent.
+## Do not delete
 
-## Demos
+Do not call `delete_project`, `delete_file`, `delete_team`, `delete_page`, or `delete_shape` unless the user named that exact target in this turn. A redesign adds or updates the boards in scope. It does not wipe a library.
 
-`penpot-api-mcp` 0.4.3 reads, searches, and exports. It does not create shapes. A demo is:
+## Record
 
-1. An export of the current board when the file exists.
-2. `.heyeddi/designs/<feature>/penpot-demo.md` describing the boards to add or change: name, width (375 / 768 / 1440), regions, and token roles mapped to the Aura bridge (`--app-bg`, `--app-surface-card`, `--app-text-main`, `--q-primary` ← `--p-primary-color`).
-3. A note that the designer applies the demo in Penpot. The next pass exports it. Do not switch to the plugin MCP to draw it.
+Also write `.heyeddi/designs/<feature>/penpot-demo.md` with the project name, file name, board names, widths, and token roles (`--app-bg`, `--app-surface-card`, `--app-text-main`, `--q-primary` from `--p-primary-color`). The file is the handoff if the MCP disconnects.
 
 ## Fallback
 
-If `penpot-api` is not connected, say so in one line and follow ACT 2.6 in `SKILL.md`. The written spec and HTML+CSS use the same token roles. Implementation still follows `@vue-design-system`.
+If `penpot` is not connected, say so in one line and follow ACT 2.6 in `SKILL.md`. Implementation still follows `@vue-design-system`.

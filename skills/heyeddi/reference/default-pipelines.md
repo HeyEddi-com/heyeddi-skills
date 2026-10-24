@@ -18,6 +18,17 @@ Agents should run these chains **automatically** — do not ask the user for con
 @pre-merge-gate          → includes engineering + prose audits
 ```
 
+## UI: redesign or from scratch
+
+```
+@taste-penpot              → references/code-to-design.md
+                             audit routes, components, CSS, lazy load
+                             proposal for the whole app, named pages, or one page
+                             Penpot boards via penpot-mcp-server
+@heyeddi-design             → copy tokens into design.md
+                             stop; do not edit Vue until the user asks to build
+```
+
 ## UI: improve existing screen
 
 ```

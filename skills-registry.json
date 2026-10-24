@@ -1,5 +1,5 @@
 {
-  "version": "3.7.0",
+  "version": "3.8.0",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -64,6 +64,14 @@
       "description": "Spring micro-interactions with @vueuse/motion"
     },
     {
+      "name": "layout-morph",
+      "description": "Shared-element morphs with Quasar v-morph"
+    },
+    {
+      "name": "fancy-ui-craft",
+      "description": "Spotlight, frosted glass, one TresJS accent, and a local dotLottie"
+    },
+    {
       "name": "cli-interface-design",
       "description": "Terminal UI with clack prompts, consola, and picocolors"
     },
@@ -121,7 +129,7 @@
     },
     {
       "name": "taste-penpot",
-      "description": "General design skill: one-pass look and tokens. Penpot API MCP is optional designer output"
+      "description": "General design skill: one-pass look and tokens. Code-to-design for redesigns. zcube Penpot MCP is optional designer output"
     },
     {
       "name": "heyeddi-local-first",

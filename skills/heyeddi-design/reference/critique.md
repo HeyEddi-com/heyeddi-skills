@@ -7,7 +7,8 @@ Critique answers: *what's wrong, why it feels off, what to fix first.* **Do not 
 ## When to use
 
 - User says *critique*, *review*, *what's wrong*, *this looks bad*, *audit the UI*, *fix this page*
-- User says *better design*, *make it better*, *redesign*, *new look*, *overhaul*, *wow*, *top notch* on an **existing** route (ambition gate usually → `shape`)
+- User says *better design*, *make it better*, *wow*, *top notch* on an **existing** route (ambition gate usually → `shape`)
+- User says *from scratch*, *redesign*, *new look*, or *overhaul*: do **not** start here. `@taste-penpot` loads `references/code-to-design.md`, writes the audit and proposal, and stops before Vue edits unless they also asked to build
 - **Before `polish`** on any route (mandatory unless critique written this session)
 - Brownfield: existing UI looks unprofessional
 
@@ -17,7 +18,7 @@ After reading the UI, decide **Escalate: shape** vs **Stay: polish**. Do not def
 
 **Escalate to `shape` → craft** when **any** of these are true:
 
-1. User phrased **redesign intent**: better design, make it better, redesign, new look, overhaul, major improvement, wow, top notch, artistic, impressive
+1. User phrased **better-design intent** on one route: better design, make it better, major improvement, wow, top notch, artistic, impressive. Phrases *from scratch*, *redesign*, *new look*, and *overhaul* are not this gate. They go to `@taste-penpot` `references/code-to-design.md` and stop before code.
 2. **Name-swap test fails**: UI could belong to another product after swapping the logo/name
 3. **Template / scaffold tells**: default PrimeVue admin chrome, flat gray shell, undifferentiated cards/tables, system-font sameness, generic AI SaaS look (`aesthetic-direction.md`)
 4. **No Design signature** in brief / Decision log for this flagship route, or signature not visible in the UI

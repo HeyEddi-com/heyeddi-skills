@@ -2,7 +2,7 @@
 name: primevue-aura
 description: "PrimeVue with the Aura preset for dense Vue 3 data grids, filters, complex form controls, and overlays. No Tailwind. Use for DataTable, TreeSelect, menus, badges, and the Quasar plus PrimeVue bootstrap order."
 version: 1.0.0
-product-version: 3.7.0
+product-version: 3.8.0
 author: HeyEddi-com
 ---
 
@@ -49,7 +49,7 @@ import { createApp } from 'vue';
 import App from "@/App.vue";
 
 // 1. Quasar core base & icon assets (Loads FIRST to apply foundational resets)
-import { Quasar, Dialog, Notify } from 'quasar';
+import { Quasar, Dialog, Notify, Morph } from 'quasar';
 import '@quasar/extras/material-icons/material-icons.css';
 import 'quasar/src/css/index.sass';
 
@@ -63,7 +63,7 @@ import { MotionPlugin } from '@vueuse/motion';
 
 const app = createApp(App);
 
-app.use(Quasar, { plugins: { Dialog, Notify } });
+app.use(Quasar, { plugins: { Dialog, Notify, Morph } });
 
 app.use(PrimeVue, {
   theme: {

@@ -131,11 +131,13 @@ npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 
 | Skill | Role |
 |-------|------|
-| \`@taste-penpot\` | General design skill. Penpot API MCP for designer visuals. |
+| \`@taste-penpot\` | General design skill. Code-to-design, then zcube Penpot MCP. |
 | \`@vue-design-system\` | Vue 3 router: Quasar, PrimeVue Aura, motion, tokens, CLI |
 | \`@quasar-foundation\` | App shell, drawers, mobile and desktop frames |
 | \`@primevue-aura\` | Dense data, forms, overlays |
 | \`@motion-physics\` | Spring motion presets |
+| \`@layout-morph\` | Shared-element morphs with Quasar v-morph |
+| \`@fancy-ui-craft\` | Spotlight, glass, one TresJS accent, local dotLottie |
 | \`@cli-interface-design\` | Terminal UI; run the script and read stdout |
 | \`@aura-design-tokens\` | \`--app-*\` bridge to PrimeVue and Quasar tokens |
 | \`@visual-verification\` | Live Playwright MCP screenshots |
