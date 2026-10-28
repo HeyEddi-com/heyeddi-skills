@@ -36,7 +36,7 @@ Record the proposal in `.heyeddi/designs/<feature>/redesign.md`:
 - Quasar shell versus PrimeVue content versus `@layout-morph` or `@fancy-ui-craft` only where the page needs them
 - Penpot project and file for this app, and the boards to create (375, 768, 1440 for responsive pages)
 
-Then draw the boards with the Penpot MCP in `references/penpot-mcp.md`. Several projects can be open. Use the project for this app. Do not delete a project, file, or team.
+Then draw the boards with `@zcubekr/penpot-mcp-server` as in `references/penpot-mcp.md`. If `list_teams` is missing, ask once and install that package only after the user approves. Several projects can be open. Use the project for this app. Do not delete a project, file, or team. Never call unscoped `penpot-mcp-server` or `@penpot/mcp`.
 
 `@heyeddi-design` copies the tokens and the page list into `.heyeddi/design.md`. It does not invent a second palette.
 

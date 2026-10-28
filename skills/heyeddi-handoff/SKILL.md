@@ -71,7 +71,7 @@ mockup text.
 - Screenshot (v1): `reference/screenshot-mode.md` + `reference/interpret-mockups.md` + `reference/handoff-to-code.md`
 - Wireframe / ASCII: `reference/low-fidelity-mockups.md` + `wireframe.md` (no PNG required)
 - PrimeVue Card slots: `reference/primevue-card-slots.md`: body content in `<template #content>`
-- Penpot demos: `reference/penpot-mode.md` (API MCP only)
+- Penpot demos: `reference/penpot-mode.md` (`@zcubekr/penpot-mcp-server` only; install after user approval)
 ## When the task is complete: suggest next skills
 
 When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:

@@ -24,7 +24,7 @@ Agents should run these chains **automatically** — do not ask the user for con
 @taste-penpot              → references/code-to-design.md
                              audit routes, components, CSS, lazy load
                              proposal for the whole app, named pages, or one page
-                             Penpot boards via penpot-mcp-server
+                             Penpot boards via @zcubekr/penpot-mcp-server only
 @heyeddi-design             → copy tokens into design.md
                              stop; do not edit Vue until the user asks to build
 ```
