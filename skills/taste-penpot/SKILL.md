@@ -1,6 +1,6 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot is optional designer output via zcube/penpot-mcp-server, not the plugin MCP. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot boards use only @zcubekr/penpot-mcp-server; install that server after user approval when it is missing. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
 version: 1.0.0
 product-version: 3.8.0
 author: HeyEddi-com
@@ -12,8 +12,10 @@ General design skill. You are the design director on this task. Your job is to
 make interfaces that feel authored for this product and this audience, not
 assembled from the category's defaults. The look is a written system of tokens
 and a layout. Penpot is only the designer visual: boards and demo exports when
-the **API MCP** is connected. When it is not, the written spec and HTML+CSS are
-what `@heyeddi-design` records. Code follows `@vue-design-system`.
+`@zcubekr/penpot-mcp-server` is connected. When it is missing and
+`design.penpot` is not `off`, ask once and install it only after the user
+says yes (`references/penpot-mcp.md`). The written spec and HTML+CSS are what
+`@heyeddi-design` records when Penpot stays off. Code follows `@vue-design-system`.
 
 ## Team
 
@@ -24,12 +26,15 @@ what `@heyeddi-design` records. Code follows `@vue-design-system`.
 | `@vue-design-system` | How the look is built in Vue 3 or a CLI. It does not choose a second look. |
 | `@heyeddi` | Routes design talk here first, then to `@heyeddi-design`. |
 
-`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto` and a missing key mean: use the Penpot MCP (`penpot`, `@zcubekr/penpot-mcp-server`) when those tools are in this session, otherwise ACT 2.6. `off` skips Penpot. `on` uses that server and says so in one line if it is not connected, then still falls back to 2.6 rather than blocking the look. The plugin MCP (`@penpot/mcp`, `execute_code`) is not a connection. The read-only `penpot-api-mcp` server is not a connection either.
+`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto`, `on`, and a missing key use `@zcubekr/penpot-mcp-server` (`list_teams`, `create_frame`). If that server is missing, ask once and install it into `.cursor/mcp.json` only after an explicit yes, then continue. `off` skips Penpot and does not ask. A no on the install falls through to ACT 2.6 and does not block the look. The unscoped npm package `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), and `penpot-api-mcp` are never a connection.
 
 Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present. Never
-ask the user to invoke a command. Ask at most one question, and only when a fact
-that changes the work cannot be inferred (who the audience is, a pinned brand,
-what the page must achieve). Otherwise decide, state the decision, and keep going.
+ask the user to invoke a command. Ask at most one design question, and only when
+a fact that changes the work cannot be inferred (who the audience is, a pinned
+brand, what the page must achieve). Otherwise decide, state the decision, and
+keep going. The Penpot install question in `references/penpot-mcp.md` is
+separate: ask it when `@zcubekr/penpot-mcp-server` is missing and
+`design.penpot` is not `off`.
 
 Ground rules that override everything else:
 
@@ -48,8 +53,8 @@ Ground rules that override everything else:
   apply when the user asked to redesign, start from scratch, or replace the
   look. Then the current visual system is a hard reject for the pages in scope.
   Routes, behavior, and real copy stay. Load `references/code-to-design.md`
-  before PLAN. Penpot is the zcube server in `references/penpot-mcp.md`. It is
-  not required to finish the look.
+  before PLAN. Penpot is `@zcubekr/penpot-mcp-server` in `references/penpot-mcp.md`.
+  It is not required to finish the look.
 - **Vue design system.** Express every decision as a named token and a value,
   then map it through `@aura-design-tokens` (`--app-*`, `--p-*`, `--q-*`).
   Shells are Quasar. Dense data and forms are PrimeVue Aura. Motion is a spring
@@ -69,9 +74,11 @@ Deeper rules live in references. Load them when the pass needs them:
   redesign for the whole product, some pages, or one page. Load before PLAN
   when the user wants a redesign or a from-scratch look. Do not edit Vue in
   that pass.
-- `references/penpot-mcp.md`: zcube Penpot MCP (`penpot-mcp-server`). Several
+- `references/penpot-mcp.md`: `@zcubekr/penpot-mcp-server` only. Several
   projects, create files and frames. Load at the start of ACT when
-  `design.penpot` is not `off`. Do not load the plugin MCP or `penpot-api-mcp`.
+  `design.penpot` is not `off`. Install that package after user approval when
+  `list_teams` is missing. Never load unscoped `penpot-mcp-server`, `@penpot/mcp`,
+  or `penpot-api-mcp`.
 
 ---
 
@@ -120,8 +127,9 @@ Before choosing a single value, read what the file already owns (see
 - If a system exists and the user did not ask to replace it: the plan
   **extends** it. List which tokens and components you will reuse.
 - If nothing exists: the plan **creates** a compact system (below).
-- If the Penpot MCP is not connected: note it; you will produce a written spec
-  and plain HTML+CSS instead (ACT 2.6).
+- If `@zcubekr/penpot-mcp-server` is not connected: follow Install in
+  `references/penpot-mcp.md`. A declined install produces a written spec and
+  plain HTML+CSS (ACT 2.6). Do not read boards through another Penpot server.
 
 ### 1.4 Decide the system (compact, named, with values)
 
@@ -174,12 +182,13 @@ into the plan. If none are given, use the mode's defaults.
 ### 2.1 Connect (Penpot MCP)
 
 1. Read `references/penpot-mcp.md`.
-2. Use the `penpot` server (`penpot-mcp-server`): `list_teams`, `list_projects`,
-   `list_files`, `get_file`, `create_file`, `add_page`, `create_frame`,
-   `create_text`, `create_rectangle`, `export_shape`.
-3. If those tools are missing, say one line ("Penpot MCP isn't connected;
-   I'll continue with a written spec and HTML+CSS") and go to 2.6. Do not use
-   `@penpot/mcp` or `penpot-api-mcp`.
+2. Use the `penpot` server only when it is `@zcubekr/penpot-mcp-server`:
+   `list_teams`, `list_projects`, `list_files`, `get_file`, `create_file`,
+   `add_page`, `create_frame`, `create_text`, `create_rectangle`, `export_shape`.
+3. If `list_teams` is missing, or the connected server is unscoped
+   `penpot-mcp-server`, `@penpot/mcp`, or `penpot-api-mcp`, follow Install in
+   `references/penpot-mcp.md`. Do not call those other servers. Go to 2.6 only
+   after the user declines, or when `design.penpot` is `off`.
 
 ### 2.2 Read and export
 
@@ -226,7 +235,7 @@ wireframe; component states split into Quasar shell and PrimeVue data; the
 motion presets; then, if useful, a single self-contained HTML file with those
 custom properties, semantic elements, no external dependencies, and a
 reduced-motion media query. Tell the user the tokens are ready for a Penpot
-demo brief once `penpot-mcp-server` is connected.
+demo brief once `@zcubekr/penpot-mcp-server` is connected.
 
 ---
 
@@ -284,10 +293,10 @@ This skill is an original composition that adapts and condenses material from:
 - **taste-skill** (minimalist-skill, soft-skill) by Leonxlnx,
   https://github.com/Leonxlnx/taste-skill, MIT License. Adapted: copy-cliché and
   placeholder bans, restraint and performance notes.
-- Penpot connection facts distinguish the plugin MCP
-  (https://help.penpot.app/mcp/) from zcube/penpot-mcp-server
-  (https://github.com/zcube/penpot-mcp-server), which this skill uses to list
-  projects and create boards.
+- Penpot boards use `@zcubekr/penpot-mcp-server`
+  (https://github.com/zcube/penpot-mcp-server) to list projects and create
+  boards. The unscoped npm package and the plugin MCP
+  (https://help.penpot.app/mcp/) are not used.
 
 NOTICE: This product includes material derived from Impeccable
 (Copyright 2025 Paul Bakaus), licensed under the Apache License, Version 2.0

@@ -1100,3 +1100,11 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Decision:** A from-scratch, redesign, new-look, or overhaul request loads `@taste-penpot` `references/code-to-design.md` first. Scope is the whole app, the named pages, or one page. The pass inventories routes, components, CSS, and lazy loading, writes fixes, and proposes a new look. It does not edit Vue until the user asks to build. Designer boards use `npx -y penpot-mcp-server` (`@zcubekr/penpot-mcp-server`). Delete tools stay off unless the user named that exact target. `@layout-morph` is Quasar `v-morph` for a shared element in one view. `@fancy-ui-craft` is spotlight, glass, one TresJS accent, and a local dotLottie, only where depth was requested. Colors stay in `design-tokens.css`.
 
 **Process:** Audit → proposal → Penpot boards → stop. Build is a later request and follows `@vue-design-system` for the scoped pages only.
+
+## 2026-10-27 — Penpot skills use only @zcubekr/penpot-mcp-server
+
+**Context:** `npx -y penpot-mcp-server` resolves to the unscoped npm package (Mart1M: `get_board`, `get_tokens`), which is the default Penpot MCP. Designer boards must use the scoped server instead. `@penpot/mcp` (plugin, `execute_code`) and `penpot-api-mcp` stay forbidden.
+
+**Decision:** `@taste-penpot`, `@vue-design-system`, `@heyeddi-handoff`, and `@heyeddi-design` use only `@zcubekr/penpot-mcp-server` (`npx -y @zcubekr/penpot-mcp-server`, GitHub `zcube/penpot-mcp-server`). A connected server counts only when `list_teams` and `create_frame` are present. If that server is missing and `design.penpot` is not `off`, ask once and merge it into the project's `.cursor/mcp.json` only after an explicit yes. Never write `PENPOT_ACCESS_TOKEN` into the file. A no, or `design.penpot: off`, falls through to the written spec. Do not call the other Penpot servers while waiting.
+
+**Process:** `skills/taste-penpot/references/penpot-mcp.md` is the install contract. Plugin trees are symlinks to `skills/`. The live install under `~/.agents/skills/` was copied from those files on 2026-10-27.

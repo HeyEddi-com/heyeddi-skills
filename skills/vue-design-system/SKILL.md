@@ -71,7 +71,7 @@ Packages:
 3. Read the supporting skill. GUI work also reads `@motion-physics`, `@aura-design-tokens`, then `@layout-morph` only when a shared element moves, then `@fancy-ui-craft` only when depth was requested, then `@visual-verification`.
 4. App bootstrap (Vite plugin order, `main.js` load order) lives in `@primevue-aura`. Quasar CSS loads first. PrimeVue Aura loads second. Motion loads third.
 5. Map colors through `@aura-design-tokens`. Do not write raw hex in components.
-6. Designer visuals and Penpot demos: `@taste-penpot` using **zcube/penpot-mcp-server** (`npx -y penpot-mcp-server`). A redesign or from-scratch request loads `references/code-to-design.md` first. Do not use the plugin MCP (`@penpot/mcp`, `execute_code`) or the read-only `penpot-api-mcp` server.
+6. Designer visuals and Penpot demos: `@taste-penpot` using **only** `@zcubekr/penpot-mcp-server` (`npx -y @zcubekr/penpot-mcp-server`). If that server is missing, `@taste-penpot` installs it after the user approves. A redesign or from-scratch request loads `references/code-to-design.md` first. Never use unscoped `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), or `penpot-api-mcp`.
 
 ## Agent directives
 
@@ -122,7 +122,7 @@ Desktop is 1440×900. Mobile is 390×844. Details are in `@visual-verification`.
 
 ## MCP servers
 
-PrimeVue, Quasar, Playwright, and Penpot run over stdio. Penpot is `@zcubekr/penpot-mcp-server`, not `@penpot/mcp`.
+PrimeVue, Quasar, Playwright, and Penpot run over stdio. Penpot is `@zcubekr/penpot-mcp-server`. Unscoped `penpot-mcp-server` and `@penpot/mcp` are the wrong packages.
 
 ```json
 {
@@ -141,17 +141,16 @@ PrimeVue, Quasar, Playwright, and Penpot run over stdio. Penpot is `@zcubekr/pen
     },
     "penpot": {
       "command": "npx",
-      "args": ["-y", "penpot-mcp-server"],
+      "args": ["-y", "@zcubekr/penpot-mcp-server"],
       "env": {
-        "PENPOT_API_URL": "https://design.penpot.app",
-        "PENPOT_ACCESS_TOKEN": ""
+        "PENPOT_API_URL": "https://design.penpot.app"
       }
     }
   }
 }
 ```
 
-Start the Penpot server only when a designer visual, a redesign, or a demo export is in scope. Leave `PENPOT_ACCESS_TOKEN` empty in config examples. The environment supplies it. Never print it. See `@taste-penpot` → `references/penpot-mcp.md`.
+Start the Penpot server only when a designer visual, a redesign, or a demo export is in scope. Add it to `.cursor/mcp.json` only after the user approves. `PENPOT_ACCESS_TOKEN` stays in the environment. Never print it and never write it into config. See `@taste-penpot` → `references/penpot-mcp.md`.
 
 `@primevue-openprops-architect` is a compatibility name. If it loads, follow this skill. Do not add OpenProps unless the project already depends on `open-props`.
 

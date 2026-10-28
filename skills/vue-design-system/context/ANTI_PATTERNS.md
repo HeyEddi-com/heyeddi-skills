@@ -5,5 +5,5 @@
 - Writing hex colors or `style="..."` coordinates in `.vue` files.
 - Using `ease-in-out` or `linear` for `x`, `y`, or `scale`.
 - Rendering CLI prompts as HTML.
-- Connecting Penpot through `@penpot/mcp` or asking the user to open the Penpot MCP plugin.
+- Connecting Penpot through unscoped `penpot-mcp-server`, `@penpot/mcp`, or the Penpot MCP plugin. The only server is `@zcubekr/penpot-mcp-server`, installed after the user approves.
 - Treating `@primevue-openprops-architect` as a reason to add OpenProps.
