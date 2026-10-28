@@ -30,8 +30,6 @@ evals/runs/
 
 # Local npx skills install copy (regenerable; hub source is skills/)
 .agents/
-!.agents/skills/
-.agents/**/__pycache__/
 
 # Orchestrator sync artifact on the skills hub (consumer apps track .heyeddi/)
 /.heyeddi/

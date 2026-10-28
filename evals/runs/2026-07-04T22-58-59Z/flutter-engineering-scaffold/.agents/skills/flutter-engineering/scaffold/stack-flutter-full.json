@@ -1,6 +1,0 @@
-{
-  "frontend": "flutter",
-  "backends": ["fastapi", "firebase"],
-  "web_port": 8085,
-  "api_port": 8090
-}

@@ -1,8 +1,0 @@
-{
-  "frontend": "flutter",
-  "backends": [
-    "fastapi"
-  ],
-  "web_port": 8085,
-  "api_port": 8090
-}

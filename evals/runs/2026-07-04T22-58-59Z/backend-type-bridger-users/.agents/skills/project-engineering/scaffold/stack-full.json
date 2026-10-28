@@ -1,5 +1,0 @@
-{
-  "frontend": "vue",
-  "backends": ["fastapi", "firebase"],
-  "api_port": 8090
-}

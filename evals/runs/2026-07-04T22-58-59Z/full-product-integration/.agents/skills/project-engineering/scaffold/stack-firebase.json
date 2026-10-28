@@ -1,4 +1,0 @@
-{
-  "frontend": "vue",
-  "backends": ["firebase"]
-}
