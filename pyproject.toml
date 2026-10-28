@@ -121,8 +121,8 @@ help = "@ux-flow-auditor init flows eval"
 cmd = "python scripts/run-evals.py --keep-sandbox --timeout 600 ux-flow-auditor-init"
 
 [tool.poe.tasks.eval-orchestrator]
-help = "@heyeddi-orchestrator suggest skills eval"
-cmd = "python scripts/run-evals.py --keep-sandbox --timeout 600 heyeddi-orchestrator-suggest"
+help = "@heyeddi suggest skills eval"
+cmd = "python scripts/run-evals.py --keep-sandbox --timeout 600 heyeddi-suggest"
 
 [tool.poe.tasks.eval-flutter-handoff]
 help = "@design-handoff-flutter settings eval"

@@ -136,14 +136,14 @@
       "triggers": []
     },
     {
-      "name": "heyeddi-orchestrator",
+      "name": "heyeddi",
       "description": "Discover HeyEddi skills, auto-sync .heyeddi/ (skills index), cross-pillar opinions, and suggest @skills. Use at session start, after reinstalling skills, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route.",
       "scoring_text": "Discover available @skills and suggest which to invoke; reads skill-routing.json Discover HeyEddi skills, auto-sync .heyeddi/ (skills index), cross-pillar opinions, and suggest @skills. Use at session start, after reinstalling skills, or when connecting heyeddi-product, ux-flow-auditor, and heyeddi-design on a route.",
       "version": "3.0.0",
       "installed": true,
-      "skill_md": "/home/eddi/Projects/heyeddi/skills/skills/heyeddi-orchestrator/SKILL.md",
-      "skill_dir": "/home/eddi/Projects/heyeddi/skills/skills/heyeddi-orchestrator",
-      "invoke_as": "@heyeddi-orchestrator",
+      "skill_md": "/home/eddi/Projects/heyeddi/skills/skills/heyeddi/SKILL.md",
+      "skill_dir": "/home/eddi/Projects/heyeddi/skills/skills/heyeddi",
+      "invoke_as": "@heyeddi",
       "has_triggers_file": true,
       "triggers": [
         {
@@ -308,6 +308,6 @@
   ],
   "index_version": 1,
   "generated_at": "2026-07-15T04:42:41Z",
-  "generator": "heyeddi-orchestrator@3.0.0",
+  "generator": "heyeddi@3.0.0",
   "installed_count": 23
 }

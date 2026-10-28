@@ -10,7 +10,7 @@ Three pillars share one route/feature. **Whenever one pillar runs, all three mai
 | **UX** | `@ux-flow-auditor` | `.heyeddi/docs/ux-flows/` |
 | **Design** | `@heyeddi-design` | `.heyeddi/design.md`, `.heyeddi/designs/` |
 
-## Tools (`@heyeddi-orchestrator`)
+## Tools (`@heyeddi`)
 
 ```
 init_workflow_sync
@@ -25,4 +25,4 @@ append_pillar_opinion --pillar product|ux|design --route /path --opinion "…"
 3. **Siblings** must respond: product run → UX + design opinions; UX run → product AC + design layout; design run → product scope + UX flow notes.
 4. Read `opinions/*.md` before changing a route another pillar touched recently.
 
-See hub `docs/cross-pillar-workflow.md` and `reference/cross-pillar-workflow.md` in `@heyeddi-orchestrator`.
+See hub `docs/cross-pillar-workflow.md` and `reference/cross-pillar-workflow.md` in `@heyeddi`.
