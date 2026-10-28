@@ -1,6 +1,6 @@
 # Skills index
 
-**Generated:** 2026-07-15T04:42:41Z · **Maintained by:** `@heyeddi-orchestrator`
+**Generated:** 2026-07-15T04:42:41Z · **Maintained by:** `@heyeddi`
 
 Cached catalog — read this instead of every `SKILL.md` at session start. Refresh after installing skills: `write_skills_index --project-root .`
 
@@ -19,7 +19,7 @@ Cached catalog — read this instead of every `SKILL.md` at session start. Refre
 | heyeddi-design | @heyeddi-design | yes | End-to-end UI design for HeyEddi stack (PrimeVue, DESIGN.md, semantic tokens — OpenProps on scaffold default). Use wh... |
 | heyeddi-handoff | @heyeddi-handoff | yes | Implements screens from designer screenshots and handoff notes. Two-pass workflow — designer writes mockup-brief with... |
 | heyeddi-intake | @heyeddi-intake | yes | Translates vague user prompts into HeyEddi product docs (personas, route intent, voice), route-specific handoff artif... |
-| heyeddi-orchestrator | @heyeddi-orchestrator | yes | Discover HeyEddi skills, auto-sync .heyeddi/ (skills index), cross-pillar opinions, and suggest @skills. Use at sessi... |
+| heyeddi | @heyeddi | yes | Discover HeyEddi skills, auto-sync .heyeddi/ (skills index), cross-pillar opinions, and suggest @skills. Use at sessi... |
 | heyeddi-pr-respond | @heyeddi-pr-respond | yes | Addresses PR review feedback — fetch all comment types, fix-vs-decline decisions, apply fixes, re-run pre-merge gate,... |
 | heyeddi-pr-review | @heyeddi-pr-review | yes | Reviews submitted PRs using only committed changes — product fit, docs drift, engineering quality, test coverage, and... |
 | heyeddi-product | @heyeddi-product | yes | Product leadership — user stories, acceptance criteria, backlog, holistic reviews. Verifies the product works and is ... |

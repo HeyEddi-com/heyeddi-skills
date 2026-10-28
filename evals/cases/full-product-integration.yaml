@@ -3,7 +3,7 @@ project_template: product-app
 agent_timeout: 1200
 skills:
   - heyeddi-intake
-  - heyeddi-orchestrator
+  - heyeddi
   - project-engineering
   - heyeddi-design
   - heyeddi-handoff
@@ -17,7 +17,7 @@ skills:
   - design-system-generalizer
 steps:
   - name: intake
-    skills: [heyeddi-intake, heyeddi-orchestrator]
+    skills: [heyeddi-intake, heyeddi]
     agent_timeout: 900
     prompt_file: prompts/full-product/step-0-intake.md
     judge_file: prompts/full-product/judge-0-intake.md

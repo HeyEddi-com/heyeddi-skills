@@ -19,7 +19,7 @@ One command per eval — no generic `eval-case`, no composite bundles.
 |---------|---------------------|
 | `uv run poe eval-integration` | Full pipeline (7 turns, all skills) |
 | `uv run poe eval-translator` | heyeddi-intake |
-| `uv run poe eval-orchestrator` | heyeddi-orchestrator |
+| `uv run poe eval-orchestrator` | heyeddi |
 | `uv run poe eval-scaffold` | project-engineering |
 | `uv run poe eval-api` | backend-type-bridger, composable-patterns |
 | `uv run poe eval-primevue` | primevue-openprops-architect |
@@ -76,7 +76,7 @@ cd evals/runs/<latest>/heyeddi-handoff-only && npm ci && npm run dev
 |-------------|---------|
 | `eval-integration` | `full-product-integration` |
 | `eval-translator` | `heyeddi-intake-intake` |
-| `eval-orchestrator` | `heyeddi-orchestrator-suggest` |
+| `eval-orchestrator` | `heyeddi-suggest` |
 | `eval-scaffold` | `project-engineering-scaffold-vue` |
 | `eval-api` | `backend-type-bridger-users` |
 | `eval-primevue` | `primevue-fix-violations` |

@@ -56,8 +56,8 @@
       "sourceType": "local",
       "computedHash": "fb13252eb021ab6a29ae9805e1d1cd4be05e5f8c8816a999081755f5f2d1a5e7"
     },
-    "heyeddi-orchestrator": {
-      "source": "/home/eddi/Projects/heyeddi/skills/skills/heyeddi-orchestrator",
+    "heyeddi": {
+      "source": "/home/eddi/Projects/heyeddi/skills/skills/heyeddi",
       "sourceType": "local",
       "computedHash": "3de249e8ba1fc0aef214891e0d6112be6fd4aa37ca8404e75081437969b23715"
     },
