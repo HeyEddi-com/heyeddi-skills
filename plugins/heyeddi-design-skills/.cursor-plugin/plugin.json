@@ -1,7 +1,7 @@
 {
   "name": "heyeddi-design-skills",
   "displayName": "HeyEddi Design Skills",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "HeyEddi design pack. taste-penpot is the general design skill, including code-to-design. vue-design-system builds Vue 3 UI. Published mirror: HeyEddi-com/heyeddi-design-skills.",
   "author": {
     "name": "HeyEddi",
@@ -11,8 +11,18 @@
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "license": "MIT",
   "logo": "assets/logo.svg",
-  "keywords": ["heyeddi", "design", "agent-skills", "penpot", "cursor"],
+  "keywords": [
+    "heyeddi",
+    "design",
+    "agent-skills",
+    "penpot",
+    "cursor"
+  ],
   "category": "developer-tools",
-  "tags": ["skills", "design", "heyeddi"],
+  "tags": [
+    "skills",
+    "design",
+    "heyeddi"
+  ],
   "skills": "./skills/"
 }

@@ -2,7 +2,7 @@
 name: vue-design-system
 description: "Routes Vue 3 UI and CLI work to Quasar shells, PrimeVue Aura, spring motion, shared-element morphs, depth effects, CSS tokens, visual verification, or terminal UI. No React, no Tailwind, no Bootstrap. GUI work ends in a Playwright MCP screenshot of the Vite server. CLI work ends by running the script and reading stdout."
 version: 1.0.0
-product-version: 3.8.0
+product-version: 3.8.1
 author: HeyEddi-com
 ---
 
