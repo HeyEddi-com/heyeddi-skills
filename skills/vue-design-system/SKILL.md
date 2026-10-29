@@ -1,8 +1,8 @@
 ---
 name: vue-design-system
 description: "Routes Vue 3 UI and CLI work to Quasar shells, PrimeVue Aura, spring motion, shared-element morphs, depth effects, CSS tokens, visual verification, or terminal UI. No React, no Tailwind, no Bootstrap. GUI work ends in a Playwright MCP screenshot of the Vite server. CLI work ends by running the script and reading stdout."
-version: 1.0.0
-product-version: 3.8.1
+version: 1.0.1
+product-version: 3.8.2
 author: HeyEddi-com
 ---
 
@@ -83,6 +83,7 @@ Packages:
   - Quasar (`<q-layout>`, `<q-drawer>`, `<q-header>`) for application framing and cross-platform native builds.
   - PrimeVue (Aura preset) for data tables, form fields, badges, and contextual menus.
   - `@vueuse/motion` for animations.
+- Page regions use the Flex or CSS Grid named in the spec (`../taste-penpot/references/flex-grid.md`). Copy `display`, `gap`, tracks, and Fit / Fill / Fix. Do not restack that CSS as margins. The app frame stays the Quasar `view` that matches the spec (`lHh Lpr lFf` when the sidebar is full height and the header sits in the main column).
 
 ### Visual self-correction (GUI)
 

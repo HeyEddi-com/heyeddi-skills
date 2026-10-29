@@ -10,6 +10,7 @@
 - **Document:** scan or seed `.heyeddi/design.md` (semantic tokens + PrimeVue; OpenProps when scaffold uses it).
 - **Token source:** OpenProps optional: `reference/token-strategy.md`.
 - **Foundations:** always-on defaults (responsive, theme, i18n, a11y, reading modes): `reference/foundations.md`.
+- **Flex / Grid:** Penpot layout engines. Flex is 1D (Shift+A). CSS Grid is 2D (Ctrl/Cmd+Shift+A). Spec: `../taste-penpot/references/flex-grid.md`.
 - **Design talk:** append **Decision log** entries in `.heyeddi/design.md` after craft, polish, or handoff (`reference/design-talk.md`).
 - **Craft:** brief confirmed → hand off to stack implementer (`reference/implement-routing.md`); no framework code in design skill.
 - **Surface completeness:** design full screens per `reference/surface-completeness.md`: affordances, states, spacing, deferred wiring backlog.

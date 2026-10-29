@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot boards use only @zcubekr/penpot-mcp-server; install that server after user approval when it is missing. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
-version: 1.0.0
-product-version: 3.8.1
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. Layouts use Penpot Flex (1D) or CSS Grid (2D), the same engines as the browser (references/flex-grid.md). A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot boards use only @zcubekr/penpot-mcp-server; install that server after user approval when it is missing. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
+version: 1.1.0
+product-version: 3.8.2
 author: HeyEddi-com
 ---
 
@@ -68,6 +68,9 @@ Deeper rules live in references. Load them when the pass needs them:
   uniqueness check is mandatory. The brief still wins when they conflict.
 - `references/taste-rules.md`: per-mode rules, layout, type, colour, motion,
   copy, states, app-UI tokens and depth. Load during PLAN for any new surface.
+- `references/flex-grid.md`: Penpot Flex (Shift+A) for one direction, CSS Grid
+  (Ctrl/Cmd+Shift+A) for rows and columns together. Load during PLAN whenever
+  the surface has structure, and in ACT when writing boards or the HTML fallback.
 - `references/anti-slop.md`: the full refuse list, the over-used font list and
   the AI-look calibration. Load during PLAN and again for CRITIQUE.
 - `references/code-to-design.md`: analyze an existing app, then propose a
@@ -137,9 +140,11 @@ Write decisions as tokens. Keep each list short; a small system used with
 conviction beats a large one used timidly.
 
 - **Layout**: primary reading/task path; what groups and what separates; the
-  focal element per view and how it wins (size, weight, contrast, space); grid
-  and max widths; density (spacing base 4px, scale e.g. 4/8/12/16/24/32/48/64/96);
-  how it reflows at narrow, mid and wide widths.
+  focal element per view and how it wins (size, weight, contrast, space);
+  density (spacing base 4px, scale e.g. 4/8/12/16/24/32/48/64/96); how it
+  reflows at narrow, mid and wide widths. Name the engine per region from
+  `references/flex-grid.md`: Flex for a 1D stack, CSS Grid for a 2D skeleton.
+  Child sizing is Fit Content, Fill, or Fix.
 - **Type**: one or two families with a clear job each; role scale from a ratio
   (about 1.125–1.2 for Operate, 1.25 for most UI, 1.333+ for Persuade display);
   body 16px floor on the web, measure 45–75 characters; weights per role.
@@ -210,6 +215,12 @@ server disconnects.
   `--p-primary-color`.
 - Component split: Quasar shell vs PrimeVue Aura data. Motion cites a preset
   from `@motion-physics` (`microFeedback`, `modalEnter`, `staggerItem`).
+- Layout engine per region from `references/flex-grid.md` (direction or tracks,
+  gap, padding, justify, align, Fit / Fill / Fix). Quasar `q-layout` is the app
+  frame: drawer width and header height are the fixed grid tracks. Page
+  interiors use the named engine. If the live MCP schema can set flex or grid,
+  set it on the frame. Otherwise the demo brief is the Shift+A / Ctrl+Shift+A
+  instruction, and Inspect CSS is what handoff copies.
 - Real copy. Label synthetic content as placeholder.
 - Do not delete projects, files, pages, or shapes unless the user named that
   exact target. A redesign adds the boards in scope.
@@ -234,8 +245,10 @@ Produce, in this order: the five-line brief; the token table mapped to
 wireframe; component states split into Quasar shell and PrimeVue data; the
 motion presets; then, if useful, a single self-contained HTML file with those
 custom properties, semantic elements, no external dependencies, and a
-reduced-motion media query. Tell the user the tokens are ready for a Penpot
-demo brief once `@zcubekr/penpot-mcp-server` is connected.
+reduced-motion media query. Layout CSS is the Flex or Grid spec from
+`references/flex-grid.md` (`display`, `gap`, tracks, Fit / Fill / Fix). Tell
+the user the tokens are ready for a Penpot demo brief once
+`@zcubekr/penpot-mcp-server` is connected.
 
 ---
 
@@ -251,7 +264,7 @@ once, and stop; open-ended polishing wastes the user's time.
 | 1 | **Specificity** | Cover the product name: it still could not be any other product. Not in a calibration cluster (anti-slop.md). |
 | 2 | **Mode fit** | Persuade: offer clear, action visible in its working form, proof shown. Operate: a regular user knows where everything is before noticing style. Read: comfortable column, clear wayfinding. Experience: the work leads. |
 | 3 | **Hierarchy** | Squint test: primary, secondary and groups readable in order; one focal point per view. |
-| 4 | **Layout and rhythm** | Grouping by proximity; tight inside groups, generous between; more space above headings than below; no monotone grid of identical cards. |
+| 4 | **Layout and rhythm** | Grouping by proximity; tight inside groups, generous between; more space above headings than below; no monotone grid of identical cards. 1D regions are Flex; 2D regions are CSS Grid (`references/flex-grid.md`). Fit / Fill / Fix is explicit. Inspect CSS matches the spec. |
 | 5 | **Typography** | Role scale with visible steps; weight and colour carry hierarchy too; body ≥16px, measure 45–75ch; display ≤ about 96px, tracking not tighter than -0.04em; balanced headings. |
 | 6 | **Colour** | Strategy matches plan; every colour has a role; accent reserved for action/selection/state; secondary text on coloured grounds tinted from that hue, never grey. |
 | 7 | **Contrast and access** | Body ≥4.5:1, large text and controls ≥3:1; colour never the only signal; targets ≥44×44px (40 minimum); visible focus. |

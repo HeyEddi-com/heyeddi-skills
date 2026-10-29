@@ -44,6 +44,8 @@ Designer-eye prose is not enough. From mockups, extract **numbers and CSS intent
 
 Compare **reference PNG** side-by-side while writing spec: if you cannot cite a token for a gap, you have not finished the designer pass.
 
+When `penpot-demo.md` or the Penpot Inspect panel names an engine, the Implementation spec uses that CSS (`display: flex` or `display: grid`, `gap`, `grid-template-columns`, `flex-grow`). Rules: `../taste-penpot/references/flex-grid.md`. Map Fit Content to `max-content`, Fill to `flex-grow: 1` or `1fr`, and Fix to a tokenized px size. The app frame stays Quasar: `q-drawer` width is the sidebar track, `q-header` height is the header track. Nested page regions use the named engine. A 375 layout collapses the sidebar track into the drawer.
+
 ## Implementation spec (required section in brief)
 
 Add after **Spacing & alignment**:
