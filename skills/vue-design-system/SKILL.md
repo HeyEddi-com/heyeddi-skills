@@ -83,7 +83,7 @@ Packages:
   - Quasar (`<q-layout>`, `<q-drawer>`, `<q-header>`) for application framing and cross-platform native builds.
   - PrimeVue (Aura preset) for data tables, form fields, badges, and contextual menus.
   - `@vueuse/motion` for animations.
-- Page regions use the Flex or CSS Grid named in the spec (`../taste-penpot/references/flex-grid.md`). Copy `display`, `gap`, tracks, and Fit / Fill / Fix. Do not restack that CSS as margins. The app frame stays the Quasar `view` that matches the spec (`lHh Lpr lFf` when the sidebar is full height and the header sits in the main column).
+- Page regions use the Flex or CSS Grid named in the spec (`@taste-penpot` `references/flex-grid.md`). Copy `display`, `gap`, tracks, and Fit / Fill / Fix. Do not restack that CSS as margins. The app frame stays the Quasar `view` that matches the spec (`lHh Lpr lFf` when the sidebar is full height and the header sits in the main column).
 
 ### Visual self-correction (GUI)
 
