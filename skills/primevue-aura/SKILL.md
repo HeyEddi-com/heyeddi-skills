@@ -2,7 +2,7 @@
 name: primevue-aura
 description: "PrimeVue with the Aura preset for dense Vue 3 data grids, filters, complex form controls, and overlays. No Tailwind. Use for DataTable, TreeSelect, menus, badges, and the Quasar plus PrimeVue bootstrap order."
 version: 1.0.0
-product-version: 3.8.2
+product-version: 3.8.3
 author: HeyEddi-com
 ---
 
