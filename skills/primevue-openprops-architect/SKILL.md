@@ -2,7 +2,7 @@
 name: primevue-openprops-architect
 description: "Compatibility name for Vue UI checks. Follow @vue-design-system (Quasar, PrimeVue Aura, spring motion, CSS tokens). Do not add OpenProps, Tailwind, or React. Runs vue-tsc and stylelint when available."
 version: 1.0.0
-product-version: 3.8.1
+product-version: 3.8.2
 author: HeyEddi-com
 paths:
   - "**/*.vue"

@@ -2,7 +2,7 @@
 name: cli-interface-design
 description: "Designs readable interactive CLIs with @clack/prompts, consola, and picocolors. After writing the script, run it and inspect ANSI stdout for alignment. Does not render HTML, Canvas, or a browser screenshot."
 version: 1.0.0
-product-version: 3.8.1
+product-version: 3.8.2
 author: HeyEddi-com
 ---
 

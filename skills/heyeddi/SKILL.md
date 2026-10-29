@@ -2,7 +2,7 @@
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. Discovers skills, syncs .heyeddi/, and decides what to run. Design talk goes to @taste-penpot first (look, @zcubekr/penpot-mcp-server only) then @heyeddi-design. A redesign or from-scratch request analyzes the app before any new look. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
 version: 3.4.0
-product-version: 3.8.1
+product-version: 3.8.2
 author: HeyEddi-com
 ---
 

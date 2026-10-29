@@ -23,7 +23,7 @@ Follow [awesome-design-md extended sections](https://github.com/VoltAgent/awesom
 | 2 | **Foundations (always on)** | Responsive, theme, i18n, a11y, reading modes: see `foundations.md` |
 | 3 | **Colors** | Grouped (Brand, Surface, Text); **Token source** row (OpenProps / custom); each swatch = role + token |
 | 4 | **Typography** | Font family, hierarchy **table**, principles |
-| 5 | **Layout** | Spacing scale, grid/shell, whitespace philosophy |
+| 5 | **Layout** | Spacing scale, shell, whitespace. Per region: Flex or CSS Grid (`../taste-penpot/references/flex-grid.md`), tracks or direction, gap, Fit / Fill / Fix. Quasar owns the app frame. |
 | 6 | **Elevation & Depth** | Level table (flat → shadow) |
 | 7 | **Shapes** | Border-radius token table |
 | 8 | **Components** | Named tokens → PrimeVue mapping; states; signature patterns |

@@ -1,8 +1,8 @@
 ---
 name: heyeddi-handoff
 description: "Implements screens from briefs, wireframes, or designer screenshots. Vue 3 with Quasar shells and PrimeVue Aura. Two-pass for PNGs; single-pass from confirmed brief.md. Chains to @vue-design-system and @visual-auditor."
-version: 1.3.0
-product-version: 3.8.1
+version: 1.4.0
+product-version: 3.8.2
 author: HeyEddi-com
 disable-model-invocation: true
 ---

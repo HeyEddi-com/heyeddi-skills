@@ -97,7 +97,8 @@ own words always win.
   brochure-airy at 24px+. Pick once, hold it.
 - **Responsive is structural**: reorder, collapse, reflow or reveal by priority;
   check narrow, intermediate, wide, zoomed, and long-language states. Visual order
-  and focus order agree.
+  and focus order agree. The reflow is a Flex or Grid change (`references/flex-grid.md`):
+  wrap, a collapsed track, or a stacked direction. Same engines at 375, 768, and 1440.
 - **Extremes**: long names, empty states, overlays, sticky elements, safe areas,
   small targets. Design for them, do not discover them later.
 - Depth only when it clarifies state or hierarchy. Optical corrections only after

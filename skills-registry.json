@@ -1,5 +1,5 @@
 {
-  "version": "3.8.1",
+  "version": "3.8.2",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -129,7 +129,7 @@
     },
     {
       "name": "taste-penpot",
-      "description": "General design skill: one-pass look and tokens. Code-to-design for redesigns. zcube Penpot MCP is optional designer output"
+      "description": "General design skill: one-pass look and tokens. Penpot Flex (1D) or CSS Grid (2D). Code-to-design for redesigns. zcube Penpot MCP is optional designer output"
     },
     {
       "name": "heyeddi-local-first",

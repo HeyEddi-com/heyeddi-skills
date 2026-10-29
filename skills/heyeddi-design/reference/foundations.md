@@ -12,6 +12,7 @@ Read this file before `craft`, `polish`, `document`, or `@heyeddi-handoff` imple
 - **Audit widths (fast):** 375, 768, 1440 — iteration during craft/polish.
 - **Audit widths (done):** 375, 430, 768, 1024, 1440, 1920 — flagship/marketing before calling done (`@visual-auditor --preset done`). See `brief-language.md`.
 - **Fluid layouts**: no fixed desktop-only widths; forms and CTAs stack on small screens.
+- **Layout engines:** Penpot Flex for one direction, CSS Grid for rows and columns together. Read `../taste-penpot/references/flex-grid.md` when writing a layout, a wireframe, or the Layout section of `design.md`. Name the engine per region. Child sizing is Fit Content, Fill, or Fix. The app frame stays Quasar (`q-layout`, `q-drawer`, `q-header`): drawer width and header height are the fixed tracks. Page interiors use the named engine. At 375, a sidebar track becomes the drawer.
 - **Touch targets** ≥ 44×44px on coarse pointers.
 - **No horizontal scroll** on primary content at 375px unless intentional (data tables → scroll container with caption).
 - **Responsive contract** in the brief: state desktop vs mobile stack order (e.g. copy before visual on mobile).

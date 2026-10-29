@@ -1108,3 +1108,11 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Decision:** `@taste-penpot`, `@vue-design-system`, `@heyeddi-handoff`, and `@heyeddi-design` use only `@zcubekr/penpot-mcp-server` (`npx -y @zcubekr/penpot-mcp-server`, GitHub `zcube/penpot-mcp-server`). A connected server counts only when `list_teams` and `create_frame` are present. If that server is missing and `design.penpot` is not `off`, ask once and merge it into the project's `.cursor/mcp.json` only after an explicit yes. Never write `PENPOT_ACCESS_TOKEN` into the file. A no, or `design.penpot: off`, falls through to the written spec. Do not call the other Penpot servers while waiting.
 
 **Process:** `skills/taste-penpot/references/penpot-mcp.md` is the install contract. Plugin trees are symlinks to `skills/`. The live install under `~/.agents/skills/` was copied from those files on 2026-10-27.
+
+## 2026-10-29 — Penpot layout is Flex or CSS Grid
+
+**Context:** Penpot uses browser CSS Flexbox and CSS Grid on the canvas. Design skills still specified spacing and frames, so agents could fake stacks with absolute rectangles and hand off CSS that did not match Inspect.
+
+**Decision:** `taste-penpot` v1.1.0 owns `references/flex-grid.md`. 1D regions (components, nav, chips, cards) are Flex (Shift+A): direction, justify, align, gap, wrap, and child Fit Content / Fill / Fix. 2D regions (page skeletons, dashboards, galleries) are CSS Grid (Ctrl/Cmd+Shift+A): `fr`, `px`, `auto`, `minmax`, and cell spans. `penpot-demo.md` records the engine per region. Inspect CSS is the implementation spec. The app frame stays Quasar (`q-drawer` width and `q-header` height are the fixed tracks). `view="lHh Lpr lFf"` is the full-height sidebar with the header in the main column. Page interiors use the named engine. `heyeddi-design` v2.8.0, `heyeddi-handoff` v1.4.0, and `vue-design-system` v1.0.1 load that reference. Hub **v3.8.2**. Design pack **v1.2.2**.
+
+**Process:** PLAN names the engine. ACT writes it on the frame when the MCP schema allows, otherwise into the demo brief and the HTML fallback. Handoff copies `display: flex` or `display: grid` into the Implementation spec. At 375 a sidebar track becomes the drawer.
