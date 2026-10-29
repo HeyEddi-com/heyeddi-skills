@@ -1116,3 +1116,9 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Decision:** `taste-penpot` v1.1.0 owns `references/flex-grid.md`. 1D regions (components, nav, chips, cards) are Flex (Shift+A): direction, justify, align, gap, wrap, and child Fit Content / Fill / Fix. 2D regions (page skeletons, dashboards, galleries) are CSS Grid (Ctrl/Cmd+Shift+A): `fr`, `px`, `auto`, `minmax`, and cell spans. `penpot-demo.md` records the engine per region. Inspect CSS is the implementation spec. The app frame stays Quasar (`q-drawer` width and `q-header` height are the fixed tracks). `view="lHh Lpr lFf"` is the full-height sidebar with the header in the main column. Page interiors use the named engine. `heyeddi-design` v2.8.0, `heyeddi-handoff` v1.4.0, and `vue-design-system` v1.0.1 load that reference. Hub **v3.8.2**. Design pack **v1.2.2**.
 
 **Process:** PLAN names the engine. ACT writes it on the frame when the MCP schema allows, otherwise into the demo brief and the HTML fallback. Handoff copies `display: flex` or `display: grid` into the Implementation spec. At 375 a sidebar track becomes the drawer.
+
+## 2026-10-29 — Penpot layout field names
+
+**Context:** A plugin-API note used `layoutChild` sizing (`fix`, `fill`, `auto`), grid tracks, and TypeScript boards. `create_frame` on `@zcubekr/penpot-mcp-server` does not set those fields. Two names in the note were wrong, and the samples hardcoded a hex and a font.
+
+**Decision:** `taste-penpot` v1.1.1 records the file-format names in `references/flex-grid.md`. Child sizing is `fix`, `fill`, or `auto` (panel Fit Content is `auto`). Grid track type `flex` means `fr`. Track type `fixed` is px. Child `fix` is not track `fixed`. Placement is `appendChild(child, row, column)`. Span is `layoutCell.rowSpan` and `columnSpan`, not `layoutChild.rowSpan`. Do not set width or height on a child the layout owns. Do not call `@penpot/mcp` to run `penpot.createBoard()`. Hub **v3.8.3**. Design pack **v1.2.3**.

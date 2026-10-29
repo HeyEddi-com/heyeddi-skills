@@ -2,7 +2,7 @@
 name: fancy-ui-craft
 description: "Depth for a few Vue 3 surfaces: cursor spotlight, frosted glass, one TresJS accent, and a local dotLottie state. Use on a hero, a featured card, or an empty state. Do not apply it to tables, forms, or every card. No React, no Tailwind."
 version: 1.0.0
-product-version: 3.8.2
+product-version: 3.8.3
 author: HeyEddi-com
 ---
 
