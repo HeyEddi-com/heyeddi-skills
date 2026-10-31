@@ -3,7 +3,7 @@
   "displayName": "HeyEddi Design Skills",
   "description": "Design pack: taste-penpot is the general design skill, including code-to-design. vue-design-system builds Vue 3 UI. @zcubekr/penpot-mcp-server creates boards across projects. Playwright MCP verifies the live page.",
   "plugin": "heyeddi-design-skills",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "skills": [
     "taste-penpot",
     "vue-design-system",
