@@ -2,7 +2,7 @@
 name: layout-morph
 description: "Shared-element morphs in Vue 3 with Quasar v-morph. Use when a card, row, or chip expands into its detail view in the same screen. GSAP Flip is only the fallback when the two states are not in one view. No React, no Tailwind."
 version: 1.0.0
-product-version: 3.8.3
+product-version: 3.8.4
 author: HeyEddi-com
 ---
 

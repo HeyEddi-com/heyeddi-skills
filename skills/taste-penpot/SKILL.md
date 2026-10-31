@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
 description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. Layouts use Penpot Flex (1D) or CSS Grid (2D), the same engines as the browser (references/flex-grid.md). A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot boards use only @zcubekr/penpot-mcp-server; install that server after user approval when it is missing. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
-version: 1.1.1
-product-version: 3.8.3
+version: 1.2.0
+product-version: 3.8.4
 author: HeyEddi-com
 ---
 
@@ -71,6 +71,9 @@ Deeper rules live in references. Load them when the pass needs them:
 - `references/flex-grid.md`: Penpot Flex (Shift+A) for one direction, CSS Grid
   (Ctrl/Cmd+Shift+A) for rows and columns together. Load during PLAN whenever
   the surface has structure, and in ACT when writing boards or the HTML fallback.
+- `references/strokes-and-tokens.md`: Penpot 2.19 per-side strokes and shared
+  token libraries. Load when a board or rectangle has a border, a divider, or
+  a token binding.
 - `references/anti-slop.md`: the full refuse list, the over-used font list and
   the AI-look calibration. Load during PLAN and again for CRITIQUE.
 - `references/code-to-design.md`: analyze an existing app, then propose a
@@ -272,7 +275,7 @@ once, and stop; open-ended polishing wastes the user's time.
 | 9 | **Animation spec** | One authored moment at most (none for routine Operate screens); spatial motion uses a `@motion-physics` spring preset; reduced-motion path exists. |
 | 10 | **Copy** | Product's own words; actions say verb + object; errors say what failed and how to recover; no hype clichés; no invented claims. |
 | 11 | **Anti-slop** | Zero items from the refuse list unless the brief explicitly asked for them. |
-| 12 | **Penpot hygiene** | API MCP export or an honest "not connected" fallback; demo brief names boards and Aura token roles; nothing outside scope is in the brief. |
+| 12 | **Penpot hygiene** | API MCP export or an honest "not connected" fallback; demo brief names boards and Aura token roles; dividers are per-side strokes (`references/strokes-and-tokens.md`), not 1px rectangles; nothing outside scope is in the brief. |
 
 Then present, briefly:
 

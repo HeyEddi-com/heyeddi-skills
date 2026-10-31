@@ -79,7 +79,7 @@ Do not call `delete_project`, `delete_file`, `delete_team`, `delete_page`, or `d
 
 Also write `.heyeddi/designs/<feature>/penpot-demo.md` with the project name, file name, board names, widths, and token roles (`--app-bg`, `--app-surface-card`, `--app-text-main`, `--q-primary` from `--p-primary-color`). Include the layout-engine table from `references/flex-grid.md` (Flex or Grid, tracks or direction, gap, child `fix` / `fill` / `auto`). The file is the handoff if the MCP disconnects. Inspect CSS from those frames is the implementation spec.
 
-`create_frame` does not set flex or grid. When the live schema grows those fields, use the file-format names in `references/flex-grid.md` (`layoutItemHSizing`, `layoutGridColumns`, cell `row` / `column` / `rowSpan`). Do not call `@penpot/mcp` to run `penpot.createBoard()`.
+`create_frame` does not set flex or grid. When the live schema grows those fields, use the file-format names in `references/flex-grid.md` (`layoutItemHSizing`, `layoutGridColumns`, cell `row` / `column` / `rowSpan`). A divider on a board or rectangle is a per-side stroke (`references/strokes-and-tokens.md`): `strokeWidthBottom` and the other sides at 0, not a 1px child. `create_frame` still sends one `strokeWidth` until the schema has the side fields. Do not call `@penpot/mcp` to run `penpot.createBoard()`.
 
 ## Fallback
 

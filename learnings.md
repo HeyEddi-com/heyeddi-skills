@@ -1122,3 +1122,9 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** A plugin-API note used `layoutChild` sizing (`fix`, `fill`, `auto`), grid tracks, and TypeScript boards. `create_frame` on `@zcubekr/penpot-mcp-server` does not set those fields. Two names in the note were wrong, and the samples hardcoded a hex and a font.
 
 **Decision:** `taste-penpot` v1.1.1 records the file-format names in `references/flex-grid.md`. Child sizing is `fix`, `fill`, or `auto` (panel Fit Content is `auto`). Grid track type `flex` means `fr`. Track type `fixed` is px. Child `fix` is not track `fixed`. Placement is `appendChild(child, row, column)`. Span is `layoutCell.rowSpan` and `columnSpan`, not `layoutChild.rowSpan`. Do not set width or height on a child the layout owns. Do not call `@penpot/mcp` to run `penpot.createBoard()`. Hub **v3.8.3**. Design pack **v1.2.3**.
+
+## 2026-10-30 — Penpot 2.19 per-side strokes and shared tokens
+
+**Context:** Penpot 2.19 can set a stroke on each side of a board or rectangle, and tokens can be published from a shared library. A video note also included keyboard shortcuts, the path editor, and API calls that are not in the plugin schema.
+
+**Decision:** `taste-penpot` v1.2.0 owns `references/strokes-and-tokens.md`. A divider is `strokeWidthBottom` (and the other sides at 0), not a 1px flex child. Inspect CSS is `border-*-width`. Alignment is `center`, `inner`, or `outer`. Tokens bind by name with `applyToken`. A shared library publishes `design.md` roles. `create_frame` still sends one `strokeWidth` until the schema grows. Do not call `@penpot/mcp`. Hub **v3.8.4**. Design pack **v1.2.4**. CI pack **v1.4.4**.

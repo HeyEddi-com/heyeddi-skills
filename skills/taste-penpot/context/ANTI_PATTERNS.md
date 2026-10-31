@@ -7,3 +7,4 @@
 - NEVER install or enable that server without an explicit yes. A missing server means ask once (`references/penpot-mcp.md`), then wait.
 - NEVER override a pinned brief with taste or with the Anthropic refuse list.
 - NEVER fake a stack or a page skeleton with absolutely positioned rectangles. 1D flow is Flex. 2D tracks are CSS Grid (`references/flex-grid.md`). Absolute position is for a badge, close icon, or tooltip that must leave the flow.
+- NEVER fake a divider, a card separator, or a tab indicator with a 1px rectangle inside a flex column. On a board or rectangle that is a per-side stroke (`references/strokes-and-tokens.md`).
