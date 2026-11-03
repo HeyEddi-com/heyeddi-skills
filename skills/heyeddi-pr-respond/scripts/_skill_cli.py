@@ -36,12 +36,21 @@ def resolve_project_root(arg: str | None, *, auto_sync: bool = True) -> Path:
     return root
 
 
-def run_command(cmd: list[str], cwd: Path, timeout: int = 600) -> str:
+def run_command(
+    cmd: list[str],
+    cwd: Path,
+    timeout: int = 600,
+    *,
+    stdin_text: str | None = None,
+) -> str:
     """Run a fixed argv command without a shell.
 
     The executable is resolved to an absolute path via ``shutil.which`` so the
-    call never depends on a relative PATH lookup, and ``shell`` is always off  - 
+    call never depends on a relative PATH lookup, and ``shell`` is always off —
     there is no string interpolation into a shell.
+
+    Pass ``stdin_text`` for tools that read ``--input -`` / ``@-`` (e.g. multiline
+    GitHub comment bodies via ``gh api --input -``).
     """
     if not cmd:
         return "[error] empty command"
@@ -56,6 +65,7 @@ def run_command(cmd: list[str], cwd: Path, timeout: int = 600) -> str:
             text=True,
             timeout=timeout,
             shell=False,
+            input=stdin_text,
         )
     except subprocess.TimeoutExpired:
         return f"[error] command timed out after {timeout}s: {cmd[0]}"

@@ -71,7 +71,7 @@ Check product fit, doc drift, engineering quality, and run pre-merge gate.
 4. Apply fixes in code/docs
 5. `@pre-merge-gate` after fixes
 6. Draft `.heyeddi/docs/pr-<N>-replies.md` — one `## Comment <id>` per thread, `## Summary` last
-7. `post_thread_replies` — inline `/replies`; discussion = **quote-reply** (never bare main-node); writes `pr-<N>-posted.json`
+7. `post_thread_replies` — resolve root id; inline REST `/replies` (+ GraphQL fallback); discussion = **quote-reply** via issues comments (never fake `/issues/comments/{id}/replies`). On error: GitHub MCP `add_reply_to_pull_request_comment` / `add_issue_comment`
 8. `verify_response --check` (add `--live` to confirm GitHub threaded replies for inline)
 9. Summary comment on PR **only after** verify passes
 

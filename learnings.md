@@ -1128,3 +1128,17 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** Penpot 2.19 can set a stroke on each side of a board or rectangle, and tokens can be published from a shared library. A video note also included keyboard shortcuts, the path editor, and API calls that are not in the plugin schema.
 
 **Decision:** `taste-penpot` v1.2.0 owns `references/strokes-and-tokens.md`. A divider is `strokeWidthBottom` (and the other sides at 0), not a 1px flex child. Inspect CSS is `border-*-width`. Alignment is `center`, `inner`, or `outer`. Tokens bind by name with `applyToken`. A shared library publishes `design.md` roles. `create_frame` still sends one `strokeWidth` until the schema grows. Do not call `@penpot/mcp`. Hub **v3.8.4**. Design pack **v1.2.4**. CI pack **v1.4.4**.
+
+## 2026-11-02 — pr-respond thread resolve must never "not find" a thread
+
+**Context:** Agents running `@heyeddi-pr-respond` sometimes reported they could not find a GitHub thread and skipped the reply. Root causes: numeric discussion ids posted to `/pulls/.../comments/.../replies`, a non-existent `/issues/comments/{id}/replies` endpoint, child reply ids (GitHub rejects reply-to-reply), unpaginated fetches, and no MCP escape hatch.
+
+**Decision:** `heyeddi-pr-respond` v2.2.0 — `_comment_resolve.py` classifies every id (cache → live GET review comment → live GET issue comment → GraphQL node). Walk `in_reply_to_id` to the **root**. Inline: REST `/replies` then GraphQL `addPullRequestReviewThreadReply`. Discussion: **quote-reply** via `POST .../issues/{pr}/comments`. `fetch_pr_comments` paginates. New `resolve_reply_targets`. On any script error, agent **must** use GitHub MCP `add_reply_to_pull_request_comment` (inline root id) or `add_issue_comment` with quote — never stop with "thread not found". Primary path remains `gh` CLI.
+
+**Process:** fetch (paginate) → inventory → fix/push → `post_thread_replies` → on error `resolve_reply_targets` + MCP → `verify_response --live`.
+
+## 2026-11-02 — Release hub v3.8.5 / CI pack v1.4.5
+
+**Context:** Ship `heyeddi-pr-respond` v2.2.0 reliable thread resolve (REST → GraphQL → MCP fallback).
+
+**Decision:** Hub **v3.8.5**. CI pack **v1.4.5**. Design pack unchanged at 1.2.4.

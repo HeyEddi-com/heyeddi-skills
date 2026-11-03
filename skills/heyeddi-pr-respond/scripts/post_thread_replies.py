@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 """Post every drafted PR reply **in the same thread** as the reviewer comment.
 
-Never use `gh pr comment` for individual replies (that creates top-level spam).
-Inline / review-thread comments → REST `/pulls/{pr}/comments/{id}/replies`.
-Review *submission* bodies (type=review) → do not post a separate PR comment.
-Discussion issue comments → GraphQL reply when possible; never "ack review" spam.
+Never use bare ``gh pr comment`` for individual replies (top-level spam).
+
+Resolution (mandatory — never guess):
+- Inline / review-thread → REST ``/pulls/{pr}/comments/{ROOT_id}/replies``
+  (walk ``in_reply_to_id`` to the top-level comment; GitHub rejects reply-to-reply)
+- On REST failure → GraphQL ``addPullRequestReviewThreadReply``
+- Discussion IssueComments → quote-reply via ``POST .../issues/{pr}/comments``
+  (there is NO ``/issues/comments/{id}/replies`` endpoint)
+
+If this script still errors for an id, the agent MUST use GitHub MCP
+``add_reply_to_pull_request_comment`` (inline) or ``add_issue_comment`` with a
+quote (discussion) — never report "thread not found" as done.
 """
 from __future__ import annotations
 
@@ -14,7 +22,15 @@ import re
 import shutil
 import sys
 from pathlib import Path
+from typing import Any
 
+from _comment_resolve import (
+    ReplyTarget,
+    build_comment_index,
+    ensure_quote_reply,
+    find_review_thread_id,
+    resolve_reply_target,
+)
 from _replies_parse import (
     infer_reply_kind,
     parse_reply_sections,
@@ -76,79 +92,146 @@ def _resolve_repo(root: Path, cache_path: Path) -> str | None:
     return out.strip() or None
 
 
-def _post_review_comment_reply(
-    root: Path, repo: str, pr: int, comment_id: str, body: str
-) -> tuple[str, str | None]:
-    """Reply in the same review-comment thread (Files changed / inline)."""
-    raw = run_command(
-        [
-            "gh",
-            "api",
-            f"repos/{repo}/pulls/{pr}/comments/{comment_id}/replies",
-            "-X",
-            "POST",
-            "-f",
-            f"body={body}",
-        ],
-        root,
-    )
-    if raw.startswith("[exit") or raw.startswith("[error]"):
-        return "error", raw[:400]
+def _load_cache(cache_path: Path) -> dict[str, Any]:
+    if not cache_path.is_file():
+        return {}
     try:
-        payload = json.loads(raw)
-        reply_id = str(payload.get("id")) if isinstance(payload, dict) and payload.get("id") else None
-    except json.JSONDecodeError:
-        reply_id = None
-    return "posted", reply_id
+        data = json.loads(cache_path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except (json.JSONDecodeError, OSError):
+        return {}
 
 
-def _resolve_database_id(root: Path, node_id: str) -> tuple[str | None, str | None]:
-    """Map GraphQL node id → databaseId + typename."""
-    query = (
-        "query($id:ID!){ node(id:$id){ __typename "
-        "... on PullRequestReviewComment { databaseId } "
-        "... on IssueComment { databaseId } } }"
-    )
-    raw = run_command(
-        ["gh", "api", "graphql", "-f", f"query={query}", "-f", f"id={node_id}"],
-        root,
-    )
+def _gh_api_json(
+    root: Path,
+    endpoint: str,
+    *,
+    method: str = "GET",
+    payload: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any] | list[Any] | None, str | None]:
+    cmd = ["gh", "api", endpoint, "-X", method, "-H", "Accept: application/vnd.github+json"]
+    stdin = None
+    if payload is not None:
+        cmd.extend(["--input", "-"])
+        stdin = json.dumps(payload)
+    raw = run_command(cmd, root, stdin_text=stdin)
     if raw.startswith("[exit") or raw.startswith("[error]"):
-        return None, raw[:200]
+        return None, raw[:500]
     try:
         data = json.loads(raw)
-        node = (data.get("data") or {}).get("node") or {}
-        db = node.get("databaseId")
-        typename = node.get("__typename")
-        if db is None:
-            return None, f"no databaseId for {typename or node_id}"
-        return f"{typename}:{db}", None
     except json.JSONDecodeError:
-        return None, "graphql non-JSON"
+        return None, "non-JSON response"
+    return data, None
 
 
-def _post_issue_comment_reply_resolved(
-    root: Path, repo: str, comment_id: str, body: str
+def _post_review_reply_rest(
+    root: Path, repo: str, pr: int, root_comment_id: str, body: str
 ) -> tuple[str, str | None]:
+    data, err = _gh_api_json(
+        root,
+        f"repos/{repo}/pulls/{pr}/comments/{root_comment_id}/replies",
+        method="POST",
+        payload={"body": body},
+    )
+    if err or not isinstance(data, dict):
+        return "error", err or "empty response"
+    reply_id = data.get("id")
+    return "posted", str(reply_id) if reply_id is not None else None
+
+
+def _post_review_reply_graphql(
+    root: Path, repo: str, pr: int, root_comment_id: str, body: str
+) -> tuple[str, str | None]:
+    thread_id = find_review_thread_id(root, repo, pr, root_comment_id)
+    if not thread_id:
+        return (
+            "error",
+            f"GraphQL fallback: no review thread contains comment {root_comment_id}",
+        )
+    mutation = (
+        "mutation($threadId:ID!,$body:String!){"
+        "addPullRequestReviewThreadReply(input:{"
+        "pullRequestReviewThreadId:$threadId,body:$body"
+        "}){comment{databaseId id}}}"
+    )
+    # body=@- keeps multiline / special characters intact (never -f body=...)
     raw = run_command(
         [
             "gh",
             "api",
-            f"repos/{repo}/issues/comments/{comment_id}/replies",
-            "-X",
-            "POST",
+            "graphql",
             "-f",
-            f"body={body}",
+            f"query={mutation}",
+            "-f",
+            f"threadId={thread_id}",
+            "-f",
+            "body=@-",
         ],
         root,
+        stdin_text=body,
     )
     if raw.startswith("[exit") or raw.startswith("[error]"):
         return "error", raw[:400]
     try:
-        payload = json.loads(raw)
-        return "posted", str(payload.get("id") or payload.get("node_id") or "")
+        data = json.loads(raw)
+        errors = data.get("errors")
+        if errors:
+            return "error", json.dumps(errors)[:300]
+        comment = (
+            ((data.get("data") or {}).get("addPullRequestReviewThreadReply") or {}).get(
+                "comment"
+            )
+            or {}
+        )
+        rid = comment.get("databaseId") or comment.get("id")
+        return "posted", str(rid) if rid is not None else thread_id
     except json.JSONDecodeError:
-        return "posted", raw.strip()[:120] or None
+        return "error", "graphql non-JSON"
+
+
+def _post_discussion_quote(
+    root: Path, repo: str, pr: int, body: str, parent_snippet: str
+) -> tuple[str, str | None]:
+    quoted = ensure_quote_reply(body, parent_snippet)
+    data, err = _gh_api_json(
+        root,
+        f"repos/{repo}/issues/{pr}/comments",
+        method="POST",
+        payload={"body": quoted},
+    )
+    if err or not isinstance(data, dict):
+        return "error", err or "empty response"
+    return "posted", str(data.get("id") or data.get("node_id") or "")
+
+
+def _already_replied_inline(
+    root: Path, repo: str, pr: int, root_comment_id: str
+) -> bool:
+    """True when this root thread already has at least one reply (any author)."""
+    data, err = _gh_api_json(
+        root, f"repos/{repo}/pulls/{pr}/comments?per_page=100", method="GET"
+    )
+    # Prefer paginated dedicated fetch when list endpoint used without paginate —
+    # fall back to single-comment children check via full paginate.
+    if err or not isinstance(data, list):
+        raw = run_command(
+            ["gh", "api", f"repos/{repo}/pulls/{pr}/comments", "--paginate"],
+            root,
+        )
+        if raw.startswith("[exit") or raw.startswith("[error]"):
+            return False
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError:
+            return False
+    if not isinstance(data, list):
+        return False
+    for item in data:
+        if not isinstance(item, dict):
+            continue
+        if str(item.get("in_reply_to_id") or "") == str(root_comment_id):
+            return True
+    return False
 
 
 def _post_one(
@@ -156,46 +239,79 @@ def _post_one(
     root: Path,
     repo: str,
     pr: int,
-    comment_id: str,
-    kind: str,
+    target: ReplyTarget,
     body: str,
-) -> tuple[str, str | None]:
+) -> tuple[str, str | None, list[str]]:
+    """Post using resolved target. Returns (status, ref, attempts)."""
+    attempts: list[str] = []
     if BANNED_BODY.search(body):
         return (
             "error",
             "banned body: do not post 'Acknowledged review attachment' top-level spam",
+            attempts,
         )
 
-    # Review *submission* bodies are not threads. Never gh pr comment these.
-    if kind == "review":
+    if target.post_method == "skip_review":
         return (
             "skipped_review_body",
-            "Review submission bodies are not reply threads. Reply on each inline "
-            "comment via /replies; at most one Summary at the end.",
+            target.detail
+            or (
+                "Review submission bodies are not reply threads. Reply on each inline "
+                "comment via /replies; at most one Summary at the end."
+            ),
+            attempts,
         )
 
-    # Numeric IDs → always in-thread review-comment reply.
-    if comment_id.isdigit():
-        return _post_review_comment_reply(root, repo, pr, comment_id, body)
-
-    # GraphQL / opaque ids: resolve then reply in the correct thread type.
-    resolved, err = _resolve_database_id(root, comment_id)
-    if err or not resolved:
-        # Fixture-style DC_* ids or unresolved: refuse top-level spam.
+    if target.post_method == "unresolved" or not target.reply_to_id:
+        hint = target.mcp_hint or "Use GitHub MCP pull_request_read then reply tools"
         return (
             "error",
-            err
-            or (
-                f"Cannot resolve {comment_id} to a threadable comment id. "
-                "Use the numeric review-comment id and POST .../comments/ID/replies."
-            ),
+            (target.detail or f"Cannot resolve {target.input_id}") + f" | fallback: {hint}",
+            attempts,
         )
-    typename, db_id = resolved.split(":", 1)
-    if typename == "PullRequestReviewComment":
-        return _post_review_comment_reply(root, repo, pr, db_id, body)
-    if typename == "IssueComment":
-        return _post_issue_comment_reply_resolved(root, repo, db_id, body)
-    return "error", f"unsupported comment type {typename}"
+
+    if target.post_method == "discussion_quote":
+        attempts.append("discussion_quote via POST issues/{pr}/comments")
+        status, ref = _post_discussion_quote(
+            root, repo, pr, body, target.body_snippet
+        )
+        if status == "posted":
+            return status, ref, attempts
+        attempts.append(f"discussion_quote failed: {ref}")
+        mcp = target.mcp_hint or "MCP add_issue_comment with quote"
+        return "error", f"{ref} | fallback: {mcp}", attempts
+
+    # inline review_reply
+    root_id = target.reply_to_id
+    attempts.append(f"REST pulls/{pr}/comments/{root_id}/replies")
+    status, ref = _post_review_reply_rest(root, repo, pr, root_id, body)
+    if status == "posted":
+        return status, ref, attempts
+
+    attempts.append(f"REST failed: {ref}")
+    # Common: already replied by us / race — treat as success only if a child exists
+    if ref and ("422" in ref or "already" in ref.lower() or "replies to replies" in ref.lower()):
+        if _already_replied_inline(root, repo, pr, root_id):
+            # If 422 was "replies to replies", we should have walked to root already.
+            # If still failing but thread has replies from a previous run, ok.
+            if "replies to replies" not in (ref or "").lower():
+                return "already-replied", root_id, attempts
+
+    attempts.append("GraphQL addPullRequestReviewThreadReply")
+    status, ref = _post_review_reply_graphql(root, repo, pr, root_id, body)
+    if status == "posted":
+        return status, ref, attempts
+    attempts.append(f"GraphQL failed: {ref}")
+
+    mcp = target.mcp_hint or (
+        f"MCP add_reply_to_pull_request_comment commentId={root_id} pullNumber={pr}"
+    )
+    return (
+        "error",
+        f"All gh strategies failed for {target.input_id} (root={root_id}). "
+        f"Last: {ref} | MUST fallback: {mcp}",
+        attempts,
+    )
 
 
 def _post_summary_once(root: Path, pr: int, body: str) -> tuple[str, str | None]:
@@ -284,6 +400,8 @@ def main() -> None:
         emit(json.dumps({"error": "## Summary must be last (after all individual replies)"}, indent=2))
         sys.exit(1)
 
+    cache = _load_cache(cache_path)
+    index = build_comment_index(cache)
     repo = None if dry_run else _resolve_repo(root, cache_path)
     if not dry_run and not repo:
         emit(json.dumps({"error": "could not resolve repo for gh posts"}, indent=2))
@@ -318,41 +436,69 @@ def main() -> None:
             )
             continue
 
-        kind = infer_reply_kind(section.comment_id, None, section.kind)
-
-        if dry_run:
-            status = "skipped_review_body" if kind == "review" else "dry-run"
-            posted.append(
-                {
-                    "comment_id": section.comment_id,
-                    "type": kind,
-                    "status": status,
-                    "reply_ref": None,
-                    "note": (
-                        "Review bodies are not posted as top-level comments"
-                        if kind == "review"
-                        else "Would POST .../comments/ID/replies in-thread"
-                    ),
-                }
-            )
-            succeeded_ids.add(section.comment_id)
-            continue
-
-        assert repo is not None
-        status, ref = _post_one(
+        kind_hint = infer_reply_kind(section.comment_id, None, section.kind)
+        target = resolve_reply_target(
             root=root,
             repo=repo,
             pr=args.pr,
             comment_id=section.comment_id,
-            kind=kind,
+            kind_hint=kind_hint if kind_hint != "unknown" else section.kind,
+            index=index,
+            live=not dry_run,
+        )
+
+        if dry_run:
+            status = (
+                "skipped_review_body"
+                if target.post_method == "skip_review"
+                else "dry-run"
+            )
+            if target.post_method == "unresolved":
+                status = "error"
+                errors.append(f"{section.comment_id}: {target.detail}")
+            posted.append(
+                {
+                    "comment_id": section.comment_id,
+                    "type": target.kind,
+                    "status": status,
+                    "reply_ref": target.reply_to_id,
+                    "post_method": target.post_method,
+                    "resolve_detail": target.detail,
+                    "mcp_fallback": target.mcp_hint,
+                    "note": (
+                        "Review bodies are not posted as top-level comments"
+                        if target.post_method == "skip_review"
+                        else (
+                            f"Would {target.post_method} → {target.reply_to_id}"
+                            if target.reply_to_id
+                            else target.detail
+                        )
+                    ),
+                }
+            )
+            if status in OK_STATUSES:
+                succeeded_ids.add(section.comment_id)
+            continue
+
+        assert repo is not None
+        status, ref, attempts = _post_one(
+            root=root,
+            repo=repo,
+            pr=args.pr,
+            target=target,
             body=section.body,
         )
 
         entry: dict = {
             "comment_id": section.comment_id,
-            "type": kind,
+            "type": target.kind,
             "status": status,
-            "reply_ref": ref if status == "posted" else None,
+            "reply_ref": ref if status in OK_STATUSES else None,
+            "post_method": target.post_method,
+            "resolved_root_id": target.reply_to_id,
+            "resolve_detail": target.detail,
+            "attempts": attempts,
+            "mcp_fallback": target.mcp_hint,
         }
         if status in OK_STATUSES:
             succeeded_ids.add(section.comment_id)
@@ -384,7 +530,12 @@ def main() -> None:
         "error_count": len(errors),
         "errors": errors,
         "summary": summary_status,
-        "rule": "Individual replies MUST use in-thread /replies. Never gh pr comment per comment.",
+        "rule": (
+            "Individual replies MUST use resolved in-thread targets. "
+            "Never gh pr comment per comment. On any error, agent MUST use "
+            "GitHub MCP add_reply_to_pull_request_comment (inline) or "
+            "add_issue_comment with quote (discussion) — never give up."
+        ),
         "hint": "Run verify_response.py --pr <N> --live --check after posting.",
     }
 

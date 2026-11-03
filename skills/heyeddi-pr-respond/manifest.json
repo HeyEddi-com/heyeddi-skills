@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-pr-respond",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "tools": [
     {
       "name": "fetch_pr_comments",
@@ -100,8 +100,26 @@
       "readonly": true
     },
     {
+      "name": "resolve_reply_targets",
+      "description": "Resolve each comment id to root reply target + GitHub MCP fallback hint (never guess).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pr": { "type": "integer" },
+          "project_root": { "type": "string" },
+          "replies_text": { "type": "string" },
+          "replies_file": { "type": "string" },
+          "comment_ids": { "type": "string" },
+          "offline": { "type": "boolean" }
+        },
+        "required": ["pr", "project_root"]
+      },
+      "script": "scripts/resolve_reply_targets.py",
+      "readonly": true
+    },
+    {
       "name": "post_thread_replies",
-      "description": "Post every ## Comment <id> reply in-thread from --replies-text.",
+      "description": "Post every ## Comment <id> reply in-thread from --replies-text (REST→GraphQL; MCP hint on failure).",
       "parameters": {
         "type": "object",
         "properties": {

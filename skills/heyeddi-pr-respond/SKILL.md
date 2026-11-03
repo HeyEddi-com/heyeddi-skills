@@ -1,8 +1,8 @@
 ---
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback — human reviewers, HeyEddi CI, inline threads. Auto-fix, commit+push, in-thread replies, CI check first — never ask before fixing or posting. One skill for every review source."
-version: 2.1.0
-product-version: 3.8.4
+version: 2.2.0
+product-version: 3.8.5
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -64,11 +64,27 @@ Reviewers and HeyEddi debate only see **remote HEAD**.
 
 Hard gate: `assert_fixes_pushed --check` (also inside `post_thread_replies` unless `--dry-run` / `--allow-unpushed`).
 
-## Critical: in-thread replies only
+## Critical: in-thread replies only (must work every time)
 
-- **Do** `gh api …/pulls/<N>/comments/<ID>/replies`
-- **Do not** `gh pr comment` per finding
+- **Do** resolve the id first (`resolve_reply_targets` or `post_thread_replies` resolution)
+- **Do** reply on the **root** review-comment id (GitHub rejects replies-to-replies)
+- **Do** `gh api …/pulls/<N>/comments/<ROOT_ID>/replies` for inline (script does GraphQL fallback)
+- **Do** discussion as **quote-reply** on the PR conversation (no `/issues/comments/{id}/replies`)
+- **Do not** `gh pr comment` per finding (except one final Summary)
 - **Do not** "Acknowledged review attachment…" spam
+- **Do not** tell the user a thread "could not be found" and stop
+
+### If `post_thread_replies` errors for an id — MCP fallback (mandatory)
+
+Never give up. Use the GitHub MCP tools from each error's `mcp_fallback` / `resolve_reply_targets`:
+
+| Kind | MCP tool | Notes |
+|------|----------|--------|
+| Inline | `add_reply_to_pull_request_comment` | `commentId` = **root** numeric review-comment id + `pullNumber` |
+| Discussion | `add_issue_comment` | `issue_number` = PR number; body must **quote** the parent |
+| Unknown | `pull_request_read` | `get_review_comments` / `get_comments`, then reply with the numeric id |
+
+Primary path remains **`gh` CLI** inside the scripts. MCP is the agent escape hatch when gh still fails.
 
 ## Mandatory pipeline
 
@@ -87,6 +103,7 @@ assert_no_merge --check                  → unless user said authorize merge
 assert_fixes_pushed --check
 → compose ## Comment <id> for every postable_reply_id + ## Summary last
 post_thread_replies --pr <N> --replies-text '...'
+→ on any posted[].status=error: resolve_reply_targets + GitHub MCP reply (mandatory)
 verify_response --pr <N> --replies-text '...' --use-inventory --live --check
 → optional one Summary after verify
 ```
@@ -101,13 +118,14 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 
 | Tool | Purpose |
 |------|---------|
-| `fetch_pr_comments` | Fetch inline, review, discussion → temp cache |
+| `fetch_pr_comments` | Fetch inline, review, discussion → temp cache (paginated) |
 | `build_comment_inventory` | Parse root summaries + inline; list every item |
 | `filter_comments` | Optional `--scope heyeddi` (default `all`) |
 | `discover_and_verify` | Evidenced test/build commands |
 | `assert_no_merge` | Merge hard gate |
 | `assert_fixes_pushed` | Commit+push gate before Fixed replies |
-| `post_thread_replies` | Post every draft in-thread |
+| `resolve_reply_targets` | Map each id → root target + MCP fallback hint |
+| `post_thread_replies` | Post every draft in-thread (REST → GraphQL → MCP hint) |
 | `verify_response` | Hard-fail if any postable ID missing |
 
 ## Requires
