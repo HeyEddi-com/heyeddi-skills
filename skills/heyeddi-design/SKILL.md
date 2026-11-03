@@ -1,8 +1,8 @@
 ---
 name: heyeddi-design
-description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff requests AFTER taste-penpot has chosen the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Screenshot gate still applies before done."
-version: 2.8.0
-product-version: 3.8.5
+description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: ≥3 options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Screenshot gate still applies before done."
+version: 2.9.0
+product-version: 3.8.6
 author: HeyEddi-com
 ---
 
@@ -10,9 +10,9 @@ author: HeyEddi-com
 
 **Stack-agnostic UI design** for HeyEddi apps: discovery, briefs, critique, and design-system documentation. **Implementation** (Vue, Flutter, CSS in components) belongs to stack skills — see `reference/implement-routing.md`.
 
-**Team:** `@taste-penpot` owns the look in one pass (Anthropic frontend-design + tokens). This skill owns product fit and implementation handoff. Read `reference/design-team.md` before any design turn. Do not author a second palette or restart discover → research → explore to find a look.
+**Team:** `@taste-penpot` owns the look in one pass (Anthropic frontend-design + tokens), including the **identity gate** (`references/identity-gate.md`: ≥3 options when no style is pinned). This skill owns product fit and implementation handoff. Read `reference/design-team.md` before any design turn. Do not author a second palette or restart discover → research → explore to find a look.
 
-**Auto-pickup:** Design talk still loads this skill, and it immediately loads `@taste-penpot` if that pass has not already produced tokens. Then record those tokens. `reference/brief-language.md` is product language for the brief, not a second art direction.
+**Auto-pickup:** Design talk still loads this skill, and it immediately loads `@taste-penpot` if identity/tokens are not locked. If taste must run the identity gate, **wait for the user's choice** before recording tokens or crafting. `reference/brief-language.md` is product language for the brief, not a second art direction.
 
 ## Design vs implement (mandatory split)
 
@@ -27,11 +27,12 @@ Read **`reference/implement-routing.md`** every session that ends in shipped UI.
 
 ## Default behavior (no confirmation)
 
-- **Design talk of any kind:** load `brief-language.md` first; pin taste + subject + hard rejects before chrome
-- **Better design / redesign:** "better design", "make it better", "redesign", "new look", "overhaul", "wow", "top notch" → **do not polish-only**. Run critique ambition gate (`reference/critique.md`); if template-like or ambition fails → **`shape` → craft → implement**. Spacing/token tweaks alone are wrong for these phrases.
-- **Critique + fix (local):** "looks bad", "fix this page", "polish", "tweak spacing" → critique **then** stack implementer + `@visual-auditor` — **unless** the ambition gate says escalate to `shape` (then shape first; do not ask).
-- **Craft:** confirmed brief → hand off to stack implementer in the same workflow
+- **Design talk of any kind:** load `brief-language.md` first; if identity unset → `@taste-penpot` identity gate (≥3 options, wait); then pin taste + subject + hard rejects before chrome
+- **Better design / redesign:** "better design", "make it better", "redesign", "new look", "overhaul", "wow", "top notch" → **do not polish-only**. Run critique ambition gate (`reference/critique.md`); if template-like or ambition fails → identity gate (if unset) → **`shape` → craft → implement**. Spacing/token tweaks alone are wrong for these phrases.
+- **Critique + fix (local):** "looks bad", "fix this page", "polish", "tweak spacing" → keep existing identity; critique **then** stack implementer + `@visual-auditor` — **unless** the ambition gate says escalate to `shape` (then identity gate if replacing look; do not ask).
+- **Craft:** confirmed brief + locked identity → hand off to stack implementer in the same workflow
 - **Ambition bar:** impressive craft is default on flagship routes — do not wait for user to ask
+- **Exception that requires confirmation:** identity A/B/C choice when the gate applies (and brief confirmation after shape)
 
 ## Subagents (default)
 

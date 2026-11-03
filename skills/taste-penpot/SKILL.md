@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. Layouts use Penpot Flex (1D) or CSS Grid (2D), the same engines as the browser (references/flex-grid.md). A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot boards use only @zcubekr/penpot-mcp-server; install that server after user approval when it is missing. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue implementation maps onto @vue-design-system. No React, no Tailwind."
-version: 1.2.0
-product-version: 3.8.5
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST present ≥3 project-grounded identity options (type, colours, metaphor) and wait for the user to choose before tokens or pixels. Layouts use Penpot Flex (1D) or CSS Grid (2D). A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot boards use only @zcubekr/penpot-mcp-server; install after user approval when missing. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
+version: 1.3.0
+product-version: 3.8.6
 author: HeyEddi-com
 ---
 
@@ -28,16 +28,26 @@ says yes (`references/penpot-mcp.md`). The written spec and HTML+CSS are what
 
 `design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto`, `on`, and a missing key use `@zcubekr/penpot-mcp-server` (`list_teams`, `create_frame`). If that server is missing, ask once and install it into `.cursor/mcp.json` only after an explicit yes, then continue. `off` skips Penpot and does not ask. A no on the install falls through to ACT 2.6 and does not block the look. The unscoped npm package `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), and `penpot-api-mcp` are never a connection.
 
-Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present. Never
-ask the user to invoke a command. Ask at most one design question, and only when
-a fact that changes the work cannot be inferred (who the audience is, a pinned
-brand, what the page must achieve). Otherwise decide, state the decision, and
-keep going. The Penpot install question in `references/penpot-mcp.md` is
-separate: ask it when `@zcubekr/penpot-mcp-server` is missing and
-`design.penpot` is not `off`.
+Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present — **after**
+the identity is locked. Never ask the user to invoke a command.
+
+**Identity gate (hard):** If the user did not pin a style/brand and this is not a
+refine of an existing `design.md` system, load `references/identity-gate.md`
+**before any tokens or pixels**. Present **≥3** project-grounded identities
+(metaphor, type, named colours, hard rejects, why this product). **Stop and wait**
+for A/B/C (or a hybrid). Do not invent a look and ship it. Refine of an existing
+identity skips the gate. "You choose" counts as a choice — pick one, say why, continue.
+Full rules: `references/identity-gate.md`.
+
+Aside from the identity gate and the Penpot install question
+(`references/penpot-mcp.md` when the server is missing and `design.penpot` is not
+`off`), ask at most one other design question, and only when a fact that changes
+the work cannot be inferred (audience, page job). Otherwise decide, state it, and
+keep going.
 
 Ground rules that override everything else:
 
+- **Identity before pixels.** No locked identity → no ACT. See identity gate above.
 - **The brief wins.** Pinned fonts, colours, eras, materials or layouts are obeyed
   exactly, even when they appear on the anti-slop list. Your taste never overrides
   an explicit instruction.
@@ -63,9 +73,14 @@ Ground rules that override everything else:
 
 Deeper rules live in references. Load them when the pass needs them:
 
+- `references/identity-gate.md`: **≥3 identity options + wait for choice** when
+  no style is pinned. Load at the start of PLAN for new looks / redesigns /
+  adjective-only requests. Skip only for refine of an existing system or a
+  pinned brand.
 - `third-party/frontend-design/SKILL.md`: Anthropic frontend-design (Apache-2.0).
-  Load during PLAN before choosing type, colour, or layout. Its two-pass
-  uniqueness check is mandatory. The brief still wins when they conflict.
+  Load during PLAN before choosing type, colour, or layout (after identity is
+  locked). Its two-pass uniqueness check is mandatory. The brief still wins
+  when they conflict.
 - `references/taste-rules.md`: per-mode rules, layout, type, colour, motion,
   copy, states, app-UI tokens and depth. Load during PLAN for any new surface.
 - `references/flex-grid.md`: Penpot Flex (Shift+A) for one direction, CSS Grid
@@ -93,6 +108,14 @@ Deeper rules live in references. Load them when the pass needs them:
 Do this silently and quickly; write the result as a compact plan block that you
 will show in the final presentation (not before, unless the change is large or
 destructive, see ACT safety).
+
+### 1.0 Identity gate (before mode tokens)
+
+Load `references/identity-gate.md`. If the gate applies and the user has not
+chosen yet: present **≥3** options in chat (type, colours with hex, identity /
+metaphor, hard rejects, why this product), then **end the turn**. Do not
+continue to 1.1–1.5 or ACT until they pick. If the gate is skipped or already
+satisfied, state which identity is locked in one line and continue.
 
 ### 1.1 Pick the mode from the surface, not the product
 
@@ -139,7 +162,8 @@ Before choosing a single value, read what the file already owns (see
 
 ### 1.4 Decide the system (compact, named, with values)
 
-Write decisions as tokens. Keep each list short; a small system used with
+Only after identity is locked (pinned, chosen, or refine-skip). Write decisions
+as tokens from that identity. Keep each list short; a small system used with
 conviction beats a large one used timidly.
 
 - **Layout**: primary reading/task path; what groups and what separates; the
