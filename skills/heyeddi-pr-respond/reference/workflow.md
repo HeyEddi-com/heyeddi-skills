@@ -62,6 +62,10 @@ Include orphan findings in Summary when they have no inline thread.
 python scripts/post_thread_replies.py --pr <N> --replies-text '...' --project-root <root>
 ```
 
+Script resolves each id (cache → live GET → root walk). Inline: REST `/replies` then GraphQL thread reply. Discussion: quote-reply on the PR (no fake issue-comment `/replies`).
+
+If any `posted[].status` is `error`: run `resolve_reply_targets`, then **GitHub MCP** `add_reply_to_pull_request_comment` (inline root id) or `add_issue_comment` with quote (discussion). Never stop with "thread not found".
+
 ## Phase 7: Verify
 
 ```bash

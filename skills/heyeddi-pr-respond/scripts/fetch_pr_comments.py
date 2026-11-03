@@ -107,11 +107,23 @@ def main() -> None:
     repo = repo_out.strip()
     pr = args.pr
 
+    # Always paginate — missing pages is a common "thread not found" cause.
     inline = run_command(
-        ["gh", "api", f"repos/{repo}/pulls/{pr}/comments"],
+        ["gh", "api", f"repos/{repo}/pulls/{pr}/comments", "--paginate"],
         root,
     )
-    discussion = run_command(
+    # Issue/discussion comments (Conversation tab) — also paginate via REST so
+    # ids are always numeric database ids (gh pr view comments can truncate).
+    discussion_rest = run_command(
+        [
+            "gh",
+            "api",
+            f"repos/{repo}/issues/{pr}/comments",
+            "--paginate",
+        ],
+        root,
+    )
+    discussion_view = run_command(
         ["gh", "pr", "view", str(pr), "--json", "comments"],
         root,
     )
@@ -126,11 +138,21 @@ def main() -> None:
         except json.JSONDecodeError:
             return s
 
+    inline_parsed = try_parse(inline)
+    disc_rest_parsed = try_parse(discussion_rest)
+    disc_view_parsed = try_parse(discussion_view)
+
+    # Prefer REST issue comments (complete + numeric ids). Fall back to gh view.
+    if isinstance(disc_rest_parsed, list):
+        discussion_payload: object = {"comments": disc_rest_parsed}
+    else:
+        discussion_payload = disc_view_parsed
+
     data = {
         "pr": pr,
         "repo": repo,
-        "inline": wrap_comment_bodies(try_parse(inline)),
-        "discussion": wrap_comment_bodies(try_parse(discussion)),
+        "inline": wrap_comment_bodies(inline_parsed),
+        "discussion": wrap_comment_bodies(discussion_payload),
         "reviews": wrap_comment_bodies(try_parse(reviews)),
         "untrusted_content_note": _NOTE,
     }
