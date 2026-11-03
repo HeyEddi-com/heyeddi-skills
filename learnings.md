@@ -1142,3 +1142,17 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** Ship `heyeddi-pr-respond` v2.2.0 reliable thread resolve (REST → GraphQL → MCP fallback).
 
 **Decision:** Hub **v3.8.5**. CI pack **v1.4.5**. Design pack unchanged at 1.2.4.
+
+## 2026-11-02 — Design identity gate (≥3 options before pixels)
+
+**Context:** Design requests without a pinned style often shipped generic UI; users had to ask for a redo with a real identity.
+
+**Decision:** `@taste-penpot` v1.3.0 owns `references/identity-gate.md`. When no style/brand is pinned and the task is not a refine of an existing `design.md` system: present **≥3** project-grounded identities (metaphor, typography, named hex colours, hard rejects, why this product), **stop until the user chooses**, then PLAN → ACT. Text + hex is enough; GenerateImage optional. Refine preserves identity (skip gate). Redesign / from scratch re-opens the gate after code audit. `@heyeddi-design` v2.9.0 and `@heyeddi` router sync. Design pack **v1.2.5**.
+
+**Process:** Design talk → taste identity gate (if unset) → choice → tokens → heyeddi-design record → craft/handoff.
+
+## 2026-11-02 — Release hub v3.8.6 / design pack v1.2.5
+
+**Context:** Ship design identity gate (`taste-penpot` v1.3.0, `heyeddi-design` v2.9.0).
+
+**Decision:** Hub **v3.8.6**. Design pack **v1.2.5**. CI pack unchanged at 1.4.5.

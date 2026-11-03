@@ -1,6 +1,9 @@
 # Anti-patterns
 
 - NEVER run a discover → research → shape pipeline. One pass only.
+- NEVER invent a look when the user only said "modern" / "clean" / "professional" — run `references/identity-gate.md` (≥3 options, wait for choice).
+- NEVER ship PLAN tokens, Penpot boards, or HTML demos before identity is locked (pinned, chosen, or refine-skip).
+- NEVER present three hue swaps of the same world and call them identities.
 - NEVER invent a second palette after `@heyeddi-design` already has tokens from this pass.
 - NEVER require Penpot when `design.penpot` is `off`. Write the spec and HTML+CSS.
 - NEVER call unscoped `penpot-mcp-server`, `@penpot/mcp`, or `penpot-api-mcp`. The only Penpot server is `@zcubekr/penpot-mcp-server`.

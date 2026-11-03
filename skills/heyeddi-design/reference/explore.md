@@ -16,21 +16,24 @@ Do not ask the user to install image APIs.
 
 ## Phase A: Visual direction probes (when available)
 
-Generate **2-4** distinct direction probes differing in hierarchy, density, nav topology, typographic voice, or color strategy: **not** palette swaps or the same layout with different hues.
+**Prerequisite:** Identity already locked via `@taste-penpot` `references/identity-gate.md` (or gate correctly skipped). Explore does **not** replace the identity gate. If identity is still unset, stop and run the gate first.
 
-Each probe should answer: *Would this feel like a different product identity, or the same template recolored?* Reject lanes that only change primary color.
+Generate **2-4** probes that vary hierarchy, density, nav topology, or composition **inside the chosen identity**: **not** three unrelated brands and **not** palette-only swaps.
+
+Each probe should answer: *Would this still feel like the chosen identity, or a different product?* Reject lanes that abandon the locked metaphor/type/colour roles.
 
 Base probes on:
 
-- Discovery: color strategy, scene sentence, anchors, anti-goals
+- The **chosen** identity (metaphor, type, hex roles, hard rejects)
+- Discovery: scene sentence, anchors, anti-goals
 - Research: trends and patterns to adopt/avoid
 
 **Use native image generation** when the harness provides it. See **`reference/visual-tools.md`** for GenerateImage, Canvas, and when each is mandatory.
 
 After generating:
 
-- Ask which direction feels closest, what's off, what should carry forward
-- Do not treat images as final spec: they test lanes for the brief
+- Ask which **composition / density** feels closest within the locked identity
+- Do not treat images as final spec: they refine the brief, not reopen identity
 
 ## Phase B: Wireframes
 

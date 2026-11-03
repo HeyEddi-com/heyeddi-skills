@@ -27,11 +27,13 @@ Read the scoped source before choosing a look. Write `.heyeddi/designs/<feature>
 
 ## Redesign proposal
 
-After the audit, `@taste-penpot` replaces the look for the scoped pages. Product behavior, routes, and real copy stay. The current palette, type, and layout are a hard reject for that scope. "Existing system first" does not apply to the visual system on a from-scratch or redesign request.
+After the audit, run the **identity gate** (`references/identity-gate.md`) unless the user already pinned the new identity. Present **≥3** options grounded in the product (and the audit), then **stop until they choose**. Do not invent a single redesign look and draw it.
+
+Once identity is locked, `@taste-penpot` replaces the look for the scoped pages. Product behavior, routes, and real copy stay. The current palette, type, and layout are a hard reject for that scope. "Existing system first" does not apply to the visual system on a from-scratch or redesign request.
 
 Record the proposal in `.heyeddi/designs/<feature>/redesign.md`:
 
-- Five-line brief and token table for the new look
+- Chosen identity name + five-line brief and token table for the new look
 - Which pages change, and what stays
 - Quasar shell versus PrimeVue content versus `@layout-morph` or `@fancy-ui-craft` only where the page needs them
 - Penpot project and file for this app, and the boards to create (375, 768, 1440 for responsive pages)

@@ -7,22 +7,24 @@
 ## Pipeline
 
 ```
-discover → research → explore → brief → user confirms → hand off to craft
+identity gate (≥3 options → user picks)
+  → discover → research → explore → brief → user confirms → hand off to craft
 ```
 
 Load and follow each phase in order:
 
+0. **Identity gate (hard when unset):** Load `@taste-penpot` → `references/identity-gate.md`. If no pinned style and not refining an existing `design.md` identity: present **≥3** options (type, colours, metaphor) grounded in the project, **end the turn**, wait for A/B/C. Do not invent a look. Skip only when refine preserves an existing system or the user already pinned/chose an identity.
 1. `reference/discover.md`: discovery interview (personas if missing from product.md)
 2. `reference/research.md`: web trend research → `designs/<feature>/research.md` (**Audience fit** section required)
-3. `reference/explore.md`: concept images + wireframes + **visual tools** (`reference/visual-tools.md`)
+3. `reference/explore.md`: concept images + wireframes + **visual tools** (`reference/visual-tools.md`) — probes must match the **chosen** identity, not open a second identity contest
 4. Read `reference/audience-design.md`: pick direction row before writing brief
 4b. Read `reference/brief-language.md`: subject/metaphor, hard rejects, hero/type/accent/responsive/SSOT — adjective-only briefs are incomplete
 4c. Read `reference/design-ambition.md`: draft **Design signature** for flagship routes
 4d. Read `reference/aesthetic-direction.md`: subject/job, thesis hero, type, motion, one aesthetic risk; run two-pass uniqueness check before locking the brief
 5. **Brief** (below) → `designs/<feature>/brief.md`
-6. **Stop and wait** for explicit user confirmation
+6. **Stop and wait** for explicit user confirmation of the brief (separate from identity pick)
 
-User may opt out of research or explore with explicit consent: note skips in the brief.
+User may opt out of research or explore with explicit consent: note skips in the brief. They may **not** opt out of the identity gate when it applies.
 
 ## Design brief
 

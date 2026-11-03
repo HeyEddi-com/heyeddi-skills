@@ -1,14 +1,18 @@
 # Brief language: taste + subject + hard rejects (always on)
 
-**Date:** 2026-09-20
+**Date:** 2026-09-20 · **Updated:** 2026-11-02
 
 **Auto-load:** Read this file whenever the user talks about design, UI look/feel, marketing, heroes, dashboards, polish, critique, or "make it professional/clean/modern." Do **not** wait for them to say "brief" or "shape."
 
 Vague adjectives are not a brief. **Naming taste + subject + hard rejects up front** prevents the first ship from being "random framework + dark mode."
 
+## Identity choice gate (before this hard gate)
+
+If the user did **not** pin a style/brand and this is not a refine of an existing `design.md` identity: `@taste-penpot` must run **`references/identity-gate.md`** first — **≥3** project-grounded options (metaphor, type, named hex colours, hard rejects, why this product), then **stop until the user picks**. Do not craft, polish into a new look, or invent tokens on adjectives alone. Refine of an existing system skips that gate. After they choose, continue with the pins below using that identity.
+
 ## Hard gate (before pixels or craft)
 
-Pin all of these in chat or `brief.md` **before** inventing a look. If the user only said "professional" / "clean" / "modern," translate or ask — never ship on adjectives alone.
+Pin all of these in chat or `brief.md` **before** inventing a look. If the user only said "professional" / "clean" / "modern," run the identity gate (above) — never ship on adjectives alone.
 
 | Must name | Working language (adapt to product) |
 |-----------|-------------------------------------|
