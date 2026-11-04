@@ -1,5 +1,5 @@
 {
-  "version": "3.8.6",
+  "version": "3.8.7",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -125,11 +125,11 @@
     },
     {
       "name": "heyeddi-design",
-      "description": "ALWAYS-ON for design/UI/look talk: briefs with subject+hard rejects, critique, craft; 6-width done gate"
+      "description": "ALWAYS-ON for design/UI/look talk: briefs with subject+hard rejects, critique, craft; blocks handoff unless taste layout hard gates + 6-width done gate"
     },
     {
       "name": "taste-penpot",
-      "description": "General design skill: one-pass look and tokens. Penpot Flex (1D) or CSS Grid (2D). Code-to-design for redesigns. zcube Penpot MCP is optional designer output"
+      "description": "General design skill: one-pass look and tokens. Prefer @heyeddi/penpot-mcp-server Flex/Grid + nesting; hifi.html when MCP is absolute-only; text-wall reject; visual QA before done"
     },
     {
       "name": "heyeddi-local-first",

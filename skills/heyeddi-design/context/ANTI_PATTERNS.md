@@ -18,6 +18,8 @@
 - NEVER ship flagship routes that look like **the last project with a name swap**: define and implement **Design signature** per `reference/design-ambition.md`.
 - NEVER ship marketing/flagship UI that reads as **generic AI chrome** (template KPI hero, Inter-only type, fake 01/02/03, purple gradient SaaS, cream+terracotta default, scattered motion, boxed/inset heroes, opaque slabs over washes): follow `reference/aesthetic-direction.md` + `brief-language.md` and take **one justified aesthetic risk**.
 - NEVER call flagship/marketing **done** without `@visual-auditor --preset done` (6 widths) and fixing what you see; logo-off brand test must pass.
+- NEVER hand off or craft when `@taste-penpot` layout hard gates fail: text-wall cards, absolute MCP boards sold as Flex, missing `hifi.html` while MCP cannot Flex/nest, or no pixel review (`taste-penpot/references/layout-hard-gates.md`).
+- NEVER accept a Suite/settings/form design that is one multiline string in a gray rectangle: require separate fields on an 8px grid (human hi-fi bar).
 - NEVER put edge/link accent colors where they disappear on washed paper — edges must read on the plane.
 - NEVER treat "make it artistic / top notch / better design / redesign" as spacing-only polish: run critique ambition gate; escalate to `shape` when template-like or signature missing (`design-ambition.md`, `critique.md`).
 - NEVER answer redesign intent with hierarchy-unchanged token tweaks when the name-swap or scaffold test fails.

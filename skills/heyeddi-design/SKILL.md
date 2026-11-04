@@ -1,8 +1,8 @@
 ---
 name: heyeddi-design
-description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: ≥3 options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Screenshot gate still applies before done."
-version: 2.9.0
-product-version: 3.8.6
+description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: ≥3 options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Blocks handoff unless taste layout hard gates pass (no text-wall, hifi.html when MCP cannot Flex, visual QA). Screenshot gate still applies before done."
+version: 2.10.0
+product-version: 3.8.7
 author: HeyEddi-com
 ---
 
@@ -74,8 +74,9 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 3h. Read `reference/aesthetic-direction.md` on **any user-facing route**.
 3i. Read `context/PROSE_ANTI_SLOP.md` when writing **UI copy** in briefs or `design.md`.
 3j. Read `reference/visual-tools.md` during **`explore`**, **`shape`**, and **`critique`** on flagship routes: use **GenerateImage** for direction probes and **Canvas** for compare/brief/critique summaries when the IDE provides them.
+3k. Before **craft** / handoff: confirm `@taste-penpot` **layout hard gates** (`taste-penpot/references/layout-hard-gates.md`): no text-wall; Flex/Grid via `@heyeddi/penpot-mcp-server` **or** `.heyeddi/designs/<feature>/hifi.html` when MCP cannot nest; absolute boards not sold as Flex; taste CRITIQUE looked at pixels. Missing any gate → send back to taste. Do not invent a second look to paper over a text-wall.
 4. After **shape** (brief confirmed), **critique**, or **polish**, append to **Decision log** in `.heyeddi/design.md`.
-5. After stack implementer finishes: `@visual-auditor` **fast** widths `375,768,1440` while iterating. **Before calling done** on flagship/marketing: **done** widths `375,430,768,1024,1440,1920` (`--preset done`) and fix what you see. Logo-off test: if it could be another startup after removing the brand, it is not done.
+5. After stack implementer finishes: `@visual-auditor` **fast** widths `375,768,1440` while iterating. **Before calling done** on flagship/marketing: **done** widths `375,430,768,1024,1440,1920` (`--preset done`) and fix what you see. Logo-off test: if it could be another startup after removing the brand, it is not done. Design-only / Penpot passes still need taste Gate D (export or render hi-fi, read pixels) before calling the design done.
 
 ## Commands
 

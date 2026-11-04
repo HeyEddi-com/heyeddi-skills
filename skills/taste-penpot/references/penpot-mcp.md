@@ -2,38 +2,72 @@
 
 Load at the start of ACT when `design.penpot` is not `off`.
 
-Designer visuals use **only** `@zcubekr/penpot-mcp-server` (GitHub `zcube/penpot-mcp-server`). It talks to the Penpot API, can open more than one project, and can create files, pages, and frames. It does not need a browser tab.
+Designer visuals use **`@heyeddi/penpot-mcp-server`** (GitHub `HeyEddi-com/penpot-mcp-server`), the HeyEddi fork of `@zcubekr/penpot-mcp-server`. It talks to the Penpot API, nests children with `parentId`, and sets Flex/Grid via `set_frame_layout` / `create_frame` layout fields. It does not need a browser tab.
 
-A connected Penpot server counts only when its tools include `list_teams` and `create_frame` from that package.
+A connected Penpot server counts when its tools include `list_teams` and `create_frame`. Prefer the HeyEddi fork when `set_frame_layout` or `parentId` on create tools is present (hi-fi in Penpot). Upstream `@zcubekr/penpot-mcp-server` still works for absolute sketches only; then Gate C HTML remains mandatory.
 
-## Never use another Penpot MCP
+## Never use these Penpot MCPs
 
-These are the wrong servers. Do not call their tools, do not keep them as the `penpot` entry, and do not install them.
+Do not call their tools, do not keep them as the `penpot` entry, and do not install them.
 
 | Server | How it shows up | Tools that identify it |
 |---|---|---|
-| Unscoped npm `penpot-mcp-server` (Mart1M). `npx penpot-mcp-server` without `@zcubekr` installs this. | Default package name | `get_board`, `debug_board`, `get_tokens` |
+| Unscoped npm `penpot-mcp-server` (Mart1M). `npx penpot-mcp-server` without a scope installs this. | Default package name | `get_board`, `debug_board`, `get_tokens` |
 | Official plugin `@penpot/mcp` | Penpot's own MCP, plugin window, `http://localhost:4401/mcp` | `execute_code`, `high_level_overview`, `penpot_api_info` |
 | `penpot-api-mcp` | Older read-only server | read and export only |
 
-If one of those is the server named `penpot`, treat `@zcubekr/penpot-mcp-server` as missing and follow Install.
+If one of those is the server named `penpot`, treat the HeyEddi (or zcubekr) server as missing and follow Install.
 
 ## Install
 
-When `design.penpot` is not `off` and `list_teams` from `@zcubekr/penpot-mcp-server` is not in this session, stop and ask once:
+When `design.penpot` is not `off` and `list_teams` is not in this session, stop and ask once:
 
-> Penpot boards need `@zcubekr/penpot-mcp-server`. May I add it to this project's `.cursor/mcp.json`?
+> Penpot boards need `@heyeddi/penpot-mcp-server` (Flex/Grid + nesting). May I add it to this project's `.cursor/mcp.json`?
 
 Wait for an explicit yes. Do not write config, run `npx`, or enable a server before that yes. A missing server is not a reason to call the unscoped package or `@penpot/mcp`.
 
 On yes, merge this into the project `.cursor/mcp.json`. Keep every other server. If `penpot` already points at another package, replace that entry.
+
+Preferred (npm, after publish):
 
 ```json
 {
   "mcpServers": {
     "penpot": {
       "command": "npx",
-      "args": ["-y", "@zcubekr/penpot-mcp-server"],
+      "args": ["-y", "@heyeddi/penpot-mcp-server"],
+      "env": {
+        "PENPOT_API_URL": "https://design.penpot.app"
+      }
+    }
+  }
+}
+```
+
+Until npm publish, use GitHub:
+
+```json
+{
+  "mcpServers": {
+    "penpot": {
+      "command": "npx",
+      "args": ["-y", "github:HeyEddi-com/penpot-mcp-server"],
+      "env": {
+        "PENPOT_API_URL": "https://design.penpot.app"
+      }
+    }
+  }
+}
+```
+
+Local clone:
+
+```json
+{
+  "mcpServers": {
+    "penpot": {
+      "command": "node",
+      "args": ["/absolute/path/to/penpot-mcp-server/dist/index.js"],
       "env": {
         "PENPOT_API_URL": "https://design.penpot.app"
       }
@@ -50,22 +84,21 @@ On no, follow ACT 2.6 in `SKILL.md`. `design.penpot: off` skips this section. Do
 
 ## Tools for this skill
 
-Trust the live tool schema if a name differs. These names belong to `@zcubekr/penpot-mcp-server`.
+Trust the live tool schema if a name differs.
 
 | Tool | Use |
 |------|-----|
-| `list_teams` | See which teams the token can access. Confirms this is the zcubekr server. |
-| `list_projects` | List projects. Pick the one for this app. |
-| `search_projects` | Find a project by name when the list is long. |
-| `list_files` | Files in the chosen project. |
-| `get_file` | Read a file before adding boards. |
-| `create_project` | Only when this app has no project yet. |
-| `create_file` | A file for this feature when none exists. |
-| `add_page` | One page per flow in scope. |
-| `create_frame` | A board at 375, 768, or 1440. |
-| `create_text` | Real copy. Label placeholders. |
-| `create_rectangle` | Regions that map to Quasar shell or PrimeVue content. |
-| `export_shape` | PNG of the board for the critique pass. |
+| `list_teams` | Confirms API MCP access. |
+| `list_projects` / `search_projects` | Pick the app project. |
+| `list_files` / `get_file` | Read before writing boards. |
+| `create_project` / `create_file` / `add_page` | Scope containers. |
+| `create_frame` | Board at 375 / 768 / 1440. Pass `layout: "flex"` or `"grid"` plus gap/padding/dir when using HeyEddi. |
+| `create_text` / `create_rectangle` / `create_circle` | Pass **`parentId`** of the board. Separate nodes per field (no text-wall). Set `layoutItemHSizing` / `layoutItemVSizing`. |
+| `set_frame_layout` | Enable Flex/Grid on an existing board (HeyEddi). |
+| `set_layout_item` | Fit / Fill / Fix a child (HeyEddi). |
+| `reparent_shape` | Move a shape under a board (HeyEddi). |
+| `update_shape` | Position, style, and layout fields. |
+| `export_shape` | PNG for CRITIQUE / Gate D. |
 
 ## Several projects
 
@@ -77,10 +110,18 @@ Do not call `delete_project`, `delete_file`, `delete_team`, `delete_page`, or `d
 
 ## Record
 
-Also write `.heyeddi/designs/<feature>/penpot-demo.md` with the project name, file name, board names, widths, and token roles (`--app-bg`, `--app-surface-card`, `--app-text-main`, `--q-primary` from `--p-primary-color`). Include the layout-engine table from `references/flex-grid.md` (Flex or Grid, tracks or direction, gap, child `fix` / `fill` / `auto`). The file is the handoff if the MCP disconnects. Inspect CSS from those frames is the implementation spec.
+Write `.heyeddi/designs/<feature>/penpot-demo.md` with project, file, board names, widths, token roles, and the layout-engine table from `references/flex-grid.md`. If Flex/Grid was set via MCP, mark boards **hi-fi / Flex** (or Grid). If only absolute geometry exists, mark **low-fi / absolute sketch**.
 
-`create_frame` does not set flex or grid. When the live schema grows those fields, use the file-format names in `references/flex-grid.md` (`layoutItemHSizing`, `layoutGridColumns`, cell `row` / `column` / `rowSpan`). A divider on a board or rectangle is a per-side stroke (`references/strokes-and-tokens.md`): `strokeWidthBottom` and the other sides at 0, not a 1px child. `create_frame` still sends one `strokeWidth` until the schema has the side fields. Do not call `@penpot/mcp` to run `penpot.createBoard()`.
+A divider on a board or rectangle is a per-side stroke (`references/strokes-and-tokens.md`). Do not call `@penpot/mcp`.
 
-## Fallback
+## Text on boards (no walls)
 
-Use ACT 2.6 only when `design.penpot` is `off`, or the user declined the install. Implementation still follows `@vue-design-system`.
+Prefer many `create_text` / `create_rectangle` calls nested with `parentId` on an **8px grid** (separate label, value, helper, CTA) over one multiline string in a gray card. Text-wall is a hard reject (`references/layout-hard-gates.md` Gate A).
+
+## Hi-fi path
+
+1. **HeyEddi MCP with Flex/nest** (`set_frame_layout` or `layout` on `create_frame` + `parentId` children): build real Flex/Grid boards → `export_shape` → Gate D. HTML ACT 2.6 is optional backup, not required.
+2. **Upstream zcubekr only (absolute):** boards are low-fi; ACT 2.6 `hifi.html` is **mandatory** (Gate C).
+3. **`design.penpot` off or install declined:** ACT 2.6 only.
+
+Implementation still follows `@vue-design-system`. Full reject rules: `references/layout-hard-gates.md`.

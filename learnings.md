@@ -1156,3 +1156,35 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** Ship design identity gate (`taste-penpot` v1.3.0, `heyeddi-design` v2.9.0).
 
 **Decision:** Hub **v3.8.6**. Design pack **v1.2.5**. CI pack unchanged at 1.4.5.
+
+## 2026-11-04 — Layout hard gates (hi-fi bar for taste + design)
+
+**Context:** Suite / settings passes shipped "words in a gray rectangle" because (1) `@zcubekr/penpot-mcp-server` only places absolute frames/rects/text (no Flex, no nest), and (2) agents treated connected MCP as done, skipped ACT 2.6 HTML, skipped separate field rows on an 8px grid, and skipped visual QA.
+
+**Decision:** Hub **v3.8.7**. Design pack **v1.2.6**. CI pack unchanged at 1.4.5.
+- `@taste-penpot` **v1.4.0** owns `references/layout-hard-gates.md`:
+  - Gate A text-wall reject (separate fields on 8px grid)
+  - Gate B absolute MCP ≠ Flex claim (boards are low-fi sketches)
+  - Gate C ACT 2.6 `hifi.html` **mandatory** while MCP cannot Flex/nest (connected MCP does not waive)
+  - Gate D visual QA before done (export/render, read pixels, CRITIQUE)
+- `@heyeddi-design` **v2.10.0** blocks craft/handoff when those gates fail (`craft.md` prerequisite 5, setup 3k, ANTI_PATTERNS, surface-completeness settings/suite rows)
+- `@heyeddi` router points at the same bar
+- `@heyeddi-handoff` **v1.4.1** prefers `hifi.html` for Implementation CSS; rejects text-wall briefs
+
+**Process:** Taste PLAN → ACT (optional low-fi MCP + required `hifi.html`) → CRITIQUE on pixels → heyeddi-design records → handoff copies CSS from hi-fi / real Inspect, never from absolute geometry.
+
+**Verify:** Re-read gates on next settings/suite design; refuse text-wall before handoff.
+
+## 2026-11-04 — HeyEddi Penpot MCP fork (Flex/Grid + nesting)
+
+**Context:** Layout hard gates required `hifi.html` because `@zcubekr/penpot-mcp-server` only placed absolute frames/rects/text (always parented to the page root). Penpot's update-file API already supports `layout` / `layoutFlexDir` / `layoutItemHSizing` and `parentId` nesting.
+
+**Decision:**
+- New public repo [`HeyEddi-com/penpot-mcp-server`](https://github.com/HeyEddi-com/penpot-mcp-server) (`@heyeddi/penpot-mcp-server` **v1.1.0**): fork of zcube + `parentId` on create_*, `set_frame_layout`, `set_layout_item`, `reparent_shape`, layout fields on `update_shape`
+- `@taste-penpot` **v1.5.0**: prefer HeyEddi MCP; Gate C HTML waived when Flex/nest is live; still reject text-walls + require visual QA
+- Install until npm publish: `npx -y github:HeyEddi-com/penpot-mcp-server`
+- Design pack **v1.2.7**
+
+**Process:** Install HeyEddi MCP → create_frame with `layout: flex` → create_text/rect with `parentId` + Fit/Fill → export_shape → CRITIQUE. Upstream zcubekr alone still forces ACT 2.6.
+
+**Notes:** npm publish needs org auth (`npm login` for `@heyeddi`). Local path `node …/dist/index.js` also works.
