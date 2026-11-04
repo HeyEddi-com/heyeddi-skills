@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST present ≥3 project-grounded identity options (type, colours, metaphor) and wait for the user to choose before tokens or pixels. Layouts use Penpot Flex (1D) or CSS Grid (2D). A redesign or from-scratch request analyzes the app first (references/code-to-design.md). Penpot boards use only @zcubekr/penpot-mcp-server; install after user approval when missing. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
-version: 1.3.0
-product-version: 3.8.6
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST present ≥3 project-grounded identity options (type, colours, metaphor) and wait for the user to choose before tokens or pixels. Layouts use Penpot Flex (1D) or CSS Grid (2D) via @heyeddi/penpot-mcp-server (parentId + set_frame_layout). Hard gates: reject text-walls; absolute-only MCP is low-fi and needs hifi.html; visual QA before done. Redesign/from-scratch uses references/code-to-design.md. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
+version: 1.5.0
+product-version: 3.8.7
 author: HeyEddi-com
 ---
 
@@ -11,11 +11,13 @@ author: HeyEddi-com
 General design skill. You are the design director on this task. Your job is to
 make interfaces that feel authored for this product and this audience, not
 assembled from the category's defaults. The look is a written system of tokens
-and a layout. Penpot is only the designer visual: boards and demo exports when
-`@zcubekr/penpot-mcp-server` is connected. When it is missing and
-`design.penpot` is not `off`, ask once and install it only after the user
-says yes (`references/penpot-mcp.md`). The written spec and HTML+CSS are what
-`@heyeddi-design` records when Penpot stays off. Code follows `@vue-design-system`.
+and a layout. Penpot is the designer visual: boards and demo exports when
+`@heyeddi/penpot-mcp-server` is connected (Flex/Grid + `parentId` nesting). When
+it is missing and `design.penpot` is not `off`, ask once and install it only
+after the user says yes (`references/penpot-mcp.md`). Upstream
+`@zcubekr/penpot-mcp-server` is absolute-only; then ACT 2.6 HTML is required.
+The written spec and HTML+CSS are what `@heyeddi-design` records when Penpot
+stays off. Code follows `@vue-design-system`.
 
 ## Team
 
@@ -26,7 +28,27 @@ says yes (`references/penpot-mcp.md`). The written spec and HTML+CSS are what
 | `@vue-design-system` | How the look is built in Vue 3 or a CLI. It does not choose a second look. |
 | `@heyeddi` | Routes design talk here first, then to `@heyeddi-design`. |
 
-`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto`, `on`, and a missing key use `@zcubekr/penpot-mcp-server` (`list_teams`, `create_frame`). If that server is missing, ask once and install it into `.cursor/mcp.json` only after an explicit yes, then continue. `off` skips Penpot and does not ask. A no on the install falls through to ACT 2.6 and does not block the look. The unscoped npm package `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), and `penpot-api-mcp` are never a connection.
+`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto`, `on`, and a missing key use `@heyeddi/penpot-mcp-server` (`list_teams`, `create_frame`, prefer `set_frame_layout` / `parentId`). If that server is missing, ask once and install it into `.cursor/mcp.json` only after an explicit yes, then continue. `off` skips Penpot and does not ask. A no on the install falls through to ACT 2.6 and does not block the look. The unscoped npm package `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), and `penpot-api-mcp` are never a connection.
+
+### Penpot MCP install (HeyEddi)
+
+Full contract: `references/penpot-mcp.md`. Hard gates: `references/layout-hard-gates.md`.
+
+```json
+{
+  "mcpServers": {
+    "penpot": {
+      "command": "npx",
+      "args": ["-y", "github:HeyEddi-com/penpot-mcp-server"],
+      "env": {
+        "PENPOT_API_URL": "https://design.penpot.app"
+      }
+    }
+  }
+}
+```
+
+After npm publish, prefer `"args": ["-y", "@heyeddi/penpot-mcp-server"]`. Keep `PENPOT_ACCESS_TOKEN` in the env Cursor passes to the server; never write it into `mcp.json` or chat. Hi-fi path: `create_frame` with `layout` + children with `parentId` + `set_frame_layout` / `set_layout_item` as needed, then `export_shape`. Absolute-only upstream zcubekr still requires ACT 2.6 `hifi.html`.
 
 Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present — **after**
 the identity is locked. Never ask the user to invoke a command.
@@ -63,7 +85,7 @@ Ground rules that override everything else:
   apply when the user asked to redesign, start from scratch, or replace the
   look. Then the current visual system is a hard reject for the pages in scope.
   Routes, behavior, and real copy stay. Load `references/code-to-design.md`
-  before PLAN. Penpot is `@zcubekr/penpot-mcp-server` in `references/penpot-mcp.md`.
+  before PLAN. Penpot is `@heyeddi/penpot-mcp-server` in `references/penpot-mcp.md`.
   It is not required to finish the look.
 - **Vue design system.** Express every decision as a named token and a value,
   then map it through `@aura-design-tokens` (`--app-*`, `--p-*`, `--q-*`).
@@ -86,6 +108,10 @@ Deeper rules live in references. Load them when the pass needs them:
 - `references/flex-grid.md`: Penpot Flex (Shift+A) for one direction, CSS Grid
   (Ctrl/Cmd+Shift+A) for rows and columns together. Load during PLAN whenever
   the surface has structure, and in ACT when writing boards or the HTML fallback.
+- `references/layout-hard-gates.md`: **reject rules** for text-walls, absolute≠Flex
+  claims, mandatory `hifi.html` while MCP cannot Flex/nest, and visual QA before
+  done. Load at ACT start and before claiming done. Hi-fi bar = human settings/
+  form craft, not a copy paste in a gray rectangle.
 - `references/strokes-and-tokens.md`: Penpot 2.19 per-side strokes and shared
   token libraries. Load when a board or rectangle has a border, a divider, or
   a token binding.
@@ -95,11 +121,10 @@ Deeper rules live in references. Load them when the pass needs them:
   redesign for the whole product, some pages, or one page. Load before PLAN
   when the user wants a redesign or a from-scratch look. Do not edit Vue in
   that pass.
-- `references/penpot-mcp.md`: `@zcubekr/penpot-mcp-server` only. Several
-  projects, create files and frames. Load at the start of ACT when
-  `design.penpot` is not `off`. Install that package after user approval when
-  `list_teams` is missing. Never load unscoped `penpot-mcp-server`, `@penpot/mcp`,
-  or `penpot-api-mcp`.
+- `references/penpot-mcp.md`: `@heyeddi/penpot-mcp-server` (Flex/Grid + nesting).
+  Load at the start of ACT when `design.penpot` is not `off`. Install after user
+  approval when `list_teams` is missing. Never load unscoped `penpot-mcp-server`,
+  `@penpot/mcp`, or `penpot-api-mcp`.
 
 ---
 
@@ -156,7 +181,7 @@ Before choosing a single value, read what the file already owns (see
 - If a system exists and the user did not ask to replace it: the plan
   **extends** it. List which tokens and components you will reuse.
 - If nothing exists: the plan **creates** a compact system (below).
-- If `@zcubekr/penpot-mcp-server` is not connected: follow Install in
+- If `@heyeddi/penpot-mcp-server` is not connected: follow Install in
   `references/penpot-mcp.md`. A declined install produces a written spec and
   plain HTML+CSS (ACT 2.6). Do not read boards through another Penpot server.
 
@@ -213,30 +238,37 @@ into the plan. If none are given, use the mode's defaults.
 
 ### 2.1 Connect (Penpot MCP)
 
-1. Read `references/penpot-mcp.md`.
-2. Use the `penpot` server only when it is `@zcubekr/penpot-mcp-server`:
-   `list_teams`, `list_projects`, `list_files`, `get_file`, `create_file`,
-   `add_page`, `create_frame`, `create_text`, `create_rectangle`, `export_shape`.
+1. Read `references/penpot-mcp.md` and `references/layout-hard-gates.md`.
+2. Use the `penpot` server when it is `@heyeddi/penpot-mcp-server` or compatible
+   API MCP with `list_teams` + `create_frame`. Prefer HeyEddi tools:
+   `set_frame_layout`, `parentId`, `set_layout_item`, `reparent_shape`,
+   `create_text`, `create_rectangle`, `export_shape`.
 3. If `list_teams` is missing, or the connected server is unscoped
    `penpot-mcp-server`, `@penpot/mcp`, or `penpot-api-mcp`, follow Install in
-   `references/penpot-mcp.md`. Do not call those other servers. Go to 2.6 only
-   after the user declines, or when `design.penpot` is `off`.
+   `references/penpot-mcp.md`. Do not call those other servers. Skip boards and
+   go straight to 2.6 after the user declines, or when `design.penpot` is `off`.
+4. Detect capacity: if `set_frame_layout` or `create_frame` accepts `layout` and
+   creates accept `parentId` (HeyEddi fork), build **hi-fi Flex/Grid boards** and
+   nest children. If only absolute create_* exists (upstream zcubekr), boards are
+   **low-fi** and **2.6 `hifi.html` is mandatory**.
 
 ### 2.2 Read and export
 
 - `list_projects` → `list_files` → `get_file` for the app's project.
-- Create the missing page and frames for the scope, then `export_shape` and look at the PNG.
+- Create the missing page and frames for the scope (optional low-fi), then
+  `export_shape` and **read** the PNG (Gate D).
 - On a redesign, the current palette is not reusable. Summarize what stays
   (routes, copy, behavior) and what the new boards replace.
 
-### 2.3 Demo brief for the designer
+### 2.3 Demo brief + boards (low-fi when absolute)
 
-Create the boards with the Penpot MCP, and also write
+Create optional MCP boards, and always write
 `.heyeddi/designs/<feature>/penpot-demo.md` so the handoff survives if the
 server disconnects.
 
 - One board per flow, named for handoff (`screens/pricing`,
   `screens/settings/billing`), at 375, 768, and 1440 when the surface is responsive.
+- Label boards **low-fi / absolute sketch** when Flex was not set on the frame.
 - Token roles mapped to the Aura bridge: `--app-bg`, `--app-surface-card`,
   `--app-border`, `--app-text-main`, `--app-text-muted`, `--q-primary` from
   `--p-primary-color`.
@@ -247,15 +279,18 @@ server disconnects.
   frame: drawer width and header height are the fixed grid tracks. Page
   interiors use the named engine. If the live MCP schema can set flex or grid,
   set it on the frame. Otherwise the demo brief is the Shift+A / Ctrl+Shift+A
-  instruction, and Inspect CSS is what handoff copies.
+  instruction for a human in Penpot, and **implementation CSS comes from 2.6**.
+- **No text-walls (Gate A):** never one multiline string per card. Place separate
+  labels, fields, helpers, and CTAs on the **8px grid** (many `create_text` /
+  `create_rectangle` calls). Operate surfaces must read as a settings/form UI.
 - Real copy. Label synthetic content as placeholder.
 - Do not delete projects, files, pages, or shapes unless the user named that
   exact target. A redesign adds the boards in scope.
 
 ### 2.4 What the designer receives
 
-1. The export image from the board you created or updated.
-2. The demo brief.
+1. The hi-fi HTML (2.6) and/or export image after Flex is real.
+2. The demo brief (low-fi vs hi-fi clearly marked).
 3. The five-line brief and the token table.
 
 ### 2.5 Safety
@@ -265,33 +300,47 @@ in scope. State that palette in the proposal and continue. For any other task,
 state a palette replacement in two or three lines and ask once if the request
 did not cover it. Never delete a library asset unless the user named it.
 
-### 2.6 Fallback when Penpot is not connected
+### 2.6 Hi-fi HTML (when MCP cannot Flex)
+
+**Required** when Flex/Grid cannot be set or children cannot nest (`parentId`
+missing), when `design.penpot` is `off`, or when the user declined install.
+**Optional** when `@heyeddi/penpot-mcp-server` already built Flex/Grid boards
+with nested field rows and Gate D passed. Connected absolute-only MCP does
+**not** skip this step.
 
 Produce, in this order: the five-line brief; the token table mapped to
 `--app-*` roles; a short layout spec per section or screen with an ASCII
 wireframe; component states split into Quasar shell and PrimeVue data; the
-motion presets; then, if useful, a single self-contained HTML file with those
-custom properties, semantic elements, no external dependencies, and a
-reduced-motion media query. Layout CSS is the Flex or Grid spec from
-`references/flex-grid.md` (`display`, `gap`, tracks, Fit / Fill / Fix). Tell
-the user the tokens are ready for a Penpot demo brief once
-`@zcubekr/penpot-mcp-server` is connected.
+motion presets; then a self-contained HTML file at
+`.heyeddi/designs/<feature>/hifi.html` (add width variants if needed) with those
+custom properties, semantic elements, **separate field rows** (no text-walls),
+no external dependencies, and a reduced-motion media query. Layout CSS is the
+Flex or Grid spec from `references/flex-grid.md` (`display`, `gap`, tracks,
+Fit / Fill / Fix). That CSS is what handoff copies. Full reject rules:
+`references/layout-hard-gates.md`.
+
+If Penpot was skipped, tell the user the tokens are ready for a Penpot demo
+brief once `@heyeddi/penpot-mcp-server` is connected.
 
 ---
 
 ## 3. CRITIQUE
 
-Run silently on the result (the exported board, or the rendered HTML when you
-have a way to view it). Score each line 0–2 (0 = fails, 1 = acceptable,
-2 = strong). Fix every 0, then fix the cheapest 1s. Do one fix round, re-check
-once, and stop; open-ended polishing wastes the user's time.
+**Hard stop:** do not present or hand off until Gates A-D in
+`references/layout-hard-gates.md` pass. Run silently on the **hi-fi** result
+(rendered `hifi.html`, and/or exported board after real Flex). Score each line
+0-2 (0 = fails, 1 = acceptable, 2 = strong). Fix every 0, then fix the cheapest
+1s. Do one fix round, re-check once, and stop; open-ended polishing wastes the
+user's time. **You must look at pixels** (Read PNG / screenshot). Shipping
+without visual QA is a process fail.
 
 | # | Check | Pass looks like |
 |---|---|---|
+| 0 | **Hard gates** | No text-wall; absolute boards not sold as Flex; `hifi.html` exists when MCP cannot Flex; pixels reviewed (`layout-hard-gates.md`). Any fail = score 0 and stop. |
 | 1 | **Specificity** | Cover the product name: it still could not be any other product. Not in a calibration cluster (anti-slop.md). |
 | 2 | **Mode fit** | Persuade: offer clear, action visible in its working form, proof shown. Operate: a regular user knows where everything is before noticing style. Read: comfortable column, clear wayfinding. Experience: the work leads. |
 | 3 | **Hierarchy** | Squint test: primary, secondary and groups readable in order; one focal point per view. |
-| 4 | **Layout and rhythm** | Grouping by proximity; tight inside groups, generous between; more space above headings than below; no monotone grid of identical cards. 1D regions are Flex; 2D regions are CSS Grid (`references/flex-grid.md`). Fit / Fill / Fix is explicit. Inspect CSS matches the spec. |
+| 4 | **Layout and rhythm** | Grouping by proximity; tight inside groups, generous between; more space above headings than below; no monotone grid of identical cards. 1D regions are Flex; 2D regions are CSS Grid (`references/flex-grid.md`). Fit / Fill / Fix is explicit. Hi-fi CSS matches the spec. |
 | 5 | **Typography** | Role scale with visible steps; weight and colour carry hierarchy too; body ≥16px, measure 45–75ch; display ≤ about 96px, tracking not tighter than -0.04em; balanced headings. |
 | 6 | **Colour** | Strategy matches plan; every colour has a role; accent reserved for action/selection/state; secondary text on coloured grounds tinted from that hue, never grey. |
 | 7 | **Contrast and access** | Body ≥4.5:1, large text and controls ≥3:1; colour never the only signal; targets ≥44×44px (40 minimum); visible focus. |
@@ -299,11 +348,11 @@ once, and stop; open-ended polishing wastes the user's time.
 | 9 | **Animation spec** | One authored moment at most (none for routine Operate screens); spatial motion uses a `@motion-physics` spring preset; reduced-motion path exists. |
 | 10 | **Copy** | Product's own words; actions say verb + object; errors say what failed and how to recover; no hype clichés; no invented claims. |
 | 11 | **Anti-slop** | Zero items from the refuse list unless the brief explicitly asked for them. |
-| 12 | **Penpot hygiene** | API MCP export or an honest "not connected" fallback; demo brief names boards and Aura token roles; dividers are per-side strokes (`references/strokes-and-tokens.md`), not 1px rectangles; nothing outside scope is in the brief. |
+| 12 | **Penpot / hi-fi hygiene** | Low-fi MCP boards labelled as such; `hifi.html` or real Flex Inspect CSS; demo brief names boards and Aura token roles; dividers are per-side strokes (`references/strokes-and-tokens.md`), not 1px rectangles; nothing outside scope is in the brief. |
 
 Then present, briefly:
 
-1. What you exported or specified, and which Penpot file and boards.
+1. What you shipped as hi-fi (`hifi.html` path and/or Flex boards), plus any low-fi MCP sketches.
 2. The five-line brief and the key decisions (two to five lines).
 3. What the demo brief asks the designer to add (colours, type roles, boards).
 4. Placeholders to replace with real material.
@@ -333,10 +382,10 @@ This skill is an original composition that adapts and condenses material from:
 - **taste-skill** (minimalist-skill, soft-skill) by Leonxlnx,
   https://github.com/Leonxlnx/taste-skill, MIT License. Adapted: copy-cliché and
   placeholder bans, restraint and performance notes.
-- Penpot boards use `@zcubekr/penpot-mcp-server`
-  (https://github.com/zcube/penpot-mcp-server) to list projects and create
-  boards. The unscoped npm package and the plugin MCP
-  (https://help.penpot.app/mcp/) are not used.
+- Penpot boards use `@heyeddi/penpot-mcp-server`
+  (https://github.com/HeyEddi-com/penpot-mcp-server), a fork of
+  `@zcubekr/penpot-mcp-server` with Flex/Grid and nesting. The unscoped npm
+  package and the plugin MCP (https://help.penpot.app/mcp/) are not used.
 
 NOTICE: This product includes material derived from Impeccable
 (Copyright 2025 Paul Bakaus), licensed under the Apache License, Version 2.0

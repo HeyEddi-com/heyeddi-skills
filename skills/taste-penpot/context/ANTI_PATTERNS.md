@@ -6,8 +6,14 @@
 - NEVER present three hue swaps of the same world and call them identities.
 - NEVER invent a second palette after `@heyeddi-design` already has tokens from this pass.
 - NEVER require Penpot when `design.penpot` is `off`. Write the spec and HTML+CSS.
-- NEVER call unscoped `penpot-mcp-server`, `@penpot/mcp`, or `penpot-api-mcp`. The only Penpot server is `@zcubekr/penpot-mcp-server`.
-- NEVER install or enable that server without an explicit yes. A missing server means ask once (`references/penpot-mcp.md`), then wait.
+- NEVER call unscoped `penpot-mcp-server`, `@penpot/mcp`, or `penpot-api-mcp`. Prefer `@heyeddi/penpot-mcp-server` (Flex/Grid + nesting); upstream `@zcubekr/penpot-mcp-server` is absolute-only fallback.
+- NEVER install or enable a Penpot server without an explicit yes. A missing server means ask once (`references/penpot-mcp.md`), then wait.
+- NEVER skip `parentId` nesting and `set_frame_layout` when the HeyEddi MCP exposes them: that is the hi-fi Penpot path.
 - NEVER override a pinned brief with taste or with the Anthropic refuse list.
 - NEVER fake a stack or a page skeleton with absolutely positioned rectangles. 1D flow is Flex. 2D tracks are CSS Grid (`references/flex-grid.md`). Absolute position is for a badge, close icon, or tooltip that must leave the flow.
 - NEVER fake a divider, a card separator, or a tab indicator with a 1px rectangle inside a flex column. On a board or rectangle that is a per-side stroke (`references/strokes-and-tokens.md`).
+- NEVER ship a **text-wall**: one multiline string (or one HTML blob) inside a gray card instead of separate labels, fields, helpers, and CTAs on an 8px grid (`references/layout-hard-gates.md` Gate A).
+- NEVER claim Flex/Grid or Inspect CSS from absolute MCP frames. Those boards are low-fi sketches only (Gate B).
+- NEVER skip ACT 2.6 `hifi.html` because Penpot MCP was connected. While MCP cannot set Flex/nest children, HTML hi-fi is mandatory (Gate C).
+- NEVER call the pass done without visual QA: export or render hi-fi, **read the pixels**, run CRITIQUE, fix zeros (Gate D).
+- NEVER hand off to `@heyeddi-design` / `@heyeddi-handoff` with any Gate A–D unchecked.

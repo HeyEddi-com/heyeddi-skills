@@ -29,7 +29,7 @@ File and plugin fields, boards and rectangles only:
 
 Setting a per-side width on any other shape is a validation error. A uniform stroke token applied before the per-side toggle is applied to every side. After that, one side can take a different token. Token properties are `strokeWidth`, `strokeWidthTop`, `strokeWidthRight`, `strokeWidthBottom`, `strokeWidthLeft`. Apply with `applyToken(token, ["strokeWidthBottom"])`. Application is by token **name**. The active set and theme decide the value.
 
-`create_frame` on `@zcubekr/penpot-mcp-server` still sends one `strokeWidth` number and `strokeAlignment: center`. When the live schema has the per-side fields, set those. Until then, write the four widths in `penpot-demo.md` and in the CSS fallback. Do not call `@penpot/mcp` to run `penpot.createBoard()`.
+`create_frame` on `@heyeddi/penpot-mcp-server` (and upstream zcubekr) still sends one `strokeWidth` number and `strokeAlignment: center`. When the live schema has the per-side fields, set those. Until then, write the four widths in `penpot-demo.md` and in the CSS fallback. Do not call `@penpot/mcp` to run `penpot.createBoard()`.
 
 Per-side strokes render on Penpot's WebGL canvas. If that renderer is off, the canvas falls back and the sides will not match Inspect. That switch is a user setting. Do not try to toggle it through the API server.
 

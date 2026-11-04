@@ -10,8 +10,14 @@ Read **`reference/implement-routing.md`** first.
 2. **`design.md` exists** — run `document` if missing.
 3. Run `load_context.py`: read `product.md` + `design.md`. Stop on `audience_blocker`.
 4. Brief **Audience** + **Design signature** sections filled.
+5. **Taste layout hard gates** (`@taste-penpot` `references/layout-hard-gates.md`):
+   - No text-wall mockups (multiline paste in a gray card ≠ settings/form UI)
+   - `.heyeddi/designs/<feature>/hifi.html` exists when Penpot MCP cannot set Flex/nest (required today), **or** Penpot boards have real Flex/Grid (Shift+A) with Inspect CSS
+   - `penpot-demo.md` (if present) labels absolute MCP boards as low-fi
+   - Taste CRITIQUE reviewed pixels (export or rendered hi-fi)
+   - Implementation spec CSS comes from `hifi.html` or real Inspect CSS, not from absolute geometry guesses
 
-If no brief, **stop and run `shape`**.
+If no brief, **stop and run `shape`**. If gate 5 fails, **stop and send back to `@taste-penpot` ACT 2.6 / CRITIQUE**. Do not hand off a text-wall.
 
 ## Steps (design skill)
 

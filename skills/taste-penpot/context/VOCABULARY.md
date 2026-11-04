@@ -3,7 +3,7 @@
 - **Taste:** this skill. One PLAN → ACT → CRITIQUE pass. Owns look and tokens.
 - **frontend-design:** Anthropic's short design note, vendored under `third-party/frontend-design/` (Apache-2.0). Loaded during PLAN.
 - **Identity gate:** When no style is pinned, present ≥3 project-grounded identities (metaphor, type, hex colours) and wait for A/B/C before tokens (`references/identity-gate.md`).
-- **Penpot:** optional designer boards. Controlled by `.heyeddi/stack.json` `design.penpot` (`auto` | `on` | `off`). Server is `@zcubekr/penpot-mcp-server` only. Install it after user approval when `list_teams` is missing. Unscoped `penpot-mcp-server` and `@penpot/mcp` are the wrong servers.
+- **Penpot:** optional designer boards. Controlled by `.heyeddi/stack.json` `design.penpot` (`auto` | `on` | `off`). Prefer `@heyeddi/penpot-mcp-server` (Flex/Grid + `parentId`; install via `github:HeyEddi-com/penpot-mcp-server` until npm). Upstream `@zcubekr/penpot-mcp-server` is absolute-only. Install after user approval when `list_teams` is missing. Unscoped `penpot-mcp-server` and `@penpot/mcp` are the wrong servers.
 - **Flex layout:** Penpot's 1D engine (Shift+A). Rows, columns, wrap, Fit / Fill / Fix. Same CSS as `display: flex`.
 - **CSS Grid layout:** Penpot's 2D engine (Ctrl/Cmd+Shift+A). Tracks in `fr`, `px`, `auto`, or `minmax`. Same CSS as `display: grid`.
 - **Per-side stroke:** Penpot 2.19. Boards and rectangles set `strokeWidthTop`, `strokeWidthRight`, `strokeWidthBottom`, `strokeWidthLeft`. Inspect CSS is `border-*-width`. See `references/strokes-and-tokens.md`.

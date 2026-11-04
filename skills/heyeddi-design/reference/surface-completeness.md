@@ -99,12 +99,13 @@ Use these as **completeness prompts**: not separate skill files. Combine with di
 | Archetype | Users also expect… |
 |-----------|-------------------|
 | **Sign-in / sign-up** | Forgot password, remember me, sign-up or invite copy, SSO row for team apps, legal footer if public |
-| **Settings / profile** | Section cards, helpers per field, save/discard, validation, danger zone separated |
+| **Settings / profile** | Section cards, **one control per row** (label + field + helper + trailing action), 8px grid rhythm, save/discard, validation, danger zone separated. **Reject** a card that is only a multiline text dump ("text-wall"). |
 | **List / index** | Search/filter, empty state, pagination or load more, row actions, create button |
 | **Detail / view** | Edit, back, status badge, related links, delete with confirm |
 | **Dashboard** | Shell (nav), page header, card grid, empty widgets, date range or refresh |
 | **Onboarding / empty** | Clear next step, illustration or icon, single CTA, skip if optional |
-| **Form (create/edit)** | Required markers, field help, cancel, submit loading, unsaved warning if long |
+| **Form (create/edit)** | Required markers, field help, cancel, submit loading, unsaved warning if long; separate nodes per field on 8px grid (same text-wall reject) |
+| **Suite / multi-panel** | Each panel is real UI chrome (tabs/nav + field rows), not pasted copy blocks; hi-fi via `@taste-penpot` `hifi.html` when Penpot MCP cannot Flex |
 
 If the surface doesn't match one row, **invent a checklist** in the brief using the audit sections above.
 

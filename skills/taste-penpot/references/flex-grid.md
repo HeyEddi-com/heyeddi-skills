@@ -76,9 +76,9 @@ In `.heyeddi/designs/<feature>/penpot-demo.md`, and in the Layout section of `.h
 | Cards | Grid | `repeat(auto-fit, minmax(250px, 1fr))` | row and column gap 16 | card fill |
 ```
 
-If the live `@zcubekr/penpot-mcp-server` schema can set flex or grid on a frame, set it with the names in **File format** below. `create_frame` today sets geometry, fill, and radius only. It does not take `layoutChild` or grid tracks. When those fields are absent, the table above is the instruction for **Shift + A** or **Ctrl/Cmd + Shift + A**. Do not switch to `@penpot/mcp` or `execute_code` to call `penpot.createBoard()`. The HTML fallback in ACT 2.6 uses the same `display`, `gap`, tracks, and child sizing. No external CSS.
+Prefer `@heyeddi/penpot-mcp-server`: set Flex/Grid with `layout` / `set_frame_layout` and nest children with `parentId` (file-format names below). Upstream `@zcubekr/penpot-mcp-server` still creates absolute geometry only; those boards are **low-fi sketches** and ACT 2.6 `hifi.html` is mandatory (`references/layout-hard-gates.md` Gate C). Humans can still apply **Shift + A** / **Ctrl/Cmd + Shift + A** in the Penpot UI. Do not switch to `@penpot/mcp` or `execute_code`. HTML fallback uses the same `display`, `gap`, tracks, and child sizing. No external CSS.
 
-Inspect in Penpot emits production CSS (`display: flex; gap: 16px` or `display: grid; grid-template-columns: …`). That CSS is what `@heyeddi-handoff` copies into the Implementation spec. Do not translate it into margin stacks.
+Inspect in Penpot emits production CSS (`display: flex; gap: 16px` or `display: grid; grid-template-columns: …`) only after Flex/Grid is real on the board. Until then, `@heyeddi-handoff` copies CSS from `hifi.html`, not from absolute geometry. Do not translate absolute sketches into margin stacks and call it Flex.
 
 ## Recipes
 
