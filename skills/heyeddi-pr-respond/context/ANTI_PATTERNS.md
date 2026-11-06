@@ -5,8 +5,9 @@
 - NEVER post "Fixed" while fixes are local-only — commit + push first
 - NEVER skip `build_comment_inventory` when review submission bodies exist
 - NEVER treat a HeyEddi root summary as done without replying to every inline thread
-- NEVER use `gh pr comment` for individual replies (discussion = quote-reply body, not bare spam)
+- NEVER quote-reply issue comments (tests-hold notes, review summaries, or comments by the responding account)
 - NEVER call `/issues/comments/{id}/replies` — that endpoint does not exist
+- NEVER post a body that still contains `<<<UNTRUSTED_` — read `body_raw`; leave the wrapper on `body`
 - NEVER reply using a **child** review-comment id — walk to the **root** thread id
 - NEVER invent or guess thread ids; use `resolve_reply_targets` / live GET
 - NEVER tell the user a GitHub thread "could not be found" and stop — use GitHub MCP fallback

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Build the full list of PR review items that require a fix/decline and reply.
 
-Handles:
-- Inline diff comments (always reply in-thread)
-- Discussion comments
-- Review submission bodies (root summaries) — parses path:line bullets and
-  links them to inline comments; flags orphans when a summary item has no inline
+Postable replies are unresolved pull-request review threads only (root
+review-comment id, no quote). Issue comments are listed and skipped:
+tests-hold notes, conversation summaries, and comments written by the
+responding account are not threads.
+
+Review submission bodies are parsed for path:line bullets and linked to
+inline comments. Orphans are summary-only.
 
 Stdout JSON only. Never writes under ``.heyeddi/docs/``.
 """
@@ -14,11 +16,13 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import sys
 from pathlib import Path
 from typing import Any
 
-from _skill_cli import emit, resolve_project_root
+from _comment_resolve import awaiting_root_ids, comment_plain_body, is_tests_hold
+from _skill_cli import emit, resolve_project_root, run_command
 from _temp_store import comments_cache_path, inventory_cache_path
 
 PATH_LINE_RE = re.compile(r"`([^`]+):(\d+)`")
@@ -35,10 +39,17 @@ def _login(item: dict[str, Any]) -> str:
 
 
 def _body(item: dict[str, Any]) -> str:
-    raw = item.get("body") or ""
-    if isinstance(raw, dict) and "wrapped" in raw:
-        return str(raw.get("wrapped") or "")
-    return str(raw)
+    return comment_plain_body(item)
+
+
+def _gh_login(root: Path) -> str | None:
+    if not shutil.which("gh"):
+        return None
+    out = run_command(["gh", "api", "user", "-q", ".login"], root)
+    if out.startswith("[exit") or out.startswith("[error]"):
+        return None
+    login = out.strip()
+    return login or None
 
 
 def _loc_key(path: str | None, line: int | str | None) -> str | None:
@@ -69,7 +80,11 @@ def _is_actionable_review(review: dict[str, Any]) -> bool:
     return True
 
 
-def build_inventory(data: dict[str, Any]) -> dict[str, Any]:
+def build_inventory(
+    data: dict[str, Any],
+    *,
+    responder_login: str | None = None,
+) -> dict[str, Any]:
     inline_raw = [c for c in (data.get("inline") or []) if isinstance(c, dict)]
     reviews = [c for c in (data.get("reviews") or []) if isinstance(c, dict)]
     discussion = data.get("discussion") or {}
@@ -79,9 +94,14 @@ def build_inventory(data: dict[str, Any]) -> dict[str, Any]:
         else []
     )
 
+    login = (responder_login or "").strip() or None
+    if login is None and isinstance(data.get("responder_login"), str):
+        login = data["responder_login"].strip() or None
+
     inline_by_loc: dict[str, dict[str, Any]] = {}
     items: list[dict[str, Any]] = []
     expected_reply_ids: list[str] = []
+    awaiting = set(awaiting_root_ids(inline_raw, login))
 
     for comment in inline_raw:
         if comment.get("in_reply_to_id") is not None:
@@ -93,6 +113,26 @@ def build_inventory(data: dict[str, Any]) -> dict[str, Any]:
         if loc:
             inline_by_loc[loc] = comment
         summary = _body(comment).strip().splitlines()[0][:160] if _body(comment).strip() else ""
+        author = _login(comment)
+        if cid not in awaiting:
+            items.append(
+                {
+                    "id": cid,
+                    "type": "inline",
+                    "reply_target_id": cid,
+                    "reply_kind": "answered",
+                    "path": path,
+                    "line": line,
+                    "author": author,
+                    "summary": summary,
+                    "source": "inline",
+                    "note": (
+                        "Review thread is not awaiting a reply "
+                        "(tests-hold, or the responding account already spoke last)."
+                    ),
+                }
+            )
+            continue
         items.append(
             {
                 "id": cid,
@@ -101,7 +141,7 @@ def build_inventory(data: dict[str, Any]) -> dict[str, Any]:
                 "reply_kind": "inline",
                 "path": path,
                 "line": line,
-                "author": _login(comment),
+                "author": author,
                 "summary": summary,
                 "source": "inline",
                 "listed_in_review": [],
@@ -111,21 +151,31 @@ def build_inventory(data: dict[str, Any]) -> dict[str, Any]:
 
     for comment in disc_comments:
         cid = str(comment.get("id"))
-        summary = _body(comment).strip().splitlines()[0][:160] if _body(comment).strip() else ""
+        body = _body(comment)
+        summary = body.strip().splitlines()[0][:160] if body.strip() else ""
+        author = _login(comment)
+        reasons: list[str] = []
+        if is_tests_hold(body):
+            reasons.append("tests-hold note")
+        if login and author.lower() == login.lower():
+            reasons.append("written by the responding account")
+        note = "Issue comments are not review threads. Do not quote-reply."
+        if reasons:
+            note = f"{note} {'; '.join(reasons)}."
         items.append(
             {
                 "id": cid,
                 "type": "discussion",
-                "reply_target_id": cid,
-                "reply_kind": "discussion",
+                "reply_target_id": None,
+                "reply_kind": "issue-comment",
                 "path": None,
                 "line": None,
-                "author": _login(comment),
+                "author": author,
                 "summary": summary,
                 "source": "discussion",
+                "note": note,
             }
         )
-        expected_reply_ids.append(cid)
 
     orphan_findings: list[dict[str, Any]] = []
     review_summaries: list[dict[str, Any]] = []
@@ -175,7 +225,6 @@ def build_inventory(data: dict[str, Any]) -> dict[str, Any]:
                     }
                 )
                 items.append(orphan_findings[-1])
-                expected_reply_ids.append(orphan_id)
 
         if not bullets and body.strip():
             items.append(
@@ -202,8 +251,12 @@ def build_inventory(data: dict[str, Any]) -> dict[str, Any]:
             seen_ids.add(cid)
             deduped_expected.append(cid)
 
-    postable = [i for i in items if i.get("reply_kind") in {"inline", "discussion"}]
-    summary_only = [i for i in items if i.get("reply_kind") in {"review", "orphan-finding"}]
+    postable = [i for i in items if i.get("reply_kind") == "inline"]
+    summary_only = [
+        i
+        for i in items
+        if i.get("reply_kind") in {"review", "orphan-finding", "issue-comment", "answered"}
+    ]
 
     return {
         "pr": data.get("pr"),
@@ -216,11 +269,13 @@ def build_inventory(data: dict[str, Any]) -> dict[str, Any]:
         "review_summaries": review_summaries,
         "orphan_findings": orphan_findings,
         "summary_only_items": summary_only,
+        "responder_login": login,
         "rules": [
-            "Parse every review submission body (root summary) for path:line bullets.",
-            "Every postable inline/discussion ID must get a ## Comment <id> reply draft.",
+            "Reply only on unresolved pull-request review threads, at the root comment id, with no quote.",
+            "Do not quote-reply issue comments. Skip tests-hold notes, review summaries, and comments written by the responding account.",
+            "Every postable inline ID must get a ## Comment <id> reply draft.",
             "Orphan review findings (no inline) must be fixed/declined in code and covered in ## Summary.",
-            "Review submission bodies are not postable threads — reply on inline /replies instead.",
+            "Review submission bodies are not postable threads.",
         ],
     }
 
@@ -231,6 +286,11 @@ def main() -> None:
     parser.add_argument("--project-root", default=None)
     parser.add_argument("--input", default=None, help="Comments JSON (default temp cache from fetch)")
     parser.add_argument("--write-cache", action="store_true", help="Also write inventory.json to temp dir")
+    parser.add_argument(
+        "--responder",
+        default=None,
+        help="Login of the account posting replies (default: gh api user, else cache responder_login)",
+    )
     parser.add_argument("--check", action="store_true", help="Exit 1 when zero actionable items")
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
@@ -247,7 +307,15 @@ def main() -> None:
         emit(json.dumps({"error": "comments payload must be an object"}, indent=2))
         sys.exit(1)
 
-    inventory = build_inventory(data)
+    responder = (args.responder or "").strip() or None
+    if responder is None:
+        cached = data.get("responder_login")
+        if isinstance(cached, str) and cached.strip():
+            responder = cached.strip()
+    if responder is None:
+        responder = _gh_login(root)
+
+    inventory = build_inventory(data, responder_login=responder)
     if args.write_cache:
         out_path = inventory_cache_path(args.pr)
         out_path.write_text(json.dumps(inventory, indent=2) + "\n", encoding="utf-8")

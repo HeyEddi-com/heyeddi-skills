@@ -83,6 +83,10 @@ def main() -> None:
                 )
             )
 
+    cached_login = cache.get("responder_login")
+    responder_login = (
+        cached_login.strip() if isinstance(cached_login, str) and cached_login.strip() else None
+    )
     targets = []
     unresolved = 0
     for cid, hint in pairs:
@@ -94,6 +98,7 @@ def main() -> None:
             kind_hint=hint,
             index=index,
             live=not args.offline and bool(repo),
+            responder_login=responder_login,
         )
         if target.post_method == "unresolved":
             unresolved += 1
@@ -119,8 +124,9 @@ def main() -> None:
                 "unresolved_count": unresolved,
                 "targets": targets,
                 "rule": (
-                    "Never invent thread ids. On unresolved or post failure, use the "
-                    "mcp_tool / mcp_hint for that row — do not claim thread not found."
+                    "Reply only on unresolved review threads at the root id, with no quote. "
+                    "Issue comments are skipped. On a review-thread failure, use mcp_tool / "
+                    "mcp_hint — do not claim thread not found and do not quote-reply."
                 ),
             },
             indent=2,

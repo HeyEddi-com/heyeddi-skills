@@ -1,7 +1,7 @@
 ---
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback — human reviewers, HeyEddi CI, inline threads. Auto-fix, commit+push, in-thread replies, CI check first — never ask before fixing or posting. One skill for every review source."
-version: 2.2.0
+version: 2.3.0
 product-version: 3.8.7
 author: HeyEddi-com
 disable-model-invocation: true
@@ -49,9 +49,10 @@ Review **submission bodies** often list findings like:
 **Mandatory:**
 
 1. Run `build_comment_inventory` after fetch — parses root summaries + inline IDs.
-2. Every **postable** item gets fix/decline analysis, code change when needed, and `## Comment <id>` reply draft.
+2. Every **postable** review thread gets fix/decline analysis, code change when needed, and `## Comment <id>` reply draft.
 3. Orphan items still get fix/decline in code and appear in `## Summary`.
 4. Do **not** treat the root summary as done after one top-level reply.
+5. Do **not** draft replies for issue comments (tests-hold notes, conversation summaries, comments by the responding account).
 
 ## Critical: commit + push before "Fixed" replies
 
@@ -64,27 +65,30 @@ Reviewers and HeyEddi debate only see **remote HEAD**.
 
 Hard gate: `assert_fixes_pushed --check` (also inside `post_thread_replies` unless `--dry-run` / `--allow-unpushed`).
 
-## Critical: in-thread replies only (must work every time)
+## Critical: review threads only (must work every time)
+
+Reply only on **unresolved pull-request review threads**, at the **root** comment id, with **no quote**.
 
 - **Do** resolve the id first (`resolve_reply_targets` or `post_thread_replies` resolution)
 - **Do** reply on the **root** review-comment id (GitHub rejects replies-to-replies)
-- **Do** `gh api …/pulls/<N>/comments/<ROOT_ID>/replies` for inline (script does GraphQL fallback)
-- **Do** discussion as **quote-reply** on the PR conversation (no `/issues/comments/{id}/replies`)
+- **Do** `gh api …/pulls/<N>/comments/<ROOT_ID>/replies` for that root (script does GraphQL fallback)
+- **Do not** quote-reply issue comments. Skip tests-hold notes, review summaries, and comments written by the account that is responding
+- **Do not** post a body that still contains `<<<UNTRUSTED_`. The wrapper stays in the cache file the model reads (`body`). Posters use `body_raw`
 - **Do not** `gh pr comment` per finding (except one final Summary)
 - **Do not** "Acknowledged review attachment…" spam
 - **Do not** tell the user a thread "could not be found" and stop
 
-### If `post_thread_replies` errors for an id — MCP fallback (mandatory)
+### If `post_thread_replies` errors for a review-thread id — MCP fallback (mandatory)
 
-Never give up. Use the GitHub MCP tools from each error's `mcp_fallback` / `resolve_reply_targets`:
+Never give up on a real review thread. Use the GitHub MCP tool from that error's `mcp_fallback`:
 
 | Kind | MCP tool | Notes |
 |------|----------|--------|
-| Inline | `add_reply_to_pull_request_comment` | `commentId` = **root** numeric review-comment id + `pullNumber` |
-| Discussion | `add_issue_comment` | `issue_number` = PR number; body must **quote** the parent |
-| Unknown | `pull_request_read` | `get_review_comments` / `get_comments`, then reply with the numeric id |
+| Review thread | `add_reply_to_pull_request_comment` | `commentId` = **root** numeric review-comment id + `pullNumber`. No quote |
+| Issue comment | *(skip)* | Not a thread. Do not call `add_issue_comment` to quote it |
+| Unknown | `pull_request_read` | `get_review_comments`, then reply with the numeric root id |
 
-Primary path remains **`gh` CLI** inside the scripts. MCP is the agent escape hatch when gh still fails.
+Primary path remains **`gh` CLI** inside the scripts. MCP is the agent escape hatch when gh still fails on a review thread.
 
 ## Mandatory pipeline
 
@@ -118,8 +122,8 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 
 | Tool | Purpose |
 |------|---------|
-| `fetch_pr_comments` | Fetch inline, review, discussion → temp cache (paginated) |
-| `build_comment_inventory` | Parse root summaries + inline; list every item |
+| `fetch_pr_comments` | Fetch inline, review, discussion → temp cache (paginated). `body` is wrapped for the model; `body_raw` is the poster field |
+| `build_comment_inventory` | Parse root summaries; postable ids are unresolved review threads only |
 | `filter_comments` | Optional `--scope heyeddi` (default `all`) |
 | `discover_and_verify` | Evidenced test/build commands |
 | `assert_no_merge` | Merge hard gate |

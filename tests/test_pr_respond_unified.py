@@ -66,6 +66,8 @@ def test_build_comment_inventory_links_review_bullets(tmp_path: Path) -> None:
         str(tmp_path),
         "--input",
         str(cache),
+        "--responder",
+        "pr-author",
     )
     assert proc.returncode == 0, proc.stderr + proc.stdout
     inv = json.loads(proc.stdout)
@@ -74,6 +76,79 @@ def test_build_comment_inventory_links_review_bullets(tmp_path: Path) -> None:
     assert inv["items"][0]["listed_in_review"] == ["9001"] or any(
         i.get("listed_in_review") == ["9001"] for i in inv["items"]
     )
+
+
+def test_inventory_skips_issue_comments_and_answered_threads(tmp_path: Path) -> None:
+    comments = {
+        "pr": 358,
+        "repo": "org/repo",
+        "responder_login": "pr-author",
+        "inline": [
+            {
+                "id": 10,
+                "path": "a.py",
+                "line": 1,
+                "body": "please fix the calendar source",
+                "user": {"login": "reviewer"},
+                "created_at": "2026-11-06T00:00:00Z",
+            },
+            {
+                "id": 11,
+                "path": "a.py",
+                "line": 1,
+                "body": "Fixed.",
+                "in_reply_to_id": 10,
+                "user": {"login": "pr-author"},
+                "created_at": "2026-11-06T01:00:00Z",
+            },
+            {
+                "id": 12,
+                "path": "b.py",
+                "line": 4,
+                "body": "metadata note",
+                "user": {"login": "reviewer"},
+                "created_at": "2026-11-06T02:00:00Z",
+            },
+        ],
+        "discussion": {
+            "comments": [
+                {
+                    "id": 900,
+                    "body": "<!-- heyeddi:tests-hold:abc -->\nHeyEddi did not review this commit.",
+                    "user": {"login": "heyeddi-ci[bot]"},
+                },
+                {
+                    "id": 901,
+                    "body": "Responded to 2/2 comments.",
+                    "user": {"login": "pr-author"},
+                },
+            ]
+        },
+        "reviews": [],
+    }
+    cache = tmp_path / "comments.json"
+    cache.write_text(json.dumps(comments), encoding="utf-8")
+    proc = _run(
+        RESPOND / "build_comment_inventory.py",
+        "--pr",
+        "358",
+        "--project-root",
+        str(tmp_path),
+        "--input",
+        str(cache),
+        "--responder",
+        "pr-author",
+    )
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    inv = json.loads(proc.stdout)
+    assert inv["postable_reply_ids"] == ["12"]
+    kinds = {item["id"]: item["reply_kind"] for item in inv["items"]}
+    assert kinds["10"] == "answered"
+    assert kinds["12"] == "inline"
+    assert kinds["900"] == "issue-comment"
+    assert kinds["901"] == "issue-comment"
+    assert "900" not in inv["postable_reply_ids"]
+    assert "901" not in inv["postable_reply_ids"]
 
 
 def test_fetch_pr_comments_fixture_uses_temp_not_docs(tmp_path: Path) -> None:
