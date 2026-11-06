@@ -59,33 +59,42 @@ With HeyEddi MCP: nest each field under the card/board via `parentId` and size w
 
 ## Gate B - Absolute ≠ Flex claim
 
+Calling `set_frame_layout` is not proof. Label **hi-fi / Flex** only after you
+read the board back in the same turn (`get_shape_properties` on the frame and
+on the copy that belongs on it).
+
 **Fail:**
 
-- Demo brief or chat claims "Flex column" / "CSS Grid" when frames are only
-  absolute geometry (no layout attrs, no Shift+A)
-- Inspect CSS handoff invented from absolute boards without HTML or real Flex
+- The brief says "Flex column" / "CSS Grid" and the read-back has no `layout`
+  of `flex` or `grid`
+- Copy, nav, or a card that belongs on a phone has no `parentId` of that phone
+  (or of a frame parented to that phone). Shapes stored at 0,0 on the page, or
+  a header whose y sits under the phone, are not on the board
+- `penpot-demo.md` says hi-fi after the API rejected the change, or quotes a
+  page id that `list_pages` does not return
+- Inspect CSS invented from absolute boards
 
 **Pass:**
 
-- Boards with MCP Flex/Grid set are labelled **hi-fi** in `penpot-demo.md`
-- Absolute-only boards are labelled **low-fi / absolute sketch**
-- Implementation CSS comes from Penpot Inspect (real Flex/Grid) or from
-  `hifi.html` (Gate C)
+- Read-back shows `layout` on the phone and `parentId` of the type, form, and
+  nav. `penpot-demo.md` quotes that read-back (page id, layout, parent ids)
+- Absolute geometry is labelled **low-fi / absolute sketch**, not hi-fi
+- If the shape read omits `parentId` and `layout`, you cannot claim Flex. The
+  board stays low-fi until a read shows both
 
 ---
 
-## Gate C - HTML ACT 2.6 when MCP cannot Flex
+## Gate C - HTML is not the Penpot file
 
-**Trigger (any of these):**
+`hifi.html` is a different artifact. It never proves a board in the Penpot file.
+
+**Write HTML only when no Penpot boards were created:**
 
 - Live schema cannot set flex/grid or nest with `parentId` (upstream zcubekr-only)
 - `design.penpot` is `off`
 - User declined Penpot install
 
-**Waived when:** HeyEddi MCP (or equivalent) set Flex/Grid on the boards and nested
-children with `parentId`, and Gate D passed on those exports.
-
-**Required output when triggered:**
+**Required in that case:**
 
 1. Five-line brief + token table (`--app-*` roles)
 2. Layout-engine table (Flex/Grid per region, gap, Fit/Fill/Fix)
@@ -95,19 +104,34 @@ children with `parentId`, and Gate D passed on those exports.
 Skipping HTML because "Penpot was connected" while MCP lacked Flex is a **process
 fail**.
 
+Writing HTML and then calling Penpot boards done is also a **process fail**.
+If the file has frames, Gate B and Gate D are about those frames.
+
 ---
 
-## Gate D - Visual QA before done
+## Gate D - The canvas, not the HTML mirror
 
-**Fail:** Claiming done without looking at pixels.
+**Fail:**
 
-**Pass (minimum):**
+- `hifi.html` is treated as proof of the Penpot file
+- `export_shape` is missing, and the pass still calls the boards done without
+  reading the canvas. A board that does not show its own type fails: the copy
+  can be in the file and still be absent on the phone
+- The PNG or the canvas shows a photo as a thumbnail in the corner. Attaching
+  a media id is not a cover fill. A rejected fill replacement means the board
+  still fails
+- Children still at 0,0, unparented, while the write-up says hi-fi
 
-1. `export_shape` of Flex boards **and/or** render `hifi.html`
-2. **Read the image** (Read tool on PNG, or screenshot)
-3. CRITIQUE: Gate A, hierarchy, 8px rhythm, mode fit
-4. Fix every 0; re-check once
-5. Then present and hand to `@heyeddi-design`
+**Pass:**
+
+1. If `export_shape` exists, call it on each phone and **read the PNG**. The
+   image shows the type, the form, and the nav. A corner thumbnail fails
+2. If `export_shape` is missing, read `get_shape_properties` for the frame and
+   each child (`parentId`, `layout`, `x`, `y`, fill width/height versus the
+   shape) and look at the canvas. HTML does not replace this step, and you
+   still may not mark the board hi-fi
+3. When `audit_board` exists, it reports nothing. Fix every line and run it again
+4. CRITIQUE, fix every 0, re-check once, then hand to `@heyeddi-design`
 
 When Vue exists for the route, also chain `@visual-auditor`.
 
@@ -116,9 +140,9 @@ When Vue exists for the route, also chain `@visual-auditor`.
 ## Done checklist (copy into CRITIQUE)
 
 - [ ] No text-wall (Gate A)
-- [ ] Absolute boards not sold as Flex (Gate B)
-- [ ] Flex/Grid boards via HeyEddi MCP **or** `hifi.html` (Gate C)
-- [ ] Pixels reviewed and CRITIQUE fixed (Gate D)
-- [ ] `penpot-demo.md` records low-fi vs hi-fi and Aura token roles
+- [ ] Read-back shows `layout` and `parentId` before any hi-fi label (Gate B)
+- [ ] `hifi.html` was not used as proof of the Penpot file (Gate C)
+- [ ] Canvas read: PNG or shape read. Type is visible on the phone. No corner thumbnail (Gate D)
+- [ ] `penpot-demo.md` quotes the read-back and does not call absolute geometry hi-fi
 
 Any unchecked box → **not done**.
