@@ -9,6 +9,7 @@ quote-reply them.
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 from dataclasses import dataclass
@@ -16,7 +17,30 @@ from pathlib import Path
 from typing import Any, Literal
 
 from _skill_cli import run_command
-from _untrusted_doc import is_already_wrapped, unwrap_untrusted_text
+
+
+def _load_sibling(module_name: str):
+    """Load a script next to this file.
+
+    ``_untrusted_doc`` also exists under heyeddi-pr-review. A full pytest run
+    imports that copy first and caches it as ``_untrusted_doc``, which does
+    not export ``unwrap_untrusted_text``.
+    """
+    path = Path(__file__).resolve().parent / f"{module_name}.py"
+    spec = importlib.util.spec_from_file_location(
+        f"heyeddi_pr_respond.{module_name}",
+        path,
+    )
+    if spec is None or spec.loader is None:
+        raise ImportError(path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_untrusted_doc = _load_sibling("_untrusted_doc")
+is_already_wrapped = _untrusted_doc.is_already_wrapped
+unwrap_untrusted_text = _untrusted_doc.unwrap_untrusted_text
 
 Kind = Literal["inline", "discussion", "review", "unknown"]
 PostMethod = Literal[

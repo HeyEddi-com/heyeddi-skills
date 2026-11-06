@@ -20,6 +20,7 @@ MCP ``add_reply_to_pull_request_comment`` with the root id — never report
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import shutil
@@ -33,7 +34,22 @@ from _comment_resolve import (
     find_review_thread_id,
     resolve_reply_target,
 )
-from _untrusted_doc import is_already_wrapped
+
+
+def _load_sibling(module_name: str):
+    path = Path(__file__).resolve().parent / f"{module_name}.py"
+    spec = importlib.util.spec_from_file_location(
+        f"heyeddi_pr_respond.{module_name}",
+        path,
+    )
+    if spec is None or spec.loader is None:
+        raise ImportError(path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+is_already_wrapped = _load_sibling("_untrusted_doc").is_already_wrapped
 from _replies_parse import (
     infer_reply_kind,
     parse_reply_sections,
