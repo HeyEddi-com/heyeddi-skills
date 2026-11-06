@@ -2,7 +2,7 @@
 name: taste-penpot
 description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST present ≥3 project-grounded identity options (type, colours, metaphor) and wait for the user to choose before tokens or pixels. Layouts use Penpot Flex (1D) or CSS Grid (2D) via @heyeddi/penpot-mcp-server (parentId + set_frame_layout). Hard gates: reject text-walls; absolute-only MCP is low-fi and needs hifi.html; visual QA before done. Redesign/from-scratch uses references/code-to-design.md. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
 version: 1.5.1
-product-version: 3.8.7
+product-version: 3.8.8
 author: HeyEddi-com
 ---
 
