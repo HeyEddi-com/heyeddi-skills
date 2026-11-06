@@ -76,9 +76,9 @@ In `.heyeddi/designs/<feature>/penpot-demo.md`, and in the Layout section of `.h
 | Cards | Grid | `repeat(auto-fit, minmax(250px, 1fr))` | row and column gap 16 | card fill |
 ```
 
-Prefer `@heyeddi/penpot-mcp-server`: set Flex/Grid with `layout` / `set_frame_layout` and nest children with `parentId` (file-format names below). Upstream `@zcubekr/penpot-mcp-server` still creates absolute geometry only; those boards are **low-fi sketches** and ACT 2.6 `hifi.html` is mandatory (`references/layout-hard-gates.md` Gate C). Humans can still apply **Shift + A** / **Ctrl/Cmd + Shift + A** in the Penpot UI. Do not switch to `@penpot/mcp` or `execute_code`. HTML fallback uses the same `display`, `gap`, tracks, and child sizing. No external CSS.
+Prefer `@heyeddi/penpot-mcp-server`: set Flex/Grid with `layout` / `set_frame_layout` and nest children with `parentId` (file-format names below). **API reality:** Flex flags can save while children stay at `0,0` — the server does not reflow selrects. Always `set_layout_item` then read `x`/`y` back. If children remain at origin, switch to **absolute 8px layout** under the same `parentId` (Gate F). Do not nest Flex deeper and retry. Upstream `@zcubekr/penpot-mcp-server` still creates absolute geometry only; those boards are **low-fi sketches** and ACT 2.6 `hifi.html` is mandatory (`references/layout-hard-gates.md` Gate C). Humans can still apply **Shift + A** / **Ctrl/Cmd + Shift + A** in the Penpot UI. Do not switch to `@penpot/mcp` or `execute_code`. HTML fallback uses the same `display`, `gap`, tracks, and child sizing. No external CSS.
 
-Inspect in Penpot emits production CSS (`display: flex; gap: 16px` or `display: grid; grid-template-columns: …`) only after Flex/Grid is real on the board. Until then, `@heyeddi-handoff` copies CSS from `hifi.html`, not from absolute geometry. Do not translate absolute sketches into margin stacks and call it Flex.
+Inspect in Penpot emits production CSS (`display: flex; gap: 16px` or `display: grid; grid-template-columns: …`) only after Flex/Grid is **real on the canvas** (not just stored flags). Until then, `@heyeddi-handoff` copies CSS from `hifi.html`, not from absolute geometry. Do not translate absolute sketches into margin stacks and call it Flex.
 
 ## Recipes
 
@@ -115,9 +115,9 @@ The growing middle keeps buttons on one baseline across cards with different tex
 
 These are the Penpot file fields and the plugin object model (`layoutChild`, `addColumn`, `appendChild`). Use them when a tool schema exposes them. Colors and type still come from the token table, not from a sample hex or a sample font.
 
-Child of a flex or grid parent, both axes: `layoutItemHSizing` and `layoutItemVSizing` (plugin: `layoutChild.horizontalSizing` and `verticalSizing`). Values are `fix`, `fill`, or `auto`.
+Child of a flex or grid parent, both axes: `layoutItemHSizing` and `layoutItemVSizing` (plugin: `layoutChild.horizontalSizing` and `verticalSizing`). Values are `fix`, `fill`, or `auto`. **Via MCP:** set these with `set_layout_item` after create; create-time fields often read back `null`.
 
-Do not set `x`, `y`, `width`, or `height` on a child the layout owns. Assigning the board's width stops the layout from propagating.
+When Flex reflow works: do not set `x`, `y`, `width`, or `height` on a child the layout owns. Assigning the board's width stops the layout from propagating. When Flex reflow fails (children at `0,0`): you **must** set absolute `x`/`y` on the 8px grid — that is the escape hatch, not a contradiction.
 
 Grid tracks are `layoutGridColumns` and `layoutGridRows`. Each track is `{ type, value }` with type `fixed`, `flex`, `auto`, or `percent`. Plugin calls are `addColumn(type, value)` and `addRow(type, value)`. A 260px sidebar plus a main column is `fixed` 260, then `flex` 1. A 72px header plus a body row is `fixed` 72, then `flex` 1.
 
@@ -129,9 +129,10 @@ A flex board inside a grid cell sets horizontal sizing to `fill` so it uses the 
 
 Before leaving the board:
 
-- No `x`, `y`, `width`, or `height` on children the layout owns.
-- A flex container inside a grid cell is horizontal `fill`.
-- Text `growType` matches the sizing just set.
+- If Flex reflow worked: no `x`, `y`, `width`, or `height` on children the layout owns.
+- If Flex reflow failed: absolute 8px positions are required; label **hi-fi / absolute 8px** only after Gate D PNG.
+- A flex container inside a grid cell is horizontal `fill` (when Flex is real).
+- Text `growType` matches the sizing just set. Fonts must exist in Penpot (`list_font_variants`).
 - Gap, padding, and radius are steps on the spacing scale.
 - A text block that clips is `auto` or `fill`, not a short `fix`.
 
