@@ -36,8 +36,11 @@ def test_wrap_comment_bodies_unit() -> None:
     assert "<<<UNTRUSTED_EXTERNAL_CONTENT name=pr-comment-diff_hunk>>>" in inline0["diff_hunk"]
     assert OPEN_BODY in payload["discussion"]["comments"][0]["body"]
     assert OPEN_BODY in payload["reviews"][0]["body"]
+    assert payload["inline"][0]["body_raw"] == INJECT
+    assert "<<<UNTRUSTED_" not in payload["inline"][0]["body_raw"]
     again = wrap_comment_bodies(payload)
     assert again["inline"][0]["body"].count(OPEN_BODY) == 1
+    assert again["inline"][0]["body_raw"] == INJECT
 
 
 def test_fetch_pr_comments_fixture_path_only(tmp_path: Path) -> None:
@@ -64,6 +67,9 @@ def test_fetch_pr_comments_fixture_path_only(tmp_path: Path) -> None:
     assert INJECT not in proc.stdout
     cached = json.loads((tmp_path / data["untrusted_payload_path"]).read_text(encoding="utf-8"))
     assert OPEN_BODY in cached["inline"][0]["body"]
+    assert "<<<UNTRUSTED_" not in cached["inline"][0]["body_raw"]
+    assert "fetchUsers" in cached["inline"][0]["body_raw"]
     assert OPEN_BODY in cached["discussion"]["comments"][0]["body"]
     assert OPEN_BODY in cached["reviews"][0]["body"]
     assert CLOSE in cached["reviews"][0]["body"]
+    assert "<<<UNTRUSTED_" not in cached["reviews"][0]["body_raw"]

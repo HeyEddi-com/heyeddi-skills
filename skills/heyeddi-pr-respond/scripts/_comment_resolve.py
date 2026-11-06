@@ -1,14 +1,15 @@
 """Resolve any PR comment id to a postable reply target.
 
-Agents often pass numeric discussion ids, GraphQL node ids, or *child* reply
-ids. GitHub's REST ``/pulls/.../comments/{id}/replies`` only accepts a
-**top-level** review-comment id, and there is **no**
-``/issues/comments/{id}/replies`` endpoint. This module classifies the id and
-returns the correct post strategy so replies never fail with a vague
-"thread not found".
+Only unresolved pull-request review threads are postable, and only at the
+root review-comment id, with no quote. Issue comments (Conversation tab)
+are not threads: tests-hold notes, review summaries, and comments written
+by the account that is responding are skipped. There is no
+``/issues/comments/{id}/replies`` endpoint and this module does not
+quote-reply them.
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 from dataclasses import dataclass
@@ -17,8 +18,41 @@ from typing import Any, Literal
 
 from _skill_cli import run_command
 
+
+def _load_sibling(module_name: str):
+    """Load a script next to this file.
+
+    ``_untrusted_doc`` also exists under heyeddi-pr-review. A full pytest run
+    imports that copy first and caches it as ``_untrusted_doc``, which does
+    not export ``unwrap_untrusted_text``.
+    """
+    path = Path(__file__).resolve().parent / f"{module_name}.py"
+    spec = importlib.util.spec_from_file_location(
+        f"heyeddi_pr_respond.{module_name}",
+        path,
+    )
+    if spec is None or spec.loader is None:
+        raise ImportError(path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_untrusted_doc = _load_sibling("_untrusted_doc")
+is_already_wrapped = _untrusted_doc.is_already_wrapped
+unwrap_untrusted_text = _untrusted_doc.unwrap_untrusted_text
+
 Kind = Literal["inline", "discussion", "review", "unknown"]
-PostMethod = Literal["review_reply", "discussion_quote", "skip_review", "unresolved"]
+PostMethod = Literal[
+    "review_reply",
+    "skip_issue_comment",
+    "skip_review",
+    "skip_own",
+    "skip_answered",
+    "unresolved",
+]
+
+TESTS_HOLD_RE = re.compile(r"<!--\s*heyeddi:tests-hold\b", re.IGNORECASE)
 
 _GRAPHQL_NODE = re.compile(r"^[A-Za-z0-9_=-]{10,}$")
 
@@ -30,6 +64,8 @@ class CommentRecord:
     body: str
     in_reply_to_id: str | None = None
     node_id: str | None = None
+    author: str | None = None
+    created_at: str | None = None
 
 
 @dataclass(frozen=True)
@@ -40,7 +76,7 @@ class ReplyTarget:
     kind: Kind
     post_method: PostMethod
     reply_to_id: str | None
-    """Top-level review-comment database id (inline) or discussion id."""
+    """Top-level review-comment database id. None when the id is not a review thread."""
     body_snippet: str
     detail: str | None = None
     mcp_tool: str | None = None
@@ -50,8 +86,91 @@ class ReplyTarget:
 
 def _unwrap_body(raw: Any) -> str:
     if isinstance(raw, dict) and "wrapped" in raw:
-        return str(raw.get("wrapped") or "")
-    return str(raw or "")
+        return unwrap_untrusted_text(str(raw.get("wrapped") or ""))
+    return unwrap_untrusted_text(str(raw or ""))
+
+
+def comment_plain_body(item: dict[str, Any]) -> str:
+    """Plain comment text for classification. Never the untrusted banner."""
+    raw = item.get("body_raw")
+    if isinstance(raw, str) and raw and not is_already_wrapped(raw):
+        return raw
+    return _unwrap_body(item.get("body"))
+
+
+def is_tests_hold(body: str | None) -> bool:
+    return bool(TESTS_HOLD_RE.search(body or ""))
+
+
+def comment_author(item: dict[str, Any]) -> str:
+    user = item.get("user") or item.get("author") or {}
+    if isinstance(user, dict):
+        return str(user.get("login") or "")
+    return str(user or "")
+
+
+def _comment_when(item: dict[str, Any]) -> str:
+    for key in ("created_at", "createdAt", "submitted_at", "submittedAt", "updated_at"):
+        value = item.get(key)
+        if value:
+            return str(value)
+    return ""
+
+
+def _same_login(left: str | None, right: str | None) -> bool:
+    if not left or not right:
+        return False
+    return left.strip().lower() == right.strip().lower()
+
+
+def awaiting_root_ids(
+    inline_comments: list[dict[str, Any]],
+    responder_login: str | None,
+) -> list[str]:
+    """Root review-comment ids that still need a reply.
+
+    A thread is awaiting when it is not a tests-hold note and the latest
+    comment was not written by ``responder_login``. When the login is unknown,
+    every non-hold root is awaiting. Issue comments are never included.
+    """
+    nodes = [c for c in inline_comments if isinstance(c, dict) and c.get("id") is not None]
+    by_id = {str(c["id"]): c for c in nodes}
+    parent_of: dict[str, str | None] = {}
+    for comment in nodes:
+        parent = comment.get("in_reply_to_id")
+        parent_of[str(comment["id"])] = str(parent) if parent is not None else None
+
+    def root_of(comment_id: str) -> str:
+        seen: set[str] = set()
+        current = comment_id
+        while current in parent_of and current not in seen:
+            seen.add(current)
+            parent = parent_of[current]
+            if not parent:
+                return current
+            current = parent
+        return current
+
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for comment in nodes:
+        groups.setdefault(root_of(str(comment["id"])), []).append(comment)
+
+    responder = (responder_login or "").strip().lower()
+    awaiting: list[str] = []
+    for comment in nodes:
+        if parent_of.get(str(comment["id"])):
+            continue
+        root_id = str(comment["id"])
+        if root_id not in by_id:
+            continue
+        if is_tests_hold(comment_plain_body(by_id[root_id])):
+            continue
+        thread = groups.get(root_id) or [by_id[root_id]]
+        latest = max(thread, key=lambda item: (_comment_when(item), str(item.get("id"))))
+        if responder and comment_author(latest).strip().lower() == responder:
+            continue
+        awaiting.append(root_id)
+    return awaiting
 
 
 def _as_id(value: Any) -> str | None:
@@ -77,9 +196,11 @@ def build_comment_index(cache: dict[str, Any] | None) -> dict[str, CommentRecord
         index[cid] = CommentRecord(
             comment_id=cid,
             kind="inline",
-            body=_unwrap_body(item.get("body")),
+            body=comment_plain_body(item),
             in_reply_to_id=parent,
             node_id=_as_id(item.get("node_id")),
+            author=comment_author(item) or None,
+            created_at=_comment_when(item) or None,
         )
 
     discussion = cache.get("discussion") or {}
@@ -99,9 +220,11 @@ def build_comment_index(cache: dict[str, Any] | None) -> dict[str, CommentRecord
         index[cid] = CommentRecord(
             comment_id=cid,
             kind="discussion",
-            body=_unwrap_body(item.get("body")),
+            body=comment_plain_body(item),
             in_reply_to_id=None,
             node_id=_as_id(item.get("node_id")),
+            author=comment_author(item) or None,
+            created_at=_comment_when(item) or None,
         )
 
     for item in cache.get("reviews") or []:
@@ -116,7 +239,9 @@ def build_comment_index(cache: dict[str, Any] | None) -> dict[str, CommentRecord
         index[cid] = CommentRecord(
             comment_id=cid,
             kind="review",
-            body=_unwrap_body(item.get("body")),
+            body=comment_plain_body(item),
+            author=comment_author(item) or None,
+            created_at=_comment_when(item) or None,
         )
     return index
 
@@ -132,18 +257,6 @@ def walk_to_root(comment_id: str, index: dict[str, CommentRecord]) -> str:
             return current
         current = parent
     return current
-
-
-def ensure_quote_reply(body: str, parent_snippet: str) -> str:
-    """Discussion IssueComments have no nest API — quote the parent."""
-    stripped = body.strip()
-    if stripped.startswith(">"):
-        return stripped
-    snippet = parent_snippet.strip() or "(original discussion comment)"
-    # Keep quote short so the reply stays readable.
-    lines = [ln.rstrip() for ln in snippet.splitlines() if ln.strip()][:6]
-    quoted = "\n".join(f"> {ln}" if ln else ">" for ln in lines) or "> (original)"
-    return f"{quoted}\n\n{stripped}"
 
 
 def _gh_get_json(root: Path, endpoint: str) -> tuple[dict[str, Any] | None, str | None]:
@@ -170,9 +283,11 @@ def _live_lookup_review_comment(
     return CommentRecord(
         comment_id=str(data.get("id") or comment_id),
         kind="inline",
-        body=str(data.get("body") or ""),
+        body=comment_plain_body(data),
         in_reply_to_id=_as_id(data.get("in_reply_to_id")),
         node_id=_as_id(data.get("node_id")),
+        author=comment_author(data) or None,
+        created_at=_comment_when(data) or None,
     )
 
 
@@ -185,8 +300,10 @@ def _live_lookup_issue_comment(
     return CommentRecord(
         comment_id=str(data.get("id") or comment_id),
         kind="discussion",
-        body=str(data.get("body") or ""),
+        body=comment_plain_body(data),
         node_id=_as_id(data.get("node_id")),
+        author=comment_author(data) or None,
+        created_at=_comment_when(data) or None,
     )
 
 
@@ -287,6 +404,90 @@ def find_review_thread_id(
     return None
 
 
+def _latest_inline(root_id: str, index: dict[str, CommentRecord]) -> CommentRecord | None:
+    members = [
+        rec
+        for rec in index.values()
+        if rec.kind == "inline" and walk_to_root(rec.comment_id, index) == root_id
+    ]
+    if not members:
+        return None
+    members.sort(key=lambda rec: (rec.created_at or "", rec.comment_id))
+    return members[-1]
+
+
+def _skip_issue_target(comment_id: str, body: str, *, detail: str) -> ReplyTarget:
+    note = "Issue comments are not review threads. Do not quote-reply."
+    if is_tests_hold(body):
+        note += " Tests-hold notes are status posts."
+    return ReplyTarget(
+        input_id=comment_id,
+        kind="discussion",
+        post_method="skip_issue_comment",
+        reply_to_id=None,
+        body_snippet=body[:240],
+        detail=f"{note} {detail}".strip(),
+        mcp_tool=None,
+        mcp_hint=None,
+    )
+
+
+def _review_thread_target(
+    *,
+    comment_id: str,
+    pr: int,
+    index: dict[str, CommentRecord],
+    rec: CommentRecord,
+    responder_login: str | None,
+    detail: str | None,
+) -> ReplyTarget:
+    """Reply on an unresolved review thread at its root id, with no quote."""
+    root_id = walk_to_root(rec.comment_id, index)
+    root_rec = index.get(root_id) or rec
+    if is_tests_hold(rec.body) or is_tests_hold(root_rec.body):
+        return _skip_issue_target(comment_id, root_rec.body or rec.body, detail=detail or "tests-hold")
+    if _same_login(rec.author, responder_login):
+        return ReplyTarget(
+            input_id=comment_id,
+            kind="inline",
+            post_method="skip_own",
+            reply_to_id=None,
+            body_snippet=root_rec.body[:240],
+            detail="Comment was written by the account that is responding.",
+            mcp_tool=None,
+            mcp_hint=None,
+        )
+    latest = _latest_inline(root_id, index)
+    if latest and _same_login(latest.author, responder_login):
+        return ReplyTarget(
+            input_id=comment_id,
+            kind="inline",
+            post_method="skip_answered",
+            reply_to_id=root_id,
+            body_snippet=root_rec.body[:240],
+            detail=(
+                f"Review thread {root_id} already ends with a reply from "
+                f"{responder_login}. No further reply."
+            ),
+            mcp_tool=None,
+            mcp_hint=None,
+        )
+    walked = None if root_id == comment_id else f"Walked child reply {comment_id} → root review comment {root_id}"
+    return ReplyTarget(
+        input_id=comment_id,
+        kind="inline",
+        post_method="review_reply",
+        reply_to_id=root_id,
+        body_snippet=root_rec.body[:240],
+        detail=detail or walked,
+        mcp_tool="add_reply_to_pull_request_comment",
+        mcp_hint=(
+            f"MCP add_reply_to_pull_request_comment commentId={root_id} "
+            f"pullNumber={pr} (ROOT id, no quote)"
+        ),
+    )
+
+
 def resolve_reply_target(
     *,
     root: Path | None,
@@ -296,6 +497,7 @@ def resolve_reply_target(
     kind_hint: str | None,
     index: dict[str, CommentRecord],
     live: bool = True,
+    responder_login: str | None = None,
 ) -> ReplyTarget:
     """Classify ``comment_id`` and return the postable target (never guess)."""
     cid = comment_id.strip()
@@ -319,39 +521,18 @@ def resolve_reply_target(
     if cid in index:
         rec = index[cid]
         if rec.kind == "inline":
-            root_id = walk_to_root(cid, index)
-            root_body = index[root_id].body if root_id in index else rec.body
-            return ReplyTarget(
-                input_id=cid,
-                kind="inline",
-                post_method="review_reply",
-                reply_to_id=root_id,
-                body_snippet=root_body[:240],
-                detail=(
-                    None
-                    if root_id == cid
-                    else f"Walked child reply {cid} → root review comment {root_id}"
-                ),
-                mcp_tool="add_reply_to_pull_request_comment",
-                mcp_hint=(
-                    f"MCP add_reply_to_pull_request_comment commentId={root_id} "
-                    f"pullNumber={pr} (use ROOT id, never a child reply id)"
-                ),
+            return _review_thread_target(
+                comment_id=cid,
+                pr=pr,
+                index=index,
+                rec=rec,
+                responder_login=responder_login,
+                detail=None,
             )
         if rec.kind == "discussion":
-            return ReplyTarget(
-                input_id=cid,
-                kind="discussion",
-                post_method="discussion_quote",
-                reply_to_id=cid,
-                body_snippet=rec.body[:240],
-                detail="Discussion IssueComment → quote-reply on PR conversation",
-                mcp_tool="add_issue_comment",
-                mcp_hint=(
-                    f"MCP add_issue_comment issue_number={pr} with quote of parent "
-                    f"comment {cid} (no nest API for IssueComments)"
-                ),
-            )
+            own = _same_login(rec.author, responder_login)
+            extra = "Written by the responding account." if own else "Cached issue comment."
+            return _skip_issue_target(cid, rec.body, detail=extra)
 
     # Live classify when cache misses
     if live and root is not None and repo:
@@ -379,36 +560,23 @@ def resolve_reply_target(
                         index[parent_rec.comment_id] = parent_rec
                         parent = parent_rec.in_reply_to_id
                         hops += 1
-                    root_id = walk_to_root(rec.comment_id, index)
-                    return ReplyTarget(
-                        input_id=cid,
-                        kind="inline",
-                        post_method="review_reply",
-                        reply_to_id=root_id,
-                        body_snippet=(index.get(root_id) or rec).body[:240],
-                        detail=f"Live GET pulls/comments/{cid} → root {root_id}",
-                        mcp_tool="add_reply_to_pull_request_comment",
-                        mcp_hint=(
-                            f"MCP add_reply_to_pull_request_comment commentId={root_id} "
-                            f"pullNumber={pr}"
-                        ),
+                    return _review_thread_target(
+                        comment_id=cid,
+                        pr=pr,
+                        index=index,
+                        rec=rec,
+                        responder_login=responder_login,
+                        detail=f"Live GET pulls/comments/{cid} → root {walk_to_root(rec.comment_id, index)}",
                     )
             if try_kind == "discussion" and (cid.isdigit() or hint == "discussion"):
                 # Numeric or unknown discussion: GET issues/comments/{id}
                 if cid.isdigit():
                     rec = _live_lookup_issue_comment(root, repo, cid)
                     if rec:
-                        return ReplyTarget(
-                            input_id=cid,
-                            kind="discussion",
-                            post_method="discussion_quote",
-                            reply_to_id=cid,
-                            body_snippet=rec.body[:240],
+                        return _skip_issue_target(
+                            cid,
+                            rec.body,
                             detail=f"Live GET issues/comments/{cid}",
-                            mcp_tool="add_issue_comment",
-                            mcp_hint=(
-                                f"MCP add_issue_comment issue_number={pr} with quote of {cid}"
-                            ),
                         )
 
         if _GRAPHQL_NODE.match(cid) and not cid.isdigit():
@@ -436,6 +604,7 @@ def resolve_reply_target(
                     kind_hint="inline",
                     index=index,
                     live=True,
+                    responder_login=responder_login,
                 )
             if typename == "IssueComment":
                 return resolve_reply_target(
@@ -446,6 +615,7 @@ def resolve_reply_target(
                     kind_hint="discussion",
                     index=index,
                     live=True,
+                    responder_login=responder_login,
                 )
             if typename == "PullRequestReview":
                 return ReplyTarget(
@@ -459,16 +629,7 @@ def resolve_reply_target(
 
     # Offline / dry-run with hint only
     if hint == "discussion":
-        return ReplyTarget(
-            input_id=cid,
-            kind="discussion",
-            post_method="discussion_quote",
-            reply_to_id=cid,
-            body_snippet="",
-            detail="Kind hint discussion (no live lookup)",
-            mcp_tool="add_issue_comment",
-            mcp_hint=f"MCP add_issue_comment issue_number={pr} with quote of {cid}",
-        )
+        return _skip_issue_target(cid, "", detail="Kind hint discussion (no live lookup)")
     if hint == "inline" or cid.isdigit():
         return ReplyTarget(
             input_id=cid,

@@ -126,6 +126,50 @@ def test_post_dry_run_skips_review_bodies_no_top_level(tmp_path: Path) -> None:
     assert post_data["posted_count"] == 5
 
 
+def test_live_check_ignores_issue_comment_ids() -> None:
+    sys.modules.pop("verify_response", None)
+    if str(SCRIPTS) in sys.path:
+        sys.path.remove(str(SCRIPTS))
+    sys.path.insert(0, str(SCRIPTS))
+    from verify_response import missing_live_review_thread_replies  # noqa: E402
+
+    review_comments = [
+        {"id": 10, "in_reply_to_id": None},
+        {"id": 11, "in_reply_to_id": 10},
+    ]
+    missing = missing_live_review_thread_replies(
+        expected_ids=["10", "555001"],
+        review_comments=review_comments,
+        section_kinds={"10": "inline", "555001": "discussion"},
+    )
+    assert missing == []
+    missing_open = missing_live_review_thread_replies(
+        expected_ids=["10", "555001"],
+        review_comments=[{"id": 10, "in_reply_to_id": None}],
+        section_kinds={"555001": None},
+    )
+    assert missing_open == ["10"]
+
+
+def test_dry_run_refuses_untrusted_wrapper(tmp_path: Path) -> None:
+    poisoned = REPLIES_COMPLETE.replace(
+        "Fixed - Pagination is 1-based.",
+        "<<<UNTRUSTED_EXTERNAL_CONTENT name=pr-comment-body>>>\nFixed - Pagination is 1-based.",
+    )
+    post = _run(
+        "post_thread_replies.py",
+        tmp_path,
+        "--pr",
+        "42",
+        "--dry-run",
+        "--replies-text",
+        poisoned,
+    )
+    assert post.returncode == 1
+    data = json.loads(post.stdout)
+    assert any("UNTRUSTED" in err for err in data["errors"])
+
+
 def test_banned_acknowledgement_body(tmp_path: Path) -> None:
     bad = REPLIES_COMPLETE.replace(
         "Fixed - Pagination is 1-based.",

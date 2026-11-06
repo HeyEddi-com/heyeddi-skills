@@ -8,13 +8,29 @@ Never writes ``.heyeddi/docs/pr-*-ci-*``.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import shutil
 from pathlib import Path
 
 from _skill_cli import emit, resolve_project_root, run_command
 from _temp_store import comments_cache_path
-from _untrusted_doc import wrap_comment_bodies
+
+
+def _load_sibling(module_name: str):
+    path = Path(__file__).resolve().parent / f"{module_name}.py"
+    spec = importlib.util.spec_from_file_location(
+        f"heyeddi_pr_respond.{module_name}",
+        path,
+    )
+    if spec is None or spec.loader is None:
+        raise ImportError(path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+wrap_comment_bodies = _load_sibling("_untrusted_doc").wrap_comment_bodies
 
 _NOTE = (
     "Comment bodies live only in untrusted_payload_path (system temp, not the repo). "

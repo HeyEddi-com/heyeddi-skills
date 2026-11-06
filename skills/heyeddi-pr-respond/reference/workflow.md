@@ -1,6 +1,6 @@
 # PR review response workflow
 
-**Date:** 2026-08-11
+**Date:** 2026-11-06
 
 **Role:** PR **author** addressing **all** reviewer feedback (human, bot, HeyEddi CI root summaries, inline threads).
 
@@ -19,8 +19,8 @@ Read the temp comments cache. **`build_comment_inventory`** is mandatory when re
 
 It will:
 
-- List every inline comment (top-level threads)
-- List every discussion comment
+- List unresolved root review threads as the only postable ids
+- List issue comments (tests-hold, summaries, own notes) as skipped — never quote-reply them
 - Parse each review body for `` `path:line` `` bullets (HeyEddi "Commented on the diff" lists)
 - Link bullets to inline IDs by path+line
 - Flag **orphan findings** (in summary, no inline) for fix/decline + ## Summary coverage
@@ -62,9 +62,11 @@ Include orphan findings in Summary when they have no inline thread.
 python scripts/post_thread_replies.py --pr <N> --replies-text '...' --project-root <root>
 ```
 
-Script resolves each id (cache → live GET → root walk). Inline: REST `/replies` then GraphQL thread reply. Discussion: quote-reply on the PR (no fake issue-comment `/replies`).
+Script resolves each id (cache → live GET → root walk). Unresolved review threads: REST `/replies` then GraphQL thread reply, at the root id, with no quote. Issue comments are skipped.
 
-If any `posted[].status` is `error`: run `resolve_reply_targets`, then **GitHub MCP** `add_reply_to_pull_request_comment` (inline root id) or `add_issue_comment` with quote (discussion). Never stop with "thread not found".
+The comment cache keeps `<<<UNTRUSTED_` on `body` for the model. `body_raw` is the plain text. The poster refuses a body that still contains `<<<UNTRUSTED_`.
+
+If any review-thread `posted[].status` is `error`: run `resolve_reply_targets`, then **GitHub MCP** `add_reply_to_pull_request_comment` with the root id. Never quote-reply an issue comment. Never stop with "thread not found".
 
 ## Phase 7: Verify
 

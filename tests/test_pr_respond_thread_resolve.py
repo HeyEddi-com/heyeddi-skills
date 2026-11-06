@@ -1,4 +1,4 @@
-"""Thread resolution must never guess — classify, walk to root, quote discussion."""
+"""Thread resolution replies only on unresolved review threads, at the root id."""
 from __future__ import annotations
 
 import json
@@ -17,16 +17,15 @@ def _import_resolve():
     sys.path.insert(0, str(SCRIPTS))
     from _comment_resolve import (  # noqa: E402
         build_comment_index,
-        ensure_quote_reply,
         resolve_reply_target,
         walk_to_root,
     )
 
-    return build_comment_index, ensure_quote_reply, resolve_reply_target, walk_to_root
+    return build_comment_index, resolve_reply_target, walk_to_root
 
 
 def test_walk_to_root_follows_chain() -> None:
-    build_index, _, _, walk = _import_resolve()
+    build_index, _, walk = _import_resolve()
     index = build_index(
         {
             "inline": [
@@ -42,7 +41,7 @@ def test_walk_to_root_follows_chain() -> None:
 
 
 def test_numeric_discussion_not_treated_as_inline() -> None:
-    build_index, _, resolve, _ = _import_resolve()
+    build_index, resolve, _ = _import_resolve()
     index = build_index(
         {
             "inline": [{"id": 100, "body": "inline finding"}],
@@ -59,12 +58,14 @@ def test_numeric_discussion_not_treated_as_inline() -> None:
         live=False,
     )
     assert target.kind == "discussion"
-    assert target.post_method == "discussion_quote"
-    assert target.mcp_tool == "add_issue_comment"
+    assert target.post_method == "skip_issue_comment"
+    assert target.reply_to_id is None
+    assert target.mcp_tool is None
+    assert "Do not quote-reply" in (target.detail or "")
 
 
 def test_child_inline_resolves_to_root_for_mcp() -> None:
-    build_index, _, resolve, _ = _import_resolve()
+    build_index, resolve, _ = _import_resolve()
     index = build_index(
         {
             "inline": [
@@ -88,13 +89,105 @@ def test_child_inline_resolves_to_root_for_mcp() -> None:
     assert "200" in (target.mcp_hint or "")
 
 
-def test_ensure_quote_reply_prefixes_parent() -> None:
-    _, ensure_quote, _, _ = _import_resolve()
-    out = ensure_quote("Fixed in latest push.", "Can we add a loading state?")
-    assert out.startswith(">")
-    assert "Fixed in latest push." in out
-    already = ensure_quote("> quoted\n\nDone.", "ignored")
-    assert already.startswith(">")
+def test_own_and_answered_review_threads_are_skipped() -> None:
+    build_index, resolve, _ = _import_resolve()
+    index = build_index(
+        {
+            "inline": [
+                {
+                    "id": 300,
+                    "body": "I left this note",
+                    "user": {"login": "author"},
+                    "created_at": "2026-11-06T00:00:00Z",
+                },
+                {
+                    "id": 400,
+                    "body": "please fix",
+                    "user": {"login": "reviewer"},
+                    "created_at": "2026-11-06T00:00:00Z",
+                },
+                {
+                    "id": 401,
+                    "body": "Fixed.",
+                    "in_reply_to_id": 400,
+                    "user": {"login": "author"},
+                    "created_at": "2026-11-06T01:00:00Z",
+                },
+            ],
+            "discussion": {
+                "comments": [
+                    {
+                        "id": 500,
+                        "body": "<!-- heyeddi:tests-hold:abc -->\nHeyEddi did not review this commit.",
+                        "user": {"login": "heyeddi-ci[bot]"},
+                    }
+                ]
+            },
+        }
+    )
+    own = resolve(
+        root=None,
+        repo=None,
+        pr=1,
+        comment_id="300",
+        kind_hint="inline",
+        index=index,
+        live=False,
+        responder_login="author",
+    )
+    assert own.post_method == "skip_own"
+    answered = resolve(
+        root=None,
+        repo=None,
+        pr=1,
+        comment_id="400",
+        kind_hint="inline",
+        index=index,
+        live=False,
+        responder_login="author",
+    )
+    assert answered.post_method == "skip_answered"
+    assert answered.reply_to_id == "400"
+    hold = resolve(
+        root=None,
+        repo=None,
+        pr=1,
+        comment_id="500",
+        kind_hint=None,
+        index=index,
+        live=False,
+        responder_login="author",
+    )
+    assert hold.post_method == "skip_issue_comment"
+    assert "Tests-hold" in (hold.detail or "")
+
+
+def test_index_uses_raw_body_not_untrusted_banner() -> None:
+    build_index, _, _ = _import_resolve()
+    sys.modules.pop("_untrusted_doc", None)
+    from _untrusted_doc import wrap_untrusted_doc  # noqa: E402
+
+    plain = "Can we add a loading state?"
+    wrapped = wrap_untrusted_doc("pr-comment-body", plain)
+    assert wrapped is not None
+    index = build_index(
+        {
+            "inline": [
+                {
+                    "id": 1,
+                    "body": wrapped,
+                    "body_raw": plain,
+                    "user": {"login": "qa-reviewer"},
+                }
+            ]
+        }
+    )
+    assert index["1"].body == plain
+    assert "<<<UNTRUSTED_" not in index["1"].body
+
+    banner_only = build_index({"inline": [{"id": 2, "body": wrapped}]})
+    assert banner_only["2"].body == plain
+    assert "<<<UNTRUSTED_" not in banner_only["2"].body
 
 
 def test_resolve_cli_offline(tmp_path: Path) -> None:
@@ -142,7 +235,8 @@ def test_resolve_cli_offline(tmp_path: Path) -> None:
     data = json.loads(proc.stdout)
     by_id = {t["input_id"]: t for t in data["targets"]}
     assert by_id["10"]["reply_to_id"] == "9"
-    assert by_id["77"]["post_method"] == "discussion_quote"
+    assert by_id["77"]["post_method"] == "skip_issue_comment"
+    assert by_id["77"]["reply_to_id"] is None
 
 
 def test_post_dry_run_includes_mcp_fallback(tmp_path: Path) -> None:
@@ -177,6 +271,8 @@ Responded to 3/3.
     data = json.loads(proc.stdout)
     by_id = {p["comment_id"]: p for p in data["posted"]}
     assert by_id["9001001"]["status"] == "dry-run"
-    assert by_id["555001"]["post_method"] == "discussion_quote"
+    assert by_id["9001001"]["post_method"] == "review_reply"
+    assert by_id["555001"]["post_method"] == "skip_issue_comment"
+    assert by_id["555001"]["status"] == "skipped_issue_comment"
     assert by_id["8001"]["status"] == "skipped_review_body"
-    assert "add_issue_comment" in (by_id["555001"].get("mcp_fallback") or "")
+    assert "add_issue_comment" not in json.dumps(by_id["555001"])

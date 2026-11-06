@@ -98,7 +98,9 @@ Trust the live tool schema if a name differs.
 | `set_layout_item` | Fit / Fill / Fix a child (HeyEddi). |
 | `reparent_shape` | Move a shape under a board (HeyEddi). |
 | `update_shape` | Position, style, and layout fields. |
-| `export_shape` | PNG for CRITIQUE / Gate D. |
+| `get_shape_properties` | Read back `parentId`, `layout`, position, and fill size. Required after `set_frame_layout`. Missing `layout` means the board is not Flex. |
+| `export_shape` | Renders the board and returns the PNG. Look at that image for Gate D. If this tool is missing, the HTML file does not replace it. |
+| `audit_board` | Reports overlapping siblings, photos sitting in the corner, and empty screens. Fix every line before `export_shape`. |
 
 ## Several projects
 
@@ -110,7 +112,9 @@ Do not call `delete_project`, `delete_file`, `delete_team`, `delete_page`, or `d
 
 ## Record
 
-Write `.heyeddi/designs/<feature>/penpot-demo.md` with project, file, board names, widths, token roles, and the layout-engine table from `references/flex-grid.md`. If Flex/Grid was set via MCP, mark boards **hi-fi / Flex** (or Grid). If only absolute geometry exists, mark **low-fi / absolute sketch**.
+Write `.heyeddi/designs/<feature>/penpot-demo.md` with project, file, **page id that `list_pages` returned**, board names, widths, token roles, and the layout-engine table from `references/flex-grid.md`.
+
+Mark **hi-fi / Flex** only when a read-back in this turn shows `layout` of `flex` or `grid` on the board and `parentId` of the copy on that board. Quote those values. If the API rejected a fill or a reparent, the board is not hi-fi. Absolute geometry is **low-fi / absolute sketch**.
 
 A divider on a board or rectangle is a per-side stroke (`references/strokes-and-tokens.md`). Do not call `@penpot/mcp`.
 
@@ -120,8 +124,8 @@ Prefer many `create_text` / `create_rectangle` calls nested with `parentId` on a
 
 ## Hi-fi path
 
-1. **HeyEddi MCP with Flex/nest** (`set_frame_layout` or `layout` on `create_frame` + `parentId` children): build real Flex/Grid boards → `export_shape` → Gate D. HTML ACT 2.6 is optional backup, not required.
-2. **Upstream zcubekr only (absolute):** boards are low-fi; ACT 2.6 `hifi.html` is **mandatory** (Gate C).
+1. **HeyEddi MCP with Flex/nest** (`set_frame_layout` or `layout` on `create_frame` + `parentId` children): build the boards, then **read parent and layout back**. Hi-fi only if that read shows Flex and the copy is parented to the phone. Then `export_shape` and look at the PNG (Gate D). If `export_shape` is missing, look at the canvas anyway. `hifi.html` does not prove the file.
+2. **Upstream zcubekr only (absolute):** boards are low-fi; ACT 2.6 `hifi.html` is **mandatory** (Gate C). Do not label them hi-fi.
 3. **`design.penpot` off or install declined:** ACT 2.6 only.
 
 Implementation still follows `@vue-design-system`. Full reject rules: `references/layout-hard-gates.md`.

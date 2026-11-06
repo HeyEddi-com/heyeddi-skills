@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
-"""Post every drafted PR reply **in the same thread** as the reviewer comment.
+"""Post replies on unresolved pull-request review threads only.
 
 Never use bare ``gh pr comment`` for individual replies (top-level spam).
+Never quote-reply issue comments.
 
 Resolution (mandatory — never guess):
-- Inline / review-thread → REST ``/pulls/{pr}/comments/{ROOT_id}/replies``
+- Review thread → REST ``/pulls/{pr}/comments/{ROOT_id}/replies``
   (walk ``in_reply_to_id`` to the top-level comment; GitHub rejects reply-to-reply)
 - On REST failure → GraphQL ``addPullRequestReviewThreadReply``
-- Discussion IssueComments → quote-reply via ``POST .../issues/{pr}/comments``
-  (there is NO ``/issues/comments/{id}/replies`` endpoint)
+- Issue comments, tests-hold notes, review summaries, and comments written by
+  the responding account are skipped. There is no quote.
 
-If this script still errors for an id, the agent MUST use GitHub MCP
-``add_reply_to_pull_request_comment`` (inline) or ``add_issue_comment`` with a
-quote (discussion) — never report "thread not found" as done.
+Outgoing bodies that still contain ``<<<UNTRUSTED_`` are refused.
+
+If this script still errors for a review-thread id, the agent MUST use GitHub
+MCP ``add_reply_to_pull_request_comment`` with the root id — never report
+"thread not found" as done, and never ``add_issue_comment`` to quote a parent.
 """
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import shutil
@@ -27,10 +31,25 @@ from typing import Any
 from _comment_resolve import (
     ReplyTarget,
     build_comment_index,
-    ensure_quote_reply,
     find_review_thread_id,
     resolve_reply_target,
 )
+
+
+def _load_sibling(module_name: str):
+    path = Path(__file__).resolve().parent / f"{module_name}.py"
+    spec = importlib.util.spec_from_file_location(
+        f"heyeddi_pr_respond.{module_name}",
+        path,
+    )
+    if spec is None or spec.loader is None:
+        raise ImportError(path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+is_already_wrapped = _load_sibling("_untrusted_doc").is_already_wrapped
 from _replies_parse import (
     infer_reply_kind,
     parse_reply_sections,
@@ -41,7 +60,29 @@ from _temp_store import comments_cache_path
 from assert_fixes_pushed import evaluate as evaluate_fixes_pushed
 
 # Status values that satisfy verify_response checks
-OK_STATUSES = frozenset({"posted", "dry-run", "skipped_review_body", "already-replied"})
+OK_STATUSES = frozenset(
+    {
+        "posted",
+        "dry-run",
+        "skipped_review_body",
+        "skipped_issue_comment",
+        "skipped_own",
+        "skipped_answered",
+        "already-replied",
+    }
+)
+
+_SKIP_STATUS = {
+    "skip_review": "skipped_review_body",
+    "skip_issue_comment": "skipped_issue_comment",
+    "skip_own": "skipped_own",
+    "skip_answered": "skipped_answered",
+}
+
+_UNTRUSTED_REFUSAL = (
+    "refusing to post a body that still contains <<<UNTRUSTED_. "
+    "Use the plain reply text. The wrapper stays in the comment cache the model reads."
+)
 
 BANNED_BODY = re.compile(
     r"acknowledged review attachment|inline threads carry the detailed",
@@ -189,21 +230,6 @@ def _post_review_reply_graphql(
         return "error", "graphql non-JSON"
 
 
-def _post_discussion_quote(
-    root: Path, repo: str, pr: int, body: str, parent_snippet: str
-) -> tuple[str, str | None]:
-    quoted = ensure_quote_reply(body, parent_snippet)
-    data, err = _gh_api_json(
-        root,
-        f"repos/{repo}/issues/{pr}/comments",
-        method="POST",
-        payload={"body": quoted},
-    )
-    if err or not isinstance(data, dict):
-        return "error", err or "empty response"
-    return "posted", str(data.get("id") or data.get("node_id") or "")
-
-
 def _already_replied_inline(
     root: Path, repo: str, pr: int, root_comment_id: str
 ) -> bool:
@@ -251,37 +277,29 @@ def _post_one(
             attempts,
         )
 
-    if target.post_method == "skip_review":
-        return (
-            "skipped_review_body",
-            target.detail
-            or (
-                "Review submission bodies are not reply threads. Reply on each inline "
-                "comment via /replies; at most one Summary at the end."
-            ),
-            attempts,
-        )
+    skipped = _SKIP_STATUS.get(target.post_method)
+    if skipped:
+        return skipped, target.detail or skipped, attempts
+
+    if is_already_wrapped(body):
+        return "error", _UNTRUSTED_REFUSAL, attempts
 
     if target.post_method == "unresolved" or not target.reply_to_id:
-        hint = target.mcp_hint or "Use GitHub MCP pull_request_read then reply tools"
+        hint = target.mcp_hint or "Use GitHub MCP pull_request_read get_review_comments"
         return (
             "error",
             (target.detail or f"Cannot resolve {target.input_id}") + f" | fallback: {hint}",
             attempts,
         )
 
-    if target.post_method == "discussion_quote":
-        attempts.append("discussion_quote via POST issues/{pr}/comments")
-        status, ref = _post_discussion_quote(
-            root, repo, pr, body, target.body_snippet
+    if target.post_method != "review_reply":
+        return (
+            "error",
+            f"unsupported post_method {target.post_method} for {target.input_id}",
+            attempts,
         )
-        if status == "posted":
-            return status, ref, attempts
-        attempts.append(f"discussion_quote failed: {ref}")
-        mcp = target.mcp_hint or "MCP add_issue_comment with quote"
-        return "error", f"{ref} | fallback: {mcp}", attempts
 
-    # inline review_reply
+    # inline review_reply — body is posted as-is, never quoted from the parent
     root_id = target.reply_to_id
     attempts.append(f"REST pulls/{pr}/comments/{root_id}/replies")
     status, ref = _post_review_reply_rest(root, repo, pr, root_id, body)
@@ -314,8 +332,20 @@ def _post_one(
     )
 
 
+def _gh_login(root: Path) -> str | None:
+    if not shutil.which("gh"):
+        return None
+    out = run_command(["gh", "api", "user", "-q", ".login"], root)
+    if out.startswith("[exit") or out.startswith("[error]"):
+        return None
+    login = out.strip()
+    return login or None
+
+
 def _post_summary_once(root: Path, pr: int, body: str) -> tuple[str, str | None]:
     """Only allowed use of top-level PR comment: a single final summary."""
+    if is_already_wrapped(body):
+        return "error", _UNTRUSTED_REFUSAL
     if BANNED_BODY.search(body):
         return "error", "banned summary body"
     raw = run_command(["gh", "pr", "comment", str(pr), "--body", body], root)
@@ -402,6 +432,10 @@ def main() -> None:
 
     cache = _load_cache(cache_path)
     index = build_comment_index(cache)
+    responder = cache.get("responder_login")
+    responder_login = responder.strip() if isinstance(responder, str) and responder.strip() else None
+    if responder_login is None and not dry_run:
+        responder_login = _gh_login(root)
     repo = None if dry_run else _resolve_repo(root, cache_path)
     if not dry_run and not repo:
         emit(json.dumps({"error": "could not resolve repo for gh posts"}, indent=2))
@@ -445,14 +479,14 @@ def main() -> None:
             kind_hint=kind_hint if kind_hint != "unknown" else section.kind,
             index=index,
             live=not dry_run,
+            responder_login=responder_login,
         )
 
         if dry_run:
-            status = (
-                "skipped_review_body"
-                if target.post_method == "skip_review"
-                else "dry-run"
-            )
+            status = _SKIP_STATUS.get(target.post_method, "dry-run")
+            if target.post_method == "review_reply" and is_already_wrapped(section.body):
+                status = "error"
+                errors.append(f"{section.comment_id}: {_UNTRUSTED_REFUSAL}")
             if target.post_method == "unresolved":
                 status = "error"
                 errors.append(f"{section.comment_id}: {target.detail}")
@@ -466,8 +500,8 @@ def main() -> None:
                     "resolve_detail": target.detail,
                     "mcp_fallback": target.mcp_hint,
                     "note": (
-                        "Review bodies are not posted as top-level comments"
-                        if target.post_method == "skip_review"
+                        target.detail
+                        if target.post_method in _SKIP_STATUS
                         else (
                             f"Would {target.post_method} → {target.reply_to_id}"
                             if target.reply_to_id
@@ -531,10 +565,10 @@ def main() -> None:
         "errors": errors,
         "summary": summary_status,
         "rule": (
-            "Individual replies MUST use resolved in-thread targets. "
-            "Never gh pr comment per comment. On any error, agent MUST use "
-            "GitHub MCP add_reply_to_pull_request_comment (inline) or "
-            "add_issue_comment with quote (discussion) — never give up."
+            "Reply only on unresolved review threads at the root comment id, "
+            "with no quote. Never quote-reply issue comments. Never post a body "
+            "that contains <<<UNTRUSTED_. On a review-thread error, use GitHub "
+            "MCP add_reply_to_pull_request_comment with the root id."
         ),
         "hint": "Run verify_response.py --pr <N> --live --check after posting.",
     }

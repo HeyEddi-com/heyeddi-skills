@@ -1,5 +1,5 @@
 {
-  "version": "3.8.7",
+  "version": "3.8.8",
   "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
   "install": "npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'",
   "skills": [
@@ -129,7 +129,7 @@
     },
     {
       "name": "taste-penpot",
-      "description": "General design skill: one-pass look and tokens. Prefer @heyeddi/penpot-mcp-server Flex/Grid + nesting; hifi.html when MCP is absolute-only; text-wall reject; visual QA before done"
+      "description": "General design skill: one-pass look and tokens. Hi-fi only after layout and parentId are read back from the Penpot file. hifi.html does not prove those boards. Text-wall reject. Canvas QA before done"
     },
     {
       "name": "heyeddi-local-first",

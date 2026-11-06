@@ -8,33 +8,81 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import shutil
 import sys
 from pathlib import Path
+from typing import Any
 
+from _comment_resolve import awaiting_root_ids
 from _replies_parse import parse_reply_sections, summary_is_last
 from _skill_cli import emit, resolve_project_root, run_command
 from _temp_store import comments_cache_path, inventory_cache_path
 
+_NOT_INLINE_KINDS = frozenset({"review", "reviews", "discussion", "issue-comment"})
+
 
 def _expected_from_fixture(path: Path) -> list[str]:
+    """Root review-thread ids only. Issue comments and review summaries are not threads."""
     data = json.loads(path.read_text(encoding="utf-8"))
+    inline = [item for item in (data.get("inline") or []) if isinstance(item, dict)]
+    responder = data.get("responder_login")
+    login = responder.strip() if isinstance(responder, str) and responder.strip() else None
+    awaiting = set(awaiting_root_ids(inline, login))
     ids: list[str] = []
-    for item in data.get("inline") or []:
-        if isinstance(item, dict) and item.get("id") is not None:
-            ids.append(str(item["id"]))
-    discussion = data.get("discussion") or {}
-    for item in discussion.get("comments") or []:
-        if isinstance(item, dict) and item.get("id") is not None:
-            ids.append(str(item["id"]))
-    for item in data.get("reviews") or []:
-        if not isinstance(item, dict):
+    for item in inline:
+        if item.get("in_reply_to_id") is not None or item.get("id") is None:
             continue
-        body = item.get("body") or ""
-        if isinstance(body, str) and body.strip() and item.get("id") is not None:
-            ids.append(str(item["id"]))
+        cid = str(item["id"])
+        if cid in awaiting:
+            ids.append(cid)
     return ids
+
+
+def missing_live_review_thread_replies(
+    *,
+    expected_ids: list[str],
+    review_comments: list[dict[str, Any]],
+    section_kinds: dict[str, str | None],
+) -> list[str]:
+    """Ids whose root review thread has no ``in_reply_to_id`` child.
+
+    Only ids present on ``GET /pulls/{pr}/comments`` are inline threads.
+    Issue-comment ids are ignored even when they are numeric.
+    """
+    parent_of: dict[str, str | None] = {}
+    for item in review_comments:
+        if not isinstance(item, dict) or item.get("id") is None:
+            continue
+        parent = item.get("in_reply_to_id")
+        parent_of[str(item["id"])] = str(parent) if parent is not None else None
+
+    def root_of(comment_id: str) -> str:
+        seen: set[str] = set()
+        current = comment_id
+        while current in parent_of and current not in seen:
+            seen.add(current)
+            parent = parent_of[current]
+            if not parent:
+                return current
+            current = parent
+        return current
+
+    replied_roots = {parent for parent in parent_of.values() if parent}
+    missing: list[str] = []
+    seen_roots: set[str] = set()
+    for comment_id in expected_ids:
+        if comment_id not in parent_of:
+            continue
+        kind = (section_kinds.get(comment_id) or "").lower()
+        if kind in _NOT_INLINE_KINDS:
+            continue
+        root_id = root_of(comment_id)
+        if root_id in seen_roots:
+            continue
+        seen_roots.add(root_id)
+        if root_id not in replied_roots:
+            missing.append(comment_id if comment_id == root_id else root_id)
+    return missing
 
 
 def _expected_from_cache(path: Path) -> list[str]:
@@ -65,35 +113,30 @@ def _parse_comment_ids(raw: str | None) -> list[str]:
     return [part.strip() for part in raw.split(",") if part.strip()]
 
 
-def _live_replied_inline_ids(root: Path, pr: int, repo: str | None) -> tuple[set[str], str | None]:
-    """Return set of parent inline comment IDs that already have a reply on GitHub."""
+def _live_review_comments(
+    root: Path, pr: int, repo: str | None
+) -> tuple[list[dict[str, Any]] | None, str | None]:
+    """Fetch ``GET /pulls/{pr}/comments`` only. Issue comments are not threads."""
     if not shutil.which("gh"):
-        return set(), "gh CLI not found"
+        return None, "gh CLI not found"
     if not repo:
         repo_out = run_command(
             ["gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner"],
             root,
         )
         if repo_out.startswith("[exit") or repo_out.startswith("[error]"):
-            return set(), f"could not resolve repo: {repo_out}"
+            return None, f"could not resolve repo: {repo_out}"
         repo = repo_out.strip()
     raw = run_command(["gh", "api", f"repos/{repo}/pulls/{pr}/comments", "--paginate"], root)
     if raw.startswith("[exit") or raw.startswith("[error]"):
-        return set(), f"gh api failed: {raw[:200]}"
+        return None, f"gh api failed: {raw[:200]}"
     try:
         comments = json.loads(raw)
     except json.JSONDecodeError:
-        return set(), "gh api returned non-JSON"
+        return None, "gh api returned non-JSON"
     if not isinstance(comments, list):
-        return set(), "gh api comments payload is not a list"
-    replied: set[str] = set()
-    for item in comments:
-        if not isinstance(item, dict):
-            continue
-        parent = item.get("in_reply_to_id")
-        if parent is not None:
-            replied.add(str(parent))
-    return replied, None
+        return None, "gh api comments payload is not a list"
+    return [item for item in comments if isinstance(item, dict)], None
 
 
 def main() -> None:
@@ -175,7 +218,10 @@ def main() -> None:
         elif inv_path.is_file():
             try:
                 inv = json.loads(inv_path.read_text(encoding="utf-8"))
-                inv_ids = inv.get("postable_reply_ids") or inv.get("expected_reply_ids") or []
+                if "postable_reply_ids" in inv:
+                    inv_ids = inv.get("postable_reply_ids") or []
+                else:
+                    inv_ids = inv.get("expected_reply_ids") or []
                 for cid in inv_ids:
                     scid = str(cid)
                     if scid not in expected_ids:
@@ -215,27 +261,23 @@ def main() -> None:
                 repo = json.loads(cache_path.read_text(encoding="utf-8")).get("repo")
             except (json.JSONDecodeError, OSError):
                 repo = None
-        live_replied, live_err = _live_replied_inline_ids(root, args.pr, repo)
-        if live_err:
+        review_comments, live_err = _live_review_comments(root, args.pr, repo)
+        if live_err or review_comments is None:
             missing.append(f"live reply check failed: {live_err}")
         else:
-            inline_ids = [
-                cid
-                for cid in expected_ids
-                if re.fullmatch(r"\d+", cid or "")
-            ]
-            for section in reply_sections:
-                if (section.kind or "").lower() == "inline" and section.comment_id not in inline_ids:
-                    inline_ids.append(section.comment_id)
-            for comment_id in inline_ids:
-                row_kind = next(
-                    (s.kind for s in reply_sections if s.comment_id == comment_id),
-                    None,
-                )
-                if (row_kind or "").lower() in {"review", "reviews"}:
-                    continue
-                if comment_id not in live_replied:
-                    missing.append(f"live GitHub missing threaded reply for inline {comment_id}")
+            replied_roots = {
+                str(item.get("in_reply_to_id"))
+                for item in review_comments
+                if item.get("in_reply_to_id") is not None
+            }
+            live_replied = replied_roots
+            section_kinds = {section.comment_id: section.kind for section in reply_sections}
+            for comment_id in missing_live_review_thread_replies(
+                expected_ids=expected_ids,
+                review_comments=review_comments,
+                section_kinds=section_kinds,
+            ):
+                missing.append(f"live GitHub missing threaded reply for inline {comment_id}")
 
     if args.require_gate:
         docs = root / ".heyeddi" / "docs"
