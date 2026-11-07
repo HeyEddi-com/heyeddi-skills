@@ -1201,3 +1201,17 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Process:** colours/typographies → boards → `set_layout_item` + read x/y → escape if 0,0 → export PNG → CRITIQUE. Never rebuild nested Flex; never ship on audit alone.
 
 **Notes:** MCP Flex reflow / quieter audit / image paint remain server-side follow-ups; skills stop papering them over.
+
+## 2026-11-07 — Designer-thinking identity gate (3–5 options + .heyeddi docs)
+
+**Context:** Agents skipped `@taste-penpot` identity gate while scaffolding (e.g. “Fraunces + teal while EPUB works”), admitting the design skill pipeline did not run.
+
+**Decision:** Hub **v3.8.10**. Design pack **v1.2.10**.
+- `@taste-penpot` **v1.7.0**: `references/identity-gate.md` Phase 0 (project / peers / follow-vs-unique) → write `.heyeddi/designs/<feature>/identity-thinking.md`; ask 2–3 clarifying questions when blocked; present **3–5** What/Why/How options → `identity-options.md`; stop for A–E. Scaffolding/MVP never waives the gate.
+- `@heyeddi-design` **v2.12.0**: sync brief-language / shape / team / ANTI_PATTERNS; no craft while gate open.
+- `@heyeddi` **v3.4.2**: router points at designer-thinking gate.
+- Docs: `docs/design-excellence.md`, `docs/clarify-before-act.md`, `docs/heyeddi-folder.md`.
+
+**Process:** Design talk → taste Phase 0 (document + ask) → 3–5 options → user pick → PLAN → ACT → heyeddi-design record → craft/handoff.
+
+**Notes:** Dogfood after release: reinstall skills, then any “design X” without a pinned look must stop at options, not ship a default type pairing.

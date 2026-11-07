@@ -1,5 +1,17 @@
 # Examples
 
+## Identity gate (no style pinned)
+
+```
+Design Margin — an EPUB/PDF/MD reader. Make it fancy and cool.
+```
+
+**Pass:** Write `.heyeddi/designs/margin-reader/identity-thinking.md` (job, audience, peer e-readers, follow vs unique). Ask if needed. Offer **3–5** What/Why/How options in chat + `identity-options.md`. **Stop.** After A–E, PLAN → ACT.
+
+**Reject:** Skip taste, pick Fraunces + Literata + teal while scaffolding, call it done.
+
+## Pinned metaphor (gate skipped)
+
 ```
 Design the marketing home as an atlas desk. Cool paper, sea teal, no admin kit.
 ```

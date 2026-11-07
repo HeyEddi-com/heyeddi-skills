@@ -2,8 +2,9 @@
 # Anti-patterns: HeyEddi design
 
 - NEVER skip discovery for vague briefs: ask before building.
-- NEVER craft on adjective-only briefs ("professional", "clean", "modern") without `@taste-penpot` **identity gate** (≥3 options + user choice) and **subject/metaphor + hard rejects** — read `reference/brief-language.md` and taste `references/identity-gate.md`.
-- NEVER invent a look or tokens while waiting for the user to pick an identity option.
+- NEVER craft on adjective-only briefs ("professional", "clean", "modern") without `@taste-penpot` **identity gate** (designer thinking in `.heyeddi/designs/`, then 3–5 What/Why/How options + user choice) and **subject/metaphor + hard rejects** — read `reference/brief-language.md` and taste `references/identity-gate.md`.
+- NEVER invent a look or tokens while waiting for clarifying answers or the user to pick an identity option.
+- NEVER craft or hand off while scaffolding "workable UI" when identity is still unset — taste gate first, then craft.
 - NEVER write Vue, Flutter, or component CSS in this skill — `@heyeddi-handoff` / `@design-handoff-flutter` implement; see `reference/implement-routing.md`.
 - NEVER stop after critique and ask whether to fix — chain implement + `@visual-auditor` automatically.
 - NEVER add OpenProps to a brownfield project that does not use it: follow `token-strategy.md`.

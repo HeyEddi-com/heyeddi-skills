@@ -27,7 +27,7 @@ Read the scoped source before choosing a look. Write `.heyeddi/designs/<feature>
 
 ## Redesign proposal
 
-After the audit, run the **identity gate** (`references/identity-gate.md`) unless the user already pinned the new identity. Present **≥3** options grounded in the product (and the audit), then **stop until they choose**. Do not invent a single redesign look and draw it.
+After the audit, run the **identity gate** (`references/identity-gate.md`) unless the user already pinned the new identity. Document designer thinking under `.heyeddi/designs/`, then present **3–5** What/Why/How options grounded in the product (and the audit), then **stop until they choose**. Do not invent a single redesign look and draw it.
 
 Once identity is locked, `@taste-penpot` replaces the look for the scoped pages. Product behavior, routes, and real copy stay. The current palette, type, and layout are a hard reject for that scope. "Existing system first" does not apply to the visual system on a from-scratch or redesign request.
 

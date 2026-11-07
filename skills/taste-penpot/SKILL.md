@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST present ≥3 project-grounded identity options (type, colours, metaphor) and wait for the user to choose before tokens or pixels. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A–G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow — absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
-version: 1.6.0
-product-version: 3.8.9
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST run the identity gate: designer thinking (project, peers, follow vs unique) documented under .heyeddi/designs/, ask clarifying questions when needed, then present 3–5 What/Why/How options and wait for choice before tokens or pixels. Scaffolding/MVP never waives the gate. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A–G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow — absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
+version: 1.7.0
+product-version: 3.8.10
 author: HeyEddi-com
 ---
 
@@ -55,21 +55,25 @@ the identity is locked. Never ask the user to invoke a command.
 
 **Identity gate (hard):** If the user did not pin a style/brand and this is not a
 refine of an existing `design.md` system, load `references/identity-gate.md`
-**before any tokens or pixels**. Present **≥3** project-grounded identities
-(metaphor, type, named colours, hard rejects, why this product). **Stop and wait**
-for A/B/C (or a hybrid). Do not invent a look and ship it. Refine of an existing
-identity skips the gate. "You choose" counts as a choice — pick one, say why, continue.
-Full rules: `references/identity-gate.md`.
+**before any tokens or pixels**. Run **designer thinking** first (what the
+project is, what peers do, follow vs unique), write it to
+`.heyeddi/designs/<feature>/identity-thinking.md`, ask **2–3 clarifying
+questions** when job/audience cannot be inferred, then present **3–5**
+What/Why/How identities and write them to `identity-options.md`. **Stop and
+wait** for A–E (or a hybrid). Scaffolding / MVP / "workable UI" never waives
+this. Refine of an existing identity skips the gate. "You choose" counts as a
+choice — pick one, say why, continue. Full rules: `references/identity-gate.md`.
 
-Aside from the identity gate and the Penpot install question
-(`references/penpot-mcp.md` when the server is missing and `design.penpot` is not
-`off`), ask at most one other design question, and only when a fact that changes
-the work cannot be inferred (audience, page job). Otherwise decide, state it, and
-keep going.
+Aside from the identity gate (Phase 0 questions + A–E choice) and the Penpot
+install question (`references/penpot-mcp.md` when the server is missing and
+`design.penpot` is not `off`), ask at most one other design question, and only
+when a fact that changes the work cannot be inferred. Otherwise decide, state
+it, and keep going.
 
 Ground rules that override everything else:
 
-- **Identity before pixels.** No locked identity → no ACT. See identity gate above.
+- **Identity before pixels.** No locked identity → no ACT. Document thinking in
+  `.heyeddi/` before options; never skip for scaffolding. See identity gate.
 - **The brief wins.** Pinned fonts, colours, eras, materials or layouts are obeyed
   exactly, even when they appear on the anti-slop list. Your taste never overrides
   an explicit instruction.
@@ -95,10 +99,10 @@ Ground rules that override everything else:
 
 Deeper rules live in references. Load them when the pass needs them:
 
-- `references/identity-gate.md`: **≥3 identity options + wait for choice** when
-  no style is pinned. Load at the start of PLAN for new looks / redesigns /
-  adjective-only requests. Skip only for refine of an existing system or a
-  pinned brand.
+- `references/identity-gate.md`: **designer thinking → 3–5 What/Why/How options
+  + wait** when no style is pinned. Document under `.heyeddi/designs/`. Load at
+  PLAN start for new looks / redesigns / adjective-only / scaffold first looks.
+  Skip only for refine of an existing system or a pinned brand.
 - `third-party/frontend-design/SKILL.md`: Anthropic frontend-design (Apache-2.0).
   Load during PLAN before choosing type, colour, or layout (after identity is
   locked). Its two-pass uniqueness check is mandatory. The brief still wins
@@ -138,10 +142,11 @@ destructive, see ACT safety).
 ### 1.0 Identity gate (before mode tokens)
 
 Load `references/identity-gate.md`. If the gate applies and the user has not
-chosen yet: present **≥3** options in chat (type, colours with hex, identity /
-metaphor, hard rejects, why this product), then **end the turn**. Do not
-continue to 1.1–1.5 or ACT until they pick. If the gate is skipped or already
-satisfied, state which identity is locked in one line and continue.
+chosen yet: run Phase 0 (project / peers / stance → `.heyeddi/…/identity-thinking.md`;
+ask if blocked), then present **3–5** What/Why/How options in chat and
+`identity-options.md`, then **end the turn**. Do not continue to 1.1–1.5 or ACT
+until they pick. If the gate is skipped or already satisfied, state which
+identity is locked in one line and continue.
 
 ### 1.1 Pick the mode from the surface, not the product
 

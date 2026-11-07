@@ -1,6 +1,6 @@
 # Clarify before act (all HeyEddi skills)
 
-**Date:** 2026-09-04
+**Date:** 2026-11-07
 
 Every skill follows this order when information is missing:
 
@@ -9,8 +9,11 @@ Every skill follows this order when information is missing:
 2. Run load/audit     your skill's readonly script
 3. Inspect repo       code, openapi, tests — objective facts
 4. Ask the user       1 focused question or numbered list (max one round unless blocking)
-5. Act                never guess routes, API fields, or layout intent
+5. Document           write decisions into .heyeddi/ before irreversible work
+6. Act                never guess routes, API fields, or layout intent
 ```
+
+**Design / new look:** documentation and questions are not optional polish. `@taste-penpot` identity gate Phase 0 writes `designs/<feature>/identity-thinking.md`, asks when job/audience is unclear, then offers **3–5** options in `identity-options.md` and **stops** until the user picks. Do not skip to craft for scaffolding.
 
 ## Always-on (every chat)
 

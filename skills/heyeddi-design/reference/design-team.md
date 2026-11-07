@@ -1,6 +1,6 @@
 # Design team
 
-`@taste-penpot` is the general design skill. When no style is pinned, it runs the **identity gate** (`references/identity-gate.md`: ≥3 options, wait for choice). After identity is locked, it chooses the look in one pass and writes tokens. Penpot is an optional designer visual (API MCP), not a second design skill.
+`@taste-penpot` is the general design skill. When no style is pinned, it runs the **identity gate** (`references/identity-gate.md`: project/peers/stance in `.heyeddi/`, then **3–5** What/Why/How options, wait for A–E). After identity is locked, it chooses the look in one pass and writes tokens. Penpot is an optional designer visual (API MCP), not a second design skill.
 
 `@heyeddi-design` records personas, the route job, and those tokens in `.heyeddi/design.md`, then hands implementation to `@heyeddi-handoff` or `@design-handoff-flutter`.
 

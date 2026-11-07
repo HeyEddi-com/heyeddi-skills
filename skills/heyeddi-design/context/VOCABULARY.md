@@ -5,7 +5,7 @@
 - **Brief language:** taste + subject + hard rejects up front — not adjective-only briefs; see `reference/brief-language.md`.
 - **Research:** web trend / reference gathering → `.heyeddi/designs/<feature>/research.md`.
 - **Explore:** concept images (GenerateImage) + optional Canvas + wireframes → `.heyeddi/designs/<feature>/wireframes/`; see `visual-tools.md`.
-- **Identity gate:** `@taste-penpot` ≥3 identity options when style unset; user picks before shape/craft.
+- **Identity gate:** `@taste-penpot` designer thinking in `.heyeddi/` + **3–5** What/Why/How options when style unset; user picks before shape/craft.
 - **Shape:** identity locked → discover → research → explore → confirmed `brief.md`.
 - **Init:** create `.heyeddi/product.md`; offer `document` for `.heyeddi/design.md`.
 - **Document:** scan or seed `.heyeddi/design.md` (semantic tokens + PrimeVue; OpenProps when scaffold uses it).

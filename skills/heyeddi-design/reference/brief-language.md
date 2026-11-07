@@ -8,7 +8,7 @@ Vague adjectives are not a brief. **Naming taste + subject + hard rejects up fro
 
 ## Identity choice gate (before this hard gate)
 
-If the user did **not** pin a style/brand and this is not a refine of an existing `design.md` identity: `@taste-penpot` must run **`references/identity-gate.md`** first — **≥3** project-grounded options (metaphor, type, named hex colours, hard rejects, why this product), then **stop until the user picks**. Do not craft, polish into a new look, or invent tokens on adjectives alone. Refine of an existing system skips that gate. After they choose, continue with the pins below using that identity.
+If the user did **not** pin a style/brand and this is not a refine of an existing `design.md` identity: `@taste-penpot` must run **`references/identity-gate.md`** first — document project/peers/stance under `.heyeddi/designs/`, ask when needed, then **3–5** What/Why/How options — then **stop until the user picks**. Do not craft, polish into a new look, or invent tokens on adjectives alone. Scaffolding never waives this. Refine of an existing system skips that gate. After they choose, continue with the pins below using that identity.
 
 ## Hard gate (before pixels or craft)
 

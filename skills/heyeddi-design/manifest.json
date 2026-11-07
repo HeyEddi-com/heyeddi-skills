@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-design",
-  "version": "2.11.0",
+  "version": "2.12.0",
   "tools": [
     {
       "name": "load_design_context",
