@@ -8,14 +8,17 @@
 - NEVER require Penpot when `design.penpot` is `off`. Write the spec and HTML+CSS.
 - NEVER call unscoped `penpot-mcp-server`, `@penpot/mcp`, or `penpot-api-mcp`. Prefer `@heyeddi/penpot-mcp-server` (Flex/Grid + nesting); upstream `@zcubekr/penpot-mcp-server` is absolute-only fallback.
 - NEVER install or enable a Penpot server without an explicit yes. A missing server means ask once (`references/penpot-mcp.md`), then wait.
-- NEVER skip `parentId` nesting and `set_frame_layout` when the HeyEddi MCP exposes them: that is the hi-fi Penpot path.
+- NEVER draw phones before the Penpot design system (Gate E): `add_color` / `add_typography` (or reuse library) and fonts from `list_font_variants` only. No invented faces (Sora/Nunito/etc.).
+- NEVER skip `parentId` nesting and `set_frame_layout` when the HeyEddi MCP exposes them — then prove reflow. Create-time `layoutItem*` alone is not enough; call `set_layout_item` and read back.
+- NEVER claim Flex hi-fi when children still read `x/y = 0` after layout. Switch to absolute 8px (or stop). Do not rebuild the same nested-Flex approach.
 - NEVER override a pinned brief with taste or with the Anthropic refuse list.
-- NEVER fake a stack or a page skeleton with absolutely positioned rectangles. 1D flow is Flex. 2D tracks are CSS Grid (`references/flex-grid.md`). Absolute position is for a badge, close icon, or tooltip that must leave the flow.
+- NEVER fake a stack or a page skeleton with absolutely positioned rectangles **when Flex reflow works**. 1D flow is Flex. 2D tracks are CSS Grid (`references/flex-grid.md`). Absolute is for overlays — or the Gate F escape when the API does not reflow.
 - NEVER fake a divider, a card separator, or a tab indicator with a 1px rectangle inside a flex column. On a board or rectangle that is a per-side stroke (`references/strokes-and-tokens.md`).
 - NEVER ship a **text-wall**: one multiline string (or one HTML blob) inside a gray card instead of separate labels, fields, helpers, and CTAs on an 8px grid (`references/layout-hard-gates.md` Gate A).
-- NEVER claim Flex/Grid or Inspect CSS from absolute MCP frames. Those boards are low-fi sketches only (Gate B). Calling `set_frame_layout` is not proof. Read `layout` and `parentId` back. If the read omits them, the board is not hi-fi.
+- NEVER claim Flex/Grid or Inspect CSS from absolute MCP frames (unless Gate F absolute-8px + Gate D PNG). Calling `set_frame_layout` is not proof. Read `layout`, `parentId`, and child `x`/`y` back.
 - NEVER skip ACT 2.6 `hifi.html` because Penpot MCP was connected. While MCP cannot set Flex/nest children, HTML hi-fi is mandatory (Gate C).
 - NEVER treat `hifi.html` as proof of a Penpot file. The HTML mirror is a different artifact. A board that stores type the canvas does not show is a fail (Gate D).
-- NEVER call a photo done because a media id was attached. A thumbnail in the corner is a failed board, including when a fill replacement was rejected.
-- NEVER call the pass done without looking at the Penpot canvas (export PNG, or shape read plus the canvas when export is missing). HTML does not clear Gate D.
-- NEVER hand off to `@heyeddi-design` / `@heyeddi-handoff` with any Gate A–D unchecked.
+- NEVER call a photo done because `create_image` succeeded or a media id was attached. Prefer rect + cover image fill. A thumbnail in the corner is a failed board.
+- NEVER call the pass done without a Gate D PNG (or an explicit export/Cloudflare block reported). API success and `audit_board` pass do not clear Gate D.
+- NEVER leave empty or broken pages (`Look`, dated shells) as the demo surface (Gate G).
+- NEVER hand off to `@heyeddi-design` / `@heyeddi-handoff` with any Gate A–G unchecked.

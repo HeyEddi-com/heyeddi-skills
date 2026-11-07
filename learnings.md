@@ -1188,3 +1188,16 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Process:** Install HeyEddi MCP → create_frame with `layout: flex` → create_text/rect with `parentId` + Fit/Fill → export_shape → CRITIQUE. Upstream zcubekr alone still forces ACT 2.6.
 
 **Notes:** npm publish needs org auth (`npm login` for `@heyeddi`). Local path `node …/dist/index.js` also works.
+
+## 2026-11-06 — Taste gates A–G (MCP Flex reality + design system first)
+
+**Context:** Hi-fi Flex phones looked empty: API saved `layout: flex` / `parentId` while children stayed at `0,0`; `layoutItem*` on create often null; invented fonts (Sora/Nunito) missing in Penpot; `create_image` weaker than rect fills; `export_shape` hit Cloudflare; `audit_board` false-passed after hand coords. Fault was **both** MCP gaps and agent process.
+
+**Decision:** Hub **v3.8.9**. Design pack **v1.2.9**.
+- `@taste-penpot` **v1.6.0**: Gates E (design system + fonts), F (Flex reflow / `set_layout_item` / absolute 8px escape after one fail), G (page hygiene); Gate B/D tightened (0,0 ≠ Flex; PNG required; audit hint-only); `penpot-mcp.md` design-system-first order + known MCP limits table
+- `@heyeddi-design` **v2.11.0**: craft prerequisite 5 / setup 3k / ANTI_PATTERNS sync to A–G
+- `@heyeddi` **v3.4.1**: router points at design-system-first + gates A–G
+
+**Process:** colours/typographies → boards → `set_layout_item` + read x/y → escape if 0,0 → export PNG → CRITIQUE. Never rebuild nested Flex; never ship on audit alone.
+
+**Notes:** MCP Flex reflow / quieter audit / image paint remain server-side follow-ups; skills stop papering them over.

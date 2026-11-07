@@ -6,6 +6,32 @@ Designer visuals use **`@heyeddi/penpot-mcp-server`** (GitHub `HeyEddi-com/penpo
 
 A connected Penpot server counts when its tools include `list_teams` and `create_frame`. Prefer the HeyEddi fork when `set_frame_layout` or `parentId` on create tools is present (hi-fi in Penpot). Upstream `@zcubekr/penpot-mcp-server` still works for absolute sketches only; then Gate C HTML remains mandatory.
 
+## Design system first (not blind drawing)
+
+Order of work on a connected file:
+
+1. **Read** — `list_projects` → `list_files` → `get_file` / `list_pages`. Reuse the app's project.
+2. **System** — if refining, reuse library colours and typographies. If new or redesign: `add_color` and `add_typography` for the token roles **before** any phone board. Confirm fonts with `list_font_variants` (or fonts already in the file). Never invent faces (Sora/Nunito/etc.) that Penpot does not have.
+3. **Components** (when the surface repeats) — create/update components for nav, field row, CTA; instantiate instead of redrawing.
+4. **Boards** — phones at 375 / 768 / 1440 using those tokens. Prefer library-bound fills and type.
+5. **Layout proof** — `set_layout_item` + read-back. If Flex children stay at `0,0`, switch to absolute 8px (Gate F). Do not rebuild nested Flex.
+6. **Pixels** — `export_shape` and **look at the PNG** (Gate D). No PNG / Cloudflare ⇒ not done. `audit_board` is a hint, never the ship signal.
+7. **Hygiene** — do not leave empty Look/dated shells as the demo surface (Gate G).
+
+Full reject rules: `references/layout-hard-gates.md` Gates A–G.
+
+## Known MCP limits
+
+Treat these as constraints, not bugs to ignore:
+
+| Limit | Skill response |
+|---|---|
+| Flex flags save; children stay at `0,0` (no API reflow) | Gate F: one Flex try → absolute 8px or HTML. Never claim hi-fi Flex. |
+| `layoutItem*` on create often `null` | Always `set_layout_item`, then read back. |
+| `create_image` weaker than rect fills | Prefer rect + cover image fill. Media paint may need `PENPOT_AUTH_TOKEN` (see MCP README), not access token alone. |
+| `export_shape` / auth can hit Cloudflare | Gate D fail. Report block. Do not ship on API success. |
+| `audit_board` noisy (label-on-button) / false pass after hand coords | Hint only. PNG decides. |
+
 ## Never use these Penpot MCPs
 
 Do not call their tools, do not keep them as the `penpot` entry, and do not install them.
@@ -78,6 +104,8 @@ Local clone:
 
 `PENPOT_ACCESS_TOKEN` must already be in the environment Cursor passes to the server. Never print it, and never write it into a repo, a skill, a chat, or `mcp.json`. If it is unset, ask the user to set it on the `penpot` server in Cursor and continue only after they confirm it is set.
 
+For image fills / export that must match the canvas, the MCP README may also require `PENPOT_AUTH_TOKEN`. Do not invent workarounds that skip Gate D.
+
 Tell the user to enable the new `penpot` server. After `list_teams` is available, use that server.
 
 On no, follow ACT 2.6 in `SKILL.md`. `design.penpot: off` skips this section. Do not ask, and do not install.
@@ -91,16 +119,20 @@ Trust the live tool schema if a name differs.
 | `list_teams` | Confirms API MCP access. |
 | `list_projects` / `search_projects` | Pick the app project. |
 | `list_files` / `get_file` | Read before writing boards. |
-| `create_project` / `create_file` / `add_page` | Scope containers. |
-| `create_frame` | Board at 375 / 768 / 1440. Pass `layout: "flex"` or `"grid"` plus gap/padding/dir when using HeyEddi. |
-| `create_text` / `create_rectangle` / `create_circle` | Pass **`parentId`** of the board. Separate nodes per field (no text-wall). Set `layoutItemHSizing` / `layoutItemVSizing`. |
+| `list_pages` / `add_page` / `rename_page` | Scope pages; rename instead of leaving empty shells (Gate G). |
+| `create_project` / `create_file` | Scope containers. |
+| `add_color` / `add_typography` | Design system roles **before** phones (Gate E). |
+| `list_font_variants` / font upload tools | Prove a face exists before `create_text`. |
+| `create_component` / `instantiate` / variants | Repeated UI (nav, field, CTA). |
+| `create_frame` | Board at 375 / 768 / 1440. Pass `layout: "flex"` or `"grid"` plus gap/padding/dir when using HeyEddi — then prove reflow (Gate F). |
+| `create_text` / `create_rectangle` / `create_circle` | Pass **`parentId`** of the board. Separate nodes per field (no text-wall). Do not trust create-time `layoutItem*` alone. |
 | `set_frame_layout` | Enable Flex/Grid on an existing board (HeyEddi). |
-| `set_layout_item` | Fit / Fill / Fix a child (HeyEddi). |
+| `set_layout_item` | Fit / Fill / Fix a child (HeyEddi). **Required** after create; read back. |
 | `reparent_shape` | Move a shape under a board (HeyEddi). |
-| `update_shape` | Position, style, and layout fields. |
-| `get_shape_properties` | Read back `parentId`, `layout`, position, and fill size. Required after `set_frame_layout`. Missing `layout` means the board is not Flex. |
-| `export_shape` | Renders the board and returns the PNG. Look at that image for Gate D. If this tool is missing, the HTML file does not replace it. |
-| `audit_board` | Reports overlapping siblings, photos sitting in the corner, and empty screens. Fix every line before `export_shape`. |
+| `update_shape` | Position, style, and layout fields. Absolute 8px escape uses this. |
+| `get_shape_properties` | Read back `parentId`, `layout`, `x`, `y`, `layoutItem*`, fill size. Required after layout changes. Missing `layout` or children at `0,0` means not Flex hi-fi. |
+| `export_shape` | Renders the board and returns the PNG. **Look at that image** for Gate D. Cloudflare / missing = not done. HTML does not replace it. |
+| `audit_board` | Hint for overlaps and empty screens. Fix real issues. Ignore noisy stacking when the PNG is correct. Never ship on audit alone. |
 
 ## Several projects
 
@@ -108,15 +140,15 @@ Trust the live tool schema if a name differs.
 
 ## Do not delete
 
-Do not call `delete_project`, `delete_file`, `delete_team`, `delete_page`, or `delete_shape` unless the user named that exact target in this turn. A redesign adds or updates the boards in scope. It does not wipe a library.
+Do not call `delete_project`, `delete_file`, `delete_team`, `delete_page`, or `delete_shape` unless the user named that exact target in this turn. A redesign adds or updates the boards in scope. It does not wipe a library. Prefer rename / replace content for empty shells (Gate G).
 
 ## Record
 
-Write `.heyeddi/designs/<feature>/penpot-demo.md` with project, file, **page id that `list_pages` returned**, board names, widths, token roles, and the layout-engine table from `references/flex-grid.md`.
+Write `.heyeddi/designs/<feature>/penpot-demo.md` with project, file, **page id that `list_pages` returned**, board names, widths, token roles, library colour/typography ids, and the layout-engine table from `references/flex-grid.md`.
 
-Mark **hi-fi / Flex** only when a read-back in this turn shows `layout` of `flex` or `grid` on the board and `parentId` of the copy on that board. Quote those values. If the API rejected a fill or a reparent, the board is not hi-fi. Absolute geometry is **low-fi / absolute sketch**.
+Mark **hi-fi / Flex** only when a read-back in this turn shows `layout` of `flex` or `grid` on the board, `parentId` of the copy on that board, **and** children are not stuck at `0,0`. Quote those values. If Flex reflow failed and you used absolute 8px, mark **hi-fi / absolute 8px** only after Gate D PNG. Absolute geometry without that PNG is **low-fi / absolute sketch**.
 
-A divider on a board or rectangle is a per-side stroke (`references/strokes-and-tokens.md`). Do not call `@penpot/mcp`.
+If the API rejected a fill or a reparent, the board is not hi-fi. A divider on a board or rectangle is a per-side stroke (`references/strokes-and-tokens.md`). Do not call `@penpot/mcp`.
 
 ## Text on boards (no walls)
 
@@ -124,8 +156,9 @@ Prefer many `create_text` / `create_rectangle` calls nested with `parentId` on a
 
 ## Hi-fi path
 
-1. **HeyEddi MCP with Flex/nest** (`set_frame_layout` or `layout` on `create_frame` + `parentId` children): build the boards, then **read parent and layout back**. Hi-fi only if that read shows Flex and the copy is parented to the phone. Then `export_shape` and look at the PNG (Gate D). If `export_shape` is missing, look at the canvas anyway. `hifi.html` does not prove the file.
-2. **Upstream zcubekr only (absolute):** boards are low-fi; ACT 2.6 `hifi.html` is **mandatory** (Gate C). Do not label them hi-fi.
-3. **`design.penpot` off or install declined:** ACT 2.6 only.
+1. **Design system** (Gate E) → boards with library tokens.
+2. **HeyEddi MCP with Flex/nest:** `layout` + `parentId` + `set_layout_item` → read parent, layout, child x/y back. If children at `0,0`, absolute 8px escape (Gate F). Then `export_shape` and look at the PNG (Gate D). If export is blocked, stop and say so. `hifi.html` does not prove the file.
+3. **Upstream zcubekr only (absolute):** boards are low-fi; ACT 2.6 `hifi.html` is **mandatory** (Gate C). Do not label them hi-fi.
+4. **`design.penpot` off or install declined:** ACT 2.6 only.
 
 Implementation still follows `@vue-design-system`. Full reject rules: `references/layout-hard-gates.md`.

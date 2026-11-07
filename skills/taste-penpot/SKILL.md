@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST present ≥3 project-grounded identity options (type, colours, metaphor) and wait for the user to choose before tokens or pixels. Layouts use Penpot Flex (1D) or CSS Grid (2D) via @heyeddi/penpot-mcp-server (parentId + set_frame_layout). Hard gates: reject text-walls; absolute-only MCP is low-fi and needs hifi.html; visual QA before done. Redesign/from-scratch uses references/code-to-design.md. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
-version: 1.5.1
-product-version: 3.8.8
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST present ≥3 project-grounded identity options (type, colours, metaphor) and wait for the user to choose before tokens or pixels. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A–G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow — absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
+version: 1.6.0
+product-version: 3.8.9
 author: HeyEddi-com
 ---
 
@@ -48,7 +48,7 @@ Full contract: `references/penpot-mcp.md`. Hard gates: `references/layout-hard-g
 }
 ```
 
-After npm publish, prefer `"args": ["-y", "@heyeddi/penpot-mcp-server"]`. Keep `PENPOT_ACCESS_TOKEN` in the env Cursor passes to the server; never write it into `mcp.json` or chat. Hi-fi path: `create_frame` with `layout` + children with `parentId` + `set_frame_layout`, then read `layout` and `parentId` back, then `export_shape` and look at the PNG. `hifi.html` does not prove those boards. Absolute-only upstream zcubekr still requires ACT 2.6 `hifi.html`.
+After npm publish, prefer `"args": ["-y", "@heyeddi/penpot-mcp-server"]`. Keep `PENPOT_ACCESS_TOKEN` in the env Cursor passes to the server; never write it into `mcp.json` or chat. Hi-fi path: **design system first** (`add_color` / `add_typography`, fonts from `list_font_variants`) → `create_frame` with `layout` + children with `parentId` → `set_layout_item` + read `layout` / `parentId` / child `x,y` back → if children stuck at `0,0`, absolute 8px escape (do not rebuild Flex) → `export_shape` and look at the PNG. No PNG / Cloudflare ⇒ not done. `audit_board` alone never ships. `hifi.html` does not prove those boards. Absolute-only upstream zcubekr still requires ACT 2.6 `hifi.html`.
 
 Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present — **after**
 the identity is locked. Never ask the user to invoke a command.
@@ -108,10 +108,11 @@ Deeper rules live in references. Load them when the pass needs them:
 - `references/flex-grid.md`: Penpot Flex (Shift+A) for one direction, CSS Grid
   (Ctrl/Cmd+Shift+A) for rows and columns together. Load during PLAN whenever
   the surface has structure, and in ACT when writing boards or the HTML fallback.
-- `references/layout-hard-gates.md`: **reject rules** for text-walls, absolute≠Flex
-  claims, mandatory `hifi.html` while MCP cannot Flex/nest, and visual QA before
-  done. Load at ACT start and before claiming done. Hi-fi bar = human settings/
-  form craft, not a copy paste in a gray rectangle.
+- `references/layout-hard-gates.md`: **reject rules** Gates A–G (text-walls,
+  Flex reflow / 0,0 children, HTML≠Penpot, PNG visual QA, design system first,
+  layoutItem stickiness, page hygiene). Load at ACT start and before claiming
+  done. Hi-fi bar = human settings/form craft, not a copy paste in a gray
+  rectangle. Known MCP limits are listed there — do not paper them over.
 - `references/strokes-and-tokens.md`: Penpot 2.19 per-side strokes and shared
   token libraries. Load when a board or rectangle has a border, a divider, or
   a token binding.
@@ -241,55 +242,64 @@ into the plan. If none are given, use the mode's defaults.
 1. Read `references/penpot-mcp.md` and `references/layout-hard-gates.md`.
 2. Use the `penpot` server when it is `@heyeddi/penpot-mcp-server` or compatible
    API MCP with `list_teams` + `create_frame`. Prefer HeyEddi tools:
-   `set_frame_layout`, `parentId`, `set_layout_item`, `reparent_shape`,
-   `create_text`, `create_rectangle`, `export_shape`.
+   `add_color`, `add_typography`, `list_font_variants`, `set_frame_layout`,
+   `parentId`, `set_layout_item`, `reparent_shape`, `create_text`,
+   `create_rectangle`, `export_shape`.
 3. If `list_teams` is missing, or the connected server is unscoped
    `penpot-mcp-server`, `@penpot/mcp`, or `penpot-api-mcp`, follow Install in
    `references/penpot-mcp.md`. Do not call those other servers. Skip boards and
    go straight to 2.6 after the user declines, or when `design.penpot` is `off`.
 4. Detect capacity: if `set_frame_layout` or `create_frame` accepts `layout` and
-   creates accept `parentId` (HeyEddi fork), build **hi-fi Flex/Grid boards** and
-   nest children. If only absolute create_* exists (upstream zcubekr), boards are
-   **low-fi** and **2.6 `hifi.html` is mandatory**.
+   creates accept `parentId` (HeyEddi fork), attempt Flex/Grid **then prove
+   reflow** (Gate F). If only absolute create_* exists (upstream zcubekr),
+   boards are **low-fi** and **2.6 `hifi.html` is mandatory**.
 
-### 2.2 Read and export
+### 2.2 Design system, then boards, then export
 
 - `list_projects` → `list_files` → `get_file` for the app's project.
-- Create the missing page and frames for the scope. Then read them back
-  (`get_shape_properties`: `layout`, `parentId`, `x`, `y`). No `layout`, or
-  copy that is not parented to the phone, means the board is a low-fi sketch.
-  Do not write hi-fi in `penpot-demo.md`. Then Gate D: `export_shape` and read
-  the PNG. If `export_shape` is missing, read the canvas anyway. `hifi.html`
-  does not prove the Penpot file.
+- **Gate E first:** reuse or `add_color` / `add_typography`. Fonts only from
+  `list_font_variants` (or already in the file). No invented faces.
+- Create or update the page and frames for the scope. Prefer components for
+  repeated chrome. Then read shapes back (`get_shape_properties`: `layout`,
+  `parentId`, `x`, `y`, `layoutItem*`). Always `set_layout_item` after create.
+- No `layout`, or copy not parented to the phone → low-fi sketch. Flex flag
+  with children still at `0,0` → **absolute 8px escape** (one try only). Do not
+  write Flex hi-fi in `penpot-demo.md`.
+- **Gate D:** `export_shape` and read the PNG. Cloudflare / missing export ⇒
+  **not done** — say so. `audit_board` is a hint only. Prefer rect + cover
+  image fill over `create_image`. `hifi.html` does not prove the Penpot file.
+- **Gate G:** do not leave empty Look/dated shells as the demo surface.
 - On a redesign, the current palette is not reusable. Summarize what stays
   (routes, copy, behavior) and what the new boards replace.
 
 ### 2.3 Demo brief + boards (low-fi when absolute)
 
-Create optional MCP boards, and always write
+Create MCP boards only after Gate E, and always write
 `.heyeddi/designs/<feature>/penpot-demo.md` so the handoff survives if the
 server disconnects.
 
 - One board per flow, named for handoff (`screens/pricing`,
   `screens/settings/billing`), at 375, 768, and 1440 when the surface is responsive.
-- Label boards **low-fi / absolute sketch** when Flex was not set on the frame.
+- Label boards **low-fi / absolute sketch** when Flex was not proven. Label
+  **hi-fi / absolute 8px** only after Gate F escape + Gate D PNG.
 - Token roles mapped to the Aura bridge: `--app-bg`, `--app-surface-card`,
   `--app-border`, `--app-text-main`, `--app-text-muted`, `--q-primary` from
-  `--p-primary-color`.
+  `--p-primary-color`. Quote Penpot library colour/typography ids in the brief.
 - Component split: Quasar shell vs PrimeVue Aura data. Motion cites a preset
   from `@motion-physics` (`microFeedback`, `modalEnter`, `staggerItem`).
 - Layout engine per region from `references/flex-grid.md` (direction or tracks,
   gap, padding, justify, align, Fit / Fill / Fix). Quasar `q-layout` is the app
   frame: drawer width and header height are the fixed grid tracks. Page
   interiors use the named engine. If the live MCP schema can set flex or grid,
-  set it on the frame. Otherwise the demo brief is the Shift+A / Ctrl+Shift+A
-  instruction for a human in Penpot, and **implementation CSS comes from 2.6**.
+  set it on the frame **and prove reflow**. Otherwise the demo brief is the
+  Shift+A / Ctrl+Shift+A instruction for a human in Penpot, and
+  **implementation CSS comes from 2.6**.
 - **No text-walls (Gate A):** never one multiline string per card. Place separate
   labels, fields, helpers, and CTAs on the **8px grid** (many `create_text` /
   `create_rectangle` calls). Operate surfaces must read as a settings/form UI.
 - Real copy. Label synthetic content as placeholder.
 - Do not delete projects, files, pages, or shapes unless the user named that
-  exact target. A redesign adds the boards in scope.
+  exact target. Prefer rename/replace for empty shells (Gate G).
 
 ### 2.4 What the designer receives
 
@@ -331,17 +341,17 @@ brief once `@heyeddi/penpot-mcp-server` is connected.
 
 ## 3. CRITIQUE
 
-**Hard stop:** do not present or hand off until Gates A-D in
+**Hard stop:** do not present or hand off until Gates A–G in
 `references/layout-hard-gates.md` pass. When Penpot boards exist, score the
-**canvas** (export PNG or shape read-back). `hifi.html` is not that canvas.
-Score each line 0-2 (0 = fails, 1 = acceptable, 2 = strong). Fix every 0, then
-fix the cheapest 1s. Do one fix round, re-check once, and stop; open-ended
-polishing wastes the user's time. **You must look at the Penpot pixels.** A
-board that stores type the canvas does not show is a fail.
+**canvas PNG**. `hifi.html` is not that canvas. `audit_board` alone is not
+done. Score each line 0-2 (0 = fails, 1 = acceptable, 2 = strong). Fix every 0,
+then fix the cheapest 1s. Do one fix round, re-check once (PNG again), and stop;
+open-ended polishing wastes the user's time. **You must look at the Penpot
+pixels.** A board that stores type the canvas does not show is a fail.
 
 | # | Check | Pass looks like |
 |---|---|---|
-| 0 | **Hard gates** | No text-wall. Hi-fi only after read-back shows `layout` and `parentId`. `hifi.html` is not proof of the Penpot file. The canvas shows the type. No corner thumbnail (`layout-hard-gates.md`). Any fail = score 0 and stop. |
+| 0 | **Hard gates** | Gates A–G: no text-wall; Flex only if reflow real (not 0,0); design system + real fonts; PNG read (or export block reported); no orphan empty pages (`layout-hard-gates.md`). Any fail = score 0 and stop. |
 | 1 | **Specificity** | Cover the product name: it still could not be any other product. Not in a calibration cluster (anti-slop.md). |
 | 2 | **Mode fit** | Persuade: offer clear, action visible in its working form, proof shown. Operate: a regular user knows where everything is before noticing style. Read: comfortable column, clear wayfinding. Experience: the work leads. |
 | 3 | **Hierarchy** | Squint test: primary, secondary and groups readable in order; one focal point per view. |
@@ -353,7 +363,7 @@ board that stores type the canvas does not show is a fail.
 | 9 | **Animation spec** | One authored moment at most (none for routine Operate screens); spatial motion uses a `@motion-physics` spring preset; reduced-motion path exists. |
 | 10 | **Copy** | Product's own words; actions say verb + object; errors say what failed and how to recover; no hype clichés; no invented claims. |
 | 11 | **Anti-slop** | Zero items from the refuse list unless the brief explicitly asked for them. |
-| 12 | **Penpot / hi-fi hygiene** | `penpot-demo.md` quotes layout and parentId from a read-back. Absolute boards are low-fi. Page ids exist in the file. Dividers are per-side strokes (`references/strokes-and-tokens.md`), not 1px rectangles. |
+| 12 | **Penpot / hi-fi hygiene** | `penpot-demo.md` quotes layout, parentId, child x/y, and library token ids from a read-back. Broken Flex is not hi-fi. Absolute 8px escape is labelled honestly. Page ids exist; no empty shell pages. Dividers are per-side strokes (`references/strokes-and-tokens.md`), not 1px rectangles. |
 
 Then present, briefly:
 
