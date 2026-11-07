@@ -1,7 +1,10 @@
 # Anti-patterns
 
 - NEVER run a discover → research → shape pipeline. One pass only.
-- NEVER invent a look when the user only said "modern" / "clean" / "professional" — run `references/identity-gate.md` (≥3 options, wait for choice).
+- NEVER invent a look when the user only said "modern" / "clean" / "professional" — run `references/identity-gate.md` (designer thinking in `.heyeddi/`, then 3–5 What/Why/How options, wait for choice).
+- NEVER waive the identity gate for scaffolding, MVP, readers, demos, or "clean workable UI" while shipping functionality.
+- NEVER dump options without Phase 0 (project / peers / follow-vs-unique) written to `.heyeddi/designs/<feature>/identity-thinking.md`.
+- NEVER keep identity thinking only in chat — write `identity-thinking.md` and `identity-options.md` before ACT.
 - NEVER ship PLAN tokens, Penpot boards, or HTML demos before identity is locked (pinned, chosen, or refine-skip).
 - NEVER present three hue swaps of the same world and call them identities.
 - NEVER invent a second palette after `@heyeddi-design` already has tokens from this pass.

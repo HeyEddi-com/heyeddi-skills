@@ -1,8 +1,8 @@
 ---
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. Discovers skills, syncs .heyeddi/, and decides what to run. Design talk goes to @taste-penpot first (look, @zcubekr/penpot-mcp-server only) then @heyeddi-design. A redesign or from-scratch request analyzes the app before any new look. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
-version: 3.4.1
-product-version: 3.8.9
+version: 3.4.2
+product-version: 3.8.10
 author: HeyEddi-com
 ---
 
@@ -19,7 +19,7 @@ Routes work to the right `@skill`, refreshes `.heyeddi/`, and **keeps product, U
 - **Every session start** on a HeyEddi project (`.heyeddi/` present or greenfield app request)
 - User asks "what skills do we have?" or "which skill should handle this?"
 - Before a multi-step pipeline (intake → scaffold → design → handoff → QA)
-- **Design / look / polish:** `@taste-penpot` first. If no style/identity is pinned and this is not a refine of an existing `design.md` system, taste runs the **identity gate** (`references/identity-gate.md`): ≥3 project-grounded options (type, colours, metaphor) and **waits for the user to choose** before tokens or pixels. Then one pass for tokens. Prefer `@heyeddi/penpot-mcp-server` — **design system first** (colours/type/fonts), then boards; Flex only if reflow is real (else absolute 8px); PNG Gate D required (`taste-penpot/references/layout-hard-gates.md` A–G). Absolute-only MCP still needs `hifi.html`. Then `@heyeddi-design` records product context and **blocks handoff** on text-walls / empty phones / missing PNG. Vue implementation follows `@vue-design-system`. Do not let `@heyeddi-design` invent a second look. Never use unscoped `penpot-mcp-server` or `@penpot/mcp`.
+- **Design / look / polish:** `@taste-penpot` first. If no style/identity is pinned and this is not a refine of an existing `design.md` system, taste runs the **identity gate** (`references/identity-gate.md`): designer thinking (project, peers, follow vs unique) written under `.heyeddi/designs/`, clarifying questions when needed, then **3–5** What/Why/How options — and **waits for the user to choose** before tokens or pixels. Scaffolding / MVP never waives that. Then one pass for tokens. Prefer `@heyeddi/penpot-mcp-server` — **design system first** (colours/type/fonts), then boards; Flex only if reflow is real (else absolute 8px); PNG Gate D required (`taste-penpot/references/layout-hard-gates.md` A–G). Absolute-only MCP still needs `hifi.html`. Then `@heyeddi-design` records product context and **blocks handoff** on text-walls / empty phones / missing PNG. Vue implementation follows `@vue-design-system`. Do not let `@heyeddi-design` invent a second look. Never use unscoped `penpot-mcp-server` or `@penpot/mcp`.
 - **Redesign / from scratch:** `@taste-penpot` loads `references/code-to-design.md`, then the **identity gate** (unless the user pinned the new identity). Scope is the whole app, the named pages, or one page. The pass writes the audit and the proposal. It does not edit Vue until the user asks to build.
 - **Any time one pillar runs**: bookend with `load_workflow_context` / `append_pillar_opinion`
 - After `@heyeddi-intake`: confirm `skill-routing.json` before downstream work

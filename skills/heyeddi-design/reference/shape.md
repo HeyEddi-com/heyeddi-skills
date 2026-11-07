@@ -7,13 +7,13 @@
 ## Pipeline
 
 ```
-identity gate (≥3 options → user picks)
+identity gate (designer thinking → 3–5 options → user picks)
   → discover → research → explore → brief → user confirms → hand off to craft
 ```
 
 Load and follow each phase in order:
 
-0. **Identity gate (hard when unset):** Load `@taste-penpot` → `references/identity-gate.md`. If no pinned style and not refining an existing `design.md` identity: present **≥3** options (type, colours, metaphor) grounded in the project, **end the turn**, wait for A/B/C. Do not invent a look. Skip only when refine preserves an existing system or the user already pinned/chose an identity.
+0. **Identity gate (hard when unset):** Load `@taste-penpot` → `references/identity-gate.md`. If no pinned style and not refining an existing `design.md` identity: write identity-thinking under `.heyeddi/designs/`, ask if blocked, present **3–5** What/Why/How options, **end the turn**, wait for A–E. Do not invent a look. Scaffolding never skips. Skip only when refine preserves an existing system or the user already pinned/chose an identity.
 1. `reference/discover.md`: discovery interview (personas if missing from product.md)
 2. `reference/research.md`: web trend research → `designs/<feature>/research.md` (**Audience fit** section required)
 3. `reference/explore.md`: concept images + wireframes + **visual tools** (`reference/visual-tools.md`) — probes must match the **chosen** identity, not open a second identity contest

@@ -1,8 +1,19 @@
 # Design excellence — HeyEddi layers
 
-**Date:** 2026-09-20
+**Date:** 2026-11-07
 
 How HeyEddi skills produce **world-class, audience-driven** UI — not generic “modern SaaS.”
+
+## Identity before craft (hard)
+
+When no style/brand is pinned, `@taste-penpot` runs the **identity gate** (`skills/taste-penpot/references/identity-gate.md`) **before** tokens, Penpot, or Vue:
+
+1. **Designer thinking** → write `.heyeddi/designs/<feature>/identity-thinking.md` (project job/audience, peer defaults, follow vs unique stance)
+2. **Ask** 2–3 clarifying questions when job/audience cannot be inferred — wait
+3. **Offer 3–5** What/Why/How identities → `.heyeddi/designs/<feature>/identity-options.md` + chat — wait for A–E
+4. **Then** PLAN → ACT → `@heyeddi-design` records tokens → craft/handoff
+
+Scaffolding, MVP, readers, and “clean workable UI” **never** waive this. Documentation in `.heyeddi/` is the SSOT; chat is the summary.
 
 ## The stack (bottom → top)
 
@@ -11,7 +22,8 @@ How HeyEddi skills produce **world-class, audience-driven** UI — not generic �
 | **1. Intake** | `@heyeddi-intake` → `product.md` | Personas, per-route intent, competitors, voice |
 | **2. Routing** | `skill-routing.json`, `@heyeddi` | Which skill runs per route; skills index cache |
 | **3. Discovery** | `@heyeddi-design discover` + **`brief-language.md`** | Pin subject/metaphor + hard rejects (not adjectives); purpose, audience, scene |
-| **4. Research** | `designs/<feature>/research.md` | Category + competitor + audience-specific trends |
+| **3b. Identity gate** | `@taste-penpot` → `identity-thinking.md` + `identity-options.md` | Human designer loop: project → peers → stance → **3–5** options; user picks |
+| **4. Research** | `designs/<feature>/research.md` | Category + competitor + audience-specific trends (also informs gate Phase 0) |
 | **5. Direction** | `audience-design.md` + `modern-reference.md` + `aesthetic-direction.md` | Map persona → aesthetic; technique execution |
 | **6. Explore** | Wireframes + concept direction | User picks a direction before code |
 | **7. Brief** | `designs/<feature>/brief.md` | Confirmed contract — Design signature (taste, rejects, hero, type, accent, responsive, SSOT) |

@@ -1,6 +1,6 @@
 # Aesthetic direction: distinctive craft (not template AI UI)
 
-**Look is owned by `@taste-penpot`.** It loads Anthropic `frontend-design` and writes the tokens. When no style is pinned, taste runs the **identity gate** first (`../taste-penpot/references/identity-gate.md`) — ≥3 options, wait for choice — then writes tokens. This file is the HeyEddi product constraint (PrimeVue, token SSOT, screenshot gate), not a second art direction. If a rule here disagrees with the taste pass, the taste tokens win unless `product.md` explicitly pins a brand.
+**Look is owned by `@taste-penpot`.** It loads Anthropic `frontend-design` and writes the tokens. When no style is pinned, taste runs the **identity gate** first (`../taste-penpot/references/identity-gate.md`) — designer thinking in `.heyeddi/designs/`, then **3–5** What/Why/How options, wait for choice — then writes tokens. This file is the HeyEddi product constraint (PrimeVue, token SSOT, screenshot gate), not a second art direction. If a rule here disagrees with the taste pass, the taste tokens win unless `product.md` explicitly pins a brand.
 
 **Date:** 2026-09-20
 

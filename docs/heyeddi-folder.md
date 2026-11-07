@@ -47,7 +47,7 @@ We publish **free, open [Cursor Agent Skills](https://github.com/HeyEddi-com/hey
 3. **`@heyeddi-intake`** (greenfield) writes `product.md`, optional mockups/briefs, and `docs/intake/skill-routing.json` before other skills.
 4. **`@heyeddi-product`** reviews intake, writes feature specs (stories + AC), delegates UX/design/engineering research, and synthesizes review plans under `docs/product/`.
 5. **Cross-pillar sync** — `@heyeddi` `init_workflow_sync` + `opinions/`; product, UX, and design pillars opine on each route (see `docs/cross-pillar-workflow.md`).
-6. **Design skills** write to `.heyeddi/design.md` and `.heyeddi/designs/` (product.md often from `@heyeddi-intake` first).
+6. **Design skills** write to `.heyeddi/design.md` and `.heyeddi/designs/` (product.md often from `@heyeddi-intake` first). New looks also write `designs/<feature>/identity-thinking.md` (project / peers / stance) and `identity-options.md` (**3–5** What/Why/How options) **before** craft — see [design-excellence.md](./design-excellence.md).
 7. **Always-on** — `@heyeddi` (router), `@engineering-excellence` (plan + change gates), prose anti-slop. See [always-on-skills.md](always-on-skills.md).
 8. **QA / PR skills** write reports to `.heyeddi/docs/` (e.g. `ship-report.md`, `pr-42-tracking.md`).
 9. **Engineering excellence** maintains `.heyeddi/docs/engineering/` and audit reports (`engineering-audit-<date>.md`).
