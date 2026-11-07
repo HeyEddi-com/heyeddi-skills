@@ -14,10 +14,21 @@ def test_identity_gate_reference_exists() -> None:
     path = TASTE / "references" / "identity-gate.md"
     assert path.is_file()
     text = path.read_text(encoding="utf-8")
-    assert "≥3" in text or "at least three" in text.lower() or ">=3" in text
+    lower = text.lower()
+    assert (
+        "3–5" in text
+        or "3-5" in text
+        or "3 to 5" in lower
+        or "≥3" in text
+        or "at least three" in lower
+        or ">=3" in text
+    )
+    assert "identity-thinking.md" in text
+    assert "what it is" in lower and "why it is" in lower and "how it is" in lower
     assert "Stop" in text or "stop" in text
     assert "Typography" in text or "typography" in text
-    assert "hex" in text.lower()
+    assert "hex" in lower
+    assert "scaffolding" in lower or "mvp" in lower
 
 
 def test_taste_skill_wires_identity_gate() -> None:
