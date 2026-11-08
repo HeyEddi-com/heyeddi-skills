@@ -1,17 +1,28 @@
 ---
 name: heyeddi-pr-respond
-description: "Respond to all PR review feedback — human reviewers, HeyEddi CI, inline threads. Auto-fix, commit+push, in-thread replies, CI check first — never ask before fixing or posting. One skill for every review source."
-version: 2.3.0
-product-version: 3.8.11
+description: "Respond to all PR review feedback — human reviewers, @heyeddi-pr-review inline findings, HeyEddi CI. Same GitHub user who left the review is fine. Auto-fix, commit+push, in-thread replies, CI check first. Not the reviewer skill (use heyeddi-pr-review) and not the merge gate (use pre-merge-gate)."
+version: 2.4.0
+product-version: 3.8.12
 author: HeyEddi-com
 disable-model-invocation: true
 ---
 
 # HeyEddi PR Respond
 
-**PR author response to every review source** — human teammates, bots, and **HeyEddi CI** (inline + root summaries).
+**PR author response to every review source** — human teammates, **`@heyeddi-pr-review` line findings**, bots, and **HeyEddi CI**.
+
+Same GitHub account may both review and respond. Unresolved **review-thread roots** stay postable even when authored by the responder. Skip only when the thread already ends with the responder's reply, or when the item is a non-thread issue comment.
 
 There is **one** respond skill. Do not split human vs CI into different pipelines.
+
+## Flow
+
+```
+@heyeddi-pr-review   → inline findings (or Approve)
+@heyeddi-pr-respond  → this skill: fix/decline + reply every thread
+@pre-merge-gate      → merge readiness after threads are done
+```
+
 
 ## Default behavior (no confirmation)
 
@@ -52,7 +63,7 @@ Review **submission bodies** often list findings like:
 2. Every **postable** review thread gets fix/decline analysis, code change when needed, and `## Comment <id>` reply draft.
 3. Orphan items still get fix/decline in code and appear in `## Summary`.
 4. Do **not** treat the root summary as done after one top-level reply.
-5. Do **not** draft replies for issue comments (tests-hold notes, conversation summaries, comments by the responding account).
+5. Do **not** draft replies for issue comments (tests-hold notes, conversation summaries). Own **issue** notes are skipped; own **review-thread findings** from `@heyeddi-pr-review` are **not** skipped.
 
 ## Critical: commit + push before "Fixed" replies
 
@@ -72,7 +83,7 @@ Reply only on **unresolved pull-request review threads**, at the **root** commen
 - **Do** resolve the id first (`resolve_reply_targets` or `post_thread_replies` resolution)
 - **Do** reply on the **root** review-comment id (GitHub rejects replies-to-replies)
 - **Do** `gh api …/pulls/<N>/comments/<ROOT_ID>/replies` for that root (script does GraphQL fallback)
-- **Do not** quote-reply issue comments. Skip tests-hold notes, review summaries, and comments written by the account that is responding
+- **Do not** quote-reply issue comments. Skip tests-hold notes and review submission bodies. Do **not** skip unresolved inline findings just because you authored them (self-review → respond is supported)
 - **Do not** post a body that still contains `<<<UNTRUSTED_`. The wrapper stays in the cache file the model reads (`body`). Posters use `body_raw`
 - **Do not** `gh pr comment` per finding (except one final Summary)
 - **Do not** "Acknowledged review attachment…" spam

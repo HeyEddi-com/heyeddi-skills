@@ -1226,3 +1226,14 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - `@heyeddi-design` **v2.13.0**: setup 3i + `verify_prose.py` wording generalized; defaults still Vue/locale/`.heyeddi` so lit trees do not explode.
 
 **Process:** Write clean → apply PROSE_ANTI_SLOP → run checker on defaults and `--glob` for other edited prose → never claim "not for books."
+
+## 2026-11-07 — PR review is line-level code review; respond handles self-review
+
+**Context:** `@heyeddi-pr-review` was a product/docs/gate checklist writing `.heyeddi` reports. Agents did not leave GitHub inline comments. `@heyeddi-pr-respond` skipped threads authored by the responding account, breaking self-review → respond.
+
+**Decision:** Hub **v3.8.12**.
+- `@heyeddi-pr-review` **v2.0.0**: real code review (security/logic/related code); **not** lint/pre-commit; **not** `@pre-merge-gate`. Mandatory `post_inline_review` on exact lines (`<!-- heyeddi-pr-review -->`). Zero findings → APPROVE.
+- `@heyeddi-pr-respond` **v2.4.0**: reply to unresolved review roots even when same GitHub user left them; skip only after a responder reply exists.
+- Flow: **review → respond → pre-merge-gate**. `@heyeddi` **v3.4.4** pipelines/next-skill updated.
+
+**Process:** Review posts inline findings → respond fixes/replies → pre-merge-gate for ship.

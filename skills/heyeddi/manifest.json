@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi",
-  "version": "3.4.3",
+  "version": "3.4.4",
   "tools": [
     {
       "name": "sync",
@@ -8,14 +8,28 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "project_root": { "type": "string" },
-          "hub_root": { "type": "string" },
-          "skip_workflow": { "type": "boolean" },
-          "skip_update_check": { "type": "boolean" },
-          "force_update_check": { "type": "boolean" },
-          "dry_run": { "type": "boolean" }
+          "project_root": {
+            "type": "string"
+          },
+          "hub_root": {
+            "type": "string"
+          },
+          "skip_workflow": {
+            "type": "boolean"
+          },
+          "skip_update_check": {
+            "type": "boolean"
+          },
+          "force_update_check": {
+            "type": "boolean"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
         },
-        "required": ["project_root"]
+        "required": [
+          "project_root"
+        ]
       },
       "script": "scripts/sync.py",
       "readonly": false
@@ -26,16 +40,36 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "project_root": { "type": "string" },
-          "hub_root": { "type": "string" },
-          "repo": { "type": "string" },
-          "latest": { "type": "string", "description": "Override latest version (offline/evals)" },
-          "force": { "type": "boolean" },
-          "dismiss": { "type": "boolean" },
-          "disable": { "type": "boolean", "description": "Kill switch: stop update checks" },
-          "enable": { "type": "boolean" }
+          "project_root": {
+            "type": "string"
+          },
+          "hub_root": {
+            "type": "string"
+          },
+          "repo": {
+            "type": "string"
+          },
+          "latest": {
+            "type": "string",
+            "description": "Override latest version (offline/evals)"
+          },
+          "force": {
+            "type": "boolean"
+          },
+          "dismiss": {
+            "type": "boolean"
+          },
+          "disable": {
+            "type": "boolean",
+            "description": "Kill switch: stop update checks"
+          },
+          "enable": {
+            "type": "boolean"
+          }
         },
-        "required": ["project_root"]
+        "required": [
+          "project_root"
+        ]
       },
       "script": "scripts/check_skills_update.py",
       "readonly": false
@@ -127,13 +161,27 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "project_root": { "type": "string" },
-          "hub_root": { "type": "string" },
-          "current_skill": { "type": "string" },
-          "route": { "type": "string" },
-          "mode": { "type": "string", "description": "Sub-command just finished (shape, craft, audit, sync, …)" }
+          "project_root": {
+            "type": "string"
+          },
+          "hub_root": {
+            "type": "string"
+          },
+          "current_skill": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "description": "Sub-command just finished (shape, craft, audit, sync, \u2026)"
+          }
         },
-        "required": ["project_root", "current_skill"]
+        "required": [
+          "project_root",
+          "current_skill"
+        ]
       },
       "script": "scripts/suggest_next_skill.py",
       "readonly": true

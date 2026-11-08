@@ -272,7 +272,7 @@ def build_inventory(
         "responder_login": login,
         "rules": [
             "Reply only on unresolved pull-request review threads, at the root comment id, with no quote.",
-            "Do not quote-reply issue comments. Skip tests-hold notes, review summaries, and comments written by the responding account.",
+            "Do not quote-reply issue comments. Skip tests-hold notes and review summaries. Unresolved inline findings stay postable even if authored by the responder (self-review).",
             "Every postable inline ID must get a ## Comment <id> reply draft.",
             "Orphan review findings (no inline) must be fixed/declined in code and covered in ## Summary.",
             "Review submission bodies are not postable threads.",

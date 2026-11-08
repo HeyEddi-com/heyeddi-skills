@@ -1,28 +1,38 @@
+# Examples: PR code review
 
-# Examples: PR submission review
-
-## Fetch context (live)
+## Fetch context
 
 ```bash
-python scripts/fetch_pr_context.py --pr 42 --project-root . --write-cache
+python scripts/fetch_pr_context.py --pr 42 --project-root .
+gh pr diff 42
 ```
 
-## Fixture mode (eval / no gh)
+## Post findings on exact lines
 
 ```bash
-python scripts/fetch_pr_context.py --pr 42 --fixture fixtures/sample-pr-diff.json --project-root .
-python scripts/check_doc_drift.py --pr 42 --fixture fixtures/sample-pr-diff.json --project-root .
-python scripts/audit_pr_changes.py --pr 42 --fixture fixtures/sample-pr-diff.json --project-root .
+cat > /tmp/findings.json <<'EOF'
+[
+  {
+    "path": "src/api/auth.py",
+    "line": 88,
+    "body": "**Severity:** high\n**Issue:** Token compared with `==`.\n**Why:** Timing side channel on secrets.\n**Fix:** Use `hmac.compare_digest`."
+  }
+]
+EOF
+python scripts/post_inline_review.py --pr 42 --findings-file /tmp/findings.json --project-root .
 ```
 
-## Write report
+## Clean approve (no findings)
 
 ```bash
-python scripts/write_pr_review.py --pr 42 --fixture fixtures/sample-pr-diff.json --force --project-root .
+python scripts/post_inline_review.py --pr 42 --findings-json '[]' --project-root .
 ```
 
-## Verify before merge
+## Dry-run / eval fixture
 
 ```bash
-python scripts/verify_pr_review.py --pr 42 --check --project-root .
+python scripts/post_inline_review.py --pr 42 --findings-file /tmp/findings.json \
+  --fixture-out /tmp/posted.json --project-root .
+python scripts/verify_inline_review.py --pr 42 --findings-file /tmp/findings.json \
+  --posted-file /tmp/posted.json --check --project-root .
 ```

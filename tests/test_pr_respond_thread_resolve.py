@@ -11,7 +11,8 @@ SCRIPTS = REPO / "skills" / "heyeddi-pr-respond" / "scripts"
 
 
 def _import_resolve():
-    sys.modules.pop("_comment_resolve", None)
+    for name in ("_comment_resolve", "_skill_cli", "_untrusted_doc", "_temp_store"):
+        sys.modules.pop(name, None)
     if str(SCRIPTS) in sys.path:
         sys.path.remove(str(SCRIPTS))
     sys.path.insert(0, str(SCRIPTS))
@@ -89,7 +90,7 @@ def test_child_inline_resolves_to_root_for_mcp() -> None:
     assert "200" in (target.mcp_hint or "")
 
 
-def test_own_and_answered_review_threads_are_skipped() -> None:
+def test_self_review_roots_postable_answered_still_skipped() -> None:
     build_index, resolve, _ = _import_resolve()
     index = build_index(
         {
@@ -135,7 +136,9 @@ def test_own_and_answered_review_threads_are_skipped() -> None:
         live=False,
         responder_login="author",
     )
-    assert own.post_method == "skip_own"
+    # Self-review findings stay postable (same login left the root finding).
+    assert own.post_method == "review_reply"
+    assert own.reply_to_id == "300"
     answered = resolve(
         root=None,
         repo=None,
