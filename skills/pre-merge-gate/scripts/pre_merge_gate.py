@@ -122,7 +122,9 @@ def run_git_clean_checks(root: Path, rows: list[tuple[str, str, str]]) -> None:
     if out.startswith("[exit") or out.startswith("[error]"):
         rows.append(("git-clean", "FAIL", out[:200]))
         return
-    if out.strip() and not out.startswith("[skip]"):
+    # run_command maps empty stdout to "(success, no output)" — that is clean.
+    dirty = out.strip() and out.strip() != "(success, no output)" and not out.startswith("[skip]")
+    if dirty:
         rows.append(("git-clean", "FAIL", f"dirty working tree: {out.strip()[:160]}"))
     else:
         rows.append(("git-clean", "PASS", "working tree clean"))
@@ -263,16 +265,33 @@ def run_frontend_checks(root: Path, rows: list[tuple[str, str, str]]) -> None:
 
     data = json.loads(pkg.read_text(encoding="utf-8"))
     scripts = data.get("scripts", {})
+    deps_blob = json.dumps(
+        {
+            **(data.get("dependencies") or {}),
+            **(data.get("devDependencies") or {}),
+        }
+    )
+    has_vue = (root / "node_modules" / "vue").is_dir() or "vue" in deps_blob
+    # Tooling-only package.json (e.g. skills hub) — no app test/build required
+    app_like = has_vue or "vite" in deps_blob or (root / "src").is_dir()
+
     if "test" in scripts:
         out = run_command(["npm", "test", "--", "--run"], root, timeout=300)
         rows.append(("test", status_from_output(out), out[:200]))
-    else:
+    elif app_like:
         rows.append(("test", "FAIL", "package.json has no test script"))
-    out = run_command(["npm", "run", "build"], root, timeout=600)
-    rows.append(("build", status_from_output(out), out[:200]))
+    else:
+        rows.append(("test", "SKIP", "tooling package.json (no app test script)"))
+
+    if "build" in scripts:
+        out = run_command(["npm", "run", "build"], root, timeout=600)
+        rows.append(("build", status_from_output(out), out[:200]))
+    elif app_like:
+        rows.append(("build", "FAIL", "package.json has no build script"))
+    else:
+        rows.append(("build", "SKIP", "tooling package.json (no app build script)"))
 
     # vue-tsc only when Vue toolchain likely present
-    has_vue = (root / "node_modules" / "vue").is_dir() or "vue" in json.dumps(data.get("dependencies", {}))
     if has_vue and shutil.which("npx") and (root / "node_modules").is_dir():
         out = run_command(["npx", "vue-tsc", "--noEmit"], root, timeout=300)
         rows.append(("vue-tsc", status_from_output(out), out[:200]))
