@@ -1,8 +1,19 @@
 # Testing skills in this hub
 
-**Date:** 2026-07-15
+**Date:** 2026-11-07
 
 Skills are **installable packages** in `skills/` — they are tested here against a **fixture project**, not by opening this repo as a Cursor app.
+
+## Regression bar (required)
+
+We are **not** strict TDD for every skill change. We **are** regression-first for real failures:
+
+1. Reproduce the bug (script, fixture, or focused pytest).
+2. Add or extend a test under `tests/` that fails before the fix and passes after.
+3. Keep that test forever (or replace with a stronger equivalent) so CI blocks the same class of break.
+4. Prefer small unit/script tests for gate logic (`verify_*`, `_comment_resolve`, auto-sync, always-on agents, prose). Use evals when only agent behavior can prove the bug.
+
+**Do not** ship a behavioral fix for a found failure without a locking test unless the failure is purely docs/typo or cannot be automated (document why in the PR).
 
 ## Quick start
 

@@ -1262,3 +1262,14 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** Open Agent chat in a HeyEddi project → Cursor injects the rule/AGENTS block → agent runs the named skill/script when a gate fires.
 
+
+## 2026-11-07 — Regression tests for every real failure (not strict TDD)
+
+**Context:** Hub has many post-bug pytest files (prose, identity gate, PR respond, always-on agents, pre-merge sign-off) but no hard rule that every found failure gets a locking test.
+
+**Decision:** Not strict TDD for all skill edits. **Required:** for every real behavioral failure we find and fix, add/keep a `tests/` (or eval) case that would have caught it. No silent "fixed in chat" without a regression lock unless docs-only / unautomatable (say so in the PR).
+
+**Process:** reproduce → failing test → fix → green → leave the test in CI (`uv run pytest tests/ -q`).
+
+**See:** `docs/testing-skills.md` → Regression bar.
+
