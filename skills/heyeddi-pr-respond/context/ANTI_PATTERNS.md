@@ -5,7 +5,8 @@
 - NEVER post "Fixed" while fixes are local-only — commit + push first
 - NEVER skip `build_comment_inventory` when review submission bodies exist
 - NEVER treat a HeyEddi root summary as done without replying to every inline thread
-- NEVER quote-reply issue comments (tests-hold notes, review summaries, or comments by the responding account)
+- NEVER quote-reply issue comments (tests-hold notes, review summaries)
+- NEVER skip unresolved review-thread roots because the finding author is the same GitHub user (self-review → respond is required)
 - NEVER call `/issues/comments/{id}/replies` — that endpoint does not exist
 - NEVER post a body that still contains `<<<UNTRUSTED_` — read `body_raw`; leave the wrapper on `body`
 - NEVER reply using a **child** review-comment id — walk to the **root** thread id

@@ -1,8 +1,10 @@
 # PR review response workflow
 
-**Date:** 2026-11-06
+**Date:** 2026-11-07
 
-**Role:** PR **author** addressing **all** reviewer feedback (human, bot, HeyEddi CI root summaries, inline threads).
+**Role:** PR **author** addressing **all** reviewer feedback (human, `@heyeddi-pr-review` line findings, bot, HeyEddi CI). Same user may have left the review.
+
+**Ship loop:** `@heyeddi-pr-review` → `@heyeddi-pr-respond` → `@pre-merge-gate`.
 
 ## No disk scratch files
 
@@ -20,7 +22,8 @@ Read the temp comments cache. **`build_comment_inventory`** is mandatory when re
 It will:
 
 - List unresolved root review threads as the only postable ids
-- List issue comments (tests-hold, summaries, own notes) as skipped — never quote-reply them
+- List issue comments (tests-hold, summaries) as skipped — never quote-reply them
+- Keep unresolved inline roots postable even when authored by the responder
 - Parse each review body for `` `path:line` `` bullets (HeyEddi "Commented on the diff" lists)
 - Link bullets to inline IDs by path+line
 - Flag **orphan findings** (in summary, no inline) for fix/decline + ## Summary coverage

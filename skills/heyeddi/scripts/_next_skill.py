@@ -75,19 +75,19 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "why": "Full QA gate after visual fixes pass (includes engineering + prose audits).",
     },
     "pre-merge-gate": {
-        "skill": "heyeddi-pr-review",
-        "prompt": "@heyeddi-pr-review review PR #<number> before merge",
-        "why": "Submission review on the committed diff when a PR is open.",
+        "skill": "heyeddi",
+        "prompt": "@heyeddi confirm CI green then ask the user for authorize merge on PR #<number>",
+        "why": "Gates passed: merge still needs explicit authorize merge.",
     },
     "heyeddi-pr-review": {
         "skill": "heyeddi-pr-respond",
-        "prompt": "@heyeddi-pr-respond address all review comments on PR #<number>",
-        "why": "PR author: fix or decline each thread, then re-gate.",
+        "prompt": "@heyeddi-pr-respond address all review comments on PR #<number> (including this review)",
+        "why": "Inline findings posted: author fixes/declines and replies (same GitHub user ok).",
     },
     "heyeddi-pr-respond": {
         "skill": "pre-merge-gate",
         "prompt": "@pre-merge-gate re-run gates after addressing review feedback",
-        "why": "All threads responded and CI fixed: confirm merge readiness.",
+        "why": "Threads answered: confirm merge readiness (review does not own gates).",
     },
     "heyeddi-ci-config": {
         "skill": "heyeddi-ci-guide",

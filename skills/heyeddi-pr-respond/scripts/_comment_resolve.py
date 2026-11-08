@@ -1,11 +1,12 @@
 """Resolve any PR comment id to a postable reply target.
 
 Only unresolved pull-request review threads are postable, and only at the
-root review-comment id, with no quote. Issue comments (Conversation tab)
-are not threads: tests-hold notes, review summaries, and comments written
-by the account that is responding are skipped. There is no
-``/issues/comments/{id}/replies`` endpoint and this module does not
-quote-reply them.
+    root review-comment id, with no quote. Issue comments (Conversation tab)
+    are not threads: tests-hold notes and review summaries are skipped.
+    Unresolved inline findings stay postable even when authored by the
+    responder (self-review → respond). There is no
+    ``/issues/comments/{id}/replies`` endpoint and this module does not
+    quote-reply issue comments.
 """
 from __future__ import annotations
 
@@ -166,6 +167,11 @@ def awaiting_root_ids(
         if is_tests_hold(comment_plain_body(by_id[root_id])):
             continue
         thread = groups.get(root_id) or [by_id[root_id]]
+        replies = [c for c in thread if parent_of.get(str(c["id"]))]
+        # No replies yet → awaiting, even when the root is a self-review finding.
+        if not replies:
+            awaiting.append(root_id)
+            continue
         latest = max(thread, key=lambda item: (_comment_when(item), str(item.get("id"))))
         if responder and comment_author(latest).strip().lower() == responder:
             continue
@@ -446,19 +452,16 @@ def _review_thread_target(
     root_rec = index.get(root_id) or rec
     if is_tests_hold(rec.body) or is_tests_hold(root_rec.body):
         return _skip_issue_target(comment_id, root_rec.body or rec.body, detail=detail or "tests-hold")
-    if _same_login(rec.author, responder_login):
-        return ReplyTarget(
-            input_id=comment_id,
-            kind="inline",
-            post_method="skip_own",
-            reply_to_id=None,
-            body_snippet=root_rec.body[:240],
-            detail="Comment was written by the account that is responding.",
-            mcp_tool=None,
-            mcp_hint=None,
-        )
+    # Same GitHub user may run @heyeddi-pr-review then @heyeddi-pr-respond.
+    # Do NOT skip unresolved roots just because author == responder.
+    # Skip only when a reply already exists and the latest author is the responder.
     latest = _latest_inline(root_id, index)
-    if latest and _same_login(latest.author, responder_login):
+    has_reply = bool(latest and latest.comment_id != root_id)
+    if (
+        has_reply
+        and latest
+        and _same_login(latest.author, responder_login)
+    ):
         return ReplyTarget(
             input_id=comment_id,
             kind="inline",

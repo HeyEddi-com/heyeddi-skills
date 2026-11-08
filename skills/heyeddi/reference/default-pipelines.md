@@ -1,6 +1,6 @@
 # Default pipelines (top-tier bar)
 
-**Date:** 2026-09-01
+**Date:** 2026-11-07
 
 Agents should run these chains **automatically** — do not ask the user for confirmation at each step.
 
@@ -38,12 +38,13 @@ Agents should run these chains **automatically** — do not ask the user for con
 @visual-auditor
 ```
 
-## PR: address review
+## PR: review → respond → gate
 
 ```
-@heyeddi-ci-fails        → always first
-@heyeddi-pr-respond      → fix, commit, push, every thread (+ engineering audit)
-@pre-merge-gate
+@heyeddi-pr-review       → real findings as inline line comments (or Approve if clean)
+@heyeddi-ci-fails        → if CI red, first while responding
+@heyeddi-pr-respond      → fix/decline, commit, push, reply every thread (same user ok)
+@pre-merge-gate          → merge readiness (not part of review)
 ```
 
 ## Design vs implement
