@@ -2,7 +2,7 @@
 name: pre-merge-gate
 description: Runs pre-merge checks (setup prefs + backend + frontend + engineering excellence + optional UI audit). Any FAIL exits 1 (hard stop). Use when QA approves a PR or before merge to main.
 version: 1.3.0
-product-version: 3.8.10
+product-version: 3.8.11
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -45,7 +45,7 @@ The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED`
 **Optional (SKIP allowed if skill/tool missing; FAIL still hard-stops)**
 
 - duplicate UI scan (`no-duplicate-ui`)
-- prose audit (`heyeddi-design` `verify_prose.py`) — always-on for copy; skip only in emergency
+- prose audit (`heyeddi-design` `verify_prose.py`) — always-on for authored prose (default app surfaces; `--glob` when merge touches other prose); skip only in emergency
 - contrast audit on product routes (`visual-auditor`; SKIP if Playwright missing)
 
 Flags: `--skip-duplicate-ui`, `--skip-prose-audit`, `--skip-engineering-audit`, `--skip-setup-audit`, `--skip-visual-audit`. `--skip-backend`, `--skip-engineering-audit`, and `--skip-setup-audit` are emergency-only and must not be used for merge sign-off.

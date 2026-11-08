@@ -1,6 +1,6 @@
 # Always-on skills (every chat)
 
-**Date:** 2026-10-23
+**Date:** 2026-11-07
 
 These guards run on **every chat** that plans or changes work. They are not optional suggestions.
 
@@ -12,7 +12,7 @@ These guards run on **every chat** that plans or changes work. They are not opti
 | **`@heyeddi-setup`** | **Prefs gate** before git/CI/commit/push or agent autonomy assumptions (`verify_setup --check`). | **Incomplete prefs fail** those actions; run setup until check passes |
 | **`@heyeddi-local-first`** | Infra and account changes stay in the repo. `terraform plan` is allowed and must be summarized. `classify_command.py --check` exits 1 on apply and other live cloud writes. | **Exit 1** means do not run the command |
 | **`@engineering-excellence`** | **Plan gate** before coding; **change gate** after edits (`audit_engineering --check`). | **Errors fail**; warns stay advisory |
-| **Prose anti-slop** | Any user-facing or `.heyeddi` prose: `verify_prose --check` / `context/PROSE_ANTI_SLOP.md` | Fail on em/en dashes and high-signal filler |
+| **Prose anti-slop** | **Any prose the agent authors** (chat, books, docs, UI, PRs, `.heyeddi`): follow `context/PROSE_ANTI_SLOP.md`. Run `verify_prose --check` on default app surfaces; add `--glob` for manuscripts/other paths when those files were edited | Fail on em/en dashes and high-signal filler in authored text; no "not for books" carve-out |
 
 Plus **clarify-before-act** ([clarify-before-act.md](clarify-before-act.md)): ask when product/design/stack intent is missing. Never guess.
 
@@ -44,7 +44,7 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 4. **Plan gate** — before implementing: `check_engineering_plan --check` (docs ready + plan smells); read `reuse-catalog.md`.
 5. **Work** — follow the routed `@skill`.
 6. **Change gate** — after code changes: `audit_engineering --check` (errors only).
-7. **Prose** — if copy or `.heyeddi` docs changed: `verify_prose --check`.
+7. **Prose** — apply `PROSE_ANTI_SLOP.md` to every sentence you author. If you edited Vue/locale/`.heyeddi` copy: `verify_prose --check`. If you edited books/docs outside defaults: `verify_prose --check --glob '<path>'`. Never skip because the surface is "not UI."
 8. **Ship** — `@pre-merge-gate` before merge-ready claims.
 
 ## Related

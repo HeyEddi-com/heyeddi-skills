@@ -1,10 +1,12 @@
 # Prose anti-slop (HeyEddi skills)
 
-**Date:** 2026-07-16
+**Date:** 2026-11-07
 
-**Rule:** If it sounds like a LinkedIn post, a launch blog, or ChatGPT, rewrite it. Visual UI anti-slop stays in `@heyeddi-design` `reference/modern-reference.md`. This file is about **words**.
+**Rule:** If it sounds like a LinkedIn post, a launch blog, or ChatGPT, rewrite it. Visual UI anti-slop stays in `@heyeddi-design` `reference/modern-reference.md` / `@taste-penpot` `references/anti-slop.md`. This file is about **words**.
 
-Agents must apply this to product copy, design docs, PR replies, handoff briefs, skill stdout, chat, and UI strings.
+**Always on for every skill.** Apply these rules to **any prose the agent authors** in this session: chat, books, manuscripts, docs, READMEs, PR text, briefs, UI strings, skill stdout, code comments. HeyEddi skills are general-use. Writing anti-slop is not an app-only or `.heyeddi`-only gate.
+
+There is **no carve-out** for manuscripts, GTM chapters, long-form, scaffolding, or "I matched the local voice by hand." If you write it, these rules apply. Pre-existing third-party or human text you did not edit is left alone unless the user asked for a rewrite pass.
 
 ---
 
@@ -71,6 +73,9 @@ stakeholders (say who), bandwidth (say time), circle back, move the needle, low-
 - **No symmetric list padding:** inventing a third bullet so every section has exactly three.
 - **No hedge stacks:** "may potentially possibly be beneficial to consider…"
 - **No empty section titles:** "Overview", "Key insights", "Final thoughts" with no concrete content under them.
+- **No forced parallelism:** do not format every bullet as the same "Noun: Explanation" or "Imperative: Clarification" pattern.
+- **No fence-sitting** on evaluation asks: take a stance unless the user asked for a neutral multi-perspective overview.
+- **No throat-clearing openings or ribbon endings:** start with the point; stop when the point is made.
 
 ---
 
@@ -86,35 +91,43 @@ stakeholders (say who), bandwidth (say time), circle back, move the needle, low-
 | landscape of tools | the tools we use: A, B |
 | groundbreaking UX | specific change: larger hit target, clearer empty state |
 
-- Short sentences. One idea each.
-- Concrete nouns: routes, files, personas, acceptance criteria.
-- Match `product.md` Voice & tone when defined.
-- UI strings: product voice, not marketing cadence.
+- Vary sentence length. Mix short blunt lines with longer ones when needed.
+- Concrete nouns and verbs. Name the object, describe the action, move on.
+- Contractions are fine (`don't`, `isn't`) unless the surface demands formal register.
+- Write like a practitioner who did the work, not an observer at 30,000 feet.
+- Match `product.md` Voice & tone when defined; otherwise stay plain and direct.
 - Prefer verbs humans say out loud.
 
 ---
 
 ## 6. Where this applies
 
+**Default: everything you author.** The table below is examples, not an allowlist. Missing from the table does **not** mean out of scope.
+
 | Surface | Rule |
 |---------|------|
+| Chat replies in any skill session | Required |
+| Books, manuscripts, chapters, worksheets, GTM long-form | Required for text you write or edit |
+| READMEs, docs, guides, ADRs, notes | Required |
 | `.heyeddi/product.md`, feature specs, reviews | Required |
 | `.heyeddi/design.md`, briefs, critiques, Decision log | Required |
 | Mockup briefs / handoff notes | Required |
 | PR review docs and GitHub comment replies | Required |
 | Skill stdout hints and maintained `SKILL.md` text | Required |
-| Chat replies while running these skills | Required |
+| UI strings (Vue, Flutter, locales) | Required |
 | Code comments | Prefer none; if needed, same rules |
+
+**Not an exemption:** "local voice", "editorial style already uses em dashes", "UI/product gate only", or substituting Cursor `deslop` (that skill is for **code** structure, not prose).
 
 ---
 
 ## 7. Finish checklist
 
-- [ ] No em dash (U+2014) or en dash (U+2013)
+- [ ] No em dash (U+2014) or en dash (U+2013) in text you authored
 - [ ] No banned words/phrases from sections 2 to 3
 - [ ] No chatbot openers or "I hope this helps"
 - [ ] No emoji theater or triad padding
-- [ ] Every claim names a file, route, persona, or measurable outcome
+- [ ] Claims are concrete (named thing, measurable outcome, or clear instruction)
 - [ ] Reads like a sharp teammate, not a launch blog
 
 **Smell test:** Would you paste this into Slack to a tired coworker? If it would get an eye-roll, rewrite.
@@ -123,6 +136,7 @@ stakeholders (say who), bandwidth (say time), circle back, move the needle, low-
 
 ## Related
 
-- UI craft anti-slop: `@heyeddi-design` `reference/modern-reference.md` (when installed)
-- Hub canonical: repo `docs/prose-anti-slop.md`
-- Code slop (comments / `any` / nesting): Cursor team-kit `deslop` skill
+- Checker: `@heyeddi-design` `verify_prose.py --check` (default: Vue, locale JSON, `.heyeddi/product.md`, `.heyeddi/design.md`). For books or other paths: `--glob 'chapters/**/*.md'` (repeatable). Default globs stay narrow so whole lit trees do not explode; **behavior still applies** when you write those files.
+- UI craft anti-slop: `@heyeddi-design` `reference/modern-reference.md` / `@taste-penpot` `references/anti-slop.md`
+- Hub canonical: repo `docs/prose-anti-slop.md` (copy into every skill as `context/PROSE_ANTI_SLOP.md`)
+- Code slop (comments / `any` / nesting): Cursor team-kit `deslop` skill — **not** a substitute for this file

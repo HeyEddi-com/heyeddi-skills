@@ -21,7 +21,7 @@ Before step 5 when planning or coding:
 
 1. **`@heyeddi`** — route if session start or task is ambiguous
 2. **`@engineering-excellence`** — `check_engineering_plan --check` before implement; `audit_engineering --check` after edits (errors fail; warns advisory)
-3. **Prose anti-slop** — `verify_prose --check` when user-facing or `.heyeddi` prose changes
+3. **Prose anti-slop** — apply `PROSE_ANTI_SLOP.md` to any prose you author; `verify_prose --check` (plus `--glob` when needed) when files change
 
 See `docs/always-on-skills.md`.
 

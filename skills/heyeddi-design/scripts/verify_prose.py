@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Detect AI prose slop (em/en dashes, banned filler) in UI copy surfaces."""
+"""Detect AI prose slop (em/en dashes, banned filler) in authored prose.
+
+Default globs cover common app/HeyEddi surfaces. Pass --glob for books,
+manuscripts, or any other paths the agent edited. Behavior rules in
+context/PROSE_ANTI_SLOP.md apply to all agent-authored prose even when a
+path is outside the default scan.
+"""
 from __future__ import annotations
 
 import argparse
@@ -131,7 +137,7 @@ def find_dash_violations(text: str, source: str) -> list[dict]:
                 "type": "dash",
                 "source": source,
                 "line": line,
-                "message": f"{dash_name} (U+{ord(char):04X}) in UI copy; use period, comma, colon, or ASCII ' - '",
+                "message": f"{dash_name} (U+{ord(char):04X}) in prose; use period, comma, colon, or ASCII ' - '",
                 "excerpt": line_text[:160],
             }
         )
@@ -216,9 +222,16 @@ def verify_project(root: Path, extra_globs: list[str] | None = None) -> dict:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Verify UI copy has no AI prose slop")
+    parser = argparse.ArgumentParser(
+        description="Verify authored prose has no AI slop (default: Vue/locale/.heyeddi; use --glob for books/docs)"
+    )
     parser.add_argument("--project-root", default=None)
-    parser.add_argument("--glob", action="append", default=[], help="Extra glob under project root")
+    parser.add_argument(
+        "--glob",
+        action="append",
+        default=[],
+        help="Extra glob under project root (repeatable). Use for manuscripts, docs, chapters, etc.",
+    )
     parser.add_argument("--check", action="store_true", help="Exit 1 if violations found")
     args = parser.parse_args()
 

@@ -25,4 +25,4 @@
 - NEVER treat "make it artistic / top notch / better design / redesign" as spacing-only polish: run critique ambition gate; escalate to `shape` when template-like or signature missing (`design-ambition.md`, `critique.md`).
 - NEVER answer redesign intent with hierarchy-unchanged token tweaks when the name-swap or scaffold test fails.
 - NEVER hand off to `@heyeddi-handoff` without a confirmed brief and Design signature: run `shape` first.
-- NEVER ship AI prose slop (em/en dashes, delve/leverage/tapestry, "Certainly!", "it is important to note", emoji theater); follow `context/PROSE_ANTI_SLOP.md` fully
+- NEVER ship AI prose slop (em/en dashes, delve/leverage/tapestry, "Certainly!", "it is important to note", emoji theater); follow `context/PROSE_ANTI_SLOP.md` fully on **any** prose you author (chat, books, docs, UI). NEVER claim manuscripts or long-form are exempt. NEVER substitute Cursor `deslop` for prose anti-slop.

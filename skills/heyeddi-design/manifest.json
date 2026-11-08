@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-design",
-  "version": "2.12.0",
+  "version": "2.13.0",
   "tools": [
     {
       "name": "load_design_context",
@@ -22,7 +22,7 @@
     },
     {
       "name": "verify_prose",
-      "description": "Scan Vue/locale/.heyeddi copy for em/en dashes and banned AI filler.",
+      "description": "Scan authored prose for em/en dashes and banned AI filler (default Vue/locale/.heyeddi; pass --glob for books/docs).",
       "parameters": {
         "type": "object",
         "properties": {

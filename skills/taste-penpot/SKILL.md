@@ -2,7 +2,7 @@
 name: taste-penpot
 description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST run the identity gate: designer thinking (project, peers, follow vs unique) documented under .heyeddi/designs/, ask clarifying questions when needed, then present 3–5 What/Why/How options and wait for choice before tokens or pixels. Scaffolding/MVP never waives the gate. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A–G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow — absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
 version: 1.7.0
-product-version: 3.8.10
+product-version: 3.8.11
 author: HeyEddi-com
 ---
 

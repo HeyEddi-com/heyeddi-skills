@@ -1,4 +1,4 @@
-"""Unit tests for UI copy prose verification in heyeddi-design."""
+"""Unit tests for prose verification in heyeddi-design (universal anti-slop)."""
 from __future__ import annotations
 
 from _skill_loader import load_skill_script
@@ -39,3 +39,16 @@ def test_verify_project_on_empty_fixture(tmp_path) -> None:
     result = verify_project(tmp_path)
     assert result["ok"] is True
     assert result["files_scanned"] == 1
+
+
+def test_verify_project_extra_glob_scans_manuscript(tmp_path) -> None:
+    chapters = tmp_path / "chapters"
+    chapters.mkdir()
+    (chapters / "one.md").write_text("Delve into the tapestry of growth.\n", encoding="utf-8")
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "HomeView.vue").write_text(GOOD_COPY, encoding="utf-8")
+    clean = verify_project(tmp_path)
+    assert clean["ok"] is True
+    scanned = verify_project(tmp_path, ["chapters/**/*.md"])
+    assert scanned["ok"] is False
+    assert scanned["filler_count"] >= 1
