@@ -1,16 +1,24 @@
 {
   "skill": "pre-merge-gate",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "tools": [
     {
       "name": "run_pre_merge_gate",
-      "description": "Orchestrate pre-merge checks (backend+frontend). Exit 1 on any FAIL.",
+      "description": "Orchestrate stack-aware pre-merge checks. With --signoff/--pr: git-clean, CI, unresolved threads. Exit 1 on any FAIL.",
       "parameters": {
         "type": "object",
         "properties": {
           "project_root": {
             "type": "string",
             "description": "Workspace root path"
+          },
+          "signoff": {
+            "type": "boolean",
+            "description": "Merge sign-off: git-clean, auto-detect PR, ban emergency skips"
+          },
+          "pr": {
+            "type": "integer",
+            "description": "PR number (implies sign-off + CI/thread checks)"
           }
         },
         "required": [

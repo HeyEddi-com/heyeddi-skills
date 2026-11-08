@@ -1,69 +1,100 @@
 ---
 name: pre-merge-gate
-description: Runs pre-merge checks (setup prefs + backend + frontend + engineering excellence + optional UI audit). Any FAIL exits 1 (hard stop). Use when QA approves a PR or before merge to main.
-version: 1.3.0
-product-version: 3.8.12
+description: "Ship gate after review→respond: setup, stack tests/build/analyze, engineering + prose, optional UI contrast, and with --signoff/--pr also git-clean, CI checks, and unresolved review threads. Any FAIL exits 1. Use before claiming merge-ready or merging to main."
+version: 2.0.0
+product-version: 3.8.13
 author: HeyEddi-com
 disable-model-invocation: true
 ---
 
 # Pre-merge Gate
 
+Final **merge readiness** gate. It does **not** replace `@heyeddi-pr-review` (line findings) or `@heyeddi-pr-respond` (thread replies).
+
+## Flow
+
+```
+@heyeddi-pr-review   → inline findings (or Approve)
+@heyeddi-pr-respond  → fix/decline + reply every thread
+@pre-merge-gate --signoff   → this skill (local + PR CI + open threads)
+→ authorize merge
+```
+
 ## Subagents (default)
 
-Run gate via **Task** `shell` subagent: `pre_merge_gate.py`. Main chat triages FAIL lines and re-delegates fixes. See `reference/subagents.md`.
+Run via **Task** `shell`: `pre_merge_gate.py`. Main chat triages FAIL rows and re-delegates fixes. See `reference/subagents.md`.
 
 ## When to use
 
-- QA wants a single green/red report before approving a PR
-- Before merging to `main` / `dev`
-- After addressing review feedback: confirm all gates pass
+- Before claiming merge-ready or merging to `main` / `dev`
+- After `@heyeddi-pr-respond` finishes
+- QA wants one green/red report
 
 ## Hard stop
 
-The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED` report with exit 0 as merge-ready — that bug is fixed. Agents must not merge (or say merge-ready) unless the process exits 0.
+The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED` report as merge-ready. Agents must not merge (or say merge-ready) unless the process exits 0 **with `--signoff` or `--pr <N>`**.
 
 ## Instructions
 
-1. Run `python .agents/skills/pre-merge-gate/scripts/pre_merge_gate.py --project-root <root>`.
-2. Read the markdown report: each check shows PASS/FAIL/SKIP.
-3. Fix failing checks and re-run until exit code is 0.
+1. Preferred (PR open):
 
-**Eval / harness turns:** When the eval harness captures Playwright proof separately, run with `--skip-visual-audit` so the gate does not invoke contrast audit (no Playwright in agent turn).
+   ```bash
+   python .agents/skills/pre-merge-gate/scripts/pre_merge_gate.py \
+     --project-root . --signoff
+   ```
+
+   Or pin the PR: `--pr <N>` (implies sign-off).
+
+2. Local-only smoke (no PR/CI/thread checks): omit `--signoff` / `--pr`.
+3. Read the report: each check is PASS/FAIL/SKIP. Optional `--json` appends a machine payload.
+4. Fix FAILs and re-run until exit 0.
+
+**Eval / harness:** use `--skip-visual-audit` when Playwright is unavailable in the agent turn.
 
 ## Checks
 
-**Required when the tree exists**
+### Always (stack-aware)
 
-- **setup audit** (`@heyeddi-setup` `verify_setup --check`: incomplete prefs fail)
-- npm test + production build (`package.json`)
-- `vue-tsc --noEmit` when `node_modules` is present (FAIL if frontend exists but toolchain missing)
-- `backend` pytest (`backend/tests`, prefers `backend/.venv`)
-- ruff **F821** on `backend/app` (undefined names / dropped imports)
-- **engineering audit** (`@engineering-excellence` `audit_engineering --check`: errors fail; warns advisory)
+| Check | When |
+|-------|------|
+| setup-audit | `@heyeddi-setup verify_setup --check` |
+| test / build / vue-tsc | `package.json` present (vue-tsc only if Vue deps) |
+| backend-pytest / backend-f821 | `backend/` present |
+| dart-analyze / flutter-test | `pubspec.yaml` present |
+| duplicate-ui | skill installed |
+| prose-audit | defaults + changed `*.md` globs from PR/diff |
+| engineering-audit | `@engineering-excellence --check` |
+| contrast-audit | product routes (see visual rules) |
 
-**Optional (SKIP allowed if skill/tool missing; FAIL still hard-stops)**
+### Sign-off (`--signoff` or `--pr`)
 
-- duplicate UI scan (`no-duplicate-ui`)
-- prose audit (`heyeddi-design` `verify_prose.py`) — always-on for authored prose (default app surfaces; `--glob` when merge touches other prose); skip only in emergency
-- contrast audit on product routes (`visual-auditor`; SKIP if Playwright missing)
+| Check | Rule |
+|-------|------|
+| git-clean | dirty tree → FAIL |
+| git-pushed | unpushed commits → FAIL |
+| pr-checks | `gh pr checks` failing/pending → FAIL |
+| pr-review-threads | unresolved review threads → FAIL (run respond) |
+| signoff-emergency-skips | `--skip-backend` / setup / engineering → FAIL |
+| visual | if `.heyeddi/product.md` exists, missing Playwright → FAIL (not silent SKIP) |
 
-Flags: `--skip-duplicate-ui`, `--skip-prose-audit`, `--skip-engineering-audit`, `--skip-setup-audit`, `--skip-visual-audit`. `--skip-backend`, `--skip-engineering-audit`, and `--skip-setup-audit` are emergency-only and must not be used for merge sign-off.
+### Flags
+
+- `--skip-duplicate-ui`, `--skip-prose-audit`, `--skip-visual-audit`, `--skip-flutter`, `--skip-git-clean`
+- Emergency only (blocked under sign-off): `--skip-backend`, `--skip-engineering-audit`, `--skip-setup-audit`
+- `--no-pr` with `--signoff`: local sign-off without PR/CI/thread checks (still git-clean + emergency ban)
+
+## Never
+
+- Claim merge-ready without exit 0 under `--signoff` or `--pr`
+- Use emergency skips for real merge sign-off
+- Substitute this skill for code review or thread replies
+- Treat SKIP as PASS when a required tree exists but tooling is missing
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
+  --current-skill pre-merge-gate --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill pre-merge-gate --project-root .
-   ```
-
-   Add `--route /path` if you worked a specific route.
-
-2. Include the script's **`### Next step`** block in your **final** reply. The user copies the **Prompt** line into chat (e.g. `@heyeddi-design craft /settings`).
-
-Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
-
-See `@heyeddi` → `reference/next-skill-handoff.md`.
+Include the script's `### Next step` in your final reply.

@@ -2,7 +2,7 @@
 name: heyeddi-design
 description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: designer thinking in .heyeddi/, then 3–5 What/Why/How options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Blocks handoff unless taste layout hard gates pass (no text-wall, hifi.html when MCP cannot Flex, visual QA). Screenshot gate still applies before done."
 version: 2.13.0
-product-version: 3.8.12
+product-version: 3.8.13
 author: HeyEddi-com
 ---
 

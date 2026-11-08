@@ -31,7 +31,7 @@ Non-git work may continue when prefs are incomplete. Never invent branch names, 
 | `@heyeddi-design` | Product side of design: personas, `design.md`, handoff. Consumes taste tokens. Does not invent a second look. |
 | `@visual-auditor` | After UI changes; flagship done = `--preset done` (6 widths) |
 | `@ux-flow-auditor` | Task flows / friction |
-| `@pre-merge-gate` | Before merge or ship claim (includes setup + engineering + prose audits) |
+| `@pre-merge-gate` | Before merge or ship claim — use `--signoff` (setup + engineering + prose + CI/threads) |
 | PR / CI skills | Review or respond loops only |
 
 Scaffolders, bridgers, and stack implementers run when the stack/task needs them.
@@ -45,7 +45,7 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 5. **Work** — follow the routed `@skill`.
 6. **Change gate** — after code changes: `audit_engineering --check` (errors only).
 7. **Prose** — apply `PROSE_ANTI_SLOP.md` to every sentence you author. If you edited Vue/locale/`.heyeddi` copy: `verify_prose --check`. If you edited books/docs outside defaults: `verify_prose --check --glob '<path>'`. Never skip because the surface is "not UI."
-8. **Ship** — `@pre-merge-gate` before merge-ready claims.
+8. **Ship** — `@pre-merge-gate --signoff` before merge-ready claims (exit 0 required).
 
 ## Related
 
@@ -53,4 +53,4 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 - `@heyeddi-setup` → `reference/setup-always-on.md`
 - `@engineering-excellence` → `reference/engineering-always-on.md`
 - `@heyeddi` → `reference/always-on.md` · `reference/host-surfaces.md`
-- `@pre-merge-gate` runs `verify_setup --check`, `audit_engineering --check`, and `verify_prose --check` by default
+- `@pre-merge-gate` runs `verify_setup --check`, `audit_engineering --check`, and `verify_prose --check` by default; `--signoff` / `--pr` also require git-clean, green PR checks, and no unresolved review threads
