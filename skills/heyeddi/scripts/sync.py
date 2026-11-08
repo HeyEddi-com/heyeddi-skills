@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from _always_on_agents import ensure_always_on_agents
 from _catalog import find_hub_root, write_skills_index
 from _skill_cli import emit, resolve_project_root
 from _skills_update import check_skills_update
@@ -16,6 +17,11 @@ def main() -> None:
     parser.add_argument("--project-root", default=None)
     parser.add_argument("--hub-root", default=None)
     parser.add_argument("--skip-workflow", action="store_true")
+    parser.add_argument(
+        "--skip-always-on-agents",
+        action="store_true",
+        help="Skip AGENTS.md + .cursor/rules/heyeddi-always-on.mdc",
+    )
     parser.add_argument(
         "--skip-update-check",
         action="store_true",
@@ -36,13 +42,21 @@ def main() -> None:
         emit(
             {
                 "dry_run": True,
-                "would_write": [".heyeddi/skills-index.json", ".heyeddi/skills-index.md"],
+                "would_write": [
+                    ".heyeddi/skills-index.json",
+                    ".heyeddi/skills-index.md",
+                    "AGENTS.md",
+                    ".cursor/rules/heyeddi-always-on.mdc",
+                ],
                 "would_check_skills_update": not args.skip_update_check,
             }
         )
         return
 
     payload = dict(write_skills_index(project_root, hub_root))
+
+    if not args.skip_always_on_agents:
+        payload["always_on_agents"] = ensure_always_on_agents(project_root)
 
     workflow_readme = project_root / ".heyeddi" / "docs" / "workflow" / "README.md"
     if not args.skip_workflow and not workflow_readme.is_file():
