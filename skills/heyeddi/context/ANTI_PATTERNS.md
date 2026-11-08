@@ -1,6 +1,8 @@
 # Anti-patterns
 
 - **Skipping always-on router**: every session start / ambiguous task needs catalog or suggest_skills first.
+- **Relying on skill ALWAYS-ON text alone**: every-chat enforcement needs project `AGENTS.md` + `.cursor/rules/heyeddi-always-on.mdc`; keep them via sync / `ensure_always_on_agents`.
+- **Deleting the managed always-on block**: edit outside `<!-- heyeddi-always-on:* -->`; sync replaces the marked section.
 - **Skipping SKILL.md**: suggestions are pointers; always read the target skill before tools.
 - **Loading every skill at once**: wastes context; use catalog + 1-3 reads.
 - **Ignoring skill-routing.json**: when present, it overrides keyword guesses.

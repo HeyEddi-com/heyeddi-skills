@@ -2,13 +2,25 @@
 
 **Date:** 2026-11-07
 
-These guards run on **every chat** that plans or changes work. They are not optional suggestions.
+These guards apply on **every Agent chat** that plans or changes work. They are not optional suggestions.
+
+## How always-on is delivered
+
+Skills alone are **opt-in by relevance**. True every-chat enforcement uses:
+
+| Surface | Role |
+|---------|------|
+| **`AGENTS.md`** (project root, managed `<!-- heyeddi-always-on:* -->` block) | Portable always-on checklist (Cursor, Zed, other AGENTS.md hosts) |
+| **`.cursor/rules/heyeddi-always-on.mdc`** (`alwaysApply: true`) | Cursor injects the same checklist every Agent chat |
+| **Skills** (`@heyeddi-setup`, `@engineering-excellence`, …) | Playbooks + scripts when a gate fires |
+
+`@heyeddi` auto-sync / `sync` / `ensure_always_on_agents.py` install and refresh those files when `.heyeddi/` is ensured. Full skill bodies are **not** pasted every turn.
 
 ## Always-on guards
 
 | Guard | Role | Fail rule |
 |-------|------|-----------|
-| **`@heyeddi`** | Session start + ambiguous tasks: sync `.heyeddi/`, rank skills, route. Do not freestyle the pipeline. | Soft: must load catalog / follow routing before multi-step work |
+| **`@heyeddi`** | Session start + ambiguous tasks: sync `.heyeddi/`, keep always-on files, rank skills, route. Do not freestyle the pipeline. | Soft: must load catalog / follow routing before multi-step work |
 | **`@heyeddi-setup`** | **Prefs gate** before git/CI/commit/push or agent autonomy assumptions (`verify_setup --check`). | **Incomplete prefs fail** those actions; run setup until check passes |
 | **`@heyeddi-local-first`** | Infra and account changes stay in the repo. `terraform plan` is allowed and must be summarized. `classify_command.py --check` exits 1 on apply and other live cloud writes. | **Exit 1** means do not run the command |
 | **`@engineering-excellence`** | **Plan gate** before coding; **change gate** after edits (`audit_engineering --check`). | **Errors fail**; warns stay advisory |

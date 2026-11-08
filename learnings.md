@@ -1250,3 +1250,15 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** `@heyeddi-pr-review` → `@heyeddi-pr-respond` → `@pre-merge-gate --signoff` → authorize merge. Exit 0 required before merge-ready claims.
 
+
+## 2026-11-07 — Always-on via AGENTS.md + Cursor alwaysApply (not skill bodies)
+
+**Context:** Skill `ALWAYS-ON` descriptions are opt-in by relevance; agents skipped setup/engineering/prose/local-first gates.
+
+**Decision:** Hub **v3.8.14**. `@heyeddi` **v3.4.6**.
+- Thin every-chat checklist in project **`AGENTS.md`** (managed `<!-- heyeddi-always-on:* -->` block) + **`.cursor/rules/heyeddi-always-on.mdc`** (`alwaysApply: true`).
+- Skills stay playbooks/scripts; auto-sync / `sync` / `ensure_always_on_agents.py` install and refresh the thin files.
+- Do not paste full skill packages into AGENTS.md.
+
+**Process:** Open Agent chat in a HeyEddi project → Cursor injects the rule/AGENTS block → agent runs the named skill/script when a gate fires.
+

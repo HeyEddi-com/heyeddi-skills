@@ -2,7 +2,7 @@
 name: pre-merge-gate
 description: "Ship gate after review→respond: setup, stack tests/build/analyze, engineering + prose, optional UI contrast, and with --signoff/--pr also git-clean, CI checks, and unresolved review threads. Any FAIL exits 1. Use before claiming merge-ready or merging to main."
 version: 2.0.0
-product-version: 3.8.13
+product-version: 3.8.14
 author: HeyEddi-com
 disable-model-invocation: true
 ---

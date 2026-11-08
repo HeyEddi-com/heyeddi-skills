@@ -122,4 +122,12 @@ def ensure_heyeddi(
         if skills_root is None:
             return {"status": "skipped", "reason": "cannot resolve install skills root"}
         result.update(_write_minimal_index(project_root, skills_root))
+
+    # Thin always-on AGENTS.md + Cursor alwaysApply rule (skills stay playbooks).
+    try:
+        from _always_on_agents import ensure_always_on_agents  # noqa: PLC0415
+
+        result["always_on_agents"] = ensure_always_on_agents(project_root)
+    except Exception as exc:  # noqa: BLE001 — never block skill tools
+        result["always_on_agents"] = {"ok": False, "error": str(exc)}
     return result

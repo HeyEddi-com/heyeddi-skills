@@ -50,9 +50,14 @@ def test_ensure_heyeddi_skips_write_when_index_exists(tmp_path: Path) -> None:
     heyeddi.mkdir()
     (heyeddi / "skills-index.json").write_text('{"skills":[],"skill_count":0}\n', encoding="utf-8")
     result = ensure_heyeddi(tmp_path, once_per_process=False)
-    assert result == {"status": "ok"}
+    assert result is not None
+    assert result.get("status") == "ok"
     data = json.loads((heyeddi / "skills-index.json").read_text(encoding="utf-8"))
     assert data["skill_count"] == 0
+    # Always-on AGENTS.md / Cursor rule still installed when .heyeddi exists
+    assert (tmp_path / "AGENTS.md").is_file()
+    assert (tmp_path / ".cursor" / "rules" / "heyeddi-always-on.mdc").is_file()
+    assert "always_on_agents" in result
 
 
 def test_write_minimal_index_scans_siblings(tmp_path: Path) -> None:

@@ -1,10 +1,10 @@
 {
   "skill": "heyeddi",
-  "version": "3.4.5",
+  "version": "3.4.6",
   "tools": [
     {
       "name": "sync",
-      "description": "Full .heyeddi/ sync: refresh skills index, init workflow if missing, detect hub updates (ask before install).",
+      "description": "Full .heyeddi/ sync: refresh skills index, always-on AGENTS.md/rule, init workflow if missing, detect hub updates (ask before install).",
       "parameters": {
         "type": "object",
         "properties": {
@@ -15,6 +15,9 @@
             "type": "string"
           },
           "skip_workflow": {
+            "type": "boolean"
+          },
+          "skip_always_on_agents": {
             "type": "boolean"
           },
           "skip_update_check": {
@@ -32,6 +35,27 @@
         ]
       },
       "script": "scripts/sync.py",
+      "readonly": false
+    },
+    {
+      "name": "ensure_always_on_agents",
+      "description": "Install/update thin always-on AGENTS.md managed block + .cursor/rules/heyeddi-always-on.mdc (alwaysApply).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string"
+          },
+          "check": {
+            "type": "boolean",
+            "description": "Exit 1 if managed always-on files missing or stale"
+          }
+        },
+        "required": [
+          "project_root"
+        ]
+      },
+      "script": "scripts/ensure_always_on_agents.py",
       "readonly": false
     },
     {
