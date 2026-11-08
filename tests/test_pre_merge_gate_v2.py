@@ -102,3 +102,47 @@ def test_signoff_report_marks_mode(tmp_path: Path) -> None:
     out = (proc.stdout or "") + (proc.stderr or "")
     assert "**Sign-off mode:** yes" in out
     assert "**PR:** none (local)" in out
+
+
+def test_git_clean_treats_empty_status_sentinel_as_pass(tmp_path: Path) -> None:
+    """run_command returns '(success, no output)' for empty porcelain — must be clean."""
+    sys.path.insert(0, str(PRE_MERGE.parent))
+    from pre_merge_gate import run_git_clean_checks  # noqa: PLC0415
+
+    rows: list[tuple[str, str, str]] = []
+    subprocess.run(["git", "init"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "test"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+    (tmp_path / "README").write_text("x\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "commit", "-m", "init"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+    run_git_clean_checks(tmp_path, rows)
+    clean = [r for r in rows if r[0] == "git-clean"]
+    assert clean and clean[0][1] == "PASS", rows
+
+
+def test_tooling_package_json_skips_test_build(tmp_path: Path) -> None:
+    (tmp_path / "package.json").write_text(
+        json.dumps({"name": "hub", "scripts": {"skill-security": "echo ok"}}),
+        encoding="utf-8",
+    )
+    proc = _run(tmp_path, *_local_skips())
+    out = (proc.stdout or "") + (proc.stderr or "")
+    assert "| test | SKIP |" in out
+    assert "| build | SKIP |" in out
+    assert proc.returncode == 0
