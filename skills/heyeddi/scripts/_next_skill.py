@@ -71,8 +71,8 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
     },
     "visual-auditor": {
         "skill": "pre-merge-gate",
-        "prompt": "@pre-merge-gate run the merge readiness checklist",
-        "why": "Full QA gate after visual fixes pass (includes engineering + prose audits).",
+        "prompt": "@pre-merge-gate --signoff run the merge readiness checklist",
+        "why": "Full QA gate after visual fixes pass (includes engineering + prose + PR checks).",
     },
     "pre-merge-gate": {
         "skill": "heyeddi",
@@ -86,7 +86,7 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
     },
     "heyeddi-pr-respond": {
         "skill": "pre-merge-gate",
-        "prompt": "@pre-merge-gate re-run gates after addressing review feedback",
+        "prompt": "@pre-merge-gate --signoff re-run gates after addressing review feedback",
         "why": "Threads answered: confirm merge readiness (review does not own gates).",
     },
     "heyeddi-ci-config": {
@@ -183,7 +183,7 @@ MODE_NEXT: dict[str, dict[str, dict[str, str]]] = {
         },
         "review": {
             "skill": "pre-merge-gate",
-            "prompt": "@pre-merge-gate run the merge readiness checklist",
+            "prompt": "@pre-merge-gate --signoff run the merge readiness checklist",
             "why": "Holistic PM review is complete: confirm gates before ship.",
         },
     },

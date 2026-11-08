@@ -15,7 +15,7 @@ Agents should run these chains **automatically** — do not ask the user for con
 @visual-verification     (vue GUI: Playwright MCP screenshot, fix)
 @visual-auditor          → fix, not report-only
 @ux-flow-auditor         → flagship routes
-@pre-merge-gate          → includes engineering + prose audits
+@pre-merge-gate --signoff → merge readiness (local + PR CI + open threads)
 ```
 
 ## UI: redesign or from scratch
@@ -44,7 +44,7 @@ Agents should run these chains **automatically** — do not ask the user for con
 @heyeddi-pr-review       → real findings as inline line comments (or Approve if clean)
 @heyeddi-ci-fails        → if CI red, first while responding
 @heyeddi-pr-respond      → fix/decline, commit, push, reply every thread (same user ok)
-@pre-merge-gate          → merge readiness (not part of review)
+@pre-merge-gate --signoff → merge readiness: clean tree, CI green, threads resolved
 ```
 
 ## Design vs implement

@@ -1,6 +1,6 @@
 # PR workflows
 
-**Date:** 2026-08-09
+**Date:** 2026-11-07
 
 HeyEddi splits pull request work into **skills** with distinct roles. Use the right one — they are not interchangeable.
 
@@ -8,24 +8,15 @@ HeyEddi splits pull request work into **skills** with distinct roles. Use the ri
 
 | Workflow | Skill | Who | When |
 |----------|-------|-----|------|
-| **1. Review submitted PR** | `@heyeddi-pr-review` | Reviewer, QA, or author self-check | Before approval / before requesting review |
-| **2. Respond to PR review** | `@heyeddi-pr-respond` | PR author | All review feedback (human, HeyEddi CI, inline + root summaries) |
+| **1. Review submitted PR** | `@heyeddi-pr-review` | Reviewer, QA, or author self-check | Inline line findings (not merge gates) |
+| **2. Respond to PR review** | `@heyeddi-pr-respond` | PR author | Every thread (same GitHub user ok) |
+| **3. Merge readiness** | `@pre-merge-gate --signoff` | Author / QA | After respond; before merge-ready claim |
 
 ```
-                    ┌─────────────────────────┐
-                    │   Feature branch PR     │
-                    └───────────┬─────────────┘
-                                │
-              ┌─────────────────┴─────────────────┐
-              ▼                                   ▼
-   @heyeddi-pr-review              (reviewers comment)
-   committed diff only                          │
-   product + docs + eng + gate                   ▼
-              │                      @heyeddi-pr-respond
-              │                      fix / decline + re-gate
-              └─────────────────┬─────────────────┘
-                                ▼
-                         merge to main
+@heyeddi-pr-review  → inline findings (or Approve)
+@heyeddi-pr-respond → fix/decline + reply every thread
+@pre-merge-gate --signoff → clean tree, CI green, threads resolved
+→ authorize merge
 ```
 
 ## Workflow 1 — Review submitted PR
@@ -41,20 +32,18 @@ HeyEddi splits pull request work into **skills** with distinct roles. Use the ri
 3. `audit_pr_changes` — KISS/test signals on changed files only
 4. `@heyeddi-product` — `load_product_context`, `check_features` for touched routes
 5. Conditional delegates when UI/API files change (visual-auditor, composable-patterns, etc.)
-6. `@pre-merge-gate` — tests, build, types
-7. `write_pr_review` → `.heyeddi/docs/pr-<N>-review.md`
-8. Agent sets **Verdict:** Approve | Request changes | Block
-9. `verify_pr_review --check`
+6. `post_inline_review` — real findings on exact lines (`<!-- heyeddi-pr-review -->`); zero findings → Approve
+7. Do **not** own `@pre-merge-gate` inside review (that is step 3 after respond)
 
 ### Output
 
-Default: markdown report at `.heyeddi/docs/pr-<N>-review.md`. Post `gh pr review` only when the user asks.
+Inline GitHub review comments on the committed diff. Lint/CI/merge gates stay with `@pre-merge-gate`.
 
 ### Example prompt
 
 ```
 @heyeddi-pr-review Review PR #42 — committed changes only.
-Check product fit, doc drift, engineering quality, and run pre-merge gate.
+Leave real findings as inline comments (security, logic, related call sites).
 ```
 
 ## Workflow 2 — Respond to PR review
@@ -69,11 +58,11 @@ Check product fit, doc drift, engineering quality, and run pre-merge gate.
 2. Tracking table → `.heyeddi/docs/pr-<N>-tracking.md`
 3. Per comment: fix | decline | partial | out-of-scope
 4. Apply fixes in code/docs
-5. `@pre-merge-gate` after fixes
-6. Draft `.heyeddi/docs/pr-<N>-replies.md` — one `## Comment <id>` per thread, `## Summary` last
-7. `post_thread_replies` — resolve root id; inline REST `/replies` (+ GraphQL fallback); discussion = **quote-reply** via issues comments (never fake `/issues/comments/{id}/replies`). On error: GitHub MCP `add_reply_to_pull_request_comment` / `add_issue_comment`
-8. `verify_response --check` (add `--live` to confirm GitHub threaded replies for inline)
-9. Summary comment on PR **only after** verify passes
+5. Draft `.heyeddi/docs/pr-<N>-replies.md` — one `## Comment <id>` per thread, `## Summary` last
+6. `post_thread_replies` — resolve root id; inline REST `/replies` (+ GraphQL fallback); discussion = **quote-reply** via issues comments (never fake `/issues/comments/{id}/replies`). On error: GitHub MCP `add_reply_to_pull_request_comment` / `add_issue_comment`
+7. `verify_response --check` (add `--live` to confirm GitHub threaded replies for inline)
+8. Summary comment on PR **only after** verify passes
+9. `@pre-merge-gate --signoff` after threads are done
 
 ### vs `/babysit`
 
@@ -112,7 +101,7 @@ Covers human reviewers, HeyEddi CI root summaries, inline threads, and discussio
 | Product / AC | `@heyeddi-product` | fix-vs-decline uses PR goals |
 | Engineering | `audit_pr_changes`, `@engineering-excellence` | fixes + re-audit if needed |
 | Visual / UX | `@visual-auditor` (if UI in diff) | only if comment is visual |
-| CI / tests | `@pre-merge-gate` | `@pre-merge-gate` after fixes |
+| CI / tests / ship | `@pre-merge-gate --signoff` | `@pre-merge-gate --signoff` after threads |
 | GitHub | optional review | **required** threaded replies |
 
 ## Artifacts (`.heyeddi/docs/`) — local / gitignored / not for commit

@@ -1237,3 +1237,16 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - Flow: **review → respond → pre-merge-gate**. `@heyeddi` **v3.4.4** pipelines/next-skill updated.
 
 **Process:** Review posts inline findings → respond fixes/replies → pre-merge-gate for ship.
+
+## 2026-11-07 — pre-merge-gate v2 is the ship bar (--signoff)
+
+**Context:** After review→respond, agents still needed a hard merge gate: CI green, unresolved threads closed, clean/pushed tree, Flutter analyze/test, prose on changed md, and no silent emergency skips.
+
+**Decision:** Hub **v3.8.13**. `@pre-merge-gate` **v2.0.0**.
+- Local smoke: omit `--signoff` / `--pr` (tests keep working with emergency skips as SKIP).
+- Merge claim: `--signoff` (auto-detect PR) or `--pr <N>` → git-clean, git-pushed, `gh pr checks`, unresolved review threads, emergency skips FAIL, visual required when `.heyeddi/product.md` exists.
+- Flutter: `dart analyze` / `flutter test` when `pubspec.yaml` present.
+- `@heyeddi` **v3.4.5**: pipelines + next-skill prompt `--signoff`.
+
+**Process:** `@heyeddi-pr-review` → `@heyeddi-pr-respond` → `@pre-merge-gate --signoff` → authorize merge. Exit 0 required before merge-ready claims.
+
