@@ -56,8 +56,9 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 4. **Plan gate** — before implementing: `check_engineering_plan --check` (docs ready + plan smells); read `reuse-catalog.md`.
 5. **Work** — follow the routed `@skill`.
 6. **Change gate** — after code changes: `audit_engineering --check` (errors only).
-7. **Prose** — apply `PROSE_ANTI_SLOP.md` to every sentence you author. If you edited Vue/locale/`.heyeddi` copy: `verify_prose --check`. If you edited books/docs outside defaults: `verify_prose --check --glob '<path>'`. Never skip because the surface is "not UI."
-8. **Ship** — `@pre-merge-gate --signoff` before merge-ready claims (exit 0 required).
+7. **Tests (this project)** — bug fix → test that would have failed, then fix; new behavior → focused test with the change. Not strict TDD. Skip only docs/typos/unautomatable (say so). Run the project test command for what you touched.
+8. **Prose** — apply `PROSE_ANTI_SLOP.md` to every sentence you author. If you edited Vue/locale/`.heyeddi` copy: `verify_prose --check`. If you edited books/docs outside defaults: `verify_prose --check --glob '<path>'`. Never skip because the surface is "not UI."
+9. **Ship** — `@pre-merge-gate --signoff` before merge-ready claims (exit 0 required).
 
 ## Related
 

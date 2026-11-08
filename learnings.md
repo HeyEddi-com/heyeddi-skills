@@ -1262,3 +1262,10 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** Open Agent chat in a HeyEddi project → Cursor injects the rule/AGENTS block → agent runs the named skill/script when a gate fires.
 
+
+## 2026-11-07 — Always-on agents must test project fixes (not a skill)
+
+**Context:** Agents in consumer projects fixed bugs / shipped code without adding tests. User clarified this is an **AGENTS.md / alwaysApply** gate, not a skills-hub TDD policy.
+
+**Decision:** Hub **v3.8.15**. Always-on checklist item **Tests (this project)**: bug → locking test then fix; new behavior → focused test with the change; skip only docs/typos/unautomatable. Delivered only via `AGENTS.md` + `.cursor/rules/heyeddi-always-on.mdc` templates (no new skill).
+
