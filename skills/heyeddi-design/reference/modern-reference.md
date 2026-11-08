@@ -125,8 +125,8 @@ Before calling a screen done:
 - [ ] Flagship marketing/app: calm-wow borrow is translated (atmosphere + thesis + status), not neon Volta clone
 - [ ] Avoided generic AI look clusters unless the brief asked for them
 - [ ] Decision log entry cites which reference pattern you borrowed **and this project's memorable detail + aesthetic risk** (`design-ambition.md`)
-- [ ] UI **copy** follows `context/PROSE_ANTI_SLOP.md` (no em dashes, no AI filler)
-- [ ] `verify_prose.py --check` passes on Vue/locale files
+- [ ] All authored **prose** follows `context/PROSE_ANTI_SLOP.md` (no em dashes, no AI filler; not UI-only)
+- [ ] `verify_prose.py --check` passes on Vue/locale/`.heyeddi` (add `--glob` if other prose paths were edited)
 - [ ] Smell test: would this copy survive Slack without an eye-roll?
 
 ## When plain is OK

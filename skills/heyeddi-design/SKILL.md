@@ -1,8 +1,8 @@
 ---
 name: heyeddi-design
 description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: designer thinking in .heyeddi/, then 3–5 What/Why/How options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Blocks handoff unless taste layout hard gates pass (no text-wall, hifi.html when MCP cannot Flex, visual QA). Screenshot gate still applies before done."
-version: 2.12.0
-product-version: 3.8.10
+version: 2.13.0
+product-version: 3.8.11
 author: HeyEddi-com
 ---
 
@@ -72,7 +72,7 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 3f. Read `reference/audience-design.md` when shaping, crafting, or polishing **any user-facing route**.
 3g. Read `reference/design-ambition.md` on **flagship routes**.
 3h. Read `reference/aesthetic-direction.md` on **any user-facing route**.
-3i. Read `context/PROSE_ANTI_SLOP.md` when writing **UI copy** in briefs or `design.md`.
+3i. Read `context/PROSE_ANTI_SLOP.md` whenever you author prose (briefs, `design.md`, chat, docs, books). Writing anti-slop is general-use, not UI-only.
 3j. Read `reference/visual-tools.md` during **`explore`**, **`shape`**, and **`critique`** on flagship routes: use **GenerateImage** for direction probes and **Canvas** for compare/brief/critique summaries when the IDE provides them.
 3k. Before **craft** / handoff: confirm `@taste-penpot` **layout hard gates A–G** (`taste-penpot/references/layout-hard-gates.md`): no text-wall; design system + real fonts; Flex only if reflow real (else absolute 8px / `hifi.html`); export PNG (not audit alone); no orphan empty pages. Missing any gate → send back to taste. Do not invent a second look to paper over a text-wall.
 4. After **shape** (brief confirmed), **critique**, or **polish**, append to **Decision log** in `.heyeddi/design.md`.

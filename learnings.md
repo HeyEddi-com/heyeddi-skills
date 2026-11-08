@@ -1215,3 +1215,14 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Process:** Design talk → taste Phase 0 (document + ask) → 3–5 options → user pick → PLAN → ACT → heyeddi-design record → craft/handoff.
 
 **Notes:** Dogfood after release: reinstall skills, then any “design X” without a pinned look must stop at options, not ship a default type pairing.
+
+## 2026-11-07 — Prose anti-slop is universal (no UI/book carve-out)
+
+**Context:** Agents skipped `PROSE_ANTI_SLOP` on book manuscripts, claiming the gate was UI/product/`.heyeddi` only. Always-on wording and `verify_prose` defaults made that excuse easy.
+
+**Decision:** Hub **v3.8.11**. Design pack **v1.2.11**.
+- Canonical `docs/prose-anti-slop.md` (+ every `context/PROSE_ANTI_SLOP.md`): applies to **any prose the agent authors** (chat, books, docs, UI, PRs). Section 6 is examples, not an allowlist. Explicit bans on manuscript exemptions and substituting Cursor `deslop`.
+- `@heyeddi` **v3.4.3** / always-on docs: behavioral always-on for all authored prose; `verify_prose --check` + `--glob` when non-default paths change.
+- `@heyeddi-design` **v2.13.0**: setup 3i + `verify_prose.py` wording generalized; defaults still Vue/locale/`.heyeddi` so lit trees do not explode.
+
+**Process:** Write clean → apply PROSE_ANTI_SLOP → run checker on defaults and `--glob` for other edited prose → never claim "not for books."
