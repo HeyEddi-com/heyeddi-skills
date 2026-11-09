@@ -1269,3 +1269,10 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Decision:** Hub **v3.8.15**. Always-on checklist item **Tests (this project)**: bug → locking test then fix; new behavior → focused test with the change; skip only docs/typos/unautomatable. Delivered only via `AGENTS.md` + `.cursor/rules/heyeddi-always-on.mdc` templates (no new skill).
 
+
+## 2026-11-08 — @heyeddi hard gate: run ensure/sync before any chat
+
+**Context:** Global skills install does not write project AGENTS.md. Agents could `@heyeddi` and answer without running a script, so always-on files never appeared.
+
+**Decision:** Hub **v3.8.16**. `@heyeddi` **v3.4.8**. First action on every invoke: run `ensure_always_on_agents.py` or `sync.py`; confirm AGENTS.md + alwaysApply rule; **forbidden** chat-only. Then route as usual.
+

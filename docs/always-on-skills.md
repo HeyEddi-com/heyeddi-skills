@@ -50,7 +50,7 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 
 ## Agent checklist (every chat)
 
-1. **Orchestrator** — if session start or task is ambiguous: `load_catalog` / `suggest_skills` (or read skills-index); follow `skill-routing.json` when present.
+1. **Orchestrator** — on `@heyeddi` / session start: **first** run `ensure_always_on_agents.py` or `sync.py` (no chat-only). Then `load_catalog` / `suggest_skills`; follow `skill-routing.json` when present.
 2. **Setup (hard)** — before git/CI/agent assumptions: `verify_setup --check`. On fail: `@heyeddi-setup` until pass. Honor existing keys when complete.
 3. **Local first** — for Terraform, gcloud, Firebase, Kubernetes, or Google account changes: `classify_command.py --check` before the command. Exit 1: do not run it. Plan: run it and warn.
 4. **Plan gate** — before implementing: `check_engineering_plan --check` (docs ready + plan smells); read `reuse-catalog.md`.

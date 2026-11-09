@@ -1,8 +1,8 @@
 ---
 name: heyeddi
-description: "ALWAYS-ON router named @heyeddi. Discovers skills, syncs .heyeddi/, installs thin AGENTS.md + Cursor alwaysApply always-on gates, and decides what to run. Design talk goes to @taste-penpot first (look, @zcubekr/penpot-mcp-server only) then @heyeddi-design. A redesign or from-scratch request analyzes the app before any new look. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
-version: 3.4.7
-product-version: 3.8.15
+description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist — never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
+version: 3.4.8
+product-version: 3.8.16
 author: HeyEddi-com
 ---
 
@@ -13,6 +13,25 @@ author: HeyEddi-com
 Routes work to the right `@skill`, refreshes `.heyeddi/`, installs **thin always-on** `AGENTS.md` + `.cursor/rules/heyeddi-always-on.mdc`, and **keeps product, UX, and design pillars in sync**.
 
 **Every-chat policy** is delivered via those agent/rule files (not by pasting full skill bodies). This skill remains the router + sync playbook. See `reference/always-on.md` and hub `docs/always-on-skills.md`.
+
+## Hard gate (first action — no exceptions)
+
+When this skill is invoked (`@heyeddi`, session start, or “what should we run”), **before** answering, routing, or reading other skills:
+
+1. Run **one** of these (project root = the workspace you are in):
+
+   ```bash
+   python .agents/skills/heyeddi/scripts/ensure_always_on_agents.py --project-root .
+   # preferred when index/workflow may also be stale:
+   python .agents/skills/heyeddi/scripts/sync.py --project-root .
+   ```
+
+   Fallbacks if skills live under Cursor: `~/.agents/skills/heyeddi/scripts/…` or `.cursor/skills/heyeddi/scripts/…`.
+
+2. Confirm `AGENTS.md` and `.cursor/rules/heyeddi-always-on.mdc` exist (or `--check` passes).
+3. **Only then** continue: `verify_setup`, `suggest_skills` / `load_catalog`, routing, design, etc.
+
+**Forbidden:** Chat-only `@heyeddi` (explaining the skill, listing gates, or routing) without running a script that writes/verifies always-on files. Attaching the skill is not enough — a script must run.
 
 ## When to use
 
@@ -37,20 +56,19 @@ After routing, enforce:
 
 ## Automatic `.heyeddi/` + always-on upkeep
 
-**You do not need a manual sync command.** Every HeyEddi skill tool call runs auto-sync first:
+**On `@heyeddi` itself:** use the **Hard gate** above (must run `ensure_always_on_agents` or `sync` first).
+
+**Other HeyEddi skill tool calls** still auto-sync first:
 
 1. **Ensures** `.heyeddi/` and refreshes `.heyeddi/skills-index.{json,md}` when missing
 2. **Installs/updates** project `AGENTS.md` (managed block) and `.cursor/rules/heyeddi-always-on.mdc` (`alwaysApply: true`)
 
-Reinstall skills (`npx skills add`) and keep working: the next `@heyeddi-intake`, `@heyeddi-product`, or orchestrator tool updates `.heyeddi/` + always-on files automatically.
-
-Optional explicit full sync (includes workflow scaffold + always-on files): `sync --project-root .`
-
-Force/check always-on files only:
+Reinstall skills (`npx skills add`) and keep working: the next tool that resolves the project root updates `.heyeddi/` + always-on files. That does **not** excuse skipping the Hard gate when the user invoked `@heyeddi` alone.
 
 ```bash
 python .agents/skills/heyeddi/scripts/ensure_always_on_agents.py --project-root .
 python .agents/skills/heyeddi/scripts/ensure_always_on_agents.py --project-root . --check
+python .agents/skills/heyeddi/scripts/sync.py --project-root .
 ```
 
 ## Cross-pillar sync (mandatory for product · UX · design)
