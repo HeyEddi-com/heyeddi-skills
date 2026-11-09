@@ -1,6 +1,7 @@
 # Anti-patterns
 
 - **Skipping always-on router**: every session start / ambiguous task needs catalog or suggest_skills first.
+- **Chat-only `@heyeddi`**: never answer or route under this skill without first running `ensure_always_on_agents.py` or `sync.py` for the project root.
 - **Relying on skill ALWAYS-ON text alone**: every-chat enforcement needs project `AGENTS.md` + `.cursor/rules/heyeddi-always-on.mdc`; keep them via sync / `ensure_always_on_agents`.
 - **Deleting the managed always-on block**: edit outside `<!-- heyeddi-always-on:* -->`; sync replaces the marked section.
 - **Skipping SKILL.md**: suggestions are pointers; always read the target skill before tools.
