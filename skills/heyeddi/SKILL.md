@@ -1,8 +1,8 @@
 ---
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist — never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
-version: 3.4.8
-product-version: 3.8.16
+version: 3.4.10
+product-version: 3.8.17
 author: HeyEddi-com
 ---
 
@@ -129,6 +129,7 @@ See `@heyeddi` → `reference/next-skill-handoff.md`.
 - `@heyeddi-product` · `@ux-flow-auditor` · `@heyeddi-design`: three pillars
 - `@heyeddi-setup`: always-on prefs hard gate (`verify_setup --check`)
 - `@engineering-excellence`: always-on plan + change gates
+- `reference/reproduce-first.md`: bug test first; frontend bugs use Playwright on local, then ask before test or production. Non-local: look only, no destructive action
 - `@heyeddi-intake`: upstream intake
 - `reference/host-surfaces.md`: prefer host plan/data/visual tools; portable degrade
 - `reference/next-skill-handoff.md`: next-skill block when a pipeline task completes
