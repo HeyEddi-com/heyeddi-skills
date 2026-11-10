@@ -23,6 +23,10 @@ def test_ensure_writes_agents_and_rule(tmp_path: Path) -> None:
     assert "@pre-merge-gate --signoff" in agents
     assert "Tests (this project)" in agents
     assert "would have failed" in agents
+    assert "Playwright" in agents
+    assert "local" in agents
+    assert "production" in agents
+    assert "No destructive action" in agents
     rule = (tmp_path / ".cursor" / "rules" / "heyeddi-always-on.mdc").read_text(encoding="utf-8")
     assert "alwaysApply: true" in rule
     assert "HeyEddi always-on" in rule

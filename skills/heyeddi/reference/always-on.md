@@ -16,7 +16,7 @@ Always-on **policy** lives in consumer **`AGENTS.md`** (managed block) and **`.c
 5. **Honor `stack.json`**: read git/tools/agent prefs before commit, push, or CI assumptions — only after `verify_setup --check` passes.
 6. **Host surfaces**: prefer native plan / data / visual tools when this session lists them; otherwise portable fallbacks. See `reference/host-surfaces.md`.
 7. **`.heyeddi/` upkeep**: keep skills-index / routing coherent; do not re-scaffold workflow every message.
-8. **Tests (this project)**: bug fix → locking test then fix; new behavior → focused test with the change (always-on AGENTS/rule — not a separate skill).
+8. **Tests (this project)**: bug fix → failing test, run it, then fix. Pure frontend → Playwright login + navigation on the local app; ask before a test env, and again before production. On those environments: look and navigate only, no destructive action (`reference/reproduce-first.md`). New behavior → focused test with the change. Always-on AGENTS/rule, not a separate skill.
 
 ## Not required every message
 

@@ -1270,6 +1270,12 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Decision:** Hub **v3.8.15**. Always-on checklist item **Tests (this project)**: bug → locking test then fix; new behavior → focused test with the change; skip only docs/typos/unautomatable. Delivered only via `AGENTS.md` + `.cursor/rules/heyeddi-always-on.mdc` templates (no new skill).
 
 
+## 2026-11-09 — Frontend bugs: Playwright on local, then ask
+
+**Context:** Reproduce-first was a one-line always-on rule. Frontend bugs were still fixed without a browser test, and agents had no order for local vs hosted apps.
+
+**Decision:** Hub **v3.8.17**. Same gate, no new skill. `@heyeddi` **v3.4.10** `reference/reproduce-first.md`. A pure frontend bug is a Playwright test: project test login, navigate the flow, **local app first**. If local cannot reproduce, ask before a test env, and ask again before production. On any non-local environment: look and navigate only. No destructive action whatsoever. If the bug needs a write, stop and ask. Do not perform the write.
+
 ## 2026-11-08 — @heyeddi hard gate: run ensure/sync before any chat
 
 **Context:** Global skills install does not write project AGENTS.md. Agents could `@heyeddi` and answer without running a script, so always-on files never appeared.
