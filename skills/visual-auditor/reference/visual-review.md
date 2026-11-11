@@ -14,8 +14,8 @@ Mockup PNG colors are **layout only**: implementation colors come from `design.m
 ## Review steps
 
 1. `load_visual_context --route /path --write-review`
-2. `capture_screenshots --route /path` (fast) or `--preset done` before ship
-3. `audit_contrast --route /path` (automated legibility)
+2. `capture_screenshots --route /path` (fast) or `--preset done` before ship. This runs `audit_geometry` on each PNG.
+3. `audit_contrast --route /path` (automated legibility). This remains the ship check.
 4. **Open each PNG** in `.heyeddi/audits/visual/screenshots/`
 5. Fill **vs product.md** and **vs design.md** sections in the review doc
 6. Merge contrast violations into issues table

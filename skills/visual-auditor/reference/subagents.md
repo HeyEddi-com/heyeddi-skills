@@ -3,7 +3,7 @@
 | Phase | Who | Tool |
 |-------|-----|------|
 | Load spec context | `shell` | `load_visual_context --write-review` |
-| Capture + contrast | `shell` | `capture_screenshots`, `audit_contrast` |
+| Capture + geometry + contrast | `shell` | `capture_screenshots` (runs `audit_geometry`), `audit_contrast` |
 | **Review screenshots** | **main agent** | Read PNGs vs product.md + design.md |
 | **Fix code** | **main agent** | Edit views/CSS: same turn |
 | Log each fix | `shell` | `append_fix_log` |

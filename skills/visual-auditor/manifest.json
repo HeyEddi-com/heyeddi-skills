@@ -1,6 +1,6 @@
 {
   "skill": "visual-auditor",
-  "version": "3.2.0",
+  "version": "3.3.1",
   "tools": [
     {
       "name": "load_visual_context",
@@ -52,6 +52,20 @@
         "required": ["route", "project_root"]
       },
       "script": "scripts/audit_contrast.py",
+      "readonly": true
+    },
+    {
+      "name": "audit_geometry",
+      "description": "PNG geometry gate. Hard-fails a flat text wall, unreadable marks, and content clipped at the top or bottom edge.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "image": { "type": "string" },
+          "check": { "type": "boolean" }
+        },
+        "required": ["image"]
+      },
+      "script": "scripts/audit_geometry.py",
       "readonly": true
     },
     {

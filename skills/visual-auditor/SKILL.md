@@ -1,8 +1,8 @@
 ---
 name: visual-auditor
 description: "ALWAYS use after design/implement for screenshot QA: capture, contrast, fix, document. Mandatory after handoff. Fast widths 375/768/1440; before flagship done use --preset done (375/430/768/1024/1440/1920). Auto-fix — never report-only unless user says audit-only. Edges must read on the plane."
-version: 3.2.0
-product-version: 3.8.17
+version: 3.3.1
+product-version: 3.8.18
 author: HeyEddi-com
 ---
 
@@ -47,6 +47,7 @@ Read **`reference/visual-review.md`** and **`reference/fix-loop.md`**.
 ```
 load_visual_context --route /path --write-review
 capture_screenshots --route /path
+audit_geometry --image <each captured PNG> --check
 audit_contrast --route /path
 → READ PNGs + product.md + design.md + mockup-brief + contrast report
 → FIX each error/actionable warn in code
@@ -69,10 +70,11 @@ finalize_visual_review --route /path --check
 | Tool | Role |
 |------|------|
 | `load_visual_context` | Spec paths, captures, contrast summary; `--write-review` scaffolds review doc |
-| `capture_screenshots` | PNGs → `.heyeddi/audits/visual/screenshots/` (`--preset fast\|done`) |
-| `audit_contrast` | WCAG + motion-over-text |
+| `capture_screenshots` | PNGs → `.heyeddi/audits/visual/screenshots/`. Runs `audit_geometry` on each PNG and exits 1 on a hard error. |
+| `audit_contrast` | WCAG + motion-over-text, when a browser can see text nodes |
+| `audit_geometry` | PNG gate: text wall, unreadable marks, clipped edge. No model. `reference/geometry-gate.md` |
 | `append_fix_log` | Document each fix with spec reference + files |
-| `finalize_visual_review` | Re-capture at **done** widths, contrast `--check`, close review |
+| `finalize_visual_review` | Re-capture at **done** widths, contrast `--check`, close review. Contrast stays the ship check. |
 
 ## Subagents
 
