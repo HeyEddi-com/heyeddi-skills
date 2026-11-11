@@ -31,6 +31,7 @@ hub-tools = [
 dev = [
     "poethepoet>=0.31.0",
     "pytest>=8.0",
+    "pillow>=11.0.0",
 ]
 
 [tool.uv]

@@ -82,6 +82,17 @@ def main() -> None:
         encoding="utf-8",
     )
 
+    geometry: dict | None = None
+    geometry_failed = False
+    try:
+        from audit_geometry import gate_captures  # noqa: PLC0415
+    except ImportError:
+        geometry = {"ok": None, "skipped": "pillow missing", "reports": []}
+        emit("[skip] geometry gate needs pillow. pip install pillow, then capture again.")
+    else:
+        geometry = gate_captures([root / rel for rel in artifacts])
+        geometry_failed = not geometry["ok"]
+
     emit(
         json.dumps(
             {
@@ -89,10 +100,13 @@ def main() -> None:
                 "artifacts": artifacts,
                 "manifest": str(manifest_path.relative_to(root)),
                 "screenshot_dir": str(out_dir.relative_to(root)),
+                "geometry": geometry,
             },
             indent=2,
         )
     )
+    if geometry_failed:
+        sys.exit(1)
 
     if args.check:
         contrast_script = Path(__file__).parent / "audit_contrast.py"

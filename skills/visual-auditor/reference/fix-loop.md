@@ -9,6 +9,7 @@
 ```
 load_visual_context --route /settings --write-review
 capture_screenshots --route /settings
+audit_geometry --image .heyeddi/audits/visual/screenshots/<file>.png --check
 audit_contrast --route /settings
 READ screenshots + product + design + contrast report
 FOR EACH issue (error + actionable warn):
