@@ -1,8 +1,8 @@
 ---
 name: vue-design-system
 description: "Routes Vue 3 UI and CLI work to Quasar shells, PrimeVue Aura, spring motion, shared-element morphs, depth effects, CSS tokens, visual verification, or terminal UI. No React, no Tailwind, no Bootstrap. GUI work ends in a Playwright MCP screenshot of the Vite server. CLI work ends by running the script and reading stdout."
-version: 1.0.1
-product-version: 3.8.18
+version: 1.0.2
+product-version: 3.8.19
 author: HeyEddi-com
 ---
 
@@ -10,7 +10,7 @@ author: HeyEddi-com
 
 **Target stack:** Vue 3 (Composition API, `<script setup>`) · no React · no Tailwind · no Bootstrap · web, desktop, mobile, and CLI.
 
-This skill is the Vue and CLI build router. It does not invent a second look. `@taste-penpot` is the general design skill and owns aesthetic direction. `@heyeddi-design` records it in `.heyeddi/design.md`. This skill decides which package builds the surface, then you load that skill and follow it.
+This skill is the Vue and CLI build router. It does not invent a second look. GUI work also follows `@heyeddi` `reference/browser-platform.md`: Modern Web Guidance (including `legacy-scan` on existing files) and Chrome DevTools for agents on localhost. Quasar and PrimeVue stay the components. Playwright stays the screenshot tool. `@taste-penpot` is the general design skill and owns aesthetic direction. `@heyeddi-design` records it in `.heyeddi/design.md`. This skill decides which package builds the surface, then you load that skill and follow it.
 
 ## When to use
 
@@ -139,6 +139,10 @@ PrimeVue, Quasar, Playwright, and Penpot run over stdio. Penpot is `@zcubekr/pen
     "playwright": {
       "command": "npx",
       "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
     },
     "penpot": {
       "command": "npx",

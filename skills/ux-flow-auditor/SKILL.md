@@ -2,14 +2,14 @@
 name: ux-flow-auditor
 description: "Traces user task flows with Playwright: click depth, step success, friction: and writes reports to .heyeddi/docs/ux-flows/. Use when measuring ease of use, clicks to complete a task, or onboarding friction. Not for static visual critique (use heyeddi-design critique) or layout screenshots (use visual-auditor)."
 version: 1.0.0
-product-version: 3.8.18
+product-version: 3.8.19
 author: HeyEddi-com
 disable-model-invocation: true
 ---
 
 # UX Flow Auditor
 
-Task-oriented UX: how many clicks to achieve a goal, where users get stuck.
+Task-oriented UX: how many clicks to achieve a goal, where users get stuck. Web flows also follow `@heyeddi` `reference/browser-platform.md` (`legacy-scan` on the files in the flow, Chrome DevTools on localhost for motion and long tasks). Playwright remains the click trace.
 
 **All artifacts go under `.heyeddi/docs/` and `.heyeddi/audits/`**: never repo root.
 

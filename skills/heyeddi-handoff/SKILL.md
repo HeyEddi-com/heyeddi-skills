@@ -2,7 +2,7 @@
 name: heyeddi-handoff
 description: "Implements screens from briefs, wireframes, or designer screenshots. Vue 3 with Quasar shells and PrimeVue Aura. Two-pass for PNGs; single-pass from confirmed brief.md. Chains to @vue-design-system and @visual-auditor."
 version: 1.4.1
-product-version: 3.8.18
+product-version: 3.8.19
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -11,7 +11,7 @@ disable-model-invocation: true
 
 **Vue implementation** from confirmed design artifacts: mockup-brief + PNGs **or** `brief.md` + wireframes from `@heyeddi-design shape`. See `reference/handoff-to-code.md` and `heyeddi-design/reference/implement-routing.md`.
 
-**Default:** after implement, chain `@vue-design-system` → `@visual-auditor` without asking. Shell is Quasar. Dense data is PrimeVue Aura. No React, no Tailwind.
+**Default:** after implement, chain `@vue-design-system` → `@visual-auditor` without asking. Shell is Quasar. Dense data is PrimeVue Aura. No React, no Tailwind. Before the first edit on existing UI, follow `@heyeddi` `reference/browser-platform.md` (`legacy-scan`, then Chrome DevTools on localhost).
 
 ## Subagents (default)
 

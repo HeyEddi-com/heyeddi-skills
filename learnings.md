@@ -1282,3 +1282,9 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Decision:** Hub **v3.8.16**. `@heyeddi` **v3.4.8**. First action on every invoke: run `ensure_always_on_agents.py` or `sync.py`; confirm AGENTS.md + alwaysApply rule; **forbidden** chat-only. Then route as usual.
 
+
+## 2026-11-12 — Browser platform: Modern Web Guidance and Chrome DevTools MCP
+
+**Context:** Frontend and design skills had no step to find outdated platform patterns in existing UI, and no way to check performance, memory, or reduced motion in a real browser.
+
+**Decision:** Hub **v3.8.19**. `@heyeddi` **v3.4.11** `reference/browser-platform.md`, added as always-on gate 5. Frontend and design skills run Modern Web Guidance `legacy-scan` on the files they will touch, verify each hit, then fix from the guide. Chrome DevTools MCP is optional and local only, on a fresh profile, for traces, memory, and `prefers-reduced-motion`. Quasar, PrimeVue Aura, and Aura tokens stay the components. Playwright stays the screenshot and signed-in test tool. A missing install never blocks a design-only pass. `install-skills.sh --agent` installs for agents other than Cursor (default stays `cursor`).
