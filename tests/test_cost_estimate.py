@@ -304,6 +304,21 @@ def test_python_and_dart_reads_detected(tmp_path: Path) -> None:
     assert dart["firestore_reads_per_day"] > 0
 
 
+def test_limit_declared_before_the_read_counts(tmp_path: Path) -> None:
+    result = _fs(tmp_path, "src/services/feed.ts", [
+        "const q = query(collection(db, 'posts'), limit(25))",
+        "const snap = await getDocs(q)",
+    ])
+    assert result["firestore_reads_per_day"] == 200 * 25
+    assert "no limit" not in result["findings"][0]["message"]
+
+
+def test_getdoc_is_never_labelled_no_limit(tmp_path: Path) -> None:
+    result = _fs(tmp_path, "src/services/user.ts", ["const snap = await getDoc(ref)"])
+    assert result["findings"], result
+    assert "no limit" not in result["findings"][0]["message"]
+
+
 def test_unrelated_get_calls_are_not_firestore(tmp_path: Path) -> None:
     result = _fs(tmp_path, "src/util/cache.ts", ["const hit = cache.get()", "const v = map.get()"])
     assert result["findings"] == []

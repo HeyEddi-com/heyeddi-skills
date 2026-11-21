@@ -21,6 +21,7 @@ FIRESTORE_HINT = re.compile(
 TRIGGER = re.compile(r"onDocument(Written|Created|Updated)|functions\.firestore|\bonWrite\b|on_document_(written|created|updated)")
 WRITE = re.compile(r"\.(set|update|add)\s*\(|\b(setDoc|updateDoc|addDoc)\s*\(|batch\.commit")
 WINDOW = 6
+LOOKBACK = 3
 
 CHEAPER = (
     "add limit() and paginate; listen to one small summary doc, not the collection; "
@@ -46,8 +47,11 @@ def _scan(lines: list[str], assumptions: dict) -> list[tuple[str, int, int, str]
     polled_ms = next((ms for ms in poll_intervals_ms(text) if 0 < ms < 60000), None)
     sites: list[tuple[str, int, int, str]] = []
     for i, line in enumerate(lines):
-        window = "\n".join(lines[i:i + WINDOW])
-        single_doc = bool(re.search(r"\bdoc\s*\(", window)) and not re.search(r"\b(collection|query|collectionGroup)\s*\(", window)
+        window = "\n".join(lines[max(0, i - LOOKBACK):i + WINDOW])
+        single_doc = bool(SINGLE.search(line) and not QUERY.search(line)) or (
+            bool(re.search(r"\bdoc\s*\(", window))
+            and not re.search(r"\b(collection|query|collectionGroup)\s*\(", window)
+        )
         n, bounded = _bound(window, a)
         docs = 1 if single_doc else (n if bounded else docs_default)
         in_loop = any(LOOP.search(x) for x in lines[max(0, i - 3):i + 1])
