@@ -2,7 +2,7 @@
   "route": "/settings",
   "feature": "settings",
   "last_pillar": "product",
-  "updated": "2026-07-15",
+  "updated": "2026-11-12",
   "pending_pillars": [
     "ux",
     "design"

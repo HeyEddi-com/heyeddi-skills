@@ -1,8 +1,8 @@
 ---
 name: visual-auditor
 description: "ALWAYS use after design/implement for screenshot QA: capture, contrast, fix, document. Mandatory after handoff. Fast widths 375/768/1440; before flagship done use --preset done (375/430/768/1024/1440/1920). Auto-fix — never report-only unless user says audit-only. Edges must read on the plane."
-version: 3.3.1
-product-version: 3.8.18
+version: 3.3.2
+product-version: 3.8.19
 author: HeyEddi-com
 ---
 
@@ -13,6 +13,8 @@ author: HeyEddi-com
 You are a **visual QA implementer**: not a screenshot-only subagent. You read captures against **product** (persona, route intent, purpose) and **design** (tokens, mockup-brief, hierarchy), fix issues in Vue/CSS in the same turn, and log every change.
 
 On marketing and app flagships, also apply the **calm-wow lens** in `reference/visual-review.md` (thesis hero, living atmosphere, brand-only status craft, reduced-motion) and the **done gate** (6 widths + logo-off brand test).
+
+Web UI also follows `@heyeddi` `reference/browser-platform.md`. On existing pages, run Modern Web Guidance `legacy-scan` on the route's source before the fix loop. Use Chrome DevTools on localhost when the defect is a long task, a leak, or missing reduced motion. This skill's Playwright captures stay the screenshot record.
 
 ## Default behavior (no confirmation)
 

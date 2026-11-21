@@ -24,6 +24,8 @@ def test_ensure_writes_agents_and_rule(tmp_path: Path) -> None:
     assert "Tests (this project)" in agents
     assert "would have failed" in agents
     assert "Playwright" in agents
+    assert "legacy-scan" in agents
+    assert "browser-platform.md" in agents
     assert "local" in agents
     assert "production" in agents
     assert "No destructive action" in agents

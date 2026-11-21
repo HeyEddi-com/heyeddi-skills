@@ -56,14 +56,15 @@ Scaffolders, bridgers, and stack implementers run when the stack/task needs them
 4. **Plan gate** — before implementing: `check_engineering_plan --check` (docs ready + plan smells); read `reuse-catalog.md`.
 5. **Work** — follow the routed `@skill`.
 6. **Change gate** — after code changes: `audit_engineering --check` (errors only).
-7. **Tests (this project)** — bug fix → test that would have failed, run it, then fix. Pure frontend → Playwright test that signs in with the project test login and navigates the flow on the local app. If local cannot reproduce, ask before a test env, and ask again before production. On those environments: look and navigate only. No destructive action whatsoever (`@heyeddi` `reference/reproduce-first.md`). New behavior → focused test with the change. Not strict TDD. Skip only docs/typos/unautomatable (say so). Run the project test command for what you touched.
-8. **Prose** — apply `PROSE_ANTI_SLOP.md` to every sentence you author. If you edited Vue/locale/`.heyeddi` copy: `verify_prose --check`. If you edited books/docs outside defaults: `verify_prose --check --glob '<path>'`. Never skip because the surface is "not UI."
-9. **Ship** — `@pre-merge-gate --signoff` before merge-ready claims (exit 0 required).
+7. **Browser platform** — frontend or design work loads `@heyeddi` `reference/browser-platform.md`. Existing UI: `npx modern-web-guidance legacy-scan <path> --json` on the files you will touch, then verify hits. Chrome DevTools MCP on a fresh profile at localhost for traces, memory, and reduced motion. Playwright stays screenshots and signed-in tests. Non-local: look and navigate only.
+8. **Tests (this project)** — bug fix → test that would have failed, run it, then fix. Pure frontend → Playwright test that signs in with the project test login and navigates the flow on the local app. If local cannot reproduce, ask before a test env, and ask again before production. On those environments: look and navigate only. No destructive action whatsoever (`@heyeddi` `reference/reproduce-first.md`). New behavior → focused test with the change. Not strict TDD. Skip only docs/typos/unautomatable (say so). Run the project test command for what you touched.
+9. **Prose** — apply `PROSE_ANTI_SLOP.md` to every sentence you author. If you edited Vue/locale/`.heyeddi` copy: `verify_prose --check`. If you edited books/docs outside defaults: `verify_prose --check --glob '<path>'`. Never skip because the surface is "not UI."
+10. **Ship** — `@pre-merge-gate --signoff` before merge-ready claims (exit 0 required).
 
 ## Related
 
 - `@heyeddi-local-first` → `reference/process.md`
 - `@heyeddi-setup` → `reference/setup-always-on.md`
 - `@engineering-excellence` → `reference/engineering-always-on.md`
-- `@heyeddi` → `reference/always-on.md` · `reference/host-surfaces.md`
+- `@heyeddi` → `reference/always-on.md` · `reference/host-surfaces.md` · `reference/browser-platform.md`
 - `@pre-merge-gate` runs `verify_setup --check`, `audit_engineering --check`, and `verify_prose --check` by default; `--signoff` / `--pr` also require git-clean, green PR checks, and no unresolved review threads

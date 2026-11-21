@@ -2,26 +2,26 @@
 
 [![skills.sh](https://skills.sh/b/HeyEddi-com/heyeddi-skills)](https://skills.sh/HeyEddi-com/heyeddi-skills)
 
-**HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) — free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
+**HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) - free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.8.18** · 39 skills · [skills-registry.json](skills-registry.json)
+**Status:** **v3.8.19** · 39 skills · [skills-registry.json](skills-registry.json)
 
 ### Who this is for
 
 - Teams shipping on **HeyEddi** (or adopting its `.heyeddi/` conventions)
 - Apps on **Vue + FastAPI + Firebase** and/or **Flutter** that want structured agent workflows
-- Anyone who wants open, battle-tested skills for handoff, visual QA, engineering audits, and PR loops — and is fine with an opinionated stack
+- Anyone who wants open, battle-tested skills for handoff, visual QA, engineering audits, and PR loops - and is fine with an opinionated stack
 
 ### Who this is not
 
 - A stack-agnostic “any framework” skills marketplace
-- A substitute for [HeyEddi CI](https://ci.heyeddi.com) product docs — for CI-only agents use the sibling pack [`heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills)
+- A substitute for [HeyEddi CI](https://ci.heyeddi.com) product docs - for CI-only agents use the sibling pack [`heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills)
 
 This hub is the **SSOT** for the full pack. Marketplace plugins for both packs ship from here (`./scripts/sync-plugins.sh`). The CI skills.sh package is published to [`HeyEddi-com/heyeddi-ci-skills`](https://github.com/HeyEddi-com/heyeddi-ci-skills) via `./scripts/publish-ci-pack-repo.sh`.
 
 ## About HeyEddi
 
-**HeyEddi** is a **collaborative workspace for agents and humans** — not just a dev agency. Skills and `.heyeddi/` in your repo give agents and your team shared product, design, and engineering context. Need vetted humans for design, engineering, or product work? See **[heyeddi.com/humans](https://heyeddi.com/humans)**.
+**HeyEddi** is a **collaborative workspace for agents and humans** - not just a dev agency. Skills and `.heyeddi/` in your repo give agents and your team shared product, design, and engineering context. Need vetted humans for design, engineering, or product work? See **[heyeddi.com/humans](https://heyeddi.com/humans)**.
 
 ## Install (consumers)
 
@@ -29,7 +29,7 @@ This hub is the **SSOT** for the full pack. Marketplace plugins for both packs s
 
 ### Install all skills (recommended)
 
-Into your **project** (`.agents/skills/` — shared with other agents):
+Into your **project** (`.agents/skills/` - shared with other agents):
 
 ```bash
 npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
@@ -50,6 +50,7 @@ git clone git@github.com:HeyEddi-com/heyeddi-skills.git
 cd heyeddi-skills
 ./scripts/install-skills.sh --all --project /path/to/your-app
 ./scripts/install-skills.sh --all --global
+./scripts/install-skills.sh --all --global --agent claude-code   # ~/.claude/skills/
 ```
 
 ### Install CI-only pack (sibling skills.sh repo)
@@ -105,7 +106,7 @@ Invoke skills in chat with `@skill-name` (e.g. `@heyeddi-intake`, `@heyeddi-hand
 - **Full pack:** [skills.sh/heyeddi-com/heyeddi-skills](https://www.skills.sh/heyeddi-com/heyeddi-skills)
 - **CI-only pack:** [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills)
 
-Install counts on the leaderboard come from the Vercel CLI's own [install telemetry](https://www.skills.sh/privacy) — nothing is collected by this repo.
+Install counts on the leaderboard come from the Vercel CLI's own [install telemetry](https://www.skills.sh/privacy) - nothing is collected by this repo.
 
 **Official listing playbook:** see [docs/skills-sh-official-listing.md](docs/skills-sh-official-listing.md) (topics, frontmatter, security score, Vercel core review).
 
@@ -116,8 +117,8 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `heyeddi` | Discover @skills and suggest pipelines from `skill-routing.json` |
 | `heyeddi-setup` | Ensure `.heyeddi/stack.json` has stack + git/tools/agent prefs |
 | `heyeddi-intake` | User prompt → `product.md`, mockups, intake JSON, routing |
-| `heyeddi-product` | PM review — stories, AC, usefulness; orchestrates UX/design/engineering research |
-| `heyeddi-design` | Design from scratch — briefs, wireframes, craft (Vue) |
+| `heyeddi-product` | PM review - stories, AC, usefulness; orchestrates UX/design/engineering research |
+| `heyeddi-design` | Design from scratch - briefs, wireframes, craft (Vue) |
 | `vue-design-system` | Routes Vue 3 UI and CLI to Quasar, PrimeVue Aura, motion, tokens |
 | `quasar-foundation` | App shells, drawers, mobile gestures, Capacitor and Tauri |
 | `primevue-aura` | Dense data, forms, and overlays with the Aura preset |
@@ -135,7 +136,7 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `backend-type-bridger` | OpenAPI / Firestore → TypeScript types |
 | `dart-type-bridger` | OpenAPI / Firestore → Dart model stubs |
 | `composable-patterns` | Vue composables for FastAPI / Firebase access |
-| `flutter-patterns` | Riverpod repositories — Dio + Firebase patterns |
+| `flutter-patterns` | Riverpod repositories - Dio + Firebase patterns |
 | `heyeddi-local-first` | Local Terraform and config first. `terraform plan` warns. `classify_command.py --check` exits 1 on apply and other live cloud writes |
 | `engineering-excellence` | KISS/YAGNI/DRY/SOLID audits + `.heyeddi/docs/engineering/` |
 | `heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract (Reviewer + optional Spot; GHA-first) |
@@ -143,11 +144,11 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `@heyeddi-pr-respond` | Respond to all PR review feedback (human + HeyEddi CI) |
 | `@heyeddi-ci-fails` | Diagnose failing GitHub Checks; optional `/heyeddi fails` |
 | `heyeddi-ci-runners` | Spot: GHA overflow/always + sealed `pipeline:`; evidence before claims |
-| `ux-flow-auditor` | Task-flow traces — friction, click depth — `.heyeddi/docs/ux-flows/` |
+| `ux-flow-auditor` | Task-flow traces - friction, click depth - `.heyeddi/docs/ux-flows/` |
 | `visual-auditor` | Review screenshots vs spec, fix visual issues, document fixes |
 | `verify-build` | Vite static build validator |
 | `pre-merge-gate` | QA merge-readiness checklist |
-| `heyeddi-pr-review` | Review submitted PR — diff, product, docs, engineering, tests |
+| `heyeddi-pr-review` | Review submitted PR - diff, product, docs, engineering, tests |
 | `design-system-generalizer` | Spread golden-page patterns across routes |
 | `no-duplicate-ui` | Detect duplicate Vue UI |
 
@@ -216,8 +217,8 @@ Evals give the agent a **goal**, not a script. Each skill must run its real work
 | [docs/skills-roadmap.md](docs/skills-roadmap.md) | Build plan |
 | [docs/distribution.md](docs/distribution.md) | Single-package install + marketplaces |
 | [docs/skills-sh-official-listing.md](docs/skills-sh-official-listing.md) | skills.sh index + official listing playbook |
-| [docs/v2-skill-naming.md](docs/v2-skill-naming.md) | Historical ADR — v2 `heyeddi-*` spine renames (aliases removed in v3.0.0) |
-| [docs/pr-workflows.md](docs/pr-workflows.md) | Two PR workflows — submission review vs respond |
+| [docs/v2-skill-naming.md](docs/v2-skill-naming.md) | Historical ADR - v2 `heyeddi-*` spine renames (aliases removed in v3.0.0) |
+| [docs/pr-workflows.md](docs/pr-workflows.md) | Two PR workflows - submission review vs respond |
 | [docs/team-cheat-sheet.md](docs/team-cheat-sheet.md) | Designer + QA reference |
 | [docs/cloud-agent-integration.md](docs/cloud-agent-integration.md) | Pydantic AI / LangChain |
 | [docs/testing-skills.md](docs/testing-skills.md) | Script smoke tests |

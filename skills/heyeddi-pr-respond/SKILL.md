@@ -2,7 +2,7 @@
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback — human reviewers, @heyeddi-pr-review inline findings, HeyEddi CI. Same GitHub user who left the review is fine. Auto-fix, commit+push, in-thread replies, CI check first. Not the reviewer skill (use heyeddi-pr-review) and not the merge gate (use pre-merge-gate)."
 version: 2.4.0
-product-version: 3.8.18
+product-version: 3.8.19
 author: HeyEddi-com
 disable-model-invocation: true
 ---

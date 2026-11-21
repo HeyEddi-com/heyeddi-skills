@@ -1,8 +1,8 @@
 ---
 name: visual-verification
 description: "Visual self-correction for Vue UI through the Playwright MCP. After a layout or dashboard change, screenshot the Vite dev server and fix overlap, wrap, padding, and unstyled type before done. Uses browser_navigate, browser_resize, and browser_take_screenshot. Not Puppeteer. Not a substitute for @visual-auditor's recorded review."
-version: 1.0.0
-product-version: 3.8.18
+version: 1.0.1
+product-version: 3.8.19
 author: HeyEddi-com
 ---
 
@@ -13,6 +13,8 @@ author: HeyEddi-com
 Do not use Puppeteer or `@modelcontextprotocol/server-puppeteer`.
 
 `@visual-auditor` still records the done review (contrast report, widths, fix log). Run this loop first, while the dev server is hot, and correct the code before that review.
+
+Before the first edit on existing UI, follow `@heyeddi` `reference/browser-platform.md`: `npx modern-web-guidance legacy-scan <path> --json` on the files you will touch, drop false positives, then fix from the retrieved guide. Playwright screenshots stay this skill. Chrome DevTools MCP (`chrome-devtools-mcp`) is the add-on for a local performance trace, a memory check, or `prefers-reduced-motion`. Fresh profile. Localhost only.
 
 ## When the agent activates this skill
 

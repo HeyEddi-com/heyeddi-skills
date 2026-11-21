@@ -65,3 +65,5 @@
 - `2026-07-15T16:38:03` **product** `/settings` → requests ux, design
 - `2026-07-15T19:30:19` **product** `/settings` → requests ux, design
 - `2026-07-15T19:30:19` **product** `/settings` → requests ux, design
+- `2026-11-12T14:47:34` **product** `/settings` → requests ux, design
+- `2026-11-12T14:47:34` **product** `/settings` → requests ux, design
