@@ -58,7 +58,11 @@ def run_skill_script(root: Path, skill_name: str, script_rel: str, extra_args: l
         return "[error] command timed out"
     except FileNotFoundError as exc:
         return f"[error] command not found: {exc}"
-    output = (result.stdout or "") + (result.stderr or "")
+    # gh 2.105+ writes hints to stderr on success; keep only stdout then.
+    if result.returncode == 0 and Path(cmd[0]).name == "gh":
+        output = result.stdout or ""
+    else:
+        output = (result.stdout or "") + (result.stderr or "")
     if result.returncode != 0:
         return f"[exit {result.returncode}]\n{output}".strip()
     return output.strip() or "(success, no output)"
