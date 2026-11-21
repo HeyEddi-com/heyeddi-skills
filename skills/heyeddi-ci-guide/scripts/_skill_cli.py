@@ -42,7 +42,12 @@ def run_command(cmd: list[str], cwd: Path, timeout: int = 600) -> str:
     except subprocess.TimeoutExpired:
         return f"[error] command timed out after {timeout}s: {' '.join(cmd)}"
 
-    output = (result.stdout or "") + (result.stderr or "")
+    # gh 2.105+ writes hints (for example "gh event listen") to stderr on success.
+    # Callers parse gh stdout as JSON or a SHA, so drop stderr when gh succeeds.
+    if result.returncode == 0 and Path(cmd[0]).name == "gh":
+        output = result.stdout or ""
+    else:
+        output = (result.stdout or "") + (result.stderr or "")
     if result.returncode != 0:
         return f"[exit {result.returncode}]\n{output}".strip()
     return output.strip() or "(success, no output)"
