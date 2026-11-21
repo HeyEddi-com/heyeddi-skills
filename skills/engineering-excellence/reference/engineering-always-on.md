@@ -4,7 +4,7 @@
 
 This skill is **always on** for every chat that plans or changes code. Not only when the user types `@engineering-excellence`.
 
-## Two gates
+## Three gates
 
 ### 1. Plan gate (before coding)
 
@@ -35,6 +35,18 @@ python .agents/skills/engineering-excellence/scripts/audit_engineering.py \
 - Update `architecture.md` / reuse rows when modules change
 - `append_decision` for non-obvious trade-offs
 
+### 3. Cost gate (after edits)
+
+```bash
+python .agents/skills/engineering-excellence/scripts/estimate_change_cost.py \
+  --project-root . --check
+```
+
+- Prices the cost drivers in the diff against `.heyeddi/docs/engineering/budget.json`
+- Report the monthly range and cheaper options in the reply
+- Over budget exits 1: ask the user; `--approved "<reason>"` only on their yes
+- Full rules: `budget-gate.md`
+
 ## Who must bookend
 
 | Skill | Plan gate | Change gate |
@@ -44,12 +56,12 @@ python .agents/skills/engineering-excellence/scripts/audit_engineering.py \
 | `@heyeddi-handoff` | before Pass 2 Vue | after route complete |
 | `@design-handoff-flutter` | before widget build | after route complete |
 | `@heyeddi-pr-respond` | when planning fixes | after code fixes, before push |
-| `@pre-merge-gate` | — | runs `audit_engineering --check` |
+| `@pre-merge-gate` | none | runs `audit_engineering --check` and `estimate_change_cost --check` |
 
 ## Severity policy
 
 | Severity | Examples | Gate |
 |----------|----------|------|
-| **error** | Missing required engineering doc files; extreme oversized modules | Fails `--check` |
-| **warn** | Large files, fat handlers, stub docs | Advisory |
+| **error** | Missing required engineering doc files; extreme oversized modules; change over budget | Fails `--check` |
+| **warn** | Large files, fat handlers, stub docs, cost driver with no $ in the plan, change over the warn line | Advisory |
 | **info** | Abstraction name hints, missing smoke specs | Advisory |

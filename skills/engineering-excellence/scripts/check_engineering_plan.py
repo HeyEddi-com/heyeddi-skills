@@ -15,6 +15,13 @@ ABSTRACTION_SMELL = re.compile(
     r"(\w*Factory|\w*Manager|\bOrchestrator\b|\bAbstract[A-Z]\w*|\bBase[A-Z]\w+Service\b)"
 )
 REUSE_HINT = re.compile(r"\b(reuse|reuse-catalog|existing|second call site|YAGNI|DRY)\b", re.I)
+COST_DRIVER = re.compile(
+    r"(min[_ -]?instances?|always[- ]on|\bGKE\b|Kubernetes|Cloud NAT|NAT gateway|Cloud SQL|AlloyDB|"
+    r"Spanner|Redis|Memorystore|load balancer|Firestore|onSnapshot|listener|realtime|real-time|\bcron\b|polling|setInterval|\bLLM\b|claude-|gpt-|\bGPU\b|"
+    r"macos runner|larger runner)",
+    re.I,
+)
+COST_HINT = re.compile(r"(\bcost|\bbudget|\$\s?\d|per month|/mo\b|estimate_change_cost)", re.I)
 
 
 def _docs_status(root: Path) -> list[dict]:
@@ -68,6 +75,19 @@ def _plan_smells(plan_text: str, plan_label: str) -> list[dict]:
                 "message": "Plan smells over-built: prefer the smallest change that meets AC",
             }
         )
+    driver = COST_DRIVER.search(plan_text)
+    if driver and not COST_HINT.search(plan_text):
+        findings.append(
+            {
+                "principle": "Budget",
+                "severity": "warn",
+                "file": plan_label,
+                "message": (
+                    f"Plan adds a cost driver ({driver.group(0)}) with no cost line. "
+                    "Add a monthly estimate and the cheaper option you rejected."
+                ),
+            }
+        )
     return findings
 
 
@@ -77,7 +97,9 @@ def check_engineering_plan(root: Path, plan_text: str | None, plan_label: str) -
         "Read .heyeddi/docs/engineering/reuse-catalog.md",
         "Prefer extend existing modules over new abstractions",
         "Keep views/routers thin; services/composables hold logic",
+        "Cost drivers (infra, LLM calls, schedules, CI, polling): state $/month and the cheaper option",
         "After edits: audit_engineering.py --check (errors fail; warns advisory)",
+        "After edits: estimate_change_cost.py --check (over budget fails)",
     ]
     if plan_text is not None:
         findings.extend(_plan_smells(plan_text, plan_label))

@@ -1,0 +1,278 @@
+{
+  "as_of": "2026-11",
+  "currency": "USD",
+  "note": "Rough list prices for estimates only (GCP us-central1, AWS us-east-1, Anthropic first-party API, GitHub-hosted runners). Monthly ranges: low = smallest common size or idle, high = a busy small production size. Check the provider pricing page before a real decision. Projects override any row in .heyeddi/docs/engineering/budget.json under \"rates\".",
+  "cloud_run_min_instance": {
+    "low": 7,
+    "high": 65,
+    "note": "One warm instance, 1 vCPU / 512 MiB: idle billing (low) to busy all month (high)",
+    "cheaper": "min instances 0 with startup CPU boost; keep 1 only on the latency-critical service"
+  },
+  "cpu_always_allocated": {
+    "low": 40,
+    "high": 70,
+    "note": "CPU billed for the whole instance life, per instance",
+    "cheaper": "request-based CPU unless you run background work after the response"
+  },
+  "terraform_resources": {
+    "google_sql_database_instance": {
+      "low": 10,
+      "high": 250,
+      "cheaper": "smallest tier for non-prod, stop it at night, or Neon / Firestore for small load"
+    },
+    "google_alloydb_instance": {
+      "low": 200,
+      "high": 800,
+      "cheaper": "Cloud SQL until AlloyDB features are needed"
+    },
+    "google_spanner_instance": {
+      "low": 65,
+      "high": 700,
+      "cheaper": "Cloud SQL unless you need global writes"
+    },
+    "google_container_cluster": {
+      "low": 73,
+      "high": 300,
+      "cheaper": "Cloud Run unless you need Kubernetes; one zonal cluster has a free management tier"
+    },
+    "google_container_node_pool": {
+      "low": 25,
+      "high": 200,
+      "cheaper": "spot nodes for stateless work; autoscale to the smallest count"
+    },
+    "google_compute_instance": {
+      "low": 7,
+      "high": 100,
+      "cheaper": "e2-micro or e2-small, spot VMs, or Cloud Run"
+    },
+    "google_compute_instance_template": {
+      "low": 0,
+      "high": 100,
+      "cheaper": "check the group size that uses it"
+    },
+    "google_compute_router_nat": {
+      "low": 32,
+      "high": 60,
+      "cheaper": "Private Google Access when traffic only goes to Google APIs"
+    },
+    "google_compute_global_forwarding_rule": {
+      "low": 18,
+      "high": 25,
+      "cheaper": "Cloud Run default URL or domain mapping when one service is enough"
+    },
+    "google_compute_forwarding_rule": {
+      "low": 18,
+      "high": 25,
+      "cheaper": "share one load balancer across services"
+    },
+    "google_compute_address": {
+      "low": 3,
+      "high": 8,
+      "cheaper": "release addresses you do not attach"
+    },
+    "google_compute_global_address": {
+      "low": 3,
+      "high": 8,
+      "cheaper": "release addresses you do not attach"
+    },
+    "google_vpc_access_connector": {
+      "low": 10,
+      "high": 50,
+      "cheaper": "Direct VPC egress on Cloud Run"
+    },
+    "google_redis_instance": {
+      "low": 35,
+      "high": 250,
+      "cheaper": "in-process cache or Firestore until the hit rate proves Redis"
+    },
+    "google_memcache_instance": {
+      "low": 40,
+      "high": 200,
+      "cheaper": "in-process cache first"
+    },
+    "google_cloud_run_v2_service": {
+      "low": 0,
+      "high": 5,
+      "cheaper": "scale to zero (min instances 0)"
+    },
+    "google_cloud_run_service": {
+      "low": 0,
+      "high": 5,
+      "cheaper": "scale to zero (min instances 0)"
+    },
+    "google_cloudfunctions2_function": {
+      "low": 0,
+      "high": 5,
+      "cheaper": "keep min instances 0"
+    },
+    "google_storage_bucket": {
+      "low": 0,
+      "high": 5,
+      "cheaper": "lifecycle rules to Nearline / delete old objects"
+    },
+    "google_pubsub_topic": {
+      "low": 0,
+      "high": 5,
+      "cheaper": "usage-based; watch retained messages"
+    },
+    "google_bigquery_dataset": {
+      "low": 0,
+      "high": 10,
+      "cheaper": "partition and cluster tables; set default table expiry"
+    },
+    "google_cloud_scheduler_job": {
+      "low": 0,
+      "high": 0.1,
+      "cheaper": "three jobs per account are free"
+    },
+    "google_secret_manager_secret": {
+      "low": 0,
+      "high": 0.1,
+      "cheaper": "delete old secret versions"
+    },
+    "google_logging_project_sink": {
+      "low": 0,
+      "high": 10,
+      "cheaper": "filter the sink; drop debug logs"
+    },
+    "google_artifact_registry_repository": {
+      "low": 0,
+      "high": 5,
+      "cheaper": "cleanup policy for old images"
+    },
+    "aws_instance": {
+      "low": 8,
+      "high": 100,
+      "cheaper": "t4g sizes, spot, or Lambda / Fargate"
+    },
+    "aws_db_instance": {
+      "low": 15,
+      "high": 250,
+      "cheaper": "smallest class for non-prod, single AZ outside prod"
+    },
+    "aws_rds_cluster": {
+      "low": 45,
+      "high": 400,
+      "cheaper": "Aurora Serverless v2 minimum ACU, or plain RDS"
+    },
+    "aws_nat_gateway": {
+      "low": 33,
+      "high": 60,
+      "cheaper": "VPC endpoints for AWS services; one NAT for non-prod"
+    },
+    "aws_lb": {
+      "low": 17,
+      "high": 30,
+      "cheaper": "share one load balancer with listener rules"
+    },
+    "aws_eks_cluster": {
+      "low": 73,
+      "high": 150,
+      "cheaper": "ECS Fargate or Lambda unless you need Kubernetes"
+    },
+    "aws_elasticache_cluster": {
+      "low": 12,
+      "high": 200,
+      "cheaper": "in-process cache first"
+    },
+    "aws_eip": {
+      "low": 3,
+      "high": 4,
+      "cheaper": "release addresses you do not attach"
+    }
+  },
+  "llm_per_mtok": {
+    "claude-fable-5-2": {
+      "input": 8.0,
+      "output": 40.0
+    },
+    "claude-fable-5-1": {
+      "input": 10.0,
+      "output": 50.0
+    },
+    "claude-fable-5": {
+      "input": 10.0,
+      "output": 50.0
+    },
+    "claude-opus-5-5": {
+      "input": 4.0,
+      "output": 20.0
+    },
+    "claude-opus-5": {
+      "input": 5.0,
+      "output": 25.0
+    },
+    "claude-opus-4-8": {
+      "input": 5.0,
+      "output": 25.0
+    },
+    "claude-opus-4-7": {
+      "input": 5.0,
+      "output": 25.0
+    },
+    "claude-opus-4-6": {
+      "input": 5.0,
+      "output": 25.0
+    },
+    "claude-sonnet-5-5": {
+      "input": 2.0,
+      "output": 10.0
+    },
+    "claude-sonnet-5": {
+      "input": 2.0,
+      "output": 10.0
+    },
+    "claude-sonnet-4-6": {
+      "input": 3.0,
+      "output": 15.0
+    },
+    "claude-haiku-5-5": {
+      "input": 0.1,
+      "output": 0.5
+    },
+    "claude-haiku-4-5": {
+      "input": 1.0,
+      "output": 5.0
+    }
+  },
+  "llm_family_fallback": {
+    "fable": {
+      "input": 8.0,
+      "output": 40.0
+    },
+    "mythos": {
+      "input": 8.0,
+      "output": 40.0
+    },
+    "opus": {
+      "input": 4.0,
+      "output": 20.0
+    },
+    "sonnet": {
+      "input": 2.0,
+      "output": 10.0
+    },
+    "haiku": {
+      "input": 0.1,
+      "output": 0.5
+    }
+  },
+  "llm_cheaper": "prompt caching for the stable prefix, Batch API (half price) for work that can wait, lower effort, and measure a smaller model on real requests before switching",
+  "ci_runner_per_minute": {
+    "linux": 0.008,
+    "large": 0.032,
+    "macos": 0.08
+  },
+  "requests_per_million": 0.4,
+  "firestore": {
+    "read_per_100k": {
+      "low": 0.03,
+      "high": 0.06
+    },
+    "write_per_100k": {
+      "low": 0.09,
+      "high": 0.18
+    },
+    "note": "Native mode: single region (low) to multi-region (high). First 50k reads/day are free per project."
+  }
+}

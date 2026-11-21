@@ -24,6 +24,7 @@ EMERGENCY_SKIP_FLAGS = (
     "skip_backend",
     "skip_engineering_audit",
     "skip_setup_audit",
+    "skip_cost_estimate",
 )
 
 
@@ -451,6 +452,7 @@ def main() -> None:
     parser.add_argument("--skip-visual-audit", action="store_true")
     parser.add_argument("--skip-engineering-audit", action="store_true", help="Emergency only")
     parser.add_argument("--skip-setup-audit", action="store_true", help="Emergency only")
+    parser.add_argument("--skip-cost-estimate", action="store_true", help="Emergency only")
     parser.add_argument("--skip-backend", action="store_true", help="Emergency only")
     parser.add_argument("--skip-flutter", action="store_true")
     parser.add_argument("--skip-git-clean", action="store_true", help="Skip dirty/unpushed checks")
@@ -477,6 +479,8 @@ def main() -> None:
         emergency_used.append("--skip-engineering-audit")
     if args.skip_setup_audit:
         emergency_used.append("--skip-setup-audit")
+    if args.skip_cost_estimate:
+        emergency_used.append("--skip-cost-estimate")
 
     if signoff and not args.skip_git_clean:
         run_git_clean_checks(root, rows)
@@ -546,6 +550,21 @@ def main() -> None:
     else:
         st = "FAIL" if signoff else "SKIP"
         rows.append(("engineering-audit", st, "skipped via --skip-engineering-audit"))
+
+    if not args.skip_cost_estimate:
+        out = run_skill_script(
+            root,
+            "engineering-excellence",
+            "scripts/estimate_change_cost.py",
+            ["--check"],
+        )
+        st = status_from_output(out)
+        if st == "PASS" and '"ok": false' in out:
+            st = "FAIL"
+        rows.append(("cost-estimate", st, out[:200]))
+    else:
+        st = "FAIL" if signoff else "SKIP"
+        rows.append(("cost-estimate", st, "skipped via --skip-cost-estimate"))
 
     if not args.skip_visual_audit:
         # Require visual when product routes exist and we are in sign-off
