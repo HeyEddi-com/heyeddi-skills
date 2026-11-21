@@ -102,6 +102,17 @@ def main() -> None:
                                 "body": body,
                             }
                         )
+                rev_out = run_command(
+                    ["gh", "api", f"repos/{repo}/pulls/{args.pr}/reviews", "--paginate"],
+                    root,
+                )
+                try:
+                    reviews = json.loads(rev_out)
+                except json.JSONDecodeError:
+                    reviews = []
+                for rev in reviews if isinstance(reviews, list) else []:
+                    if isinstance(rev, dict) and MARKER in str(rev.get("body") or ""):
+                        event = rev.get("state")
 
     if expected:
         posted_keys = {
@@ -114,14 +125,10 @@ def main() -> None:
             if key not in posted_keys:
                 missing.append(f"missing inline comment for {key}")
     elif not posted_comments and event not in {"APPROVE", "APPROVED"}:
-        # Clean approve may have zero comments; require either APPROVE event in fixture
-        # or at least one heyeddi-pr-review activity when findings were expected empty.
-        if args.posted_file and event == "APPROVE":
-            pass
-        elif args.findings_file is not None and not expected:
-            if args.posted_file and event != "APPROVE":
-                missing.append("zero findings require APPROVE event")
-        # live mode with zero expected: do not fail solely on empty comments
+        # Nothing expected, nothing posted, no approving review: nothing was verified.
+        missing.append(
+            "nothing verified: no --findings-file, no heyeddi-pr-review comments and no APPROVE review found"
+        )
 
     status = "ok" if not missing else "fail"
     payload = {
