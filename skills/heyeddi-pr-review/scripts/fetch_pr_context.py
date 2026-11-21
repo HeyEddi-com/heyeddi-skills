@@ -9,7 +9,7 @@ from pathlib import Path
 
 from _heyeddi_paths import pr_context_cache, skill_docs_dir
 from _pr_context import categorize_file, load_fixture, routes_from_files
-from _skill_cli import emit, resolve_project_root, run_command
+from _skill_cli import degraded, emit, gh_status, resolve_project_root, run_command
 from _untrusted_doc import wrap_pr_free_text
 
 _FREE_TEXT_KEYS = frozenset({"title", "body", "author", "changed_files_text"})
@@ -44,7 +44,10 @@ def fetch_live(root: Path, pr: int) -> dict:
     if meta_out.startswith("[exit") or meta_out.startswith("[error]"):
         return {"error": "could not fetch PR", "detail": meta_out}
 
-    meta = json.loads(meta_out)
+    try:
+        meta = json.loads(meta_out)
+    except json.JSONDecodeError:
+        return {"error": "gh returned non-JSON for pr view", "detail": meta_out[:300]}
     files_raw = meta.pop("files", [])
     changed_files = [f["path"] if isinstance(f, dict) else str(f) for f in files_raw]
 
@@ -111,6 +114,17 @@ def main() -> None:
     if args.fixture:
         payload = load_fixture(root, args.fixture, args.pr)
     else:
+        status = gh_status(root)
+        if not status["ok"]:
+            degraded(
+                "fetch_pr_context",
+                status,
+                manual=[
+                    "Read the PR with the GitHub MCP tool pull_request_read (get_diff, get_files).",
+                    "Or for a local branch: git diff origin/<base>...HEAD",
+                    "Or pass --fixture <file> with a saved payload.",
+                ],
+            )
         payload = fetch_live(root, args.pr)
 
     if "error" in payload:

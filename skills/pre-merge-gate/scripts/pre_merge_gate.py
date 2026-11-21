@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _skill_cli import emit, resolve_project_root, run_command
+from _skill_cli import EXIT_DEGRADED, emit, gh_status, resolve_project_root, run_command
 
 EMERGENCY_SKIP_FLAGS = (
     "skip_backend",
@@ -153,10 +153,19 @@ def run_git_clean_checks(root: Path, rows: list[tuple[str, str, str]]) -> None:
         rows.append(("git-pushed", "PASS", "branch synced with upstream"))
 
 
+def add_unverified_pr_rows(root: Path, rows: list[tuple[str, str, str]]) -> bool:
+    """Mark the PR checks UNVERIFIED when gh is missing or logged out. True when it did."""
+    status = gh_status(root)
+    if status["ok"]:
+        return False
+    why = f"{status['reason']}; {status['hint']}".strip("; ")
+    rows.append(("pr-checks", "UNVERIFIED", why))
+    rows.append(("pr-review-threads", "UNVERIFIED", why))
+    return True
+
+
 def run_pr_checks(root: Path, pr: int, rows: list[tuple[str, str, str]]) -> None:
-    if not shutil.which("gh"):
-        rows.append(("pr-checks", "FAIL", "gh CLI required for PR sign-off"))
-        rows.append(("pr-review-threads", "FAIL", "gh CLI required for PR sign-off"))
+    if add_unverified_pr_rows(root, rows):
         return
 
     checks = run_command(["gh", "pr", "checks", str(pr)], root, timeout=120)
@@ -404,6 +413,7 @@ def build_report(
 ) -> tuple[str, dict[str, Any], int]:
     fail_count = sum(1 for _, st, _ in rows if st == "FAIL")
     skip_count = sum(1 for _, st, _ in rows if st == "SKIP")
+    unverified_count = sum(1 for _, st, _ in rows if st == "UNVERIFIED")
     blocked = fail_count > 0
     lines = [
         "# Pre-merge Gate Report",
@@ -424,19 +434,32 @@ def build_report(
         )
         lines.append("")
         blocked = True
-    overall = "BLOCKED" if blocked else "OK"
-    lines.append(f"**Overall:** {overall} ({fail_count} failures, {skip_count} skips)")
+    # UNVERIFIED = a check that needs GitHub could not run. Not a failure, but not merge-ready.
+    unverified = unverified_count > 0 and not blocked
+    overall = "BLOCKED" if blocked else ("UNVERIFIED" if unverified else "OK")
+    if unverified:
+        lines.append(
+            "**Not merge-ready:** PR checks could not be verified (gh missing or logged out). "
+            "Check CI and review threads by hand or with the GitHub MCP tools, or run `gh auth login` "
+            "and re-run. Exit code 3."
+        )
+        lines.append("")
+    lines.append(
+        f"**Overall:** {overall} ({fail_count} failures, {unverified_count} unverified, {skip_count} skips)"
+    )
     payload = {
-        "ok": not blocked,
+        "ok": not blocked and not unverified,
         "overall": overall,
         "pr": pr,
         "signoff": signoff,
         "fail_count": fail_count,
         "skip_count": skip_count,
+        "unverified_count": unverified_count,
         "emergency_skips": emergency_used,
         "checks": [{"name": n, "status": s, "summary": m} for n, s, m in rows],
     }
-    return "\n".join(lines), payload, (1 if blocked else 0)
+    code = 1 if blocked else (EXIT_DEGRADED if unverified else 0)
+    return "\n".join(lines), payload, code
 
 
 def main() -> None:
@@ -470,6 +493,9 @@ def main() -> None:
     elif args.signoff and not args.no_pr:
         pr = detect_pr_number(root, None)
         signoff = True
+        if pr is None:
+            # No PR found. With gh unusable that means "could not look", not "there is none".
+            add_unverified_pr_rows(root, rows)
     else:
         pr = None
         signoff = bool(args.signoff)

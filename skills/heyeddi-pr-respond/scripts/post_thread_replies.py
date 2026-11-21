@@ -55,7 +55,7 @@ from _replies_parse import (
     parse_reply_sections,
     summary_is_last,
 )
-from _skill_cli import emit, resolve_project_root, run_command
+from _skill_cli import EXIT_DEGRADED, emit, gh_status, resolve_project_root, run_command
 from _temp_store import comments_cache_path
 from assert_fixes_pushed import evaluate as evaluate_fixes_pushed
 
@@ -395,7 +395,10 @@ def main() -> None:
     cache_path = comments_cache_path(args.pr)
 
     # Live posts require remote HEAD to already contain any code fixes.
-    dry_run = args.dry_run or not shutil.which("gh")
+    gh_state = gh_status(root)
+    # gh missing or logged out: nothing can be posted. Plan the replies, say so, exit 3.
+    degraded_mode = not args.dry_run and not gh_state["ok"]
+    dry_run = args.dry_run or degraded_mode
     if not dry_run and not args.allow_unpushed:
         gate = evaluate_fixes_pushed(root)
         if not gate.get("ok"):
@@ -572,6 +575,18 @@ def main() -> None:
         ),
         "hint": "Run verify_response.py --pr <N> --live --check after posting.",
     }
+
+    if degraded_mode:
+        payload["status"] = "degraded"
+        payload["posted"] = False
+        payload["gh"] = {k: gh_state.get(k) for k in ("state", "reason", "hint")}
+        payload["manual"] = [
+            "Nothing was posted to GitHub. Each entry in `posted` carries its mcp_fallback.",
+            "Reply on each root review comment with the GitHub MCP tool add_reply_to_pull_request_comment (no quote).",
+            "Or run `gh auth login` and re-run this script.",
+        ]
+        emit(json.dumps(payload, indent=2))
+        sys.exit(EXIT_DEGRADED)
 
     emit(json.dumps(payload, indent=2))
     if errors:

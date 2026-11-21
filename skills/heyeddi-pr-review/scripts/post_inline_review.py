@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _skill_cli import emit, fail, resolve_project_root, run_command
+from _skill_cli import degraded, emit, fail, gh_status, resolve_project_root, run_command
 
 MARKER = "<!-- heyeddi-pr-review -->"
 DEFAULT_APPROVE = (
@@ -195,8 +195,20 @@ def main() -> None:
         )
         return
 
-    if not shutil.which("gh"):
-        fail("gh CLI not found")
+    status = gh_status(root)
+    if not status["ok"]:
+        degraded(
+            "post_inline_review",
+            status,
+            posted=False,
+            pr=args.pr,
+            payload=payload,
+            manual=[
+                "Nothing was posted to GitHub. The review to post is in `payload`.",
+                "Post it with the GitHub MCP review tools: create a pending review, add each comment on its path and line, then submit with the same event.",
+                "Or save it with --fixture-out <file> and post it after `gh auth login`.",
+            ],
+        )
 
     repo = _repo(root)
     sha = _head_sha(root, pr=args.pr)

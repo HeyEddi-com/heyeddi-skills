@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from _skill_cli import emit, resolve_project_root, run_command
+from _skill_cli import degraded, emit, gh_status, resolve_project_root, run_command
 
 
 def _docs_dir(root: Path) -> Path:
@@ -59,9 +59,17 @@ def main() -> None:
         )
         return
 
-    if not shutil.which("gh"):
-        emit(json.dumps({"error": "gh CLI not found", "pr": args.pr}, indent=2))
-        raise SystemExit(1)
+    status = gh_status(root)
+    if not status["ok"]:
+        degraded(
+            "fetch_failing_checks",
+            status,
+            pr=args.pr,
+            manual=[
+                "Read check status with the GitHub MCP tool pull_request_read (get_status).",
+                "Or open the PR's Checks tab and paste the failing job log into the chat.",
+            ],
+        )
 
     pr = _gh_json(root, ["pr", "view", str(args.pr), "--json", "number,url,headRefOid,headRefName,statusCheckRollup"])
     if isinstance(pr, dict) and pr.get("_error"):

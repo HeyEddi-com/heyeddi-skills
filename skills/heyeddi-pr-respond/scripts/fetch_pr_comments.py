@@ -13,7 +13,7 @@ import json
 import shutil
 from pathlib import Path
 
-from _skill_cli import emit, resolve_project_root, run_command
+from _skill_cli import degraded, emit, gh_status, resolve_project_root, run_command
 from _temp_store import comments_cache_path
 
 
@@ -101,17 +101,18 @@ def main() -> None:
         )
         return
 
-    if not shutil.which("gh"):
-        emit(
-            json.dumps(
-                {
-                    "error": "gh CLI not found",
-                    "hint": "Install GitHub CLI and authenticate, or set GH_TOKEN for cloud agent",
-                },
-                indent=2,
-            )
+    status = gh_status(root)
+    if not status["ok"]:
+        # A cache from an earlier run must not pass for fresh data once gh is gone.
+        cache.unlink(missing_ok=True)
+        degraded(
+            "fetch_pr_comments",
+            status,
+            manual=[
+                "Read review threads with the GitHub MCP tool pull_request_read (get_review_comments).",
+                "Reply to a thread with add_reply_to_pull_request_comment (root comment id, no quote).",
+            ],
         )
-        return
 
     repo_out = run_command(
         ["gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner"],
