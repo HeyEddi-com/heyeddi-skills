@@ -169,3 +169,21 @@ def test_gate_run_pr_checks_without_gh_is_unverified_not_fail(tmp_path: Path, mo
     rows: list[tuple[str, str, str]] = []
     gate.run_pr_checks(tmp_path, 5, rows)
     assert [st for _n, st, _ in rows] == ["UNVERIFIED", "UNVERIFIED"]
+
+
+def test_verify_inline_review_with_nothing_to_check_fails(tmp_path: Path) -> None:
+    """0 expected, 0 posted and no APPROVE used to report ok, so --check passed on nothing."""
+    posted = tmp_path / "posted.json"
+    posted.write_text(json.dumps({"event": "COMMENT", "comments": []}))
+    env = _sandbox(tmp_path, gh_script=None)
+    result = _run(env, "heyeddi-pr-review", "verify_inline_review.py", "--pr", str(PR), "--posted-file", str(posted), "--check", cwd=_git_repo(tmp_path))
+    assert result.returncode == 1, (result.stdout, result.stderr)
+    assert "nothing verified" in result.stdout
+
+
+def test_verify_inline_review_clean_approve_passes(tmp_path: Path) -> None:
+    posted = tmp_path / "posted.json"
+    posted.write_text(json.dumps({"event": "APPROVE", "comments": []}))
+    env = _sandbox(tmp_path, gh_script=None)
+    result = _run(env, "heyeddi-pr-review", "verify_inline_review.py", "--pr", str(PR), "--posted-file", str(posted), "--check", cwd=_git_repo(tmp_path))
+    assert result.returncode == 0, (result.stdout, result.stderr)
