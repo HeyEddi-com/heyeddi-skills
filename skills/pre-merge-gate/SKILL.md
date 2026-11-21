@@ -2,7 +2,7 @@
 name: pre-merge-gate
 description: "Ship gate after review→respond: setup, stack tests/build/analyze, engineering + prose, optional UI contrast, and with --signoff/--pr also git-clean, CI checks, and unresolved review threads. Any FAIL exits 1. Use before claiming merge-ready or merging to main."
 version: 2.0.1
-product-version: 3.8.19
+product-version: 3.8.20
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -73,6 +73,7 @@ The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED`
 | duplicate-ui | skill installed |
 | prose-audit | defaults + changed `*.md` globs from PR/diff |
 | engineering-audit | `@engineering-excellence --check` |
+| cost-estimate | `@engineering-excellence estimate_change_cost --check` (over budget → FAIL) |
 | contrast-audit | product routes (see visual rules) |
 
 ### Sign-off (`--signoff` or `--pr`)
@@ -83,13 +84,13 @@ The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED`
 | git-pushed | unpushed commits → FAIL |
 | pr-checks | `gh pr checks` failing/pending → FAIL |
 | pr-review-threads | unresolved review threads → FAIL (run respond) |
-| signoff-emergency-skips | `--skip-backend` / setup / engineering → FAIL |
+| signoff-emergency-skips | `--skip-backend` / setup / engineering / cost → FAIL |
 | visual | if `.heyeddi/product.md` exists, missing Playwright → FAIL (not silent SKIP) |
 
 ### Flags
 
 - `--skip-duplicate-ui`, `--skip-prose-audit`, `--skip-visual-audit`, `--skip-flutter`, `--skip-git-clean`
-- Emergency only (blocked under sign-off): `--skip-backend`, `--skip-engineering-audit`, `--skip-setup-audit`
+- Emergency only (blocked under sign-off): `--skip-backend`, `--skip-engineering-audit`, `--skip-setup-audit`, `--skip-cost-estimate`
 - `--no-pr` with `--signoff`: local sign-off without PR/CI/thread checks (still git-clean + emergency ban)
 
 ## Never

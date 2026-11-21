@@ -88,6 +88,30 @@ Engineering ADRs: separate from the **Design Decision log** in `.heyeddi/design.
 ```
 """
 
+BUDGET = """{
+  "currency": "USD",
+  "change_warn_monthly": 25,
+  "change_error_monthly": 200,
+  "monthly_limit": null,
+  "current_monthly": null,
+  "firestore_reads_per_day_limit": 1000000,
+  "assumptions": {
+    "llm_calls_per_month": 10000,
+    "llm_input_tokens": 2000,
+    "llm_output_tokens": 500,
+    "ci_runs_per_month": 200,
+    "ci_minutes_per_run": 5,
+    "concurrent_clients": 50,
+    "firestore_sessions_per_day": 200,
+    "firestore_docs_per_query": 1000,
+    "firestore_doc_changes_per_day": 5000,
+    "firestore_loop_iterations": 20,
+    "firestore_reads_per_day_warn": 100000
+  },
+  "rates": {}
+}
+"""
+
 README = """# Engineering docs
 
 Living notes for **KISS, YAGNI, DRY, SOLID**: maintained by `@engineering-excellence`.
@@ -97,6 +121,7 @@ Living notes for **KISS, YAGNI, DRY, SOLID**: maintained by `@engineering-excell
 | `architecture.md` | How the system works: modules and data flow |
 | `reuse-catalog.md` | What already exists: do not rebuild |
 | `decisions.md` | Engineering ADRs |
+| `budget.json` | Cost gate limits and usage assumptions (`estimate_change_cost.py`) |
 
 Run `audit_engineering.py --check` before merge on non-trivial changes.
 """
@@ -125,6 +150,11 @@ def main() -> None:
             continue
         path.write_text(body, encoding="utf-8")
         created.append(str(path.relative_to(root)))
+
+    budget = eng / "budget.json"
+    if not budget.is_file():
+        budget.write_text(BUDGET, encoding="utf-8")
+        created.append(str(budget.relative_to(root)))
 
     emit({"ok": True, "created_or_updated": created, "engineering_dir": str(eng.relative_to(root))})
 

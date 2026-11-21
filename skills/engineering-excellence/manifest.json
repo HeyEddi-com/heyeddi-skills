@@ -1,6 +1,6 @@
 {
   "skill": "engineering-excellence",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "tools": [
     {
       "name": "init_engineering_docs",
@@ -46,6 +46,25 @@
       },
       "script": "scripts/audit_engineering.py",
       "readonly": true
+    },
+    {
+      "name": "estimate_change_cost",
+      "description": "Always-on cost gate: price cost drivers in the diff (infra, LLM calls, schedules, CI, polling), compare to budget.json, write cost-estimate report.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": { "type": "string" },
+          "base": { "type": "string", "description": "Git ref to diff against (default origin/main, main)" },
+          "diff_file": { "type": "string", "description": "Unified diff to read instead of git" },
+          "terraform_plan_json": { "type": "string", "description": "terraform show -json output to validate infra cost" },
+          "infracost_json": { "type": "string", "description": "infracost diff --format json output; overrides Terraform guesses" },
+          "approved": { "type": "string", "description": "User's reason for going over budget; writes an ADR" },
+          "check": { "type": "boolean", "description": "Exit non-zero when over budget" }
+        },
+        "required": ["project_root"]
+      },
+      "script": "scripts/estimate_change_cost.py",
+      "readonly": false
     },
     {
       "name": "append_decision",
