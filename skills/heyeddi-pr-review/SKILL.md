@@ -106,6 +106,15 @@ Never "Approve" in chat while leaving zero GitHub activity. Always submit the re
 | `@heyeddi-ci-fails` | CI failures before or with respond |
 | `@engineering-excellence` | Optional deeper audit when a finding needs it |
 
+## Without the gh CLI
+
+`gh` is optional. Every script here that talks to GitHub checks for it first. When `gh` is missing or logged out, the script prints `{"status": "degraded", ...}` with the reason and a `manual` list, and exits **3**.
+
+- Exit 3 is not a pass and not a failure. It means the step could not run.
+- Do not retry in a loop and do not report the step as done.
+- Do the step by hand with the GitHub MCP tools named in `manual`, or ask the user to run `gh auth login`.
+- Nothing is posted, verified or signed off when a script exits 3.
+
 ## When the task is complete: suggest next skills
 
 ```bash

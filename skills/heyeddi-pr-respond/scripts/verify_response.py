@@ -15,7 +15,7 @@ from typing import Any
 
 from _comment_resolve import awaiting_root_ids
 from _replies_parse import parse_reply_sections, summary_is_last
-from _skill_cli import emit, resolve_project_root, run_command
+from _skill_cli import degraded, emit, gh_status, resolve_project_root, run_command
 from _temp_store import comments_cache_path, inventory_cache_path
 
 _NOT_INLINE_KINDS = frozenset({"review", "reviews", "discussion", "issue-comment"})
@@ -253,6 +253,18 @@ def main() -> None:
     live_checked = False
     live_replied: set[str] = set()
     if args.live and not args.allow_draft_only:
+        status = gh_status(root)
+        if not status["ok"]:
+            degraded(
+                "verify_response",
+                status,
+                verified=False,
+                manual=[
+                    "The live reply check needs GitHub. Replies are NOT verified.",
+                    "Check threads with the GitHub MCP tool pull_request_read (get_review_comments).",
+                    "Pass --allow-draft-only to check only the draft's shape.",
+                ],
+            )
         live_checked = True
         repo = None
         cache_path = comments_cache_path(args.pr)

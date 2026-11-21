@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _skill_cli import emit, resolve_project_root, run_command
+from _skill_cli import degraded, emit, gh_status, resolve_project_root, run_command
 
 MARKER = "<!-- heyeddi-pr-review -->"
 
@@ -59,8 +59,16 @@ def main() -> None:
         event = posted.get("event") if isinstance(posted, dict) else None
         posted_comments = _findings_list(posted)
     else:
-        if not shutil.which("gh"):
-            missing.append("gh CLI not found and no --posted-file")
+        status = gh_status(root)
+        if not status["ok"]:
+            degraded(
+                "verify_inline_review",
+                status,
+                manual=[
+                    "Pass --posted-file with the review comments (GitHub MCP pull_request_read get_review_comments).",
+                    "Or open the PR's Files changed tab and confirm each comment is on its line.",
+                ],
+            )
         else:
             repo_out = run_command(
                 ["gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner"],

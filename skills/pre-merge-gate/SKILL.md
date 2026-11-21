@@ -51,6 +51,15 @@ The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED`
 
 **Eval / harness:** use `--skip-visual-audit` when Playwright is unavailable in the agent turn.
 
+## Without the gh CLI
+
+`gh` is optional for the local checks. The PR checks (`pr-checks`, `pr-review-threads`) need GitHub. When `gh` is missing or logged out they show **UNVERIFIED**, the overall verdict is **UNVERIFIED**, and the process exits **3**.
+
+- UNVERIFIED is not a pass. Do not say merge-ready. Exit 0 is still the only sign-off.
+- A real FAIL still wins: any FAIL gives BLOCKED and exit 1.
+- `--signoff` with no `gh` used to skip the PR checks silently. It now reports them UNVERIFIED.
+- Check CI and review threads by hand or with the GitHub MCP tools, or run `gh auth login` and re-run.
+
 ## Checks
 
 ### Always (stack-aware)
