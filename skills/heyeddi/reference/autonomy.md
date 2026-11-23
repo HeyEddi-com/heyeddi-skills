@@ -44,11 +44,11 @@ A request to build, fix, or change something approves the whole pipeline for it:
 
 ## Final summary
 
-One message at the end, in this order. Leave out empty sections.
+One message at the end, in this order. Leave out empty sections. Every PR, issue, commit, or CI run named here is a full URL link, never a bare `#64`.
 
 ```markdown
 **Cost:** over budget: $X to $Y/month, driver, cheaper option   ← only when over budget or a limit fires
-**Done:** what changed, per feature
+**Done:** what changed, per feature, with links: PR, commits, CI runs
 **Tests:** layers run (unit / integration / frontend), layers skipped and why
 **Assumptions:** defaults you picked and where they are recorded
 **Needs you:** batched questions, asks from check_permission, denied steps, missing secrets

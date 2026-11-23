@@ -73,11 +73,12 @@ def test_allowed_stops_are_scoped_to_design_or_explicit_requests() -> None:
 def test_agreement_lives_in_the_template_and_points_at_central_refs() -> None:
     for path in (TEMPLATE, RULE):
         body = path.read_text(encoding="utf-8")
-        for item in ("**Autonomy**", "**Setup**", "**Permissions**", "**Tests**", "**Engineering**", "**Cost**", "**Prose**", "**Ship**"):
+        for item in ("**Autonomy**", "**Setup**", "**Permissions**", "**Tests**", "**Engineering**", "**Cost**", "**Prose and links**", "**Ship**"):
             assert item in body, f"{path.name} missing {item}"
         assert "reference/autonomy.md" in body and "reference/testing.md" in body
         assert "check_permission.py" in body
         assert "Not strict TDD" not in body
+        assert "full URL" in body and "gh pr view <n> --json url" in body, f"{path.name} lost the link rule"
     assert (HEYEDDI_REF / "autonomy.md").is_file()
     assert (HEYEDDI_REF / "testing.md").is_file()
 

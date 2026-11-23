@@ -17,7 +17,7 @@ The working agreement for **every Agent chat** in this project. Skills hold the 
 6. **Engineering**: Before feature code: `@engineering-excellence` plan gate. After edits: `audit_engineering --check` (errors fail; warns advisory).
 7. **Cost**: After edits: `estimate_change_cost`. It never stops the work. State $/month in the plan when it names a cost driver. Over budget: keep the change on the branch and lead the final summary with the range, top drivers, and the cheaper option. `@pre-merge-gate` blocks the merge until the user approves.
 8. **Browser platform (frontend and design)**: Frontend and design skills load `@heyeddi` `reference/browser-platform.md`. On existing UI, run Modern Web Guidance `legacy-scan` on the files you touch, verify the hits, and fix them. Quasar, PrimeVue Aura, and Aura tokens stay the component source. Playwright is the screenshot and signed-in test tool. Fresh Chrome profile, localhost only.
-9. **Prose**: Any prose you author (chat, docs, UI, PRs, books): follow `PROSE_ANTI_SLOP`. Run `verify_prose --check` on touched surfaces; add `--glob` for other paths.
+9. **Prose and links**: Any prose you author (chat, docs, UI, PRs, books): follow `PROSE_ANTI_SLOP`. Run `verify_prose --check` on touched surfaces; add `--glob` for other paths. Every PR, issue, commit, CI run, or deploy you mention gets its full URL as a link, for example `[#64](https://github.com/org/repo/pull/64)`; `gh pr view <n> --json url -q .url` returns it. A bare `#64` is never enough.
 10. **Ship**: Before merge-ready claims: `@pre-merge-gate --signoff` (exit 0 required).
 
 ## On demand (not every chat)
