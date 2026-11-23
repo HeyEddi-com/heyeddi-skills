@@ -8,7 +8,13 @@ import shutil
 import sys
 from pathlib import Path
 
-HOOK_FILES = ("classify_command.py", "hook_before_shell.py", "hook_before_mcp.py")
+HOOK_FILES = (
+    "classify_command.py",
+    "permission_policy.py",
+    "check_permission.py",
+    "hook_before_shell.py",
+    "hook_before_mcp.py",
+)
 
 
 def _python() -> str:

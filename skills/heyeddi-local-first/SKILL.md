@@ -1,8 +1,8 @@
 ---
 name: heyeddi-local-first
-description: "ALWAYS-ON local-first gate for every agent. Prepare Terraform and config locally. terraform plan is allowed and must be summarized as a warning. classify_command.py --check exits 1 on terraform apply and other live cloud mutations. Use on any infra, Terraform, gcloud, Firebase, Kubernetes, or Google account change."
-version: 1.0.0
-product-version: 3.8.20
+description: "ALWAYS-ON permission and local-first gate for every agent. check_permission.py decides allow / ask / deny for commit, push, PR, merge, release, and dev / staging / prod reads and writes from the agent preset in .heyeddi/stack.json (default balanced). terraform plan is allowed and must be summarized. Use before any git write, gh write, publish, database client, infra, Terraform, gcloud, Firebase, Kubernetes, or Google account change."
+version: 1.1.0
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -10,34 +10,51 @@ author: HeyEddi-com
 
 **Always on** for every agent that loads HeyEddi skills (Cursor, Claude, Codex, Cloud Run, or any other host). Edit code and Terraform in the repo. Check the plan. Do not change live systems.
 
-This is the same kind of gate as `verify_setup --check`. The script exits 1 on a live mutation. Do not run that command.
+## Permission gate
 
-## Hard gate
-
-Before any Terraform, OpenTofu, Pulumi, gcloud, GAM, Firebase, kubectl, Helm, aws, gsutil, bq, or Google API write, run:
+Before commit, push, PR writes, merge, release or publish, a database client, or any Terraform, OpenTofu, Pulumi, gcloud, GAM, Firebase, kubectl, Helm, aws, gsutil, bq, or Google API command, run:
 
 ```bash
-python .agents/skills/heyeddi-local-first/scripts/classify_command.py --check --command "<the exact command>"
+python .agents/skills/heyeddi-local-first/scripts/check_permission.py --check --command "<the exact command>"
 ```
 
-From this hub, the script path is `skills/heyeddi-local-first/scripts/classify_command.py`.
+From this hub, the script path is `skills/heyeddi-local-first/scripts/check_permission.py`.
 
-| Exit | Meaning |
-|------|---------|
-| 0 and `"action": "allow"` | Run it. Reads and local config only. |
-| 0 and `"action": "plan"` | Run it. Then warn the user with what the plan would create, change, or destroy. Stop. |
-| 1 and `"blocked": true` | Do not run it. Edit the files instead. |
+| Exit | `decision` | Agent does |
+|------|-----------|------------|
+| 0 | `auto` | Run it. No question, no status report. |
+| 2 | `ask` | Ask once. Batch it with any other open question. On a yes, rerun with `--approved` and continue. Keep working on everything else while you wait. |
+| 1 | `deny` | Never run it, not through `bash -c`, a script, or an API. Hand that one step to the user or the deploy pipeline and finish the rest of the task. |
+
+The policy is `agent.preset` plus `agent.permissions` in `.heyeddi/stack.json` (`@heyeddi-setup` `reference/stack-schema.md`). No policy means `balanced`:
+
+| Action | `balanced` |
+|--------|-----------|
+| Commit, push a feature branch, open or update a PR, rerun CI | auto |
+| Push to `main` / production / staging branch, merge, release, publish, push a tag | ask |
+| Read dev, staging, prod (logs, describe, `SELECT`, look-and-navigate) | auto |
+| Write dev | auto |
+| Write staging | ask |
+| Write prod | deny (deploy pipeline) |
+
+Hard limits, under every preset: force push or delete on a protected branch, destructive statements on prod (`DROP`, `TRUNCATE`, `delete`, `destroy`), `gh repo delete`, prod writes never better than `ask`.
+
+The env comes from `targets` in `stack.json` when set, else from names in the command (`prod`, `staging`, `dev`). An unnamed remote write counts as prod.
+
+`classify_command.py` stays as the infra classifier underneath. `"action": "plan"` (`terraform plan`, `tofu plan`, `pulumi preview`, `ansible-playbook --check`) runs; summarize what it would create, change, or destroy, then keep going.
 
 A plan command is `terraform plan`, `tofu plan`, `pulumi preview`, or `ansible-playbook --check`.
 
 ## Process
 
 1. Change the Terraform, config, or app code in the working tree.
-2. Run the checker on the plan command. Exit 0 with `action: plan` means run the plan.
+2. Run the gate on the plan command. Exit 0 means run the plan.
 3. Warn the user. Quote the resource addresses the plan would add, change, or destroy.
 4. Commit and review that diff. Live apply stays in the project's deploy pipeline (Cloud Build `terraform-release` for HeyEddi CI) or in a terminal the human runs.
 
-## What exits 1
+## What counts as a live write
+
+Under `balanced` these run on dev, ask on staging, and are denied on prod or an unnamed target.
 
 - `terraform` / `tofu` `apply`, `destroy`, `import`, `refresh`, `state rm`, `workspace delete`
 - `gcloud` writes (`delete`, `deploy`, `create`, `submit`, IAM changes). `list`, `describe`, `get`, `config`, and `auth` stay allowed.
@@ -52,7 +69,8 @@ A plan command is `terraform plan`, `tofu plan`, `pulumi preview`, or `ansible-p
 
 | Script | Purpose |
 |--------|---------|
-| `classify_command.py --check` | Exit 1 on a live mutation. Plan prints a warning and exits 0. |
+| `check_permission.py --check` | The gate. Exit 0 allow, 2 ask, 1 deny. `--approved` after the user's yes. |
+| `classify_command.py --check` | Infra classifier used by the gate. Exit 1 on a live mutation. Plan prints a warning and exits 0. |
 
 ## Related
 

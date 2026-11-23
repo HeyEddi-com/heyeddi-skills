@@ -68,4 +68,4 @@ See `@heyeddi-design` → `reference/implement-routing.md`.
 
 Default answer to all: **yes, do it now**.
 
-Only **merge** needs **authorize merge** in the current turn.
+Only merge can need a question: merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn).

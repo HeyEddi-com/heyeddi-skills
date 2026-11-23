@@ -9,15 +9,15 @@ Always-on **policy** lives in consumer **`AGENTS.md`** (managed block) and **`.c
 ## Required
 
 0. **Hard gate on `@heyeddi`:** Before any reply or routing, run `ensure_always_on_agents.py` or `sync.py` for `--project-root .`. Confirm `AGENTS.md` + `.cursor/rules/heyeddi-always-on.mdc` exist (or `--check` passes). **No chat-only escape.**
-1. **Session start** (or first HeyEddi task in a thin workspace): after (0), skills index current; know which `@skill` owns the work. Run `verify_setup --check`. If it fails, **hard-route `@heyeddi-setup`** before git/CI/agent assumptions — do not invent prefs.
+1. **Session start** (or first HeyEddi task in a thin workspace): after (0), skills index current; know which `@skill` owns the work. Run `verify_setup --check`. If it fails, run `write_setup.py --defaults` (no questions), keep working, and mention the detected defaults in the final summary. Run the full `@heyeddi-setup` interview only when the user asks for it.
 2. **Ambiguous prompts**: run `suggest_skills` (or read `.heyeddi/skills-index.md`) before coding or designing.
 3. **Routing present**: follow `.heyeddi/docs/intake/skill-routing.json` order.
-4. **Always-on siblings**: after routing, enforce `@heyeddi-setup` prefs gate (when git/agent actions apply), `@heyeddi-local-first` on infra or account changes, `@engineering-excellence` plan/change gates, tests-with-fixes, and prose anti-slop. See hub `docs/always-on-skills.md`.
-5. **Honor `stack.json`**: read git/tools/agent prefs before commit, push, or CI assumptions — only after `verify_setup --check` passes.
+4. **Always-on siblings**: after routing, enforce `@heyeddi-setup` prefs (defaults when missing), `@heyeddi-local-first` `check_permission` before commit, push, PR, merge, release, and any dev / staging / prod command, `@engineering-excellence` plan/change gates, tests-with-fixes, and prose anti-slop. See hub `docs/always-on-skills.md`.
+5. **Honor `stack.json`**: read git/tools prefs before branch or CI assumptions. Agent permissions come from `check_permission`, not from reading `agent.*` by hand.
 6. **Host surfaces**: prefer native plan / data / visual tools when this session lists them; otherwise portable fallbacks. See `reference/host-surfaces.md`.
 7. **`.heyeddi/` upkeep**: keep skills-index / routing coherent; do not re-scaffold workflow every message.
 8. **Browser platform**: frontend and design skills load `reference/browser-platform.md`. Existing UI: Modern Web Guidance `legacy-scan` on the files in scope before edits. Chrome DevTools MCP for local traces, memory, and reduced motion. Playwright remains screenshots and signed-in tests.
-9. **Tests (this project)**: bug fix → failing test, run it, then fix. Pure frontend → Playwright login + navigation on the local app; ask before a test env, and again before production. On those environments: look and navigate only, no destructive action (`reference/reproduce-first.md`). New behavior → focused test with the change. Always-on AGENTS/rule, not a separate skill.
+9. **Tests (this project)**: bug fix → failing test, run it, then fix. Pure frontend → Playwright login + navigation on the local app. If local cannot reproduce, look at test or production when `check_permission` allows reads there. On those environments: look and navigate only, no destructive action (`reference/reproduce-first.md`). New behavior → focused test with the change. Always-on AGENTS/rule, not a separate skill.
 
 ## Not required every message
 
@@ -27,4 +27,4 @@ Always-on **policy** lives in consumer **`AGENTS.md`** (managed block) and **`.c
 
 ## Anti-pattern
 
-Skipping orchestrator and inventing a custom pipeline when skills-index or skill-routing already defines the path. Treating incomplete setup as a soft suggestion when the agent is about to commit, push, or assume branches. Relying only on skill `ALWAYS-ON` descriptions without project `AGENTS.md` / alwaysApply rules. **Invoking `@heyeddi` and answering without running `ensure_always_on_agents` / `sync`.**
+Skipping orchestrator and inventing a custom pipeline when skills-index or skill-routing already defines the path. Stopping the task to run a setup interview when `write_setup.py --defaults` would do. Asking before an action `check_permission` allows. Relying only on skill `ALWAYS-ON` descriptions without project `AGENTS.md` / alwaysApply rules. **Invoking `@heyeddi` and answering without running `ensure_always_on_agents` / `sync`.**

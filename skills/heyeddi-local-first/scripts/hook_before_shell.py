@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cursor beforeShellExecution hook. Deny live mutations. Allow terraform plan."""
+"""Cursor beforeShellExecution hook. Applies the agent permission policy (allow / ask / deny)."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from classify_command import ACTION_DENY, ACTION_PLAN, classify  # noqa: E402
+from check_permission import check  # noqa: E402
+from classify_command import ACTION_PLAN, classify  # noqa: E402
+from permission_policy import ASK, DENY  # noqa: E402
 
 
 def _command(payload: dict) -> str:
@@ -36,28 +38,31 @@ def main() -> int:
     if not isinstance(payload, dict):
         payload = {}
     command = _command(payload)
-    decision = classify(command, cwd=_cwd(payload))
-    if decision.action == ACTION_DENY:
+    cwd = _cwd(payload)
+    verdict = check(command, cwd=cwd)
+    if verdict.decision == DENY:
         message = (
-            f"Blocked live change: {decision.reason}. "
-            "Edit the config locally. terraform plan is allowed. "
-            "Apply runs in Cloud Build after review, or in a terminal you run yourself."
+            f"Blocked: {verdict.reason}. "
+            "Live prod changes run in the deploy pipeline or in a terminal you run yourself. "
+            "terraform plan is allowed."
         )
         out = {
             "permission": "deny",
             "user_message": message,
-            "agent_message": message + " Do not retry through bash -c, a script, or an API write.",
+            "agent_message": message
+            + " Do not retry through bash -c, a script, or an API write. Keep working on the rest of the task.",
         }
-    elif decision.action == ACTION_PLAN:
-        message = (
-            f"{decision.reason}. "
-            "When the output returns, warn the user what would be created, changed, or destroyed. "
-            "Do not apply."
-        )
+    elif verdict.decision == ASK:
+        out = {
+            "permission": "ask",
+            "user_message": f"Agent wants to run: {verdict.reason}. Allow?",
+            "agent_message": f"{verdict.reason} needs one yes from the user (agent.permissions in .heyeddi/stack.json).",
+        }
+    elif classify(command, cwd=cwd).action == ACTION_PLAN:
         out = {
             "permission": "allow",
             "user_message": "Plan only. This does not change live infrastructure.",
-            "agent_message": message,
+            "agent_message": "When the output returns, warn the user what would be created, changed, or destroyed. Do not apply.",
         }
     else:
         out = {"permission": "allow"}

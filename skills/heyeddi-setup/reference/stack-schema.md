@@ -23,8 +23,15 @@ Setup owns **git/env + agent** prefs. Tech (`frontend`, `backends`, ports, packa
     "custom_workflow": null
   },
   "agent": {
-    "commit": "ask",
-    "push": "ask"
+    "preset": "balanced",
+    "permissions": {
+      "merge": "ask",
+      "write": { "staging": "ask" }
+    }
+  },
+  "targets": {
+    "prod": ["acme-prod-123", "gke_acme_prod"],
+    "staging": ["acme-stg-456"]
   },
   "design": {
     "taste": "on",
@@ -57,11 +64,22 @@ Setup owns **git/env + agent** prefs. Tech (`frontend`, `backends`, ports, packa
 | `git.environments.staging` | branch name |
 | `git.worktrees` | boolean |
 | `git.custom_workflow` | `null` or description string |
-| `agent.commit` | `ask` \| `auto` |
-| `agent.push` | `ask` \| `auto` |
 | `setup.version` / `setup.updated` | stamped by write_setup |
 
 Optional: `git.environments.dev` (present on `main_staging_dev`).
+
+## Agent permissions (optional; read by `@heyeddi-local-first` `check_permission.py`)
+
+| Path | Values |
+|------|--------|
+| `agent.preset` | `cautious` \| `balanced` (default) \| `autonomous` |
+| `agent.permissions.<action>` | `auto` \| `ask` \| `deny` for `commit`, `push`, `push_protected`, `pr`, `merge`, `release` |
+| `agent.permissions.read.<env>` | same levels for `dev`, `staging`, `prod` |
+| `agent.permissions.write.<env>` | same levels; `write.prod` is never better than `ask` |
+| `targets.<env>` | strings (GCP project, kube context, DB host) that mark a command as that env. Without them, names containing prod / staging / dev decide, and an unnamed remote write counts as prod. |
+| `agent.commit` / `agent.push` | legacy `ask` \| `auto`; honored only when `agent.preset` and `agent.permissions` are absent |
+
+Protected branches: `main`, `master`, `git.environments.production`, `git.environments.staging`, and `git.default_branch`.
 
 ## Design prefs (stamped on write, not required to pass verify)
 

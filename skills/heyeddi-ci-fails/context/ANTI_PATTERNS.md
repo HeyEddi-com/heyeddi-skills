@@ -2,7 +2,7 @@
 
 ## Shared CI safety
 
-- NEVER `gh pr merge` without **authorize merge**
+- NEVER `gh pr merge` unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
 - NEVER enable `auto_merge`
 - NEVER invent test commands without evidence
 - NEVER claim Spot/GHA jobs executed without Check or Spot evidence

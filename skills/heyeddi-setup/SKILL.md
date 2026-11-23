@@ -1,8 +1,8 @@
 ---
 name: heyeddi-setup
-description: "ALWAYS-ON prefs gate: ensures `.heyeddi/stack.json` holds git/env and agent prefs. Incomplete prefs fail git/CI/commit/push assumptions until verify_setup --check passes. Asks env layout, custom workflow escape hatch, worktrees, commit/push autonomy. Tech stack is discovered by other skills. Use when setup is incomplete or the user says setup, preferences, or heyeddi-setup."
-version: 1.2.0
-product-version: 3.8.20
+description: "ALWAYS-ON prefs: ensures `.heyeddi/stack.json` holds git/env prefs and the agent permission preset. Missing prefs are filled with write_setup --defaults (no questions) so work never stops; the interview runs only when the user asks. Asks env layout, custom workflow escape hatch, worktrees, agent preset (cautious / balanced / autonomous). Tech stack is discovered by other skills. Use when setup is incomplete or the user says setup, preferences, or heyeddi-setup."
+version: 1.3.0
+product-version: 3.8.21
 author: HeyEddi-com
 paths:
   - ".heyeddi/stack.json"
@@ -12,17 +12,15 @@ paths:
 
 **Project working agreement** for agents: ensure `.heyeddi/stack.json` has **git/env + agent prefs**. Re-run anytime to update.
 
-**Always on** as the prefs hard gate before git/CI/commit/push or agent autonomy. See `reference/setup-always-on.md` and hub `docs/always-on-skills.md`.
+**Always on**: before the first git action of a session, `verify_setup --check`. Missing prefs get detected defaults, not a stop. See `reference/setup-always-on.md` and hub `docs/always-on-skills.md`.
 
 Does **not** quiz frontend, backends, package manager, or CI — those are filled by scaffold / engineering / CI skills as the project evolves.
 
 ## When to use
 
-- Missing `git` / `agent` / `setup` prefs in `stack.json`
-- User says "setup", "preferences", or `@heyeddi-setup`
-- Session start when `verify_setup --check` fails (**hard route** — do not invent prefs)
-- Before commit, push, PR base, or branch/env assumptions
-- Re-run to change env layout or agent autonomy
+- User says "setup", "preferences", or `@heyeddi-setup`: run the interview
+- `verify_setup --check` fails during a task: run `write_setup --defaults`, keep working, mention it in the final summary
+- Re-run to change env layout or the agent preset
 
 ## Hard gate
 
@@ -30,18 +28,18 @@ Does **not** quiz frontend, backends, package manager, or CI — those are fille
 python .agents/skills/heyeddi-setup/scripts/verify_setup.py --project-root . --check
 ```
 
-- **Exit 0** — honor prefs in `stack.json`
-- **Exit 1** — stop git/CI/agent assumptions; finish this skill until check passes
+- **Exit 0**: honor prefs in `stack.json`
+- **Exit 1**: run `write_setup.py --project-root . --defaults`. It keeps every answer already in the file and fills the rest from the repo: trunk on the default branch, `balanced` agent preset. No questions. Keep working.
 
-Non-git work may continue. Never invent branch names, PR bases, or auto-commit/push while incomplete.
+Permissions (commit, push, PR, merge, release, env reads and writes) are decided by `@heyeddi-local-first` `check_permission.py`, which reads `agent.preset` and `agent.permissions`.
 
-## Mandatory pipeline
+## Interview (only when the user asks for setup)
 
-1. `load_setup` — current `stack.json` + `missing` paths
-2. `list_questions` — ask all on re-run; `--missing-only` on first pass OK
-3. Ask the user (defaults shown)
+1. `load_setup`: current `stack.json` + `missing` paths
+2. `list_questions`: all questions on re-run; `--missing-only` on first pass
+3. Ask the user, all questions in one message, defaults shown
 4. `write_setup --json '…'`
-5. `verify_setup --check` — must pass before you stop
+5. `verify_setup --check` must pass before you stop
 
 ## Questions (prefs only)
 
@@ -50,11 +48,20 @@ Non-git work may continue. Never invent branch names, PR bases, or auto-commit/p
 | 1 | Env / branch layout? | `main_staging_dev` (default) or `main_dev` |
 | 2 | Different workflow? | no → keep preset; or describe (gitflow, trunk+tags, …) → `custom` |
 | 3 | Git worktrees for parallel features? | yes / no |
-| 4 | Agent may commit without asking? | `ask` / `auto` |
-| 5 | Agent may push without asking? | `ask` / `auto` |
-| 6 | Penpot as design source? | `auto` (default) / `on` / `off`. Taste always stays on. |
+| 4 | How much may agents do without asking? | `cautious` / `balanced` (default) / `autonomous` |
+| 5 | Penpot as design source? | `auto` (default) / `on` / `off`. Taste always stays on. |
 
-### Presets (always production + staging)
+### Agent presets
+
+| Preset | Commit, push feature branch, PR | Merge, release, push to main | Read staging / prod | Write staging | Write prod |
+|--------|------|------|------|------|------|
+| `cautious` | ask | ask | ask | deny | deny |
+| `balanced` | auto | ask | auto (look only) | ask | deny |
+| `autonomous` | auto | auto | auto | auto | ask |
+
+Per-action overrides go in `agent.permissions` (see `reference/stack-schema.md`). Hard limits no preset lifts: force push or delete on a protected branch, destructive statements on prod, `gh repo delete`, prod writes set to `auto`.
+
+### Git presets (always production + staging)
 
 | Preset | Mapping |
 |--------|---------|
@@ -66,25 +73,26 @@ Non-git work may continue. Never invent branch names, PR bases, or auto-commit/p
 ```bash
 python .agents/skills/heyeddi-setup/scripts/load_setup.py --project-root .
 python .agents/skills/heyeddi-setup/scripts/list_questions.py --project-root .
-python .agents/skills/heyeddi-setup/scripts/write_setup.py --project-root . --json '{"git.preset":"main_staging_dev","git.custom_workflow":null,"git.worktrees":false,"agent.commit":"ask","agent.push":"ask"}'
+python .agents/skills/heyeddi-setup/scripts/write_setup.py --project-root . --json '{"git.preset":"main_staging_dev","git.custom_workflow":null,"git.worktrees":false,"agent.preset":"balanced"}'
+python .agents/skills/heyeddi-setup/scripts/write_setup.py --project-root . --defaults
 python .agents/skills/heyeddi-setup/scripts/verify_setup.py --project-root . --check
 ```
 
 ## Agents: always honor prefs
 
-Read `.heyeddi/stack.json` before git/commit/push (only after `verify_setup --check` passes):
+Read `.heyeddi/stack.json` before branch or PR-base assumptions:
 
 - `git.environments` — which branch maps to production / staging / (optional) dev
 - `git.pr_base` / `git.default_branch`
 - `git.custom_workflow` — if set, follow that description over the preset
-- `agent.commit` / `agent.push` — if `ask`, confirm first
+- Commit, push, PR, merge, release, env access: run `check_permission.py`; do not read `agent.*` by hand. Legacy `agent.commit` / `agent.push` keys are still honored.
 
 ## Never
 
 - Ask frontend / backends / package manager / CI in this skill
 - Put prefs outside `.heyeddi/stack.json`
 - Claim setup done without `verify_setup --check`
-- Treat incomplete prefs as advisory when about to commit, push, or assume branches
+- Stop a task to interview the user about prefs; use `--defaults` and keep going
 - Replace `@project-engineering` / `@flutter-engineering` scaffold duties
 
 ## When the task is complete: suggest next skills

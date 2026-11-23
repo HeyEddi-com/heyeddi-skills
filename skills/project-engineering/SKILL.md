@@ -2,7 +2,7 @@
 name: project-engineering
 description: "Ensures HeyEddi projects have the right engineering stack: Vue (Vite/Vitest), FastAPI backend, or Firebase tooling. Audits gaps, scaffolds as needed, installs deps, runs tests, documents local dev servers. Use when the repo is thin or before design/feature work on any HeyEddi app."
 version: 1.1.0
-product-version: 3.8.20
+product-version: 3.8.21
 author: HeyEddi-com
 paths:
   - "package.json"
@@ -46,7 +46,7 @@ Declare intent prefs via `@heyeddi-setup` (git/env + agent). Tech keys in `.heye
     "worktrees": false,
     "custom_workflow": null
   },
-  "agent": { "commit": "ask", "push": "ask" },
+  "agent": { "preset": "balanced" },
   "setup": { "version": 1, "updated": "2026-09-06" }
 }
 ```

@@ -102,6 +102,42 @@ def test_assert_no_merge_blocks_unauthorized_gh_merge() -> None:
     assert data["allow"] is False
 
 
+def _merge_gate(root: Path, agent: dict, *extra: str) -> subprocess.CompletedProcess[str]:
+    (root / ".heyeddi").mkdir(exist_ok=True)
+    (root / ".heyeddi" / "stack.json").write_text(json.dumps({"agent": agent}), encoding="utf-8")
+    return _run(
+        RESPOND / "assert_no_merge.py",
+        "--project-root",
+        str(root),
+        "--planned-command",
+        "gh pr merge 12 --squash",
+        "--check",
+        *extra,
+    )
+
+
+def test_assert_no_merge_policy_auto_allows_without_phrase(tmp_path: Path) -> None:
+    proc = _merge_gate(tmp_path, {"preset": "balanced", "permissions": {"merge": "auto"}})
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["merge_policy"] == "auto"
+    assert _merge_gate(tmp_path, {"preset": "autonomous"}).returncode == 0
+
+
+def test_assert_no_merge_policy_ask_still_takes_the_phrase(tmp_path: Path) -> None:
+    assert _merge_gate(tmp_path, {"preset": "balanced"}).returncode == 1
+    assert _merge_gate(tmp_path, {"preset": "balanced"}, "--user-text", "ok, authorize merge").returncode == 0
+
+
+def test_assert_no_merge_policy_deny_ignores_the_phrase(tmp_path: Path) -> None:
+    proc = _merge_gate(tmp_path, {"permissions": {"merge": "deny"}}, "--user-text", "authorize merge")
+    assert proc.returncode == 1
+
+
+def test_assert_no_merge_copies_match() -> None:
+    fails = ROOT / "skills" / "heyeddi-ci-fails" / "scripts" / "assert_no_merge.py"
+    assert fails.read_text() == (RESPOND / "assert_no_merge.py").read_text()
+
+
 def test_assert_runners_claims_shipped() -> None:
     proc = _run(RUNNERS / "assert_runners_claims.py")
     assert proc.returncode == 0, proc.stderr + proc.stdout

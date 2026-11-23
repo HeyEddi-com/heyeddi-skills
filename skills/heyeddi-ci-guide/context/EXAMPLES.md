@@ -10,7 +10,7 @@ Point them to `/heyeddi ask …` or a threaded reply on the inline finding. Offe
 
 ## User asks to merge after CI respond
 
-Only if they said **authorize merge** this turn. Otherwise refuse and explain the auth matrix.
+Merge when `agent.permissions.merge` is `auto`, or when they said **authorize merge** this turn under the default `ask`. Otherwise explain the policy in one line.
 
 ## User asks if Spot ran their pipeline job
 

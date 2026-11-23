@@ -145,7 +145,11 @@ def test_hook_json_for_plan_and_apply() -> None:
     assert "warn" in plan["agent_message"]
     denied = run("terraform apply -auto-approve")
     assert denied["permission"] == "deny"
-    assert "Blocked live change" in denied["user_message"]
+    assert "Blocked" in denied["user_message"]
+    merge = run("gh pr merge 7")
+    assert merge["permission"] == "ask"
+    commit = run("git commit -m x")
+    assert commit["permission"] == "allow"
 
 
 def test_install_user_hook_merges(tmp_path: Path) -> None:
@@ -166,5 +170,6 @@ def test_install_user_hook_merges(tmp_path: Path) -> None:
     commands = [entry["command"] for entry in data["hooks"]["beforeShellExecution"]]
     assert "echo keep" in commands
     assert any(command.endswith("./hooks/hook_before_shell.py") for command in commands)
-    assert (cursor / "hooks" / "classify_command.py").is_file()
+    for name in ("classify_command.py", "permission_policy.py", "check_permission.py"):
+        assert (cursor / "hooks" / name).is_file()
     assert data["hooks"]["beforeMCPExecution"][0]["failClosed"] is True

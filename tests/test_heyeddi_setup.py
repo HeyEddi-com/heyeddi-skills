@@ -31,7 +31,9 @@ def test_missing_paths_on_empty() -> None:
     missing = missing_paths({})
     assert "git.preset" in missing
     assert "git.environments.production" in missing
-    assert "agent.commit" in missing
+    # Agent permissions are optional: no policy means the balanced preset.
+    assert "agent.commit" not in missing
+    assert "agent.preset" not in missing
     assert "frontend" not in missing
 
 
@@ -137,3 +139,34 @@ def test_verify_fails_when_incomplete(tmp_path: Path) -> None:
     )
     check = _run("verify_setup.py", "--check", cwd=tmp_path)
     assert check.returncode != 0
+
+
+def test_agent_preset_and_permissions_validate() -> None:
+    assert validate_value("agent.preset", "balanced") is None
+    assert validate_value("agent.preset", "yolo") is not None
+    assert validate_value("agent.permissions", {"merge": "auto", "write": {"staging": "ask"}}) is None
+    assert validate_value("agent.permissions", {"merge": "sometimes"}) is not None
+    assert validate_value("agent.permissions", {"write": {"moon": "auto"}}) is not None
+
+
+def test_defaults_fill_missing_setup_without_questions(tmp_path: Path) -> None:
+    subprocess.run(["git", "init", "-q", "-b", "trunk", str(tmp_path)], check=True)
+    proc = _run("write_setup.py", "--defaults", cwd=tmp_path)
+    assert proc.returncode == 0, proc.stderr
+    stack = json.loads((tmp_path / ".heyeddi" / "stack.json").read_text())
+    assert stack["git"]["default_branch"] == "trunk"
+    assert stack["git"]["environments"]["production"] == "trunk"
+    assert stack["agent"]["preset"] == "balanced"
+    assert _run("verify_setup.py", "--check", cwd=tmp_path).returncode == 0
+
+
+def test_defaults_keep_existing_answers(tmp_path: Path) -> None:
+    (tmp_path / ".heyeddi").mkdir()
+    (tmp_path / ".heyeddi" / "stack.json").write_text(
+        json.dumps({"git": {"preset": "main_dev", "pr_base": "dev"}, "agent": {"preset": "cautious"}})
+    )
+    assert _run("write_setup.py", "--defaults", cwd=tmp_path).returncode == 0
+    stack = json.loads((tmp_path / ".heyeddi" / "stack.json").read_text())
+    assert stack["git"]["preset"] == "main_dev"
+    assert stack["git"]["pr_base"] == "dev"
+    assert stack["agent"]["preset"] == "cautious"

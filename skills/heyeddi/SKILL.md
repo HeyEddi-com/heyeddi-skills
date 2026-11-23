@@ -2,7 +2,7 @@
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist — never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
 version: 3.4.11
-product-version: 3.8.20
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -47,8 +47,8 @@ When this skill is invoked (`@heyeddi`, session start, or “what should we run�
 
 After routing, enforce:
 
-1. **`@heyeddi-setup`** prefs gate (`verify_setup --check`) before git/CI/commit/push or agent autonomy — incomplete prefs **fail** those actions; route setup until pass (`reference/setup-always-on.md` on that skill)
-2. **`@heyeddi-local-first`** for infra or account changes: edit locally, run `classify_command.py --check`, then `terraform plan` and warn. Exit 1 means do not run the command.
+1. **`@heyeddi-setup`** prefs (`verify_setup --check`) before the first git action. Incomplete: `write_setup.py --defaults`, keep working, name the defaults in the final summary (`reference/setup-always-on.md` on that skill)
+2. **`@heyeddi-local-first`** before commit, push, PR, merge, release, and any dev / staging / prod command: `check_permission.py --check --command "<cmd>"`: exit 0 run it, 2 ask once then `--approved`, 1 never run it and keep working on the rest. `terraform plan` runs and gets summarized.
 3. **`@engineering-excellence`** plan gate before coding; change gate (`audit_engineering --check`) after edits — errors fail; warns advisory
 4. **Prose anti-slop** on **any prose you author** (chat, books, docs, UI, PRs) via `context/PROSE_ANTI_SLOP.md`; run `verify_prose --check` (add `--glob` for manuscripts/other paths) when files change. No "UI-only" or "not for books" exemption.
 5. **Clarify-before-act** when product/design/stack intent is missing
