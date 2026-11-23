@@ -1,7 +1,7 @@
 ---
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist — never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
-version: 3.4.11
+version: 3.5.0
 product-version: 3.8.21
 author: HeyEddi-com
 ---
@@ -38,21 +38,14 @@ When this skill is invoked (`@heyeddi`, session start, or “what should we run�
 - **Every session start** on a HeyEddi project (`.heyeddi/` present or greenfield app request)
 - User asks "what skills do we have?" or "which skill should handle this?"
 - Before a multi-step pipeline (intake → scaffold → design → handoff → QA)
-- **Design / look / polish:** `@taste-penpot` first. If no style/identity is pinned and this is not a refine of an existing `design.md` system, taste runs the **identity gate** (`references/identity-gate.md`): designer thinking (project, peers, follow vs unique) written under `.heyeddi/designs/`, clarifying questions when needed, then **3–5** What/Why/How options — and **waits for the user to choose** before tokens or pixels. Scaffolding / MVP never waives that. Then one pass for tokens. Prefer `@heyeddi/penpot-mcp-server` — **design system first** (colours/type/fonts), then boards; Flex only if reflow is real (else absolute 8px); PNG Gate D required (`taste-penpot/references/layout-hard-gates.md` A–G). Absolute-only MCP still needs `hifi.html`. Then `@heyeddi-design` records product context and **blocks handoff** on text-walls / empty phones / missing PNG. Vue implementation follows `@vue-design-system`. Do not let `@heyeddi-design` invent a second look. Never use unscoped `penpot-mcp-server` or `@penpot/mcp`.
-- **Redesign / from scratch:** `@taste-penpot` loads `references/code-to-design.md`, then the **identity gate** (unless the user pinned the new identity). Scope is the whole app, the named pages, or one page. The pass writes the audit and the proposal. It does not edit Vue until the user asks to build.
+- **Design / look / polish:** `@taste-penpot` first. If no style/identity is pinned and this is not a refine of an existing `design.md` system, taste runs the **identity gate** (`references/identity-gate.md`): designer thinking (project, peers, follow vs unique) written under `.heyeddi/designs/`, clarifying questions when needed, then **3–5** What/Why/How options. In a design request it waits for the user's pick. In a build request it picks the recommended option, records why, and keeps going (`reference/autonomy.md`). Then one pass for tokens. Prefer `@heyeddi/penpot-mcp-server` — **design system first** (colours/type/fonts), then boards; Flex only if reflow is real (else absolute 8px); PNG Gate D required (`taste-penpot/references/layout-hard-gates.md` A–G). Absolute-only MCP still needs `hifi.html`. Then `@heyeddi-design` records product context and **blocks handoff** on text-walls / empty phones / missing PNG. Vue implementation follows `@vue-design-system`. Do not let `@heyeddi-design` invent a second look. Never use unscoped `penpot-mcp-server` or `@penpot/mcp`.
+- **Redesign / from scratch:** `@taste-penpot` loads `references/code-to-design.md`, then the **identity gate** (unless the user pinned the new identity). Scope is the whole app, the named pages, or one page. The pass writes the audit and the proposal. It does not edit Vue until the user asks to build (the request was for a design, not code).
 - **Any time one pillar runs**: bookend with `load_workflow_context` / `append_pillar_opinion`
-- After `@heyeddi-intake`: confirm `skill-routing.json` before downstream work
+- After `@heyeddi-intake`: follow `skill-routing.json` downstream
 
 ## Always-on siblings (every chat)
 
-After routing, enforce:
-
-1. **`@heyeddi-setup`** prefs (`verify_setup --check`) before the first git action. Incomplete: `write_setup.py --defaults`, keep working, name the defaults in the final summary (`reference/setup-always-on.md` on that skill)
-2. **`@heyeddi-local-first`** before commit, push, PR, merge, release, and any dev / staging / prod command: `check_permission.py --check --command "<cmd>"`: exit 0 run it, 2 ask once then `--approved`, 1 never run it and keep working on the rest. `terraform plan` runs and gets summarized.
-3. **`@engineering-excellence`** plan gate before coding; change gate (`audit_engineering --check`) after edits — errors fail; warns advisory
-4. **Prose anti-slop** on **any prose you author** (chat, books, docs, UI, PRs) via `context/PROSE_ANTI_SLOP.md`; run `verify_prose --check` (add `--glob` for manuscripts/other paths) when files change. No "UI-only" or "not for books" exemption.
-5. **Clarify-before-act** when product/design/stack intent is missing
-6. **Host surfaces** — prefer this session's native plan / data / visual tools when listed; degrade to `.heyeddi` / scripts otherwise (`reference/host-surfaces.md`)
+After routing, the working agreement is the managed `AGENTS.md` block (`templates/always-on/AGENTS.section.md`): autonomy, setup, permissions, tests, engineering, cost, browser platform, prose, ship. Enforce it as written. Do not restate it in a skill. The gates it names: `@heyeddi-setup` `verify_setup`, `@heyeddi-local-first` `check_permission`, `@engineering-excellence` `check_engineering_plan` before code and `audit_engineering` plus `estimate_change_cost` after, `verify_prose`, `@pre-merge-gate --signoff`. Detail lives in `reference/autonomy.md` (run to completion, the only pauses, final summary) and `reference/testing.md` (test first, relevant layers). Host surfaces: `reference/host-surfaces.md`.
 
 ## Automatic `.heyeddi/` + always-on upkeep
 
@@ -108,28 +101,19 @@ If `.heyeddi/docs/intake/skill-routing.json` exists, **follow route order**.
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi --project-root .
-   ```
-
-   Add `--route /path` if you worked a specific route.
-
-2. Include the script's **`### Next step`** block in your **final** reply. The user copies the **Prompt** line into chat (e.g. `@heyeddi-design craft /settings`).
-
-Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
-
-See `@heyeddi` → `reference/next-skill-handoff.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
 
 ## Related
 
 - `@heyeddi-product` · `@ux-flow-auditor` · `@heyeddi-design`: three pillars
 - `@heyeddi-setup`: always-on prefs hard gate (`verify_setup --check`)
 - `@engineering-excellence`: always-on plan + change gates
-- `reference/reproduce-first.md`: bug test first; frontend bugs use Playwright on local, then ask before test or production. Non-local: look only, no destructive action
+- `reference/autonomy.md`: run the request to completion; the only pauses; one final summary
+- `reference/testing.md`: test first at the layers the change can break; hosted environments are look-only
 - `reference/browser-platform.md`: frontend and design skills load Modern Web Guidance (`legacy-scan` finds problems) and Chrome DevTools for agents. Quasar and PrimeVue stay the components. Playwright stays the screenshot tool. Localhost only.
 - `@heyeddi-intake`: upstream intake
 - `reference/host-surfaces.md`: prefer host plan/data/visual tools; portable degrade

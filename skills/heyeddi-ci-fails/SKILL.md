@@ -64,7 +64,7 @@ Also tell the user they can comment `/heyeddi fails` on the PR for hosted App an
 
 - Exit 3 is not a pass and not a failure. It means the step could not run.
 - Do not retry in a loop and do not report the step as done.
-- Do the step by hand with the GitHub MCP tools named in `manual`, or ask the user to run `gh auth login`.
+- Do the step by hand with the GitHub MCP tools named in `manual`; if that is not possible, keep going and list `gh auth login` under **Needs you**.
 - Nothing is posted, verified or signed off when a script exits 3.
 
 ## When complete

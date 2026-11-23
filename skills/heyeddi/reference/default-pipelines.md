@@ -2,13 +2,13 @@
 
 **Date:** 2026-11-07
 
-Agents should run these chains **automatically** — do not ask the user for confirmation at each step.
+Agents run these chains **automatically**, end to end, per `reference/autonomy.md`. No confirmation between steps.
 
 ## UI: greenfield route
 
 ```
 @heyeddi-intake          → product.md + skill-routing
-@heyeddi-design shape    → confirmed brief.md
+@heyeddi-design shape    → brief.md (confirmed only in a design request)
 <stack implementer>      → @heyeddi-handoff (vue) or @design-handoff-flutter
 @engineering-excellence  → plan gate before code; audit_engineering --check after
 @vue-design-system              (vue: Quasar, PrimeVue Aura, motion, tokens)

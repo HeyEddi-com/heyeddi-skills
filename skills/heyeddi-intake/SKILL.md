@@ -1,7 +1,7 @@
 ---
 name: heyeddi-intake
 description: "Translates vague user prompts into HeyEddi product docs (personas, route intent, voice), route-specific handoff artifacts (wireframes, user mockups, or briefs), and skill-routing under .heyeddi/. Use first on new projects before @heyeddi-design, @heyeddi-handoff, or @flutter-engineering. Never hand-write product.md: use write_product."
-version: 1.3.0
+version: 1.3.1
 product-version: 3.8.21
 author: HeyEddi-com
 paths:
@@ -76,21 +76,11 @@ Read `reference/clarify-before-act.md`. One round if personas/competitors missin
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-intake --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-intake --project-root .
-   ```
-
-   Add `--route /path` if you worked a specific route.
-
-2. Include the script's **`### Next step`** block in your **final** reply. The user copies the **Prompt** line into chat (e.g. `@heyeddi-design craft /settings`).
-
-Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
-
-See `@heyeddi` → `reference/next-skill-handoff.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
 
 ## Related
 

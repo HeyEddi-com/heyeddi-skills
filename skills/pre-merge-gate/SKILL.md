@@ -1,7 +1,7 @@
 ---
 name: pre-merge-gate
 description: "Ship gate after review→respond: setup, stack tests/build/analyze, engineering + prose, optional UI contrast, and with --signoff/--pr also git-clean, CI checks, and unresolved review threads. Any FAIL exits 1. Use before claiming merge-ready or merging to main."
-version: 2.0.1
+version: 2.0.2
 product-version: 3.8.21
 author: HeyEddi-com
 disable-model-invocation: true
@@ -73,7 +73,7 @@ The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED`
 | duplicate-ui | skill installed |
 | prose-audit | defaults + changed `*.md` globs from PR/diff |
 | engineering-audit | `@engineering-excellence --check` |
-| cost-estimate | `@engineering-excellence estimate_change_cost --check` (over budget → FAIL) |
+| cost-estimate | `@engineering-excellence estimate_change_cost --check` (over budget → FAIL until the user approves with `--approved`) |
 | contrast-audit | product routes (see visual rules) |
 
 ### Sign-off (`--signoff` or `--pr`)
@@ -103,8 +103,7 @@ The script **exits 1** if any check is `FAIL`. Do not treat a markdown `BLOCKED`
 ## When the task is complete: suggest next skills
 
 ```bash
-python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
-  --current-skill pre-merge-gate --project-root .
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill pre-merge-gate --project-root .
 ```
 
-Include the script's `### Next step` in your final reply.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

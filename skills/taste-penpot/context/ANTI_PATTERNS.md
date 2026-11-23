@@ -1,7 +1,7 @@
 # Anti-patterns
 
 - NEVER run a discover → research → shape pipeline. One pass only.
-- NEVER invent a look when the user only said "modern" / "clean" / "professional" — run `references/identity-gate.md` (designer thinking in `.heyeddi/`, then 3–5 What/Why/How options, wait for choice).
+- NEVER invent a look when the user only said "modern" / "clean" / "professional" — run `references/identity-gate.md` (designer thinking in `.heyeddi/`, then 3–5 What/Why/How options; design request waits for the choice, build request picks and records).
 - NEVER waive the identity gate for scaffolding, MVP, readers, demos, or "clean workable UI" while shipping functionality.
 - NEVER dump options without Phase 0 (project / peers / follow-vs-unique) written to `.heyeddi/designs/<feature>/identity-thinking.md`.
 - NEVER keep identity thinking only in chat — write `identity-thinking.md` and `identity-options.md` before ACT.
@@ -10,7 +10,7 @@
 - NEVER invent a second palette after `@heyeddi-design` already has tokens from this pass.
 - NEVER require Penpot when `design.penpot` is `off`. Write the spec and HTML+CSS.
 - NEVER call unscoped `penpot-mcp-server`, `@penpot/mcp`, or `penpot-api-mcp`. Prefer `@heyeddi/penpot-mcp-server` (Flex/Grid + nesting); upstream `@zcubekr/penpot-mcp-server` is absolute-only fallback.
-- NEVER install or enable a Penpot server without an explicit yes. A missing server means ask once (`references/penpot-mcp.md`), then wait.
+- NEVER install or enable a Penpot server without an explicit yes. A missing server is not a stop: write the spec and HTML+CSS, and offer the install under **Needs you** (`references/penpot-mcp.md`).
 - NEVER draw phones before the Penpot design system (Gate E): `add_color` / `add_typography` (or reuse library) and fonts from `list_font_variants` only. No invented faces (Sora/Nunito/etc.).
 - NEVER skip `parentId` nesting and `set_frame_layout` when the HeyEddi MCP exposes them — then prove reflow. Create-time `layoutItem*` alone is not enough; call `set_layout_item` and read back.
 - NEVER claim Flex hi-fi when children still read `x/y = 0` after layout. Switch to absolute 8px (or stop). Do not rebuild the same nested-Flex approach.

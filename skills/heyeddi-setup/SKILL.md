@@ -101,7 +101,7 @@ Read `.heyeddi/stack.json` before branch or PR-base assumptions:
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-setup --project-root .
 ```
 
-Include the script's **`### Next step`** block in your final reply.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
 
 ## Related
 

@@ -46,11 +46,11 @@ If one of those is the server named `penpot`, treat the HeyEddi (or zcubekr) ser
 
 ## Install
 
-When `design.penpot` is not `off` and `list_teams` is not in this session, stop and ask once:
+When `design.penpot` is not `off` and `list_teams` is not in this session, do not stop the task. Finish the pass with the spec and HTML+CSS, and put this under **Needs you** in the final summary:
 
 > Penpot boards need `@heyeddi/penpot-mcp-server` (Flex/Grid + nesting). May I add it to this project's `.cursor/mcp.json`?
 
-Wait for an explicit yes. Do not write config, run `npx`, or enable a server before that yes. A missing server is not a reason to call the unscoped package or `@penpot/mcp`.
+Install only after an explicit yes in a later turn. Do not write config, run `npx`, or enable a server before that yes. A missing server is not a reason to call the unscoped package or `@penpot/mcp`.
 
 On yes, merge this into the project `.cursor/mcp.json`. Keep every other server. If `penpot` already points at another package, replace that entry.
 
@@ -102,7 +102,7 @@ Local clone:
 }
 ```
 
-`PENPOT_ACCESS_TOKEN` must already be in the environment Cursor passes to the server. Never print it, and never write it into a repo, a skill, a chat, or `mcp.json`. If it is unset, ask the user to set it on the `penpot` server in Cursor and continue only after they confirm it is set.
+`PENPOT_ACCESS_TOKEN` must already be in the environment Cursor passes to the server. Never print it, and never write it into a repo, a skill, a chat, or `mcp.json`. If it is unset, continue without Penpot and list "set `PENPOT_ACCESS_TOKEN` on the `penpot` server in Cursor" under **Needs you**.
 
 For image fills / export that must match the canvas, the MCP README may also require `PENPOT_AUTH_TOKEN`. Do not invent workarounds that skip Gate D.
 

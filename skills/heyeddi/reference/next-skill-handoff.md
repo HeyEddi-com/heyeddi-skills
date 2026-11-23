@@ -1,6 +1,8 @@
 # Next skill handoff (task complete)
 
-When a **pipeline skill** finishes the user's requested work, suggest what `@skill` to run next and the **exact prompt** to paste in chat (`shape`, `craft`, `audit`, `sync`, `review`, etc.). Do **not** add this after every tool call or subagent phase.
+**Inside the request, chain; don't hand back.** When the next pipeline skill is part of what the user asked for ("implement /settings" covers handoff, engineering audit, visual QA, and the PR), run it yourself in the same run (`reference/autonomy.md`). `suggest_next_skill.py` tells you which skill that is.
+
+Only when the request is done and the next step is **new work** the user did not ask for, suggest it with the **exact prompt** to paste in chat (`shape`, `craft`, `audit`, `sync`, `review`, etc.). Do **not** add this after every tool call or subagent phase.
 
 ## When to use
 
@@ -25,7 +27,7 @@ When a **pipeline skill** finishes the user's requested work, suggest what `@ski
    - `--route /settings`: route you finished
    - `--mode shape`: sub-command you just ran (improves suggestion, e.g. shape → craft)
 
-3. Include the JSON **`user_block`** in your **final** reply. The user should be able to **copy the Prompt line** into chat.
+3. Next skill still inside the request: run it now. Outside the request: put the JSON **`user_block`** under **Next** in the final summary, so the user can **copy the Prompt line** into chat.
 
 ## Response format
 

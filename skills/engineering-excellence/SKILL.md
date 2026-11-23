@@ -1,7 +1,7 @@
 ---
 name: engineering-excellence
 description: "ALWAYS-ON: audits plans and code for KISS, YAGNI, DRY, SOLID, testability, and run cost against a budget; maintains .heyeddi/docs/engineering/. Use on every chat that plans or changes code, before merge, refactor, ADRs, or reuse-catalog work. Not for visual UX (ux-flow-auditor) or full CI (pre-merge-gate includes this audit)."
-version: 1.2.0
+version: 1.3.0
 product-version: 3.8.21
 author: HeyEddi-com
 ---
@@ -47,7 +47,7 @@ append_decision         → ADR when trade-off is non-obvious
 4. **After meaningful change:** update `architecture.md` module map and add reuse rows
 5. **Non-obvious trade-off:** `append_decision.py --title … --context … --decision …`
 6. **Change gate (every chat after edits):** `audit_engineering.py --check` (errors fail; warns advisory). Use `--strict` only when the user asks for warn-blocking.
-7. **Cost gate (every chat after edits):** `estimate_change_cost.py --project-root <root> --check`. Put the monthly range and the cheaper options in your reply. Over budget exits 1: stop, show the user the estimate and the cheaper option, and rerun with `--approved "<their reason>"` only on their yes. That writes an ADR. Detail: `reference/budget-gate.md`.
+7. **Cost estimate (every chat after edits):** `estimate_change_cost.py --project-root <root>`. It never stops the work. Over budget: keep the change on the branch and make `summary_warning` the first line of the final summary. `@pre-merge-gate` runs it with `--check` and blocks the merge until the user approves (`--approved "<their reason>"` writes an ADR). Detail: `reference/budget-gate.md`.
 
 ## Principles (how we enforce)
 
@@ -82,18 +82,8 @@ Design decisions stay in `.heyeddi/design.md` Decision log: do not mix.
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill engineering-excellence --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill engineering-excellence --project-root .
-   ```
-
-   Add `--route /path` if you worked a specific route.
-
-2. Include the script's **`### Next step`** block in your **final** reply. The user copies the **Prompt** line into chat (e.g. `@visual-auditor review and fix /settings`).
-
-Pass `--mode audit` when the change-gate audit just finished.
-
-See `@heyeddi` → `reference/next-skill-handoff.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

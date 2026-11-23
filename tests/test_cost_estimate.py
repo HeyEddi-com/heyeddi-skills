@@ -155,6 +155,7 @@ def test_monthly_limit_uses_current_spend(tmp_path: Path) -> None:
 def test_missing_budget_warns_but_passes(tmp_path: Path) -> None:
     result = estimate_change_cost(tmp_path, diff_text="")
     assert result["ok"] is True
+    assert result["summary_warning"] is None
     assert any("No budget.json" in b["message"] for b in result["budget_findings"])
 
 
@@ -198,6 +199,10 @@ def test_cli_check_reads_git_diff(tmp_path: Path) -> None:
         cwd=str(ENG_SCRIPTS), capture_output=True, text=True,
     )
     assert proc.returncode == 1
+    assert "blocks the merge, not the work" in proc.stderr
+    result = json.loads(proc.stdout)
+    assert result["summary_warning"].startswith("Cost: over budget")
+    assert "google_sql_database_instance" in result["summary_warning"] or "terraform" in result["summary_warning"]
     payload = json.loads(proc.stdout)
     assert payload["base"] == "main"
     assert payload["findings"][0]["file"] == "infra/db.tf"

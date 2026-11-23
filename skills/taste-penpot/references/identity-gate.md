@@ -5,7 +5,9 @@
 Design work starts like a real designer: **understand the product, study the
 field, take a stance, then offer directions** — not pixels. If the user did not
 pin a style, brand, or visual world, you must run this gate, document it under
-`.heyeddi/`, and **stop until they choose**. Do not invent a look and ship it.
+`.heyeddi/`, and offer the options. In a design request, **stop until they
+choose**. In a build request, pick the recommended option, record it, and keep
+building (see "Build requests" below). Never ship an unrecorded look.
 
 This gate is owned by `@taste-penpot`. `@heyeddi-design` records the chosen
 identity; it does not invent a fourth lane.
@@ -142,9 +144,27 @@ so the choice is durable after chat scrolls away.
 
 ---
 
-## Hard stop
+## Build requests (implement, build, fix, add a feature)
 
-After presenting the options:
+The user asked for working software, not a design conversation
+(`@heyeddi` `reference/autonomy.md`). Run Phase 0 and write
+`identity-options.md` as usual, then:
+
+1. Pick the option you recommend. Prefer one that reuses the project's existing
+   tokens, components, or brand assets when any exist.
+2. Mark it **Chosen (agent, build request)** in `identity-options.md` with two
+   lines of why.
+3. Continue PLAN → ACT with it locked.
+4. In the final summary, under **Assumptions**, name the pick and point at
+   `identity-options.md`. The user can switch on the branch before merge.
+
+Phase 0 questions do not end the turn in a build request: answer them from
+`.heyeddi/` and the repo, record the assumption, continue.
+
+## Design requests: hard stop
+
+When the user asked for design (design, redesign, new look, overhaul,
+`@taste-penpot`, `@heyeddi-design shape`), after presenting the options:
 
 1. Ask the user to pick **A / B / C / D / E** (or a hybrid: "A type + B colour").
 2. **End the turn.** Do not PLAN tokens, open Penpot, write HTML, or craft UI
@@ -155,8 +175,8 @@ After presenting the options:
 If the user says "you choose", pick one, state which and why in two lines, then
 proceed — that counts as a choice.
 
-Clarifying questions in Phase 0 also **end the turn** when answers are needed.
-Do not invent a look while waiting.
+In a design request, clarifying questions in Phase 0 also **end the turn** when
+answers are needed. Do not invent a look while waiting.
 
 ---
 

@@ -315,9 +315,26 @@ def estimate_change_cost(
         "budget_findings": budget_findings,
         "assumptions": assumptions,
         "approval_recorded": approval_path,
+        "summary_warning": summary_warning(errors, total_low, total_high, findings),
     }
     result["report"] = str(write_report(root, result).relative_to(root))
     return result
+
+
+def summary_warning(errors: list[dict], low: float, high: float, findings: list[dict]) -> str | None:
+    """First line of the agent's final summary when the change is over budget. Never a stop."""
+    if not errors:
+        return None
+    top = sorted(findings, key=lambda f: f["high"] or 0, reverse=True)[:3]
+    drivers = "; ".join(
+        f"{f['driver']} in {f['file']}" + (f" (cheaper: {f['cheaper']})" if f.get("cheaper") else "") for f in top
+    ) or "see report"
+    reasons = "; ".join(b["message"] for b in errors)
+    return (
+        f"Cost: over budget, ${low:,.0f} to ${high:,.0f}/month added. {reasons}. Top drivers: {drivers}. "
+        "The change stays on the branch; pick the cheaper option from the report, or approve it at merge "
+        "(estimate_change_cost --approved \"<reason>\")."
+    )
 
 
 def _read_json(path: str | None) -> dict | None:
@@ -337,7 +354,11 @@ def main() -> None:
     parser.add_argument("--terraform-plan-json", default=None, help="Output of terraform show -json plan.out")
     parser.add_argument("--infracost-json", default=None, help="Output of infracost diff --format json")
     parser.add_argument("--approved", default=None, help="User's reason for going over budget; writes an ADR")
-    parser.add_argument("--check", action="store_true", help="Exit 1 when the change is over budget")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Exit 1 when the change is over budget. Merge gate only (pre-merge-gate); during work run without it.",
+    )
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
 
@@ -358,7 +379,10 @@ def main() -> None:
     )
     emit(json.dumps(result, indent=2))
     if args.check and not result["ok"]:
-        fail("Cost gate failed: over budget. Show the estimate to the user; rerun with --approved only on their yes.")
+        fail(
+            "Cost gate failed: over budget. This blocks the merge, not the work: keep the change on the branch, "
+            "lead the final summary with summary_warning, and rerun with --approved when the user accepts the cost."
+        )
 
 
 if __name__ == "__main__":
