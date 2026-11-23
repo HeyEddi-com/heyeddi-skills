@@ -2,7 +2,7 @@
 
 ## Shared CI safety
 
-- NEVER `gh pr merge` / merge the PR without the user saying **authorize merge** in the **current turn**
+- NEVER `gh pr merge` unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
 - NEVER enable or invent `auto_merge` (schema rejects unknown keys; product law forbids agent merge)
 - NEVER enable billable knobs (`ai_review.on_ci_failure`, sealed Spot `pipeline` jobs) without explicit opt-in
 - NEVER invent knobs from memory — always run `load_policy_contract` first

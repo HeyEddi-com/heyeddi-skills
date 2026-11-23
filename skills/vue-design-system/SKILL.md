@@ -2,7 +2,7 @@
 name: vue-design-system
 description: "Routes Vue 3 UI and CLI work to Quasar shells, PrimeVue Aura, spring motion, shared-element morphs, depth effects, CSS tokens, visual verification, or terminal UI. No React, no Tailwind, no Bootstrap. GUI work ends in a Playwright MCP screenshot of the Vite server. CLI work ends by running the script and reading stdout."
 version: 1.0.2
-product-version: 3.8.20
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -161,12 +161,8 @@ Start the Penpot server only when a designer visual, a redesign, or a demo expor
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill, suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill vue-design-system --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill vue-design-system --project-root .
-   ```
-
-2. Include the script's **`### Next step`** block in your **final** reply.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

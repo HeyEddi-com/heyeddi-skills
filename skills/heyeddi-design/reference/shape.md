@@ -8,12 +8,12 @@
 
 ```
 identity gate (designer thinking → 3–5 options → user picks)
-  → discover → research → explore → brief → user confirms → hand off to craft
+  → discover → research → explore → brief → user confirms (design request) → hand off to craft
 ```
 
 Load and follow each phase in order:
 
-0. **Identity gate (hard when unset):** Load `@taste-penpot` → `references/identity-gate.md`. If no pinned style and not refining an existing `design.md` identity: write identity-thinking under `.heyeddi/designs/`, ask if blocked, present **3–5** What/Why/How options, **end the turn**, wait for A–E. Do not invent a look. Scaffolding never skips. Skip only when refine preserves an existing system or the user already pinned/chose an identity.
+0. **Identity gate (hard when unset):** Load `@taste-penpot` → `references/identity-gate.md`. If no pinned style and not refining an existing `design.md` identity: write identity-thinking under `.heyeddi/designs/`, present **3–5** What/Why/How options. Design request: **end the turn**, wait for A–E. Build request: pick the recommended option, record it, continue. Never an unrecorded look. Scaffolding never skips the gate. Skip only when refine preserves an existing system or the user already pinned/chose an identity.
 1. `reference/discover.md`: discovery interview (personas if missing from product.md)
 2. `reference/research.md`: web trend research → `designs/<feature>/research.md` (**Audience fit** section required)
 3. `reference/explore.md`: concept images + wireframes + **visual tools** (`reference/visual-tools.md`) — probes must match the **chosen** identity, not open a second identity contest
@@ -22,7 +22,7 @@ Load and follow each phase in order:
 4c. Read `reference/design-ambition.md`: draft **Design signature** for flagship routes
 4d. Read `reference/aesthetic-direction.md`: subject/job, thesis hero, type, motion, one aesthetic risk; run two-pass uniqueness check before locking the brief
 5. **Brief** (below) → `designs/<feature>/brief.md`
-6. **Stop and wait** for explicit user confirmation of the brief (separate from identity pick)
+6. Design request: **stop and wait** for explicit user confirmation of the brief (separate from identity pick). Build request: write the brief and continue to craft
 
 User may opt out of research or explore with explicit consent: note skips in the brief. They may **not** opt out of the identity gate when it applies.
 
@@ -61,12 +61,16 @@ After phases 1-3, write the brief to `designs/<feature>/brief.md` and present in
 
 **Completeness:** Read `reference/surface-completeness.md`: map all regions and archetype affordances in the brief. Do not defer UI to "later" without still designing it; record wiring in **Deferred wiring**.
 
-## Confirmation gate
+## Confirmation gate (design requests)
+
+When the user asked for a design (shape, redesign, new look), not for working code:
 
 - Present the brief and **end the response**.
 - Do **not** implement in the same turn as the brief.
 - If user disagrees, revisit the relevant phase.
 - Shape is incomplete until explicit confirmation ("yes", "proceed", "looks good").
+
+In a build request, shape writes the brief, records it under **Assumptions**, and hands straight to craft. The user reviews it on the branch.
 
 ## After confirmation
 

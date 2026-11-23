@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST run the identity gate: designer thinking (project, peers, follow vs unique) documented under .heyeddi/designs/, ask clarifying questions when needed, then present 3–5 What/Why/How options and wait for choice before tokens or pixels. Scaffolding/MVP never waives the gate. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A–G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow — absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
-version: 1.7.1
-product-version: 3.8.20
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST run the identity gate: designer thinking (project, peers, follow vs unique) documented under .heyeddi/designs/, ask clarifying questions when needed, then present 3–5 What/Why/How options. In a design request it waits for the pick before tokens or pixels; in a build request it picks the recommended option, records why, and continues. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A–G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow — absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
+version: 1.8.0
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -59,15 +59,18 @@ refine of an existing `design.md` system, load `references/identity-gate.md`
 project is, what peers do, follow vs unique), write it to
 `.heyeddi/designs/<feature>/identity-thinking.md`, ask **2–3 clarifying
 questions** when job/audience cannot be inferred, then present **3–5**
-What/Why/How identities and write them to `identity-options.md`. **Stop and
-wait** for A–E (or a hybrid). Scaffolding / MVP / "workable UI" never waives
-this. Refine of an existing identity skips the gate. "You choose" counts as a
-choice — pick one, say why, continue. Full rules: `references/identity-gate.md`.
+What/Why/How identities and write them to `identity-options.md`. In a
+**design request** (design, redesign, new look, `@taste-penpot` / `@heyeddi-design`
+shape): **stop and wait** for A–E (or a hybrid). In a **build request**
+(implement, build, fix, add a feature): pick the recommended option, mark it
+chosen in `identity-options.md` with two lines of why, and continue; the user
+can switch on the branch. Refine of an existing identity skips the gate. "You
+choose" counts as a choice. Full rules: `references/identity-gate.md`.
 
-Aside from the identity gate (Phase 0 questions + A–E choice) and the Penpot
-install question (`references/penpot-mcp.md` when the server is missing and
-`design.penpot` is not `off`), ask at most one other design question, and only
-when a fact that changes the work cannot be inferred. Otherwise decide, state
+Aside from the identity gate in a design request, ask at most one other design
+question, and only when a fact that changes the work cannot be inferred. A
+missing Penpot server is never a stop: write the spec and HTML+CSS, and offer the
+install under **Needs you** (`references/penpot-mcp.md`). Otherwise decide, state
 it, and keep going.
 
 Ground rules that override everything else:
@@ -144,8 +147,9 @@ destructive, see ACT safety).
 Load `references/identity-gate.md`. If the gate applies and the user has not
 chosen yet: run Phase 0 (project / peers / stance → `.heyeddi/…/identity-thinking.md`;
 ask if blocked), then present **3–5** What/Why/How options in chat and
-`identity-options.md`, then **end the turn**. Do not continue to 1.1–1.5 or ACT
-until they pick. If the gate is skipped or already satisfied, state which
+`identity-options.md`. Design request: **end the turn** and do not continue to
+1.1–1.5 or ACT until they pick. Build request: pick the recommended option,
+record why, continue. If the gate is skipped or already satisfied, state which
 identity is locked in one line and continue.
 
 ### 1.1 Pick the mode from the surface, not the product

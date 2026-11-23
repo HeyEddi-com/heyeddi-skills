@@ -1,8 +1,8 @@
 ---
 name: heyeddi-design
 description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: designer thinking in .heyeddi/, then 3–5 What/Why/How options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Blocks handoff unless taste layout hard gates pass (no text-wall, hifi.html when MCP cannot Flex, visual QA). Screenshot gate still applies before done."
-version: 2.13.1
-product-version: 3.8.20
+version: 2.14.0
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -27,12 +27,12 @@ Read **`reference/implement-routing.md`** every session that ends in shipped UI.
 
 ## Default behavior (no confirmation)
 
-- **Design talk of any kind:** load `brief-language.md` first; if identity unset → `@taste-penpot` identity gate (designer thinking in `.heyeddi/`, ask if needed, **3–5** options, wait); then pin taste + subject + hard rejects before chrome
+- **Design talk of any kind:** load `brief-language.md` first; if identity unset → `@taste-penpot` identity gate (designer thinking in `.heyeddi/`, **3–5** options; wait for the pick in a design request, pick and record in a build request); then pin taste + subject + hard rejects before chrome
 - **Better design / redesign:** "better design", "make it better", "redesign", "new look", "overhaul", "wow", "top notch" → **do not polish-only**. Run critique ambition gate (`reference/critique.md`); if template-like or ambition fails → identity gate (if unset) → **`shape` → craft → implement**. Spacing/token tweaks alone are wrong for these phrases.
 - **Critique + fix (local):** "looks bad", "fix this page", "polish", "tweak spacing" → keep existing identity; critique **then** stack implementer + `@visual-auditor` — **unless** the ambition gate says escalate to `shape` (then identity gate if replacing look; do not ask).
 - **Craft:** confirmed brief + locked identity → hand off to stack implementer in the same workflow. No craft while identity-thinking or options are still open.
 - **Ambition bar:** impressive craft is default on flagship routes — do not wait for user to ask
-- **Exception that requires confirmation:** identity Phase 0 questions + A–E choice when the gate applies (and brief confirmation after shape)
+- **Exception that requires confirmation:** in a **design request** only, identity Phase 0 questions + A–E choice when the gate applies, and brief confirmation after shape. In a build request neither stops (`@heyeddi` `reference/autonomy.md`).
 
 ## Subagents (default)
 
@@ -130,8 +130,7 @@ See `context/VOCABULARY.md`, `context/ANTI_PATTERNS.md`, `context/PROSE_ANTI_SLO
 ## When the task is complete: suggest next skills
 
 ```bash
-python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
-  --current-skill heyeddi-design --project-root .
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-design --project-root .
 ```
 
-Add `--route /path` and `--mode <sub-command>` when known.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

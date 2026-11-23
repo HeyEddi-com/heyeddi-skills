@@ -13,6 +13,10 @@ SETUP_SCHEMA_VERSION = 1
 
 GIT_PRESETS = ("main_staging_dev", "main_dev", "custom")
 ASK_AUTO = ("ask", "auto")
+AGENT_PRESETS = ("cautious", "balanced", "autonomous")
+PERMISSION_LEVELS = ("auto", "ask", "deny")
+PERMISSION_ACTIONS = ("commit", "push", "push_protected", "pr", "merge", "release")
+PERMISSION_ENVS = ("dev", "staging", "prod")
 PENPOT_MODES = ("auto", "on", "off")
 
 # Env maps for presets (always include production + staging).
@@ -38,7 +42,8 @@ PRESET_DEFAULT_BRANCH: dict[str, str] = {
     "main_dev": "dev",
 }
 
-# Required after @heyeddi-setup (prefs only).
+# Required after @heyeddi-setup (prefs only). Agent permissions are not required:
+# a missing policy means the balanced preset (heyeddi-local-first permission_policy).
 REQUIRED_PATHS: tuple[str, ...] = (
     "git.preset",
     "git.pr_base",
@@ -47,8 +52,6 @@ REQUIRED_PATHS: tuple[str, ...] = (
     "git.environments.staging",
     "git.worktrees",
     "git.custom_workflow",
-    "agent.commit",
-    "agent.push",
     "setup.version",
     "setup.updated",
 )
@@ -63,8 +66,7 @@ DEFAULTS: dict[str, Any] = {
         "custom_workflow": None,
     },
     "agent": {
-        "commit": "ask",
-        "push": "ask",
+        "preset": "balanced",
     },
     "design": {
         "taste": "on",
@@ -108,19 +110,15 @@ QUESTIONS: tuple[dict[str, Any], ...] = (
         "group": "git",
     },
     {
-        "id": "agent.commit",
-        "path": "agent.commit",
-        "prompt": "Agent may commit without asking?",
-        "choices": list(ASK_AUTO),
-        "hints": {"ask": "confirm first", "auto": "commit on feature branches OK"},
-        "group": "agent",
-    },
-    {
-        "id": "agent.push",
-        "path": "agent.push",
-        "prompt": "Agent may push without asking?",
-        "choices": list(ASK_AUTO),
-        "hints": {"ask": "confirm first", "auto": "push feature branches OK"},
+        "id": "agent.preset",
+        "path": "agent.preset",
+        "prompt": "How much may agents do without asking?",
+        "choices": list(AGENT_PRESETS),
+        "hints": {
+            "cautious": "Ask before commit, push, PR, merge, release, and staging/prod reads",
+            "balanced": "Commit, push feature branches, PRs, prod reads: auto. Merge, release, push to main, staging writes: ask. Prod writes: pipeline only (default)",
+            "autonomous": "Everything auto except prod writes (ask) and the hard limits",
+        },
         "group": "agent",
     },
     {
@@ -229,6 +227,12 @@ def validate_value(path: str, value: Any) -> str | None:
         if value not in ASK_AUTO:
             return f"{path} must be ask or auto"
         return None
+    if path == "agent.preset":
+        if value not in AGENT_PRESETS:
+            return f"agent.preset must be one of {AGENT_PRESETS}"
+        return None
+    if path == "agent.permissions":
+        return validate_permissions(value)
     if path == "design.taste":
         if value != "on":
             return "design.taste stays on"
@@ -247,6 +251,21 @@ def validate_value(path: str, value: Any) -> str | None:
             return "setup.updated must be a non-empty date string"
         return None
     return f"unknown path: {path}"
+
+
+def validate_permissions(value: Any) -> str | None:
+    if not isinstance(value, dict):
+        return "agent.permissions must be an object"
+    for key, level in value.items():
+        if key in ("read", "write"):
+            if not isinstance(level, dict):
+                return f"agent.permissions.{key} must map dev/staging/prod to a level"
+            for env, env_level in level.items():
+                if env not in PERMISSION_ENVS or env_level not in PERMISSION_LEVELS:
+                    return f"agent.permissions.{key}.{env} must be one of {PERMISSION_LEVELS}"
+        elif key not in PERMISSION_ACTIONS or level not in PERMISSION_LEVELS:
+            return f"agent.permissions.{key} must be one of {PERMISSION_LEVELS}"
+    return None
 
 
 def missing_paths(data: dict[str, Any]) -> list[str]:
@@ -360,6 +379,26 @@ def apply_answers(data: dict[str, Any], answers: dict[str, Any]) -> dict[str, An
         out["git"]["custom_workflow"] = None
 
     return out
+
+
+def detected_defaults(default_branch: str) -> dict[str, Any]:
+    """Answers that let an agent keep working when setup was never run.
+
+    Trunk on the repo's default branch, balanced agent preset. The user can
+    rerun @heyeddi-setup later to change any of it.
+    """
+    branch = default_branch.strip() or "main"
+    return {
+        "git": {
+            "preset": "custom",
+            "default_branch": branch,
+            "pr_base": branch,
+            "environments": {"production": branch, "staging": branch},
+            "worktrees": False,
+            "custom_workflow": f"Detected defaults: trunk on {branch}. Rerun @heyeddi-setup to change.",
+        },
+        "agent": {"preset": "balanced"},
+    }
 
 
 def ensure_prefs_defaults(data: dict[str, Any]) -> dict[str, Any]:

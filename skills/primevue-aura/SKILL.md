@@ -2,7 +2,7 @@
 name: primevue-aura
 description: "PrimeVue with the Aura preset for dense Vue 3 data grids, filters, complex form controls, and overlays. No Tailwind. Use for DataTable, TreeSelect, menus, badges, and the Quasar plus PrimeVue bootstrap order."
 version: 1.0.0
-product-version: 3.8.20
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -107,12 +107,8 @@ Card body content goes in `<template #content>`.
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill, suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill primevue-aura --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill primevue-aura --project-root .
-   ```
-
-2. Include the script's **`### Next step`** block in your **final** reply.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

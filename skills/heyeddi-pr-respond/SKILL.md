@@ -1,8 +1,8 @@
 ---
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback — human reviewers, @heyeddi-pr-review inline findings, HeyEddi CI. Same GitHub user who left the review is fine. Auto-fix, commit+push, in-thread replies, CI check first. Not the reviewer skill (use heyeddi-pr-review) and not the merge gate (use pre-merge-gate)."
-version: 2.4.0
-product-version: 3.8.20
+version: 2.5.0
+product-version: 3.8.21
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -32,7 +32,7 @@ On any PR work, **do not ask** whether to fix findings, check CI, or post thread
 2. **Fix** valid review items automatically
 3. **Commit + push** automatically
 4. **Post** every reply in-thread automatically
-5. Only **merge** requires **authorize merge** in the current turn
+5. Only merge can need a question: merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
 
 ## No project scratch files
 
@@ -110,11 +110,11 @@ build_comment_inventory --pr <N> --write-cache
 → tracking table in chat (every item: id, type, fix|decline, status)
 for each item: analyze vs PR goals → fix | decline | partial | out-of-scope
 apply code/docs fixes when fix
-@heyeddi-setup verify_setup --check      → always-on prefs hard gate (before commit/push)
+@heyeddi-setup verify_setup --check      → prefs (defaults when missing; never a stop)
 @engineering-excellence check_engineering_plan / audit_engineering --check  → always-on (errors fail)
 discover_and_verify [--run]              → evidenced commands only
-assert_no_merge --check                  → unless user said authorize merge
-→ if any fix: commit + push (automatic — do not ask; honor agent.commit/push)
+assert_no_merge --check                  → passes on merge policy auto, or authorize merge
+→ if any fix: commit + push (automatic; check_permission decides, default balanced allows on a PR branch)
 assert_fixes_pushed --check
 → compose ## Comment <id> for every postable_reply_id + ## Summary last
 post_thread_replies --pr <N> --replies-text '...'
@@ -123,7 +123,7 @@ verify_response --pr <N> --replies-text '...' --use-inventory --live --check
 → optional one Summary after verify
 ```
 
-**Never** merge without **authorize merge** in the current turn.
+**Never** merge unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn).
 
 ## HeyEddi CI false positives
 
@@ -153,14 +153,13 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 
 - Exit 3 is not a pass and not a failure. It means the step could not run.
 - Do not retry in a loop and do not report the step as done.
-- Do the step by hand with the GitHub MCP tools named in `manual`, or ask the user to run `gh auth login`.
+- Do the step by hand with the GitHub MCP tools named in `manual`; if that is not possible, keep going and list `gh auth login` under **Needs you**.
 - Nothing is posted, verified or signed off when a script exits 3.
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill, suggest what to run next:
-
 ```bash
-python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
-  --current-skill heyeddi-pr-respond --project-root .
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-pr-respond --project-root .
 ```
+
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

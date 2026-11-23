@@ -89,7 +89,7 @@ def main() -> None:
             "",
             "## Merge lock",
             "",
-            "Never `gh pr merge` without **authorize merge** in the current turn.",
+            "Merge follows `agent.permissions.merge` (default `ask`: **authorize merge** in the current turn).",
             "",
         ]
     )

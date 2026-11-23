@@ -2,13 +2,13 @@
 
 **Date:** 2026-11-07
 
-Agents should run these chains **automatically** — do not ask the user for confirmation at each step.
+Agents run these chains **automatically**, end to end, per `reference/autonomy.md`. No confirmation between steps.
 
 ## UI: greenfield route
 
 ```
 @heyeddi-intake          → product.md + skill-routing
-@heyeddi-design shape    → confirmed brief.md
+@heyeddi-design shape    → brief.md (confirmed only in a design request)
 <stack implementer>      → @heyeddi-handoff (vue) or @design-handoff-flutter
 @engineering-excellence  → plan gate before code; audit_engineering --check after
 @vue-design-system              (vue: Quasar, PrimeVue Aura, motion, tokens)
@@ -68,4 +68,4 @@ See `@heyeddi-design` → `reference/implement-routing.md`.
 
 Default answer to all: **yes, do it now**.
 
-Only **merge** needs **authorize merge** in the current turn.
+Only merge can need a question: merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn).

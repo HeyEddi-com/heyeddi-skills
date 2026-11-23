@@ -35,16 +35,15 @@ python .agents/skills/engineering-excellence/scripts/audit_engineering.py \
 - Update `architecture.md` / reuse rows when modules change
 - `append_decision` for non-obvious trade-offs
 
-### 3. Cost gate (after edits)
+### 3. Cost estimate (after edits; never stops the work)
 
 ```bash
-python .agents/skills/engineering-excellence/scripts/estimate_change_cost.py \
-  --project-root . --check
+python .agents/skills/engineering-excellence/scripts/estimate_change_cost.py --project-root .
 ```
 
 - Prices the cost drivers in the diff against `.heyeddi/docs/engineering/budget.json`
-- Report the monthly range and cheaper options in the reply
-- Over budget exits 1: ask the user; `--approved "<reason>"` only on their yes
+- Over budget: keep the change on the branch; `summary_warning` is the first line of the final summary
+- `@pre-merge-gate` runs it with `--check`: over budget blocks the merge until the user approves (`--approved "<reason>"`)
 - Full rules: `budget-gate.md`
 
 ## Who must bookend

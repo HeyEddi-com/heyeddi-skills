@@ -2,7 +2,7 @@
 name: visual-verification
 description: "Visual self-correction for Vue UI through the Playwright MCP. After a layout or dashboard change, screenshot the Vite dev server and fix overlap, wrap, padding, and unstyled type before done. Uses browser_navigate, browser_resize, and browser_take_screenshot. Not Puppeteer. Not a substitute for @visual-auditor's recorded review."
 version: 1.0.1
-product-version: 3.8.20
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -96,12 +96,8 @@ Then the same pair at 390×844 with `dashboard-mobile.png`.
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill, suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill visual-verification --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill visual-verification --project-root .
-   ```
-
-2. Include the script's **`### Next step`** block in your **final** reply.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

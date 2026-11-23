@@ -113,6 +113,14 @@ def detect_pr_number(root: Path, explicit: int | None) -> int | None:
         return None
 
 
+def detect_pr_url(root: Path, pr: int | None) -> str | None:
+    """Full PR URL so every report and summary can link it."""
+    if pr is None or not shutil.which("gh"):
+        return None
+    out = run_command(["gh", "pr", "view", str(pr), "--json", "url", "-q", ".url"], root, timeout=60).strip()
+    return out if out.startswith("https://") else None
+
+
 def run_git_clean_checks(root: Path, rows: list[tuple[str, str, str]]) -> None:
     # .git may be a dir or a worktree file
     if not (root / ".git").exists():
@@ -411,6 +419,7 @@ def build_report(
     pr: int | None,
     signoff: bool,
     emergency_used: list[str],
+    pr_url: str | None = None,
 ) -> tuple[str, dict[str, Any], int]:
     fail_count = sum(1 for _, st, _ in rows if st == "FAIL")
     skip_count = sum(1 for _, st, _ in rows if st == "SKIP")
@@ -419,7 +428,7 @@ def build_report(
     lines = [
         "# Pre-merge Gate Report",
         "",
-        f"- **PR:** {pr if pr is not None else 'none (local)'}",
+        f"- **PR:** {(f'[#{pr}]({pr_url})' if pr_url else f'#{pr}') if pr is not None else 'none (local)'}",
         f"- **Sign-off mode:** {'yes' if signoff else 'no'}",
         "",
         "| Check | Status | Summary |",
@@ -452,6 +461,7 @@ def build_report(
         "ok": not blocked and not unverified,
         "overall": overall,
         "pr": pr,
+        "pr_url": pr_url,
         "signoff": signoff,
         "fail_count": fail_count,
         "skip_count": skip_count,
@@ -612,7 +622,9 @@ def main() -> None:
             )
         )
 
-    md, payload, code = build_report(rows, pr=pr, signoff=signoff, emergency_used=emergency_used)
+    md, payload, code = build_report(
+        rows, pr=pr, signoff=signoff, emergency_used=emergency_used, pr_url=detect_pr_url(root, pr)
+    )
     if args.json:
         emit(md + "\n\n```json\n" + json.dumps(payload, indent=2) + "\n```")
     else:

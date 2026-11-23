@@ -141,7 +141,7 @@ npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 
 ## Product honesty
 
-- **No unauthorized merge** — agents need explicit **authorize merge** in the current turn
+- **No unauthorized merge**: merge follows the project's agent preset; the default asks for **authorize merge** in the current turn
 - **No structured FP API yet** — use PR debate / \`support@heyeddi.com\`
 - **Runners fail-closed** — do not claim jobs ran
 - **PR scratch** under \`.heyeddi/docs/pr-*\` is ephemeral / gitignored

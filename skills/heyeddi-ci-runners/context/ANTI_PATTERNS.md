@@ -2,7 +2,7 @@
 
 ## Shared CI safety
 
-- NEVER `gh pr merge` without **authorize merge**
+- NEVER `gh pr merge` unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
 - NEVER enable `auto_merge`
 - NEVER enable billable knobs / sealed `pipeline:` without opt-in
 - NEVER invent knobs — always `load_policy_contract`

@@ -1,8 +1,8 @@
 ---
 name: heyeddi-pr-review
 description: "Code-review a submitted PR like a human reviewer: read the committed diff, related call sites, and leave real findings (security, logic, correctness, dangerous practices) as GitHub inline comments on the exact line. Not for lint/pre-commit noise or merge gates (use pre-merge-gate). Not for replying to threads (use heyeddi-pr-respond)."
-version: 2.0.0
-product-version: 3.8.20
+version: 2.0.1
+product-version: 3.8.21
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -112,14 +112,13 @@ Never "Approve" in chat while leaving zero GitHub activity. Always submit the re
 
 - Exit 3 is not a pass and not a failure. It means the step could not run.
 - Do not retry in a loop and do not report the step as done.
-- Do the step by hand with the GitHub MCP tools named in `manual`, or ask the user to run `gh auth login`.
+- Do the step by hand with the GitHub MCP tools named in `manual`; if that is not possible, keep going and list `gh auth login` under **Needs you**.
 - Nothing is posted, verified or signed off when a script exits 3.
 
 ## When the task is complete: suggest next skills
 
 ```bash
-python .agents/skills/heyeddi/scripts/suggest_next_skill.py \
-  --current-skill heyeddi-pr-review --project-root .
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-pr-review --project-root .
 ```
 
-Include the script's `### Next step` in your final reply (expect `@heyeddi-pr-respond`).
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

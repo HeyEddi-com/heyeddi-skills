@@ -21,8 +21,9 @@ def test_ensure_writes_agents_and_rule(tmp_path: Path) -> None:
     agents = (tmp_path / "AGENTS.md").read_text(encoding="utf-8")
     assert START in agents and END in agents
     assert "@pre-merge-gate --signoff" in agents
-    assert "Tests (this project)" in agents
-    assert "would have failed" in agents
+    assert "**Tests**" in agents
+    assert "failing test" in agents
+    assert "reference/autonomy.md" in agents
     assert "Playwright" in agents
     assert "legacy-scan" in agents
     assert "browser-platform.md" in agents
@@ -32,7 +33,7 @@ def test_ensure_writes_agents_and_rule(tmp_path: Path) -> None:
     rule = (tmp_path / ".cursor" / "rules" / "heyeddi-always-on.mdc").read_text(encoding="utf-8")
     assert "alwaysApply: true" in rule
     assert "HeyEddi always-on" in rule
-    assert "Tests (this project)" in rule
+    assert "**Tests**" in rule
 
 
 def test_ensure_preserves_user_agents_content(tmp_path: Path) -> None:

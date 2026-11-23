@@ -2,7 +2,7 @@
 name: visual-auditor
 description: "ALWAYS use after design/implement for screenshot QA: capture, contrast, fix, document. Mandatory after handoff. Fast widths 375/768/1440; before flagship done use --preset done (375/430/768/1024/1440/1920). Auto-fix — never report-only unless user says audit-only. Edges must read on the plane."
 version: 3.3.2
-product-version: 3.8.20
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -104,18 +104,8 @@ Shell scripts for capture/contrast; **you** (main agent) read images, edit code,
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill visual-auditor --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill visual-auditor --project-root .
-   ```
-
-   Add `--route /path` if you worked a specific route.
-
-2. Include the script's **`### Next step`** block in your **final** reply. The user copies the **Prompt** line into chat (e.g. `@heyeddi-design craft /settings`).
-
-Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
-
-See `@heyeddi` → `reference/next-skill-handoff.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

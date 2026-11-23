@@ -6,6 +6,9 @@
 
 ## Rules
 
+Discovery is an interview the user asked for (`@heyeddi-design discover`, shape in a design request). In a build request, answer these from `.heyeddi/` and the repo, record assumptions, and continue (`@heyeddi` `reference/autonomy.md`).
+
+
 - **Do NOT** write code or make visual decisions during discovery.
 - **Do NOT** dump all questions at once: natural dialogue, **2-3 questions per round**, then wait.
 - Use the structured question tool when available; otherwise ask in chat and stop.

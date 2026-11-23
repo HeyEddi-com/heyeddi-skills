@@ -2,7 +2,7 @@
 name: quasar-foundation
 description: "Quasar application frames, drawers, mobile gestures, and Capacitor or Tauri shells for Vue 3. Use for headers, footers, navigation, pull-to-refresh, bottom sheets, and quasar build targets. Not for data tables or CLI."
 version: 1.0.0
-product-version: 3.8.20
+product-version: 3.8.21
 author: HeyEddi-com
 ---
 
@@ -48,12 +48,8 @@ Use Quasar only for these primitives:
 
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill, suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill quasar-foundation --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill quasar-foundation --project-root .
-   ```
-
-2. Include the script's **`### Next step`** block in your **final** reply.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

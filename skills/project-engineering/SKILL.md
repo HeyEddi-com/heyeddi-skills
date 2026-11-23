@@ -2,7 +2,7 @@
 name: project-engineering
 description: "Ensures HeyEddi projects have the right engineering stack: Vue (Vite/Vitest), FastAPI backend, or Firebase tooling. Audits gaps, scaffolds as needed, installs deps, runs tests, documents local dev servers. Use when the repo is thin or before design/feature work on any HeyEddi app."
 version: 1.1.0
-product-version: 3.8.20
+product-version: 3.8.21
 author: HeyEddi-com
 paths:
   - "package.json"
@@ -46,7 +46,7 @@ Declare intent prefs via `@heyeddi-setup` (git/env + agent). Tech keys in `.heye
     "worktrees": false,
     "custom_workflow": null
   },
-  "agent": { "commit": "ask", "push": "ask" },
+  "agent": { "preset": "balanced" },
   "setup": { "version": 1, "updated": "2026-09-06" }
 }
 ```
@@ -111,19 +111,8 @@ Run `dev_server_info` for project-specific steps. Each server needs its **own te
 - `verify-build`: production frontend build
 ## When the task is complete: suggest next skills
 
-When you have **finished the user's request** for this skill (not after every tool call or subagent phase), suggest what to run next:
+```bash
+python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill project-engineering --project-root .
+```
 
-1. Run:
-
-   ```bash
-   python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill project-engineering --project-root .
-   ```
-
-   Add `--route /path` if you worked a specific route.
-
-2. Include the script's **`### Next step`** block in your **final** reply. The user copies the **Prompt** line into chat (e.g. `@heyeddi-design craft /settings`).
-
-Pass `--mode shape` (or `craft`, `audit`, etc.) when you know which sub-command just finished.
-
-See `@heyeddi` → `reference/next-skill-handoff.md`.
-
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

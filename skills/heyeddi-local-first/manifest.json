@@ -3,15 +3,49 @@
   "version": "1.0.0",
   "tools": [
     {
+      "name": "check_permission",
+      "description": "Agent permission gate. Exit 0 allow, 2 ask once, 1 deny. Covers commit, push, PR, merge, release, and dev/staging/prod reads and writes from the agent preset in .heyeddi/stack.json.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Shell command the agent is about to run"
+          },
+          "cwd": {
+            "type": "string",
+            "description": "Working directory (finds .heyeddi/stack.json)"
+          },
+          "approved": {
+            "type": "boolean",
+            "description": "The user said yes to this action in the current turn"
+          }
+        },
+        "required": [
+          "command"
+        ]
+      },
+      "script": "scripts/check_permission.py",
+      "readonly": true
+    },
+    {
       "name": "classify_command",
       "description": "Hard gate for every agent. Exit 1 on terraform apply and other live cloud mutations. Plan exits 0 and must be summarized.",
       "parameters": {
         "type": "object",
         "properties": {
-          "command": { "type": "string", "description": "Shell command to classify" },
-          "cwd": { "type": "string", "description": "Working directory for script inspection" }
+          "command": {
+            "type": "string",
+            "description": "Shell command to classify"
+          },
+          "cwd": {
+            "type": "string",
+            "description": "Working directory for script inspection"
+          }
         },
-        "required": ["command"]
+        "required": [
+          "command"
+        ]
       },
       "script": "scripts/classify_command.py",
       "readonly": true

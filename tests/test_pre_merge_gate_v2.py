@@ -146,3 +146,16 @@ def test_tooling_package_json_skips_test_build(tmp_path: Path) -> None:
     assert "| test | SKIP |" in out
     assert "| build | SKIP |" in out
     assert proc.returncode == 0
+
+
+def test_report_links_the_pr_when_url_is_known() -> None:
+    sys.path.insert(0, str(PRE_MERGE.parent))
+    from pre_merge_gate import build_report  # noqa: PLC0415
+
+    url = "https://github.com/acme/app/pull/64"
+    md, payload, _ = build_report([], pr=64, signoff=True, emergency_used=[], pr_url=url)
+    assert f"[#64]({url})" in md
+    assert payload["pr_url"] == url
+    md_local, payload_local, _ = build_report([], pr=None, signoff=False, emergency_used=[])
+    assert "none (local)" in md_local
+    assert payload_local["pr_url"] is None

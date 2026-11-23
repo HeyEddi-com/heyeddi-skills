@@ -1,12 +1,14 @@
 # Budget gate
 
-Every change that touches infra, model calls, schedules, CI, or polling gets a monthly cost estimate before it ships. The point is a cheap default and a visible price for anything that is not cheap.
+Every change that touches infra, model calls, schedules, CI, or polling gets a monthly cost estimate before it merges. The point is a cheap default and a visible price for anything that is not cheap. The estimate never stops the work: the change lives on a branch, and the merge is where the user decides.
 
 ## Run it
 
 ```bash
-python .agents/skills/engineering-excellence/scripts/estimate_change_cost.py --project-root . --check
+python .agents/skills/engineering-excellence/scripts/estimate_change_cost.py --project-root .
 ```
+
+During work, run it without `--check`. `@pre-merge-gate` adds `--check`, which exits 1 over budget.
 
 It diffs the working tree against the merge base with `origin/main` (or `main`), plus untracked files. `--base <ref>` picks another base. `--diff-file` reads a saved diff.
 
@@ -41,7 +43,7 @@ Firestore bills per document read, so the cost sits in the code, not in Terrafor
 
 It also warns on a Firestore trigger that writes back to Firestore, since a write can retrigger it.
 
-The gate fails when the estimate passes `firestore_reads_per_day_limit` (default 1,000,000), whatever the dollar figure says. The first 50,000 reads a day are free per project, so a few hundred thousand is a small bill and tens of millions is not. Set the assumptions in `budget.json` to what the app really has, especially `firestore_docs_per_query`.
+The estimate is over budget when it passes `firestore_reads_per_day_limit` (default 1,000,000), whatever the dollar figure says. The first 50,000 reads a day are free per project, so a few hundred thousand is a small bill and tens of millions is not. Set the assumptions in `budget.json` to what the app really has, especially `firestore_docs_per_query`.
 
 Fixes, in the order to try them: add `limit()` and paginate; listen to one small summary document; unsubscribe when the view closes; replace the loop with a single `where in` query or `getAll`; cache or aggregate server-side with `count()`.
 
@@ -76,9 +78,11 @@ Infracost wins over the plan, and the plan wins over the diff guess.
 
 ## Over budget
 
-1. Stop. Do not rerun with a higher limit.
-2. Show the user the range, the top drivers, and the cheaper option for each.
-3. If they still want it, rerun with `--approved "<their reason>"`. That writes a "Cost approved over budget" ADR to `decisions.md` and passes.
+1. Keep working. Apply a smart default below when it fits the request without changing what the user asked for, and rerun the estimate.
+2. Still over: finish the change on the branch. Make `summary_warning` the first line of the final summary: the range, the top drivers, and the cheaper option for each. Do not raise a limit in `budget.json` to make it pass.
+3. At merge, `@pre-merge-gate` fails the cost row. If the user accepts the cost, rerun with `--approved "<their reason>"`. That writes a "Cost approved over budget" ADR to `decisions.md` and passes.
+
+If the user asked to hear about cost before building, warn first and build after their answer.
 
 ## Smart defaults
 

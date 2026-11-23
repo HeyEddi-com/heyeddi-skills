@@ -9,7 +9,7 @@ Two Chrome packs sit beside those skills. They do not replace them.
 | **Modern Web Guidance** | Guides for accessibility, forms, motion, performance, security, and Baseline. Includes the modernization scan that **finds problems** in existing HTML, CSS, JS/TS, Vue/framework files, and `package.json`. |
 | **Chrome DevTools for agents** | Live Chrome: performance traces, memory, throttled CPU, `prefers-reduced-motion`, console. Localhost only. |
 
-Playwright stays the screenshot and signed-in flow tool (`@visual-verification`, `@visual-auditor`, reproduce-first tests). DevTools does not replace those captures.
+Playwright stays the screenshot and signed-in flow tool (`@visual-verification`, `@visual-auditor`, `reference/testing.md` flows). DevTools does not replace those captures.
 
 ## Install (app repo, once)
 
@@ -42,13 +42,13 @@ On an **existing** frontend, before craft, polish, or a handoff fix, scan the fi
 npx modern-web-guidance legacy-scan <path> --json
 ```
 
-Or ask in natural language: modernize this folder with Modern Web Guidance, scan for legacy patterns, verify findings, and propose a plan before edits.
+Or in natural language: modernize this folder with Modern Web Guidance, scan for legacy patterns, verify findings, and fix them.
 
 Then:
 
 1. **Scan.** `legacy-scan` is the find-problems step. It is static. It covers the guide subset with deterministic rules.
 2. **Verify.** Drop matches the rubric marks as intentional (`@supports`, a real virtual scroller, a library behavior you must keep).
-3. **Report** verified findings before editing, unless the user already asked to apply them.
+3. **Fix, don't report.** A build or fix request already covers the files you touch: fix the verified findings there and list them in the final summary. Findings outside those files go under **Next**. Report-only applies when the user asked for an audit.
 4. **Fix from the guide.** `npx modern-web-guidance retrieve <guide-id>`. Re-run `legacy-scan` on the files you changed. Run the project test for those files.
 
 Naming one component is a guide lookup, not a repo scan.
@@ -67,7 +67,7 @@ After a GUI change, use Chrome DevTools on `http://localhost` (or the project de
 - Animations: record the motion, then repeat with `prefers-reduced-motion: reduce`.
 - Cached views: confirm memory does not climb without bound.
 
-Use a clean profile. Do not attach the user's logged-in Chrome. On a test or production URL: look and navigate only. No writes, no form submits, no account changes. Same rule as `@heyeddi` `reference/reproduce-first.md`.
+Use a clean profile. Do not attach the user's logged-in Chrome. On a test or production URL: look and navigate only. No writes, no form submits, no account changes. Same rule as `@heyeddi` `reference/testing.md`.
 
 ## Skip
 
