@@ -39,7 +39,7 @@ The policy is `agent.preset` plus `agent.permissions` in `.heyeddi/stack.json` (
 
 Hard limits, under every preset: force push or delete on a protected branch, destructive statements on prod (`DROP`, `TRUNCATE`, `delete`, `destroy`), `gh repo delete`, prod writes never better than `ask`.
 
-The env comes from `targets` in `stack.json` when set, else from names in the command (`prod`, `staging`, `dev`). An unnamed remote write counts as prod.
+The env comes from the command's shell words, with quotes removed and `# comments` dropped. A prod name anywhere (or a `targets.prod` entry from `stack.json`) makes it prod. Dev or staging come only from target values: `--project`, `--context`, `--host`, `--profile` and similar flags, connection URLs, and `$..._URL` variables, and only when every target value agrees. An IP, an unnamed target, or a label like `--tags=dev` never lowers it: an unnamed remote write counts as prod.
 
 `classify_command.py` stays as the infra classifier underneath. `"action": "plan"` (`terraform plan`, `tofu plan`, `pulumi preview`, `ansible-playbook --check`) runs; summarize what it would create, change, or destroy, then keep going.
 

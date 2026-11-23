@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import re
+import shlex
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -69,6 +70,12 @@ _ENV_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("staging", re.compile(r"(?<![a-z0-9])(staging|stage|stg|preprod|uat)(?![a-z0-9])", re.I)),
     ("dev", re.compile(r"(?<![a-z0-9])(dev|development|sandbox|test|qa)(?![a-z0-9])", re.I)),
 )
+# Flags whose value says where a command runs. Only these can make a command laxer.
+_TARGET_FLAGS = frozenset({
+    "--project", "--context", "--kube-context", "--cluster", "--host", "-h", "--profile",
+    "--stack", "--environment", "--env", "--instance", "--database", "--dbname", "-d",
+    "--site", "--target", "--server", "--url", "--account",
+})
 _LOCAL_HOST = re.compile(r"(?<![a-z0-9.])(localhost|127\.0\.0\.1|0\.0\.0\.0|::1)(?![a-z0-9])", re.I)
 
 
@@ -142,28 +149,73 @@ def protected_branches(stack: dict[str, Any]) -> set[str]:
     return names
 
 
-def detect_env(text: str, stack: dict[str, Any]) -> str | None:
-    """Return dev / staging / prod for a remote target, or None when nothing names one.
+def shell_words(text: str) -> list[str] | None:
+    """Shell words with quotes removed and `# comments` dropped. None when it will not parse."""
+    try:
+        return shlex.split(text, comments=True, posix=True)
+    except ValueError:
+        return None
 
-    Explicit `targets` in stack.json win over name heuristics:
-        "targets": {"prod": ["acme-prod-123"], "staging": ["acme-stg"]}
+
+def target_values(words: list[str]) -> list[str]:
+    """Values that name where a command runs: target flags, connection URLs, URL env vars.
+
+    Only these may make a command laxer (dev / staging / local). Labels, tags,
+    descriptions, and comments never do.
     """
+    out: list[str] = []
+    for i, word in enumerate(words):
+        name, sep, value = word.partition("=")
+        if name in _TARGET_FLAGS:
+            if sep:
+                out.append(value)
+            elif i + 1 < len(words):
+                out.append(words[i + 1])
+        elif "://" in word or (word.startswith("$") and "URL" in word.upper()):
+            out.append(word)
+    return out
+
+
+def _env_of(value: str, stack: dict[str, Any]) -> str | None:
     targets = stack.get("targets")
     if isinstance(targets, dict):
         for env in ("prod", "staging", "dev"):
             names = targets.get(env)
-            if isinstance(names, list):
-                for name in names:
-                    if isinstance(name, str) and name and name in text:
-                        return env
+            if isinstance(names, list) and any(isinstance(n, str) and n and n in value for n in names):
+                return env
     for env, pattern in _ENV_PATTERNS:
-        if pattern.search(text):
+        if pattern.search(value):
             return env
     return None
 
 
+def detect_env(text: str, stack: dict[str, Any]) -> str | None:
+    """Return dev / staging / prod for a remote target, or None when nothing names one.
+
+    Fail closed. A prod name anywhere in the shell words makes it prod. Dev or
+    staging come only from target values (`target_values`), and only when every
+    target value agrees; an IP or an unnamed target means None (treated as prod).
+    Explicit `targets` in stack.json win over name heuristics:
+        "targets": {"prod": ["acme-prod-123"], "staging": ["acme-stg"]}
+    """
+    words = shell_words(text)
+    if words is None:
+        return None
+    if any(_env_of(word, stack) == "prod" for word in words):
+        return "prod"
+    found = {_env_of(value, stack) for value in target_values(words)}
+    if not found or None in found:
+        return None
+    return "staging" if "staging" in found else found.pop()
+
+
 def is_local_target(text: str) -> bool:
-    return bool(_LOCAL_HOST.search(text))
+    """True only when every target value is a local host. Comments and labels do not count."""
+    words = shell_words(text)
+    if words is None:
+        return False
+    values = target_values(words)
+    return bool(values) and all(_LOCAL_HOST.search(value) for value in values)
 
 
 def level_for(policy: dict[str, Any], action: str, env: str | None = None) -> str:

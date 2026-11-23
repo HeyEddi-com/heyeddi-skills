@@ -154,3 +154,38 @@ def test_cli_exit_codes_and_approval(tmp_path: Path) -> None:
     assert json.loads(asked.stdout)["decision"] == "ask"
     assert _cli("gh pr merge 1", tmp_path, "--approved").returncode == 0
     assert _cli("gcloud run deploy api --project=acme-prod", tmp_path, "--approved").returncode == 1
+
+
+# Review finding (PR #64): env detection must not be spoofable into a laxer env.
+@pytest.mark.parametrize(
+    "command",
+    [
+        "gcloud run deploy api --project=10.0.0.5 # dev",
+        "gcloud run deploy api --project=p\"\"rod-acme # dev",
+        "kubectl apply -f k.yaml --context=10.1.1.1 --labels team=dev",
+        "gcloud run deploy api --project=acme-7781 --tag=dev",
+        "psql -h 10.0.0.9 -c 'update users set x=1' # localhost",
+        "psql -h 10.0.0.9 -c 'update users set x=1' --set=dev",
+    ],
+)
+def test_env_spoofing_cannot_downgrade_a_write(command: str) -> None:
+    assert _decision(command, _stack("balanced")) == "deny", command
+
+
+def test_quoted_prod_name_is_still_prod() -> None:
+    verdict = check("gcloud run deploy api --project=acme-p\"\"rod", cwd=None, stack=_stack("autonomous"))
+    assert verdict.env == "prod"
+
+
+def test_explicit_dev_target_only_counts_in_a_target_flag() -> None:
+    stack = _stack("balanced")
+    stack["targets"] = {"dev": ["acme-dev-123"]}
+    assert _decision("gcloud run deploy api --project=acme-dev-123", stack) == "auto"
+    assert _decision("gcloud run deploy api --project=10.0.0.5 --description=acme-dev-123", stack) == "deny"
+
+
+def test_legit_target_flags_still_resolve() -> None:
+    stack = _stack("balanced")
+    assert _decision("gcloud run deploy api --project acme-dev", stack) == "auto"
+    assert _decision("kubectl --context staging apply -f k.yaml", stack) == "ask"
+    assert _decision("psql -h localhost -c 'update users set x=1'", stack) == "auto"
