@@ -18,16 +18,23 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SKILLS_DIR = REPO_ROOT / "skills"
-FIXTURE_ROOT = REPO_ROOT / "fixtures" / "sample-vue-app"
-FLUTTER_FIXTURE_ROOT = REPO_ROOT / "fixtures" / "sample-flutter-app"
+FIXTURES_DIR = REPO_ROOT / "fixtures"
+FIXTURE_ROOT = FIXTURES_DIR / "sample-vue-app"
+FLUTTER_FIXTURE_ROOT = FIXTURES_DIR / "sample-flutter-app"
+VUE_FIXTURE = "sample-vue-app"
+FLUTTER_FIXTURE = "sample-flutter-app"
+# Build output and tool caches the smoke run never needs in its temp copy.
+_FIXTURE_COPY_IGNORE = shutil.ignore_patterns("node_modules", ".dart_tool", "build", "dist", "__pycache__")
 INVOKE_TOOL = REPO_ROOT / "scripts" / "cloud" / "invoke_skill_tool.py"
 REGISTER_TOOLS = REPO_ROOT / "scripts" / "cloud" / "register_tools.py"
 
@@ -39,8 +46,6 @@ FLUTTER_SKILLS = frozenset(
         "design-handoff-flutter",
     }
 )
-
-PRODUCT_TRANSLATOR_FIXTURE = REPO_ROOT / "fixtures" / "sample-vue-app"
 
 FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 
@@ -502,12 +507,18 @@ def smoke_test_tool(skill_dir: Path, tool: dict[str, Any], fixture_root: Path, r
         report.add(skill=name, tool=tool_name, layer=layer, ok=ok, detail=detail)
 
 
-def fixture_for_skill(skill_name: str) -> Path:
-    if skill_name in ("heyeddi-intake", "heyeddi-product"):
-        return PRODUCT_TRANSLATOR_FIXTURE if PRODUCT_TRANSLATOR_FIXTURE.is_dir() else FIXTURE_ROOT
-    if skill_name in FLUTTER_SKILLS and FLUTTER_FIXTURE_ROOT.is_dir():
-        return FLUTTER_FIXTURE_ROOT
-    return FIXTURE_ROOT
+def fixture_for_skill(skill_name: str, base: Path = FIXTURES_DIR) -> Path:
+    """Fixture project for a skill, under `base` (a temp copy of fixtures/ during a run)."""
+    if skill_name in FLUTTER_SKILLS and (base / FLUTTER_FIXTURE).is_dir():
+        return base / FLUTTER_FIXTURE
+    return base / VUE_FIXTURE
+
+
+def copy_fixtures(dest: Path) -> Path:
+    """Copy fixtures/ into `dest` so tool runs never write into the tracked tree."""
+    target = dest / "fixtures"
+    shutil.copytree(FIXTURES_DIR, target, ignore=_FIXTURE_COPY_IGNORE, symlinks=True)
+    return target
 
 
 def list_skills() -> list[str]:
@@ -540,19 +551,9 @@ def main() -> int:
 
     names = [args.skill] if args.skill else list_skills()
     report = RunReport()
-
-    for name in names:
-        skill_dir = SKILLS_DIR / name
-        if not skill_dir.is_dir():
-            report.add(skill=name, tool="(all)", layer="structure", ok=False, detail="skill not found")
-            continue
-        validate_structure(skill_dir, report)
-        if args.structure_only:
-            continue
-        manifest = json.loads((skill_dir / "manifest.json").read_text())
-        skill_fixture = fixture_for_skill(name) if use_default_fixture else fixture_root
-        for tool in manifest.get("tools", []):
-            smoke_test_tool(skill_dir, tool, skill_fixture, report)
+    with tempfile.TemporaryDirectory(prefix="heyeddi-smoke-") as tmp:
+        fixtures_copy = copy_fixtures(Path(tmp)) if use_default_fixture and not args.structure_only else FIXTURES_DIR
+        run_skills(names, args, fixture_root, fixtures_copy, use_default_fixture, report)
 
     # Registry sanity
     if REGISTER_TOOLS.is_file() and not args.structure_only:
@@ -567,6 +568,28 @@ def main() -> int:
 
     report.print_summary()
     return 1 if report.failed else 0
+
+
+def run_skills(
+    names: list[str],
+    args: argparse.Namespace,
+    fixture_root: Path,
+    fixtures_copy: Path,
+    use_default_fixture: bool,
+    report: RunReport,
+) -> None:
+    for name in names:
+        skill_dir = SKILLS_DIR / name
+        if not skill_dir.is_dir():
+            report.add(skill=name, tool="(all)", layer="structure", ok=False, detail="skill not found")
+            continue
+        validate_structure(skill_dir, report)
+        if args.structure_only:
+            continue
+        manifest = json.loads((skill_dir / "manifest.json").read_text())
+        skill_fixture = fixture_for_skill(name, fixtures_copy) if use_default_fixture else fixture_root
+        for tool in manifest.get("tools", []):
+            smoke_test_tool(skill_dir, tool, skill_fixture, report)
 
 
 if __name__ == "__main__":
