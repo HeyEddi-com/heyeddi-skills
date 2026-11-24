@@ -2,16 +2,16 @@
 
 Project-specific rules and preferences, appended over time.
 
-## 2026-07-02 — Skills collection uses git subtrees
+## 2026-07-02: Skills collection uses git subtrees
 
 **Context:** This repository aggregates independently distributable Cursor skills.
 
 **Decision:** Use **git subtrees** (not submodules) to vendor each skill from its own repository into `skills/<skill-name>/`.
 
-**Install:** Consumers use `npx skills add heyeddi/<name>` or `./scripts/install-skills.sh` — skills land in `.agents/skills/` or `~/.cursor/skills/`, not in this hub's `.cursor/` folder.
+**Install:** Consumers use `npx skills add heyeddi/<name>` or `./scripts/install-skills.sh`: skills land in `.agents/skills/` or `~/.cursor/skills/`, not in this hub's `.cursor/` folder.
 
 **Rationale:**
-- Single clone includes all skills — no `submodule update` step.
+- Single clone includes all skills: no `submodule update` step.
 - Edits happen in the hub without detached-HEAD submodule confusion.
 - `git subtree push` publishes changes back to the skill's standalone repo.
 
@@ -23,7 +23,7 @@ Project-specific rules and preferences, appended over time.
 
 **Notes:** Individual skill repos remain the distribution unit for consumers who want only one skill.
 
-## 2026-07-02 — Dual-runtime skills (Cursor + Cloud Run)
+## 2026-07-02: Dual-runtime skills (Cursor + Cloud Run)
 
 **Context:** HeyEddi runs a custom agent on Cloud Run (Pydantic AI + LangChain). Skills must work locally in Cursor and in the cloud agent.
 
@@ -31,9 +31,9 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** See `docs/skills-roadmap.md` for phased build plan and `docs/cloud-agent-integration.md` for Pydantic AI / LangChain registration.
 
-**Notes:** `heyeddi-handoff` v1 uses screenshots only; Penpot export → API → MCP in later phases. **`heyeddi-design` v2 replaces impeccable** — discovery, web research, explore, wireframes, DESIGN.md, craft (Phase 5, 2026-07-02).
+**Notes:** `heyeddi-handoff` v1 uses screenshots only; Penpot export → API → MCP in later phases. **`heyeddi-design` v2 replaces impeccable**: discovery, web research, explore, wireframes, DESIGN.md, craft (Phase 5, 2026-07-02).
 
-## 2026-07-02 — All 11 skills scaffolded
+## 2026-07-02: All 11 skills scaffolded
 
 **Context:** Bootstrap of full skill library per `docs/skills-roadmap.md`.
 
@@ -43,7 +43,7 @@ Project-specific rules and preferences, appended over time.
 
 **Notes:** Scripts degrade gracefully without Playwright/gh/npm. Tune per app repo; push standalone repos via subtree when ready.
 
-## 2026-07-02 — Skill testing in hub
+## 2026-07-02: Skill testing in hub
 
 **Context:** Skills live in `skills/` as installable packages; need tests without a full Vue app.
 
@@ -51,17 +51,17 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** `./scripts/test-skills.py` before publish; extend fixture when skills need new file types; manual tests in real apps for Playwright/gh/npm.
 
-## 2026-07-02 — Agent-based skill evals
+## 2026-07-02: Agent-based skill evals
 
 **Context:** Smoke tests do not verify SKILL.md instructions or agent behavior.
 
-**Decision:** `scripts/run-evals.py` + `evals/cases/*.yaml` — copy fresh project template, install skills, run local Cursor Agent CLI (`agent` binary) with specific prompt, assert on files.
+**Decision:** `scripts/run-evals.py` + `evals/cases/*.yaml`: copy fresh project template, install skills, run local Cursor Agent CLI (`agent` binary) with specific prompt, assert on files.
 
-**Backends:** `local` (default — `agent` CLI on your PC), `cursor` (optional cursor-sdk + CURSOR_API_KEY for CI), `pydantic` (EVAL_MODEL + provider key, mirrors Cloud Run tools).
+**Backends:** `local` (default: `agent` CLI on your PC), `cursor` (optional cursor-sdk + CURSOR_API_KEY for CI), `pydantic` (EVAL_MODEL + provider key, mirrors Cloud Run tools).
 
 **Process:** `./scripts/verify-agent-cli.sh` → `./scripts/setup-evals.sh` → `uv run python scripts/run-evals.py <case-id>`. See `docs/agent-evals.md`.
 
-## 2026-07-02 — Eval Python deps via uv
+## 2026-07-02: Eval Python deps via uv
 
 **Context:** Quality gates need Playwright, Pillow, PyYAML.
 
@@ -69,7 +69,7 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** `uv sync --group evals --group evals-quality` → `uv run playwright install chromium` → `uv run python scripts/run-evals.py`.
 
-## 2026-07-02 — project-engineering multi-stack
+## 2026-07-02: project-engineering multi-stack
 
 **Context:** HeyEddi uses Vue + FastAPI or Vue + Firebase; thin eval repos had no backend tooling.
 
@@ -77,7 +77,7 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** `audit_scaffold` → `scaffold_stack --stack auto` → `ensure_npm` / `ensure_python` → implement → test.
 
-## 2026-07-02 — heyeddi-design v2 replaces impeccable
+## 2026-07-02: heyeddi-design v2 replaces impeccable
 
 **Context:** Designer wants vague briefs ("enterprise view") without design jargon; full human design flow automated.
 
@@ -91,7 +91,7 @@ Project-specific rules and preferences, appended over time.
 
 **Notes:** Web search mandatory in shape unless user opts out. Concept images when harness supports generation.
 
-## 2026-07-03 — `.heyeddi/` workspace folder
+## 2026-07-03: `.heyeddi/` workspace folder
 
 **Context:** User liked `.heyeddi/stack.json`; wanted README + central place for all skill-generated docs.
 
@@ -99,15 +99,15 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** See `docs/heyeddi-folder.md`. Eval templates and fixtures migrated to `.heyeddi/designs/`.
 
-## 2026-07-03 — DESIGN.md Decision log (single file)
+## 2026-07-03: DESIGN.md Decision log (single file)
 
-**Context:** Design skills should "talk design" like the [DESIGN.md ecosystem](https://getdesign.md/what-is-design-md) — not a separate `getdesign.md` file.
+**Context:** Design skills should "talk design" like the [DESIGN.md ecosystem](https://getdesign.md/what-is-design-md): not a separate `getdesign.md` file.
 
-**Decision:** One `.heyeddi/design.md` matching [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) density — gold example: [Superhuman DESIGN.md](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/superhuman/DESIGN.md). YAML frontmatter + token refs in prose + component variants. HeyEddi adds **Decision log** at the end. Scaffold: `scaffold/heyeddi/design.md`.
+**Decision:** One `.heyeddi/design.md` matching [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) density: gold example: [Superhuman DESIGN.md](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/superhuman/DESIGN.md). YAML frontmatter + token refs in prose + component variants. HeyEddi adds **Decision log** at the end. Scaffold: `scaffold/heyeddi/design.md`.
 
 **Process:** Normative values in frontmatter/sections; episodic handoff/polish rationale in Decision log only.
 
-## 2026-07-03 — Design foundations (always on)
+## 2026-07-03: Design foundations (always on)
 
 **Context:** User wants baseline defaults in every design: responsive, system light/dark, en+es i18n with browser detection, accessibility, dyslexia-friendly reading mode.
 
@@ -115,22 +115,22 @@ Project-specific rules and preferences, appended over time.
 
 **Defaults:** mobile-first 375/768/1024/1440; `prefers-color-scheme`; vue-i18n en+es; WCAG 2.2 AA; `data-reading-mode="dyslexia"` toggle with Atkinson Hyperlegible/OpenDyslexic.
 
-## 2026-07-03 — Handoff mockups are layout-only
+## 2026-07-03: Handoff mockups are layout-only
 
 **Context:** `heyeddi-handoff-only` eval failed partly because the judge compared button/toggle **color** to mockup PNGs. Captures also showed weak shell (flat sidebar, unstyled cards).
 
-**Decision:** Mockup PNGs define **layout regions** (shell topology, cards, field order, CTA placement, responsive structure). **Colors** come from `.heyeddi/design.md` + OpenProps tokens — never sampled from PNG pixels.
+**Decision:** Mockup PNGs define **layout regions** (shell topology, cards, field order, CTA placement, responsive structure). **Colors** come from `.heyeddi/design.md` + OpenProps tokens: never sampled from PNG pixels.
 
 **Process:**
-- `heyeddi-handoff/reference/mockup-contract.md` — normative handoff contract
+- `heyeddi-handoff/reference/mockup-contract.md`: normative handoff contract
 - App shell (`AppShell`, sidebar, top bar) required before route content when mockup shows in-app UI
-- PrimeVue + `Card`/`InputText`/`Button` — not bare unstyled forms
+- PrimeVue + `Card`/`InputText`/`Button`: not bare unstyled forms
 - Eval judges compare **hierarchy/structure**, not mockup hue
 - `handoff.json` includes `"mockup_contract": "layout_only"`
 
 **Notes:** `generate-handoff-mockups.py` palette is illustrative for eval fixtures only.
 
-## 2026-07-03 — heyeddi-handoff is designer + frontend developer
+## 2026-07-03: heyeddi-handoff is designer + frontend developer
 
 **Context:** Handoff agent must resolve layout and component architecture, not only map pixels to PrimeVue.
 
@@ -138,42 +138,42 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** `mockup-contract.md` decision table; `SKILL.md` step 6; judge checks strategy is logged.
 
-## 2026-07-03 — Mockup brief before implementation
+## 2026-07-03: Mockup brief before implementation
 
-**Context:** Eval run `heyeddi-handoff-only` produced shell components but ugly layout — agents read PNGs without a designer-eye brief (gray nav pills, poor CTA placement).
+**Context:** Eval run `heyeddi-handoff-only` produced shell components but ugly layout: agents read PNGs without a designer-eye brief (gray nav pills, poor CTA placement).
 
 **Decision:** Handoff pipeline is **interpret (agent writes brief from PNGs) → sync design.md → implement**:
-1. `mockup-brief.md` — **authored by `@heyeddi-handoff`** from `desktop.png` / `mobile.png` (designer-eye + region map). Hub `poe mockups` ships PNGs only — **not** the brief.
+1. `mockup-brief.md`: **authored by `@heyeddi-handoff`** from `desktop.png` / `mobile.png` (designer-eye + region map). Hub `poe mockups` ships PNGs only: **not** the brief.
 2. `describe_handoff.py --sync-design` merges agent brief into `.heyeddi/design.md`
 3. `load_handoff.py` sets `interpret_required: true` when brief missing
 
 **Process:** `load_handoff` → interpret PNGs → write `mockup-brief.md` → `describe_handoff --sync-design` → implement. Eval judges brief existence + layout compliance.
 
-## 2026-07-03 — Critique before improve (@heyeddi-design)
+## 2026-07-03: Critique before improve (@heyeddi-design)
 
 **Context:** Improving existing UI without diagnosing first repeats mistakes. Impeccable had `critique` → `polish`; heyeddi-design only had `polish`.
 
-**Decision:** Add **`critique`** sub-command and routing — natural language ("what's wrong", "looks bad") hits critique, not discover. **`polish` requires critique first** (`.heyeddi/docs/<feature>-critique.md`). Handoff **`interpret`** = critique of target mockups, then brief, then code.
+**Decision:** Add **`critique`** sub-command and routing: natural language ("what's wrong", "looks bad") hits critique, not discover. **`polish` requires critique first** (`.heyeddi/docs/<feature>-critique.md`). Handoff **`interpret`** = critique of target mockups, then brief, then code.
 
 **Process:** Existing UI: critique → polish. Mockup handoff: interpret (critique mockups) → brief → implement.
 
-## 2026-07-03 — Surface completeness (generalized)
+## 2026-07-03: Surface completeness (generalized)
 
 **Context:** Login eval shipped minimal fields-only UI; auth-specific `auth-surfaces.md` was too narrow.
 
-**Decision:** `reference/surface-completeness.md` — general audit (hierarchy, states, spacing, affordances, **Deferred wiring**) + archetype table (sign-in, settings, list, dashboard, …). Applies to all routes; auth is one archetype row.
+**Decision:** `reference/surface-completeness.md`: general audit (hierarchy, states, spacing, affordances, **Deferred wiring**) + archetype table (sign-in, settings, list, dashboard, …). Applies to all routes; auth is one archetype row.
 
 **Process:** shape/craft/critique → surface-completeness.md → full brief → implement UI chrome → deferred wiring table.
 
-## 2026-07-03 — Design-handoff designer vs implementer (`handoff-to-code.md`)
+## 2026-07-03: Design-handoff designer vs implementer (`handoff-to-code.md`)
 
-**Context:** Eval `08-33-59Z` wrote a decent `mockup-brief.md` but sidebar spacing wrong — no `margin-top: auto` on user chip, cramped cards. Designer prose without measurable **Implementation spec**; same pass rushed into Vue.
+**Context:** Eval `08-33-59Z` wrote a decent `mockup-brief.md` but sidebar spacing wrong: no `margin-top: auto` on user chip, cramped cards. Designer prose without measurable **Implementation spec**; same pass rushed into Vue.
 
 **Decision:** Two explicit passes in `@heyeddi-handoff`: (1) designer → brief + **Implementation spec** table (tokens, flex, PrimeVue overrides); (2) implementer → tokens → shell → `verify_handoff --phase shell` → route → `verify_handoff --phase full`. `describe_handoff --check` requires Implementation spec section.
 
-**Process:** `handoff-to-code.md` + `verify_handoff.py` — closes gap between mockup interpretation and CSS.
+**Process:** `handoff-to-code.md` + `verify_handoff.py`: closes gap between mockup interpretation and CSS.
 
-## 2026-07-03 — OpenProps optional
+## 2026-07-03: OpenProps optional
 
 **Context:** OpenProps is HeyEddi scaffold default but not mandatory for every client or brownfield repo.
 
@@ -181,7 +181,7 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** `heyeddi-design/reference/token-strategy.md`; updated `heyeddi-handoff`, `primevue-openprops-architect`, `foundations.md`.
 
-## 2026-07-03 — Eval hard gates for heyeddi-handoff (tokens + rendered spacing)
+## 2026-07-03: Eval hard gates for heyeddi-handoff (tokens + rendered spacing)
 
 **Context:** Eval `08-45-17Z` passed agentic judge with cramped UI. Root cause: circular `tokens.css` aliases (`--size-6: var(--size-6)`) zeroed padding; `verify_handoff` only matched source strings; pixel similarity 0.97 on mostly-white layouts; LLM judge trusted file contents over PNG spacing.
 
@@ -189,7 +189,7 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** `evals/lib/hard_gates.py` + `visual_capture.py` spacing checks; `heyeddi-handoff-only.yaml` verify_commands include both scripts.
 
-## 2026-07-03 — Wireframe handoff evals + theme coherence
+## 2026-07-03: Wireframe handoff evals + theme coherence
 
 **Context:** User wants to test generalization from ASCII/sketch wireframes on other pages; dark-mode mismatch (dark PrimeVue cards on light shell).
 
@@ -197,7 +197,7 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** `uv run poe eval-heyeddi-handoff-wireframe` or per-case poe tasks.
 
-## 2026-07-03 — Subagents default in skills
+## 2026-07-03: Subagents default in skills
 
 **Context:** Cursor supports Task/subagents natively; custom Cloud Run backend will mirror delegation later.
 
@@ -205,94 +205,94 @@ Project-specific rules and preferences, appended over time.
 
 **Process:** heyeddi-handoff (two-pass), heyeddi-design (critique/craft/visual), visual-auditor (worker target), project-engineering, pre-merge-gate, heyeddi-pr-respond, primevue-openprops-architect. Cloud: same prompt → `delegate_to_skill` API.
 
-## 2026-07-03 — PrimeVue Card slot gates (eval hardening)
+## 2026-07-03: PrimeVue Card slot gates (eval hardening)
 
-**Context:** `heyeddi-handoff-only` eval @ `22-07-26Z` failed with empty Profile/Notifications cards — fields were direct children of `Card`, not `<template #content>`. `verify_handoff` regex passed; judge caught it.
+**Context:** `heyeddi-handoff-only` eval @ `22-07-26Z` failed with empty Profile/Notifications cards: fields were direct children of `Card`, not `<template #content>`. `verify_handoff` regex passed; judge caught it.
 
 **Decision:** Three-layer fix:
-1. **Skill docs** — `reference/primevue-card-slots.md`; ANTI_PATTERNS in heyeddi-handoff + primevue-openprops-architect
-2. **Static verify** — `verify_handoff.py` scans all `<Card>` blocks for loose body elements
-3. **Playwright content gates** — route-specific DOM checks (settings inputs/toggle, dashboard stats/table); optional `color_schemes: [light, dark]` captures
+1. **Skill docs**: `reference/primevue-card-slots.md`; ANTI_PATTERNS in heyeddi-handoff + primevue-openprops-architect
+2. **Static verify**: `verify_handoff.py` scans all `<Card>` blocks for loose body elements
+3. **Playwright content gates**: route-specific DOM checks (settings inputs/toggle, dashboard stats/table); optional `color_schemes: [light, dark]` captures
 
 **Process:** Eval YAML adds `color_schemes`; `SettingsView.spec.ts` asserts form controls after handoff (placeholder-aware).
 
-## 2026-07-03 — engineering-excellence + ux-flow-auditor skills
+## 2026-07-03: engineering-excellence + ux-flow-auditor skills
 
 **Context:** User wanted UX task tracing (clicks, ease of use) and engineering excellence (KISS, DRY, SOLID, YAGNI) with all notes under `.heyeddi/`.
 
 **Decision:** Two new skills:
-- **`engineering-excellence`** — `init_engineering_docs`, `audit_engineering`, `append_decision` → `.heyeddi/docs/engineering/` + `engineering-audit-<date>.md`
-- **`ux-flow-auditor`** — `init_ux_flows`, `trace_flow` → `.heyeddi/docs/ux-flows/` + `ux-flows.md` index
+- **`engineering-excellence`**: `init_engineering_docs`, `audit_engineering`, `append_decision` → `.heyeddi/docs/engineering/` + `engineering-audit-<date>.md`
+- **`ux-flow-auditor`**: `init_ux_flows`, `trace_flow` → `.heyeddi/docs/ux-flows/` + `ux-flows.md` index
 
 **Process:** Chain after design/handoff; distinct from `@heyeddi-design critique` (static) and `@pre-merge-gate` (CI). Docs: `docs/heyeddi-folder.md` updated.
 
-## 2026-07-03 — Integration eval process proof (visual_audit per turn)
+## 2026-07-03: Integration eval process proof (visual_audit per turn)
 
-**Context:** `full-product-integration` step 5 had no audit screenshots until judge ran; steps 3–4 had no harness captures at all.
+**Context:** `full-product-integration` step 5 had no audit screenshots until judge ran; steps 3-4 had no harness captures at all.
 
-**Decision:** Playwright proof after **each UI turn** (3–6). Saves to `.heyeddi/audits/eval-process/<step-name>/` + rolling `manifest.json`. `hard_gates: visual` for heyeddi-design turns; `handoff` for settings only.
+**Decision:** Playwright proof after **each UI turn** (3-6). Saves to `.heyeddi/audits/eval-process/<step-name>/` + rolling `manifest.json`. `hard_gates: visual` for heyeddi-design turns; `handoff` for settings only.
 
 **Process:** `visual_audit.routes` supports multi-route turns; `references_by_route` for settings mockups on step 6.
 
-## 2026-07-03 — Agent turn scope vs harness (integration step 6 hang)
+## 2026-07-03: Agent turn scope vs harness (integration step 6 hang)
 
 **Context:** After `npm run build` exit 0, agent turn ran 20+ min (`still running` heartbeat). Build was done; agent kept running Playwright/`@visual-auditor` manually while harness also captures post-turn.
 
-**Decision:** Worker prompts for integration steps 5–6: **no dev server / Playwright in agent turn** (same as `heyeddi-handoff-only`). Harness runs visual QA + hard gates. Step 6 capped at `agent_timeout: 480`. Fixed `local_agent.py` to enforce timeout during stdout read (was only on `proc.wait` after EOF).
+**Decision:** Worker prompts for integration steps 5-6: **no dev server / Playwright in agent turn** (same as `heyeddi-handoff-only`). Harness runs visual QA + hard gates. Step 6 capped at `agent_timeout: 480`. Fixed `local_agent.py` to enforce timeout during stdout read (was only on `proc.wait` after EOF).
 
-## 2026-07-03 — Dashboard turn must not bind port 8000
+## 2026-07-03: Dashboard turn must not bind port 8000
 
 **Context:** Step 4 agent curled `:8000`, tried backend, hung 6+ min; port often owned by stale uvicorn from prior eval.
 
-**Decision:** Step 2/4 prompts: no long-running uvicorn; `useUsers()` renders with demo/empty when API down. **HeyEddi API default port is 8090** (`.heyeddi/stack.json` `api_port`) — not 8000. Harness warns on busy 8090/4173; preview picks free port 4173–4182.
+**Decision:** Step 2/4 prompts: no long-running uvicorn; `useUsers()` renders with demo/empty when API down. **HeyEddi API default port is 8090** (`.heyeddi/stack.json` `api_port`): not 8000. Harness warns on busy 8090/4173; preview picks free port 4173-4182.
 
-## 2026-07-03 — API default port 8090 (migration complete)
+## 2026-07-03: API default port 8090 (migration complete)
 
 **Context:** User asked to avoid `:8000` conflicts during integration evals.
 
 **Process:** `dev_server_info.py` default + `stack.json` `api_port`; Vite `/api` proxy → `127.0.0.1:8090`; `warn_busy_eval_ports((8090, 4173))`; scaffolds `stack-fastapi.json` / `stack-full.json`; eval templates `product-app`, `api-vue`; docs/prompts/bootstrap examples updated.
 
-## 2026-07-03 — Flutter stack (engineering agent + skills)
+## 2026-07-03: Flutter stack (engineering agent + skills)
 
-**Context:** User wanted Flutter as frontend with FastAPI, Firebase, or both — not phased.
+**Context:** User wanted Flutter as frontend with FastAPI, Firebase, or both: not phased.
 
 **Decision:** Four new skills:
-- **`flutter-engineering`** — scaffold (Riverpod, go_router, Material 3), audit, `ensure_flutter`, `dev_server_info` (web **8085**, API **8090`), `verify_build`
-- **`flutter-patterns`** — Dio/Firestore repositories + Riverpod providers
-- **`dart-type-bridger`** — OpenAPI → `lib/models/api_models.dart`
-- **`design-handoff-flutter`** — Material 3 handoff + `verify_handoff`
+- **`flutter-engineering`**: scaffold (Riverpod, go_router, Material 3), audit, `ensure_flutter`, `dev_server_info` (web **8085**, API **8090`), `verify_build`
+- **`flutter-patterns`**: Dio/Firestore repositories + Riverpod providers
+- **`dart-type-bridger`**: OpenAPI → `lib/models/api_models.dart`
+- **`design-handoff-flutter`**: Material 3 handoff + `verify_handoff`
 
 **Process:** `.heyeddi/stack.json` `"frontend": "flutter"`; `@visual-auditor` supports `FLUTTER_WEB_URL`; eval cases `flutter-engineering-scaffold`, `flutter-backend-bridger-users`; fixture `sample-flutter-app`. Default Flutter web port **8085** (`web_port` in stack.json).
 
-## 2026-07-03 — Dashboard eval gate + modern design reference
+## 2026-07-03: Dashboard eval gate + modern design reference
 
 **Context:** Integration eval failed dashboard turn: harness required 3 stat cards; agent built correct TaskFlow roster (2 stats + 4 table rows). Generic hard-gate advice blamed tokens/Card slots incorrectly. User noted outputs look like plain PrimeVue admin.
 
 **Decision:**
-1. **`visual_capture.py`** — roster dashboards pass on table rows + optional stats; 3-stat rule only for KPI wireframe pattern without table.
-2. **`hard_gates.recommendations_for_issues()`** — conditional fixes keyed to failed gate.
-3. **`step-4-dashboard.md` / judge** — align with product.md (table primary).
-4. **`heyeddi-design/reference/modern-reference.md`** — named product anchors + concrete PrimeVue/CSS techniques; required read for craft/shape on flagship routes.
+1. **`visual_capture.py`**: roster dashboards pass on table rows + optional stats; 3-stat rule only for KPI wireframe pattern without table.
+2. **`hard_gates.recommendations_for_issues()`**: conditional fixes keyed to failed gate.
+3. **`step-4-dashboard.md` / judge**: align with product.md (table primary).
+4. **`heyeddi-design/reference/modern-reference.md`**: named product anchors + concrete PrimeVue/CSS techniques; required read for craft/shape on flagship routes.
 
 **Process:** Research step cites Linear/Vercel/Stripe/etc.; craft anti-slop checklist before visual-auditor.
 
-## 2026-07-03 — heyeddi-intake skill (intake agent)
+## 2026-07-03: heyeddi-intake skill (intake agent)
 
 **Context:** User wanted an upstream agent that interprets prompts into product docs, professional mockups when none supplied, seeded briefs, and routing for downstream skills.
 
-**Decision:** New `@heyeddi-intake` skill — `load_intake`, `write_product`, `write_translation`, `ingest_mockups`, `generate_mockups`, `seed_brief`, `write_routing`. Outputs under `.heyeddi/docs/intake/` + `designs/`. Differs from hub eval mockups (PNG only): translator **seeds mockup-brief.md** for `@heyeddi-handoff`.
+**Decision:** New `@heyeddi-intake` skill: `load_intake`, `write_product`, `write_translation`, `ingest_mockups`, `generate_mockups`, `seed_brief`, `write_routing`. Outputs under `.heyeddi/docs/intake/` + `designs/`. Differs from hub eval mockups (PNG only): translator **seeds mockup-brief.md** for `@heyeddi-handoff`.
 
-**Eval:** `heyeddi-intake-intake` case + `uv run poe eval-translator` — thin template `evals/projects/translator-thin/`, assertions on product.md, skill-routing.json, settings mockups/brief.
+**Eval:** `heyeddi-intake-intake` case + `uv run poe eval-translator`: thin template `evals/projects/translator-thin/`, assertions on product.md, skill-routing.json, settings mockups/brief.
 
-## 2026-07-03 — heyeddi-orchestrator (skill discovery + routing)
+## 2026-07-03: heyeddi-orchestrator (skill discovery + routing)
 
 **Context:** Agent needs to know which HeyEddi skills exist and when to use them; Cursor cannot load all SKILL.md bodies at session start.
 
-**Decision:** New `@heyeddi-orchestrator` skill — `load_catalog` (reads `skills-registry.json` + installed SKILL.md paths), `suggest_skills` (prompt keyword triggers + merge `.heyeddi/docs/intake/skill-routing.json`). Broad SKILL.md description for proactive discovery; agent must still **read** chosen skill's SKILL.md before invoking tools.
+**Decision:** New `@heyeddi-orchestrator` skill: `load_catalog` (reads `skills-registry.json` + installed SKILL.md paths), `suggest_skills` (prompt keyword triggers + merge `.heyeddi/docs/intake/skill-routing.json`). Broad SKILL.md description for proactive discovery; agent must still **read** chosen skill's SKILL.md before invoking tools.
 
-**Process:** Session start or ambiguous task → orchestrator → read top 1–3 SKILL.md files → invoke `@skill`. Greenfield without product.md → `@heyeddi-intake` first.
+**Process:** Session start or ambiguous task → orchestrator → read top 1-3 SKILL.md files → invoke `@skill`. Greenfield without product.md → `@heyeddi-intake` first.
 
-## 2026-07-04 — Skills completeness pass (except Penpot)
+## 2026-07-04: Skills completeness pass (except Penpot)
 
 **Context:** Audit found 8 PARTIAL skills vs roadmap; user requested full implementation.
 
@@ -308,9 +308,9 @@ Project-specific rules and preferences, appended over time.
 
 **Deferred:** Penpot mode (`heyeddi-handoff/reference/penpot-mode.md` Phase 6 only).
 
-**Verify:** `python3 scripts/test-skills.py` — 210/210 passed.
+**Verify:** `python3 scripts/test-skills.py`: 210/210 passed.
 
-## 2026-07-04 — Eval case cleanup (no legacy)
+## 2026-07-04: Eval case cleanup (no legacy)
 
 **Context:** Too many overlapping poe tasks (composite bundles, wireframe cases, deprecated craft login, 2-turn combined handoff).
 
@@ -318,36 +318,36 @@ Project-specific rules and preferences, appended over time.
 
 **Removed poe tasks:** `eval-case`, `eval-design`, `eval-heyeddi-design`, `eval-heyeddi-handoff-combined`, `eval-heyeddi-design-craft`, all wireframe tasks.
 
-**Kept:** 15 cases — one `uv run poe eval-*` each + `eval-integration`, `eval-all`, `eval-list`, `eval-dry-run`. See `evals/README.md`.
+**Kept:** 15 cases: one `uv run poe eval-*` each + `eval-integration`, `eval-all`, `eval-list`, `eval-dry-run`. See `evals/README.md`.
 
 **Notes:** Auto-load is **catalog + routing**, not literal injection of every skill body. Works with Cursor skill discovery and Cloud Run tool registration.
 
-**Update (same day):** `suggest_skills` is **fully agnostic** — scores every installed skill from SKILL.md description + name tokens + optional `reference/triggers.md`. Removed hardcoded `TRIGGER_PATTERNS` map.
+**Update (same day):** `suggest_skills` is **fully agnostic**: scores every installed skill from SKILL.md description + name tokens + optional `reference/triggers.md`. Removed hardcoded `TRIGGER_PATTERNS` map.
 
-**Update (same day):** **`write_skills_index`** writes `.heyeddi/skills-index.json` + `skills-index.md`. `load_catalog` / `suggest_skills` read the cache by default — rescan with `--refresh` after skill installs. Agent reads one SKILL.md, not all.
+**Update (same day):** **`write_skills_index`** writes `.heyeddi/skills-index.json` + `skills-index.md`. `load_catalog` / `suggest_skills` read the cache by default: rescan with `--refresh` after skill installs. Agent reads one SKILL.md, not all.
 
-## 2026-07-04 — Audience-driven design excellence (all layers)
+## 2026-07-04: Audience-driven design excellence (all layers)
 
-**Context:** User wanted world-class design tied to product needs and target audiences — beyond `modern-reference.md` technique layer.
+**Context:** User wanted high-quality design tied to product needs and target audiences: beyond `modern-reference.md` technique layer.
 
 **Decision:** Ten-layer stack documented in `docs/design-excellence.md`:
 
-1. `@heyeddi-intake` — extended `product.md` schema: **Personas**, **Per-route intent**, Competitors, Anti-audience, Voice & tone
-2. `@heyeddi-orchestrator` — skills index cache
-3. `@heyeddi-design discover/shape/research` — audience sections in brief + research
-4. `reference/audience-design.md` — persona → aesthetic direction map
-5. `reference/audience-fit.md` — post-build rubric (PASS/REVISE)
-6. `load_context.py` — `audience_ready` + `audience_blocker` gates
-7. `@heyeddi-handoff` — reads product personas before interpret pass
-8. `docs/clarify-before-act.md` — hub-wide ask-before-guess convention
-9. Integration eval **step 0 intake** + richer `product-app` product.md; steps 3–4 require shape + audience-fit
+1. `@heyeddi-intake`: extended `product.md` schema: **Personas**, **Per-route intent**, Competitors, Anti-audience, Voice & tone
+2. `@heyeddi-orchestrator`: skills index cache
+3. `@heyeddi-design discover/shape/research`: audience sections in brief + research
+4. `reference/audience-design.md`: persona → aesthetic direction map
+5. `reference/audience-fit.md`: post-build rubric (PASS/REVISE)
+6. `load_context.py`: `audience_ready` + `audience_blocker` gates
+7. `@heyeddi-handoff`: reads product personas before interpret pass
+8. `docs/clarify-before-act.md`: hub-wide ask-before-guess convention
+9. Integration eval **step 0 intake** + richer `product-app` product.md; steps 3-4 require shape + audience-fit
 10. `heyeddi-intake-intake` asserts Personas + Per-route intent sections
 
 **Process:** Read `.heyeddi/product.md` personas → pick direction row → brief with Audience section → craft → audience-fit critique → polish. Decision log cites persona + pattern borrowed.
 
-**Notes:** World-class quality still requires running the full pipeline — skipping shape caps at "nice admin UI."
+**Notes:** Top quality still requires running the full pipeline: skipping shape caps at "nice admin UI."
 
-## 2026-07-04 — Spec-compliance fixes after agent eval audit
+## 2026-07-04: Spec-compliance fixes after agent eval audit
 
 **Context:** 15 agent evals; 4 failed due to skill/eval gaps (not just agent mistakes).
 
@@ -362,89 +362,89 @@ Project-specific rules and preferences, appended over time.
 
 **Verify:** `python3 scripts/test-skills.py` (210/210) + `pytest tests/test_spec_compliance_fixes.py`
 
-## 2026-07-06 — Product-translator mockups: wireframe-first, not cookie-cutter PNGs
+## 2026-07-06: Product-translator mockups: wireframe-first, not cookie-cutter PNGs
 
 **Context:** `@heyeddi-intake` always called `generate_mockups` → identical settings-app-shell PNG with only product name changed. Wrong for varied products/routes.
 
 **Decision:**
 - **User images** → `ingest_mockups` (screenshots, sketches, competitor refs)
-- **No images (default)** → `generate_wireframe` — layout from `product-translation.json` page purpose (marketing, login, dashboard table, settings, generic)
+- **No images (default)** → `generate_wireframe`: layout from `product-translation.json` page purpose (marketing, login, dashboard table, settings, generic)
 - **PNG preset** → `generate_mockups --confirm-preset-match` only as last resort when preset matches route
 - `generate_mockups` without `--confirm-preset-match` **refuses** with hint
 
 **Docs:** `reference/mockup-strategy.md`, updated `mockup-quality.md`, pipeline, SKILL v1.2.0.
 
-## 2026-07-06 — Product-translator: no PNGs in skill package
+## 2026-07-06: Product-translator: no PNGs in skill package
 
 **Context:** Skill should not ship sample PNGs or Pillow template drawers. Testing PNGs belong in hub eval tooling (`poe mockups`), not distributable skills.
 
 **Decision:**
 - Removed `generate_mockups.py` and `_layout_mockups.py` from `skills/heyeddi-intake/`
-- Added `prepare_mockup_prompts.py` + `reference/ai-mockup-images.md` — agent generates PNGs with native image tool when needed
+- Added `prepare_mockup_prompts.py` + `reference/ai-mockup-images.md`: agent generates PNGs with native image tool when needed
 - Hub `scripts/generate-handoff-mockups.py` remains eval/fixture-only
 - SKILL v1.3.0
 
 **Verify:** `python3 scripts/test-skills.py` heyeddi-intake passes; no `.png` under `skills/`.
 
-## 2026-07-06 — HeyEddi-design: project-specific ambition bar
+## 2026-07-06: HeyEddi-design: project-specific ambition bar
 
 **Context:** Designer on test projects only pushed harder when user explicitly asked for "artistic / top notch" design.
 
-**Decision:** `reference/design-ambition.md` — impressive craft is **default** for flagship routes. Brief requires **Design signature** section; craft ends with ambition checklist; audience-fit adds **Visual distinction** dimension (≥4 when high fidelity). User saying "make it artistic" confirms the bar, does not replace `shape`/signature work.
+**Decision:** `reference/design-ambition.md`: impressive craft is **default** for flagship routes. Brief requires **Design signature** section; craft ends with ambition checklist; audience-fit adds **Visual distinction** dimension (≥4 when high fidelity). User saying "make it artistic" confirms the bar, does not replace `shape`/signature work.
 
 **Verify:** shape → craft on flagship route; Decision log cites memorable detail per project.
 
-## 2026-07-06 — Visual-auditor v2: WCAG contrast + motion-over-text
+## 2026-07-06: Visual-auditor v2: WCAG contrast + motion-over-text
 
-**Context:** Auditor only captured screenshots — missed green-on-green text and light gray copy over animated gradients.
+**Context:** Auditor only captured screenshots: missed green-on-green text and light gray copy over animated gradients.
 
-**Decision:** `audit_contrast.py` + in-page `contrast_probe.js` — WCAG AA ratios, same-hue detection, motion/background-image behind text. Reports under `.heyeddi/audits/visual/`. `pre-merge-gate` runs contrast audit with `--check`. `capture_screenshots --check` chains contrast.
+**Decision:** `audit_contrast.py` + in-page `contrast_probe.js`: WCAG AA ratios, same-hue detection, motion/background-image behind text. Reports under `.heyeddi/audits/visual/`. `pre-merge-gate` runs contrast audit with `--check`. `capture_screenshots --check` chains contrast.
 
 **Verify:** `pytest tests/test_contrast_audit.py`; fixture `contrast-violations.html` must report errors.
 
-## 2026-07-06 — Visual-auditor paths under `.heyeddi/audits/visual/`
+## 2026-07-06: Visual-auditor paths under `.heyeddi/audits/visual/`
 
 **Context:** Screenshots wrote to repo-root `.visual-audit/` while contrast reports used `.heyeddi/audits/visual/`.
 
-**Decision:** All `@visual-auditor` artifacts under `.heyeddi/audits/visual/` — screenshots in `screenshots/` subdirectory. Eval harness mirrors to same path. Repo-root `.visual-audit/` is legacy read-only.
+**Decision:** All `@visual-auditor` artifacts under `.heyeddi/audits/visual/`: screenshots in `screenshots/` subdirectory. Eval harness mirrors to same path. Repo-root `.visual-audit/` is legacy read-only.
 
-## 2026-07-06 — Visual-auditor v3: review, fix, document
+## 2026-07-06: Visual-auditor v3: review, fix, document
 
 **Context:** User wanted auditor to review screenshots against product + design spec, fix issues immediately, not only report them.
 
-**Decision:** v3.0.0 — `load_visual_context`, `append_fix_log`, `finalize_visual_review`; `reference/visual-review.md` + `fix-loop.md`. Removed `disable-model-invocation`. Agent reads PNGs, edits Vue/CSS, logs each fix, re-verifies contrast.
+**Decision:** v3.0.0: `load_visual_context`, `append_fix_log`, `finalize_visual_review`; `reference/visual-review.md` + `fix-loop.md`. Removed `disable-model-invocation`. Agent reads PNGs, edits Vue/CSS, logs each fix, re-verifies contrast.
 
-## 2026-07-06 — Product-manager skill (holistic PM orchestrator)
+## 2026-07-06: Product-manager skill (whole-product PM orchestrator)
 
-**Context:** User wanted PM beyond backlog — verify product works, is useful, suggest better alternatives; delegate UX, design, engineering research in code.
+**Context:** User wanted PM beyond backlog: verify product works, is useful, suggest better alternatives; delegate UX, design, engineering research in code.
 
-**Decision:** New `@heyeddi-product` — `load_product_context`, `audit_product`, `write_feature_spec`, `check_features`, `write_review_plan`, `verify_product`. Artifacts under `.heyeddi/docs/product/`. Delegates to `@ux-flow-auditor`, `@heyeddi-design critique`, `@visual-auditor`, `@engineering-excellence` per `reference/delegation.md`.
+**Decision:** New `@heyeddi-product`: `load_product_context`, `audit_product`, `write_feature_spec`, `check_features`, `write_review_plan`, `verify_product`. Artifacts under `.heyeddi/docs/product/`. Delegates to `@ux-flow-auditor`, `@heyeddi-design critique`, `@visual-auditor`, `@engineering-excellence` per `reference/delegation.md`.
 
 **Chain:** `@heyeddi-intake` → `@heyeddi-product` audit + specs → design/engineering → PM review → `@pre-merge-gate`.
 
-## 2026-07-07 — Cross-pillar workflow sync (product · UX · design)
+## 2026-07-07: Cross-pillar workflow sync (product · UX · design)
 
-**Context:** User wanted product, UX, and design flows connected — when one runs, others opine and maintain docs.
+**Context:** User wanted product, UX, and design flows connected: when one runs, others opine and maintain docs.
 
-**Decision:** `@heyeddi-orchestrator` v1.2.0 — `init_workflow_sync`, `load_workflow_context`, `append_pillar_opinion`. Artifacts under `.heyeddi/docs/workflow/opinions/`. Mandatory bookends in `@heyeddi-product`, `@ux-flow-auditor`, `@heyeddi-design`. Hub `docs/cross-pillar-workflow.md`.
+**Decision:** `@heyeddi-orchestrator` v1.2.0: `init_workflow_sync`, `load_workflow_context`, `append_pillar_opinion`. Artifacts under `.heyeddi/docs/workflow/opinions/`. Mandatory bookends in `@heyeddi-product`, `@ux-flow-auditor`, `@heyeddi-design`. Hub `docs/cross-pillar-workflow.md`.
 
-## 2026-07-07 — Two PR workflows (submission review vs respond)
+## 2026-07-07: Two PR workflows (submission review vs respond)
 
-**Context:** User needed distinct skills: (1) review submitted PR on committed diff only — product, docs, engineering, tests; (2) respond to human review comments with fix-vs-decline and re-gate.
+**Context:** User needed distinct skills: (1) review submitted PR on committed diff only: product, docs, engineering, tests; (2) respond to human review comments with fix-vs-decline and re-gate.
 
 **Decision:**
-- **`@heyeddi-pr-review`** (new) — `fetch_pr_context`, `check_doc_drift`, `audit_pr_changes`, `write_pr_review`, `verify_pr_review` → `.heyeddi/docs/pr-<N>-review.md`
-- **`@heyeddi-pr-respond`** (v1.1) — adds `verify_response`, `reference/workflow.md`, mandatory `pre_merge_gate` before summary
+- **`@heyeddi-pr-review`** (new): `fetch_pr_context`, `check_doc_drift`, `audit_pr_changes`, `write_pr_review`, `verify_pr_review` → `.heyeddi/docs/pr-<N>-review.md`
+- **`@heyeddi-pr-respond`** (v1.1): adds `verify_response`, `reference/workflow.md`, mandatory `pre_merge_gate` before summary
 
 **Process:** See `docs/pr-workflows.md`. Evals: `uv run poe eval-pr-submission`, `uv run poe eval-pr`.
 
-**Notes:** Submission review = reviewer/QA; responder = PR author after feedback. Default output is `.heyeddi/docs/` — post `gh pr review` only when user asks.
+**Notes:** Submission review = reviewer/QA; responder = PR author after feedback. Default output is `.heyeddi/docs/`: post `gh pr review` only when user asks.
 
-## 2026-07-07 — v2 skill naming plan (`heyeddi-*` spine)
+## 2026-07-07: v2 skill naming plan (`heyeddi-*` spine)
 
 **Context:** User asked whether to rename all skills to `heyeddi-*` or only main workflows.
 
-**Decision:** **Spine only** (6–8 renames), not all 22. Canonical v2 names: `heyeddi-intake`, `heyeddi-product`, `heyeddi-orchestrator`, `heyeddi-handoff`, `heyeddi-pr-review`, `heyeddi-pr-respond` (+ optional `heyeddi-ship-gate`, `heyeddi-handoff-flutter`). Guardrails stay descriptive (`verify-build`, `engineering-excellence`, …).
+**Decision:** **Spine only** (6-8 renames), not all 22. Canonical v2 names: `heyeddi-intake`, `heyeddi-product`, `heyeddi-orchestrator`, `heyeddi-handoff`, `heyeddi-pr-review`, `heyeddi-pr-respond` (+ optional `heyeddi-ship-gate`, `heyeddi-handoff-flutter`). Guardrails stay descriptive (`verify-build`, `engineering-excellence`, …).
 
 **Migration:** v2.0.0 ships alias stub folders (symlink to canonical) + `skills-registry.json` `aliases` map + `migrate-skill-names-v2.py` for `.heyeddi/` routing JSON. Remove aliases in v3.0.0.
 
@@ -454,70 +454,70 @@ Project-specific rules and preferences, appended over time.
 
 **Notes:** `@heyeddi-design` unchanged. Typing `@heyeddi` in Cursor surfaces the pipeline spine. v1 names remain as deprecated alias folders until v3.0.0.
 
-## 2026-07-07 — Auto `.heyeddi/` migration on session start
+## 2026-07-07: Auto `.heyeddi/` migration on session start
 
-**Context:** User expected reinstall to update `.heyeddi/` — skills should migrate project artifacts, not a separate manual script.
+**Context:** User expected reinstall to update `.heyeddi/`: skills should migrate project artifacts, not a separate manual script.
 
-**Decision:** `@heyeddi-orchestrator` v2.0.0 — `migrate_heyeddi`, `sync_heyeddi_workspace`; `write_skills_index` and `load_catalog --refresh` run migration first. Writes `.heyeddi/sync-state.json` + `docs/skill-name-migration-2.0.0.json`.
+**Decision:** `@heyeddi-orchestrator` v2.0.0: `migrate_heyeddi`, `sync_heyeddi_workspace`; `write_skills_index` and `load_catalog --refresh` run migration first. Writes `.heyeddi/sync-state.json` + `docs/skill-name-migration-2.0.0.json`.
 
 **Process:** Session start → `sync_heyeddi_workspace`. After `npx skills add` → same. Hub `migrate-skill-names-v2.py` delegates to skill script.
 
-## 2026-07-07 — Zero-command auto-sync; tool renamed to `sync`
+## 2026-07-07: Zero-command auto-sync; tool renamed to `sync`
 
-**Context:** User should not need to run a manual orchestrator command — any HeyEddi skill invocation should keep `.heyeddi/` current.
+**Context:** User should not need to run a manual orchestrator command: any HeyEddi skill invocation should keep `.heyeddi/` current.
 
 **Decision:** `_auto_sync.ensure_heyeddi()` runs from every spine skill's `resolve_project_root()` (orchestrator, intake, product, handoff, design, pr-review, pr-respond). Renamed `sync_heyeddi_workspace` → `sync` (`sync.py`).
 
 **Process:** Reinstall skills → use any `@heyeddi-*` skill normally; migration + index refresh happen automatically. Optional explicit full sync: `@heyeddi-orchestrator` `sync`.
 
-## 2026-07-08 — Scanner hardening (Snyk/Socket) — v2.0.2
+## 2026-07-08: Scanner hardening (Snyk/Socket), v2.0.2
 
 **Context:** skills.sh scanners flagged SSRF (urllib on caller URL) and subprocess-spawn capability on several skills.
 
 **Decision:** No `# nosec`. Real mitigations only:
-- `sync_openapi.py` (dart + backend type-bridgers): `validate_fetch_url()` sanitizer gate — http/https only, no embedded creds, host required; use explicit `urllib.request.Request(url, method="GET")`.
-- `run_command()` (all `_skill_cli.py`) + direct `npm` call: resolve exe via `shutil.which()` to absolute path, `shell=False` explicit. Python spawns already use `sys.executable` (absolute) — left as-is.
+- `sync_openapi.py` (dart + backend type-bridgers): `validate_fetch_url()` sanitizer gate: http/https only, no embedded creds, host required; use explicit `urllib.request.Request(url, method="GET")`.
+- `run_command()` (all `_skill_cli.py`) + direct `npm` call: resolve exe via `shutil.which()` to absolute path, `shell=False` explicit. Python spawns already use `sys.executable` (absolute): left as-is.
 
-**Also fixed:** `heyeddi-pr-respond` / `heyeddi-pr-review` `_skill_cli.py` had lost `run_command` when the auto-sync variant was copied over them — re-added (hardened). This restored 8 failing PR-fetch smoke tests → 392/392.
+**Also fixed:** `heyeddi-pr-respond` / `heyeddi-pr-review` `_skill_cli.py` had lost `run_command` when the auto-sync variant was copied over them: re-added (hardened). This restored 8 failing PR-fetch smoke tests → 392/392.
 
-## 2026-07-08 — Orchestrator: remove in-skill subprocess spawn — v2.0.3
+## 2026-07-08: Orchestrator: remove in-skill subprocess spawn, v2.0.3
 
 **Context:** `heyeddi-orchestrator` `sync.py` spawned its own `init_workflow_sync.py` via `subprocess.run([sys.executable, ...])` → Snyk Med Risk.
 
 **Decision:** Extract `scaffold_workflow(root, force=)` in `init_workflow_sync.py`; `sync.py` imports and calls it in-process. Orchestrator now has **zero** subprocess/urllib/eval. Cross-*skill* spawns elsewhere keep `sys.executable` (needed for isolation).
 
-**Note:** skills.sh scan lags releases — capability-only flags (Socket on handoff/intake, Gen on pre-merge-gate) are benign and irreducible without `# nosec`.
+**Note:** skills.sh scan lags releases: capability-only flags (Socket on handoff/intake, Gen on pre-merge-gate) are benign and irreducible without `# nosec`.
 
-## 2026-07-08 — skills.sh page polish — v2.0.4
+## 2026-07-08: skills.sh page polish, v2.0.4
 
 **Context:** skills.sh org page GitHub button points at `github.com/heyeddi-com` (not `/skills`); 28 skills listed due to v1 alias stubs.
 
 **Decision:**
-- Root `skills.sh.json` — Pipeline / Engineering / Design & QA groupings on [skills.sh/heyeddi-com/skills](https://www.skills.sh/heyeddi-com/skills).
+- Root `skills.sh.json`: Pipeline / Engineering / Design & QA groupings on [skills.sh/heyeddi-com/skills](https://www.skills.sh/heyeddi-com/skills).
 - v1 alias folders (`design-handoff`, `product-translator`, …) → `metadata.internal: true` in SKILL.md (hidden from `npx skills add --list`).
 - Canonical install command in docs: `npx skills add HeyEddi-com/skills --skill <name>` (hub, not per-skill standalone repos).
 
 **Process:** Install counts = Vercel `npx skills add` only. Share repo page URL, not org page. Re-run `npx skills add` after release to refresh skills.sh cache. No custom HeyEddi usage telemetry in skills.
 
-## 2026-07-08 — Next-skill handoff at task complete — v2.0.6
+## 2026-07-08: Next-skill handoff at task complete, v2.0.6
 
 **Context:** User wants a copy-paste **prompt** for the next `@skill` when a pipeline task finishes (e.g. `@heyeddi-design craft /settings`), not `python scripts/...` paths.
 
 **Decision:**
 - `suggest_next_skill.py` returns `prompt` + `user_block` with **Prompt:** line for chat.
 - `--mode` (shape, craft, audit, sync, …) refines chain (e.g. design shape → craft).
-- 12 pipeline SKILL.md files — task complete only; utilities stripped.
-- `reference/next-skill-handoff.md` — examples table.
+- 12 pipeline SKILL.md files: task complete only; utilities stripped.
+- `reference/next-skill-handoff.md`: examples table.
 
-## 2026-07-14 — Remove deprecated v1 skill alias folders
+## 2026-07-14: Remove deprecated v1 skill alias folders
 
 **Context:** User asked to remove all deprecated skill names (v1 aliases from v2 rename).
 
 **Planned (awaiting approval):** Delete the 6 deprecated alias install folders (`product-translator`, `product-manager`, `skill-orchestrator`, `design-handoff`, `pr-submission-review`, `pr-review-responder`) from `skills/`, mirrored `.agents/skills/` and `plugins/heyeddi-skills/skills/`. Update `skills.sh.json`, `skills-lock.json`, README/docs counts. Keep `skill-name-aliases.json` + migrate path so consumer `.heyeddi/` artifacts still remap old names (unless user requests full alias-map removal). Leave `design-handoff-flutter` (not deprecated). Leave historical `evals/runs/` snapshots untouched.
 
-## 2026-07-14 — v3.0.0 remove all v1 skill aliases
+## 2026-07-14: v3.0.0 remove all v1 skill aliases
 
-**Context:** User approved full removal — alias folders, alias map, migrate path, and bootstrap scripts. Only they use these skills.
+**Context:** User approved full removal: alias folders, alias map, migrate path, and bootstrap scripts. Only they use these skills.
 
 **Decision / Executed:**
 - Deleted 6 alias stub folders from `skills/` and `.agents/skills/` (`product-translator`, `product-manager`, `skill-orchestrator`, `design-handoff`, `pr-submission-review`, `pr-review-responder`). Kept `design-handoff-flutter`.
@@ -527,7 +527,7 @@ Project-specific rules and preferences, appended over time.
 - Regenerated fixture skills index; reinstalled `.agents/skills` from hub.
 - Left historical `evals/runs/` and `learnings.md` history entries as-is.
 
-## 2026-07-15 — Run tests before release (missed on v3.0.0)
+## 2026-07-15: Run tests before release (missed on v3.0.0)
 
 **Context:** Shipped v3.0.0 without full pytest / `poe test` / agent evals; user asked afterward.
 
@@ -536,43 +536,43 @@ Project-specific rules and preferences, appended over time.
 2. `uv run poe test` (skill smoke)
 3. At least `uv run poe eval-orchestrator` (or `eval-all` for major)
 
-**Note:** `evals/prompts/design-handoff/` must match case paths (`heyeddi-handoff/`) — rename drift broke `eval-list` after v2 rename.
+**Note:** `evals/prompts/design-handoff/` must match case paths (`heyeddi-handoff/`): rename drift broke `eval-list` after v2 rename.
 
-## 2026-07-15 — Full verification after v3.0.0
+## 2026-07-15: Full verification after v3.0.0
 
 **Ran:** pytest 15/15; `poe test` 293/293; all 16 agent evals eventually PASS.
 
 **Issues found:**
-1. `evals/prompts/design-handoff/` vs cases expecting `heyeddi-handoff/` — fixed by rename (uncommitted at time of run).
-2. `eval-all | tee` without `pipefail` reported exit 0 after judge `RuntimeError` timeout — suite aborted mid-run.
+1. `evals/prompts/design-handoff/` vs cases expecting `heyeddi-handoff/`: fixed by rename (uncommitted at time of run).
+2. `eval-all | tee` without `pipefail` reported exit 0 after judge `RuntimeError` timeout: suite aborted mid-run.
 3. Default judge timeout 300s too low for some cases; `--judge-timeout 900` fixed retries.
 4. `design-handoff-flutter-settings` flaked once (missing `verify_tokens` in evidence); passed on retry.
 
 **Improvements to pursue:** release checklist script; `set -o pipefail` in eval docs/poe; raise default `EVAL_JUDGE_TIMEOUT`; structure test that prompt_file paths exist; continue-on-error for eval-all.
 
-## 2026-07-15 — Release gate tooling (v3.0.1)
+## 2026-07-15: Release gate tooling (v3.0.1)
 
 **Implemented:** `scripts/release-gate.sh`, default judge timeout 900s, `--all` continues on case errors, eval prompt-path pytest, `evals/runs/` gitignored, poe `eval-all` / `release-gate` tasks with `PYTHONUNBUFFERED=1`.
 
-## 2026-07-15 — Snyk auto-sync / prompt-injection hardening
+## 2026-07-15: Snyk auto-sync / prompt-injection hardening
 
 **Context:** skills.sh / Snyk flagged `_auto_sync.py` as high-risk (search home + env paths, `sys.path.insert`, dynamic import) and `load_context.py` for untrusted PRODUCT.md/DESIGN.md ingestion.
 
 **Triage:**
-- **Real:** auto-sync path search + `sys.path` mutation — supply-chain shaped.
+- **Real:** auto-sync path search + `sys.path` mutation: supply-chain shaped.
 - **Stale:** findings mentioning `_heyeddi_migrate.py` (removed in v3.0.0).
 - **Mostly capability FP:** agent running `npm test` / skill scripts (expected for engineering skills).
 - **Prompt injection:** legitimate risk surface; wrap project docs as data.
 
 **Fix:** Allowlist-only orchestrator script roots (skill sibling + project `.agents`/`.cursor` only); load `_catalog.py` via `importlib.util.spec_from_file_location` (no `sys.path`); wrap product/design markdown in `UNTRUSTED_PROJECT_DOC` delimiters.
 
-## 2026-07-15 — OpenAPI sync local-file only (Snyk third-party content)
+## 2026-07-15: OpenAPI sync local-file only (Snyk third-party content)
 
 **Context:** Snyk flagged `sync_openapi.py --url` as third-party content exposure (fetch → JSON → agent context).
 
 **Decision:** Remove all network fetch from backend + dart type-bridgers. Sync only from a local file under project root (`openapi.json` or `--openapi <relpath>`). SKILL.md instructs agents to refresh with `curl … -o openapi.json` when needed. Stdout remains a summary (counts/names), never raw schema dump.
 
-## 2026-07-15 — Handoff brief third-party content wrapping
+## 2026-07-15: Handoff brief third-party content wrapping
 
 **Context:** Snyk flagged `load_handoff.py` reading outsider-authored `mockup-brief.md` (and possibly wireframe/design) into agent JSON as third-party content exposure.
 
@@ -583,7 +583,7 @@ Project-specific rules and preferences, appended over time.
 
 Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are delimited as `UNTRUSTED_PROJECT_DOC` with an explicit data-only note. Paths remain unwrapped.
 
-## 2026-07-15 — PR review third-party content wrapping
+## 2026-07-15: PR review third-party content wrapping
 
 **Context:** Snyk flagged `fetch_pr_context` (`gh pr view` / `gh pr diff`) ingesting outsider PR title/body/author/file list into JSON that `write_pr_review` embeds in `.heyeddi/docs/pr-<N>-review.md`.
 
@@ -591,7 +591,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 - `heyeddi-pr-review`: wrap title/body/author (+ `changed_files_text`) as `UNTRUSTED_EXTERNAL_CONTENT`; report H1 is only `PR #N` (title not in heading); metadata section is DATA-only.
 - `heyeddi-pr-respond`: wrap comment/review `body` fields the same way in `fetch_pr_comments`.
 
-## 2026-07-15 — Product skill: auto-sync tighten + prompt boundaries + verify allowlist
+## 2026-07-15: Product skill: auto-sync tighten + prompt boundaries + verify allowlist
 
 **Context:** Scanner flagged (1) `_auto_sync` loading catalog from project `.agents`/`.cursor`, (2) `load_product_context` / `audit_product` / `check_features` ingesting `product.md` + feature specs without boundaries, (3) `verify_product` subprocess as execution vector.
 
@@ -600,7 +600,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 2. Product scripts emit `product_md_text` / `feature_spec_texts` / wrapped `purpose` with `UNTRUSTED_PROJECT_DOC`.
 3. `verify_product` only execs allowlisted sibling basenames (`audit_product.py`, `check_features.py`) with fixed `--check` flag filtering.
 
-## 2026-07-15 — PR respond comment fetch wrapping (reinforced)
+## 2026-07-15: PR respond comment fetch wrapping (reinforced)
 
 **Context:** Snyk flagged `fetch_pr_comments.py` emitting outsider review/discussion/inline bodies into the agent “analyze vs PR goals” step.
 
@@ -609,7 +609,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 - Explicit DATA-only notes in SKILL.md / workflow.md / ANTI_PATTERNS
 - `tests/test_fetch_pr_comments_untrusted.py`
 
-## 2026-07-15 — Handoff SUSPICIOUS trust-chain (triage + docs)
+## 2026-07-15: Handoff SUSPICIOUS trust-chain (triage + docs)
 
 **Context:** Scanner marked screenshot-to-code handoff SUSPICIOUS: untrusted design inputs + code/shell subagents + chained skills without stated provenance. No exfiltration/malware shown.
 
@@ -617,11 +617,11 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Mitigations documented/enforced:**
 - Existing `UNTRUSTED_PROJECT_DOC` wraps on brief/wireframe/design excerpts
-- New `heyeddi-handoff/reference/trust-boundaries.md` — DATA-only inputs, Pass 1/2 separation, same-install-tree skill provenance allowlist
+- New `heyeddi-handoff/reference/trust-boundaries.md`: DATA-only inputs, Pass 1/2 separation, same-install-tree skill provenance allowlist
 - Subagent worker trust preamble; ANTI_PATTERNS against mockup-driven installs
 - Flutter handoff SKILL.md points at the same policy
 
-## 2026-07-15 — CI skill security: skill-trust (+ skills-check), not skills.sh CLI
+## 2026-07-15: CI skill security: skill-trust (+ skills-check), not skills.sh CLI
 
 **Context:** User asked to run skills.sh-adjacent security tools in CI. `npx skills` has no test/audit command.
 
@@ -632,7 +632,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Added:** `scripts/skill-security-scan.sh`, root `package.json` + lockfile, `.github/workflows/ci.yml` (pytest + smoke + scan), `poe skill-security`, release-gate step.
 
-## 2026-07-15 — v3.0.2 security hardening + CI + release
+## 2026-07-15: v3.0.2 security hardening + CI + release
 
 **Shipped:** Untrusted-doc wraps (handoff, design, product, PR review/respond, orchestrator opinions), auto-sync skill-tree-only allowlist, OpenAPI local-only, verify_product allowlist, trust-boundaries docs, CI skill-security scans. Merge PR #1 → tag **v3.0.2**.
 
@@ -649,7 +649,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 ## 2026-07-16: Prose anti-slop (no em dashes / AI filler)
 
-**Context:** Skills had UI anti-slop (`modern-reference.md`) and Cursor `deslop` for code, but no shared ban on em dashes or AI prose filler. Skill docs themselves were full of `—`.
+**Context:** Skills had UI anti-slop (`modern-reference.md`) and Cursor `deslop` for code, but no shared ban on em dashes or AI prose filler. Skill docs themselves were full of em dashes.
 
 **Decision:**
 - Canonical: `docs/prose-anti-slop.md`
@@ -665,7 +665,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 **Context:** User demanded stronger prevention of obvious AI slop beyond em dashes.
 
 **Expanded `docs/prose-anti-slop.md` / every `context/PROSE_ANTI_SLOP.md` with:**
-- Soft-focus verbs/nouns/adjectives (delve, tapestry, realm, robust, seamless, …)
+- Soft-focus verbs, nouns, and adjectives (the list lives in `verify_prose.py`)
 - Corporate sludge and chatbot residue
 - Blog filler phrases and fake profundity patterns
 - Structure bans (emoji theater, triad padding, hedge stacks)
@@ -686,11 +686,11 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Decision:** Always post the review to GitHub via `gh pr review` when the submission review completes (Approve / Request changes / Block mapped to `--approve` / `--request-changes` / comment+block rationale). Keep the full report in `.heyeddi/docs/pr-<N>-review.md`.
 
-**Exception:** GitHub forbids approving your own PR — post `--comment` with the same verdict text and note that a second reviewer must click Approve if branch rules require it.
+**Exception:** GitHub forbids approving your own PR: post `--comment` with the same verdict text and note that a second reviewer must click Approve if branch rules require it.
 
 **Process:** After `verify_pr_review --check` passes, run `gh pr review <N>` with the verdict; do not wait for a separate "post it" ask.
 
-## 2026-07-24 — Prose hard gate (`verify_prose.py`)
+## 2026-07-24: Prose hard gate (`verify_prose.py`)
 
 **Context:** User still saw em dashes in website copy despite July 2026 advisory `PROSE_ANTI_SLOP` rules. Agents skipped optional checklist items.
 
@@ -704,7 +704,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Verify:** `uv run pytest tests/test_verify_prose.py`; `python3 scripts/test-skills.py heyeddi-design`.
 
-## 2026-07-24 — skills.sh official listing hygiene
+## 2026-07-24: skills.sh official listing hygiene
 
 **Context:** User wants HeyEddi skills listed as official on skills.sh (beyond telemetry indexing).
 
@@ -717,7 +717,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 **Process:** Run frontmatter sync on every hub version bump; drive installs via pinned `npx skills add` URLs; open vercel-labs/skills PR after traction.
 
 
-## 2026-08-05 — PR respond: hard-gate individual thread replies
+## 2026-08-05: PR respond: hard-gate individual thread replies
 
 **Context:** `@heyeddi-pr-respond` (and the PR review handler rule) often posted a summary or marked tracking RESPONDED without posting a reply in each GitHub comment thread.
 
@@ -731,7 +731,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Notes:** Skill version **1.2.0**. Parent `pr-review-handler.mdc` got a hard-gate callout pointing at this flow.
 
-## 2026-08-05 — Skills update: detect and ask (no silent self-update)
+## 2026-08-05: Skills update: detect and ask (no silent self-update)
 
 **Context:** User asked whether skills should auto-self-update when newer versions exist, or ask first.
 
@@ -745,7 +745,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Notes:** Orchestrator skill **3.1.0**. See `reference/skills-update.md`.
 
-## 2026-08-05 — PR respond: ban top-level acknowledgement spam
+## 2026-08-05: PR respond: ban top-level acknowledgement spam
 
 **Context:** Agents posted Conversation-tab spam like "Acknowledged review attachment PRR_…" instead of replying in the reviewer's thread.
 
@@ -757,7 +757,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Notes:** Skill **1.2.1**. Parent `pr-review-handler.mdc` updated.
 
-## 2026-08-07 — PR respond: discussion quote-reply (no bare main-node)
+## 2026-08-07: PR respond: discussion quote-reply (no bare main-node)
 
 **Context:** Agents still answered `@heyeddi-ci` Conversation comments as bare top-level `gh pr comment` posts (main Conversation node), not nested under the parent and without quoting it.
 
@@ -773,14 +773,14 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Notes:** Skill **1.3.0**. Parent `pr-review-handler.mdc` hard gate updated.
 
-## 2026-08-09 — Recreated HeyEddi CI skill pack (symlink-safe)
+## 2026-08-09: Recreated HeyEddi CI skill pack (symlink-safe)
 
 **Context:** `heyeddi-ci-guide`, `heyeddi-ci-respond`, `heyeddi-ci-fails`, `heyeddi-ci-runners` were wiped by a checkout. `plugins/heyeddi-skills/skills` is a symlink to `../../skills`.
 
 **Process:** Write only under `skills/<name>/`. Copy into `plugins/heyeddi-ci-skills/skills/` with `cp -a` (real dirs). Never `rm -rf` via the heyeddi-skills symlink path. CI respond uses `pr-{n}-ci-*` artifact names; ephemeral PR scratch is gitignored via project-engineering scaffold snippet.
 
 
-## 2026-08-09 — HeyEddi CI skill pack + ephemeral PR scratch
+## 2026-08-09: HeyEddi CI skill pack + ephemeral PR scratch
 
 **Context:** CI-only agent skills for config, responding to HeyEddi findings, Check failures, runners placeholder, and guide. Orphan `.heyeddi/docs/pr-*` files after merge.
 
@@ -788,14 +788,14 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 - Ship `@heyeddi-ci-config|guide|respond|fails|runners` in hub + marketplace plugin `heyeddi-ci-skills`
 - Runners skill is PLACEHOLDER (fail-closed; never claim jobs ran)
 - Feedback: debate + support@ only (no FP API)
-- PR artifacts (`pr-*-{tracking,replies,posted,comments,context,review,ci-*}`) are ephemeral — never commit; gitignore via project-engineering scaffold
-- `plugins/heyeddi-skills/skills` is a symlink to `../../skills` — never `rm -rf` through it
+- PR artifacts (`pr-*-{tracking,replies,posted,comments,context,review,ci-*}`) are ephemeral: never commit; gitignore via project-engineering scaffold
+- `plugins/heyeddi-skills/skills` is a symlink to `../../skills`: never `rm -rf` through it
 
 **Process:** Author under `skills/<name>/`; `cp -a` into `plugins/heyeddi-ci-skills/skills/`. Living contract via `load_policy_contract`. Merge only with **authorize merge**.
 
 **Notes:** Hub **v3.2.0**. Docs: `docs/ci-skills.md`.
 
-## 2026-08-09 — Packs: heyeddi-skills + heyeddi-ci-skills from one hub
+## 2026-08-09: Packs: heyeddi-skills + heyeddi-ci-skills from one hub
 
 **Context:** Brand the hub as **heyeddi-skills**; ship CI as a separate pack/plugin without a second skill monorepo. Legacy `plugins/heyeddi-skills/skills → ../../skills` whole-dir symlink made `rm -rf` delete SSOT.
 
@@ -808,7 +808,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Process:** Edit pack JSON when adding skills → `sync-plugins.sh` → commit plugin link/copy updates as needed.
 
-## 2026-08-09 — GitHub CI releases both packs (no repo rename)
+## 2026-08-09: GitHub CI releases both packs (no repo rename)
 
 **Context:** Keep GitHub repo `HeyEddi-com/skills`. Publish **heyeddi-skills** + **heyeddi-ci-skills** on each hub version tag.
 
@@ -819,7 +819,7 @@ Emitted `mockup_brief_text`, `wireframe_md_text`, and `design_md_excerpt` are de
 
 **Process:** Bump `skills-registry.json` + `packs/heyeddi-skills.json` (and CI pack version when needed) in PR → merge main → Release workflow.
 
-## 2026-08-09 — Dual public repos for skills.sh (v3.3.0)
+## 2026-08-09: Dual public repos for skills.sh (v3.3.0)
 
 **Context:** skills.sh indexes GitHub repos 1:1. Branding packs as heyeddi-skills / heyeddi-ci-skills inside one `skills` repo left a single skills.sh page.
 
@@ -839,20 +839,20 @@ npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 ```
 
-## 2026-08-09 — Monorepo only (no CI skills.sh mirror)
+## 2026-08-09: Monorepo only (no CI skills.sh mirror)
 
 **Context:** Dual GitHub repos for skills.sh conflicted with the agreed monorepo model (one hub, two Marketplace packs).
 
 **Decision:**
 - Single public hub: `HeyEddi-com/heyeddi-skills` (local folder may stay `skills`)
-- Packs `heyeddi-skills` + `heyeddi-ci-skills` are plugins/manifests inside the hub — **not** a second GitHub skill tree
+- Packs `heyeddi-skills` + `heyeddi-ci-skills` are plugins/manifests inside the hub: **not** a second GitHub skill tree
 - Remove `publish-ci-pack-repo.sh` / `CI_PACK_PUSH_TOKEN` / mirror sync
 - Archive `HeyEddi-com/heyeddi-ci-skills` if it was created as a publish mirror
 - CI install: selective `--skill heyeddi-ci-*` from the hub, or Marketplace plugin **heyeddi-ci-skills**
 
 **Process:** Author under `skills/<name>/` → `sync-plugins.sh` → release attaches both pack JSON assets.
 
-## 2026-08-09 — Dual skills.sh repos restored (v3.4.0 / CI 1.2.0)
+## 2026-08-09: Dual skills.sh repos restored (v3.4.0 / CI 1.2.0)
 
 **Context:** The monorepo-only decision (single hub, Marketplace packs only) conflicted with skills.sh indexing **one page per GitHub repo**. CI consumers need a dedicated install URL.
 
@@ -861,7 +861,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 - Publish CI pack mirror `HeyEddi-com/heyeddi-ci-skills` via `scripts/publish-ci-pack-repo.sh`
 - SSOT stays `skills/<name>/` in the hub; CI repo is a published skills.sh package only
 - Marketplace still lists both plugins from the hub
-- Release workflow optionally syncs the CI mirror when secret `CI_PACK_PUSH_TOKEN` is set (never use `secrets.X || github.token` — invalid Actions expression)
+- Release workflow optionally syncs the CI mirror when secret `CI_PACK_PUSH_TOKEN` is set (never use `secrets.X || github.token`: invalid Actions expression)
 
 **Install:**
 ```bash
@@ -879,7 +879,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Skills:** `heyeddi-ci-respond` v1.1.0, `heyeddi-pr-respond` v1.4.0 in hub `skills/`.
 
-## 2026-08-11 — Skills release needs a version bump
+## 2026-08-11: Skills release needs a version bump
 
 **Context:** Merged docs-only routing clarity (#15) without bumping `skills-registry.json`; Release workflow no-oped because `v3.4.1` already existed.
 
@@ -891,14 +891,14 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Notes:** Released **v3.4.2** (hub) / **v1.2.2** (CI pack) for respond-skill routing clarity.
 
-## 2026-08-11 — Merge `@heyeddi-pr-respond` + `@heyeddi-ci-respond` (v2.0.0)
+## 2026-08-11: Merge `@heyeddi-pr-respond` + `@heyeddi-ci-respond` (v2.0.0)
 
 **Context:** User wanted one respond skill, no `pr-*` scratch files, commit+push before Fixed replies, and proper handling of HeyEddi CI **root review summaries** (review submission bodies listing path:line findings).
 
 **Decision:**
 - **`@heyeddi-pr-respond` v2.0.0** is the single respond skill for human + HeyEddi CI + all bots
 - **`@heyeddi-ci-respond`** deprecated alias (`metadata.internal`, empty manifest tools)
-- No `.heyeddi/docs/pr-*` or `pr-*-ci-*` files — temp cache + `--replies-text` only
+- No `.heyeddi/docs/pr-*` or `pr-*-ci-*` files: temp cache + `--replies-text` only
 - New `build_comment_inventory.py`: parses root review bodies for `` `path:line` ``, links to inline IDs, flags orphans
 - Mandatory pipeline: fetch → inventory → fix/decline all items → commit+push → post_thread_replies → verify `--use-inventory --live`
 
@@ -906,7 +906,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Notes:** Reinstall `@heyeddi-pr-respond` in consumer projects. Delete legacy scratch files under `.heyeddi/docs/`.
 
-## 2026-08-11 — Delete `@heyeddi-ci-respond` (v3.4.4)
+## 2026-08-11: Delete `@heyeddi-ci-respond` (v3.4.4)
 
 **Context:** v3.4.3 left `heyeddi-ci-respond` as a deprecated alias; `npx skills add` still installed two respond skills.
 
@@ -924,7 +924,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Date:** 2026-08-13
 
-## 2026-09-04 — Always-on: orchestrator + engineering excellence + prose
+## 2026-09-04: Always-on: orchestrator + engineering excellence + prose
 
 **Context:** User wants engineering excellence on every chat (plans and changes), with orchestrator always-on as router. Errors fail; warns advisory.
 
@@ -938,13 +938,13 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Verify:** `uv run pytest tests/test_engineering_always_on.py tests/test_next_skill.py`; `python3 scripts/test-skills.py engineering-excellence`
 
-## 2026-09-04 — Spot runners shipped: retire CI skills PLACEHOLDER
+## 2026-09-04: Spot runners shipped: retire CI skills PLACEHOLDER
 
 **Context:** HeyEddi CI product (`heyeddi-tool/heyeddi-ci`) runs sealed `pipeline:` on Spot and GHA overflow/always under entitlement. Skills still said PLACEHOLDER/fail-closed.
 
 **Decision:**
-- `@heyeddi-ci-runners` v2.0.0 — GHA-first (`HEYEDDI_RUNS_ON`) + sealed `pipeline:` for no-GHA; evidence before execution claims
-- `@heyeddi-ci-config` v1.2.0 — drop placeholder language; prefer `pipeline: {}` when workflows exist
+- `@heyeddi-ci-runners` v2.0.0: GHA-first (`HEYEDDI_RUNS_ON`) + sealed `pipeline:` for no-GHA; evidence before execution claims
+- `@heyeddi-ci-config` v1.2.0: drop placeholder language; prefer `pipeline: {}` when workflows exist
 - Cascade: guide, fails, registry, README, `docs/ci-skills.md`, packs, orchestrator next-skill
 - Replace `assert_runners_placeholder` with `assert_runners_claims` (deprecated alias kept)
 
@@ -952,12 +952,12 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Verify:** `uv run pytest tests/test_heyeddi_ci_skills.py`
 
-## 2026-09-06 — `@heyeddi-setup`: stack + prefs in `stack.json`
+## 2026-09-06: `@heyeddi-setup`: stack + prefs in `stack.json`
 
 **Context:** Need a re-runnable project setup that captures git/tools/agent prefs alongside stack, so agents always honor one file.
 
 **Decision:**
-- New skill `@heyeddi-setup` — Q&A writes **only** `.heyeddi/stack.json` (no separate prefs file)
+- New skill `@heyeddi-setup`: Q&A writes **only** `.heyeddi/stack.json` (no separate prefs file)
 - Required keys: frontend/backends/ports + `git.*` + `tools.*` + `agent.*` + `setup.*`
 - Job is **ensure keys exist** (ask/confirm), not silent repo sniffing
 - Re-run: `list_questions` shows current defaults → `write_setup` → `verify_setup --check`
@@ -967,7 +967,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Verify:** `uv run pytest tests/test_heyeddi_setup.py tests/test_next_skill.py`; `python3 scripts/test-skills.py heyeddi-setup`
 
-## 2026-09-06 — `@heyeddi-setup` prefs-only + env presets
+## 2026-09-06: `@heyeddi-setup` prefs-only + env presets
 
 **Context:** Frontend/backends/package manager/CI should not be quiz questions; they are discovered as the project evolves. Git model should default to production+staging envs with an escape hatch.
 
@@ -979,7 +979,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Verify:** `uv run pytest tests/test_heyeddi_setup.py`
 
-## 2026-09-06 — Prefer host surfaces; no capability probe
+## 2026-09-06: Prefer host surfaces; no capability probe
 
 **Context:** Agents should use native plan / data / visual tools when the host provides them (Cursor, other IDEs, CLI, Cloud Run), without Cursor-only hardcoding.
 
@@ -991,7 +991,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Anti-pattern:** Guessing IDE capabilities from the filesystem.
 
-## 2026-09-08 — `@heyeddi-setup` HARD prefs gate
+## 2026-09-08: `@heyeddi-setup` HARD prefs gate
 
 **Context:** Setup skill existed with `verify_setup --check`, but always-on policy only soft-suggested it. Agents could invent git/agent prefs.
 
@@ -1006,11 +1006,11 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Verify:** `uv run pytest tests/test_setup_always_on.py tests/test_engineering_always_on.py tests/test_heyeddi_setup.py`
 
-## 2026-09-14 — Better design escalates to shape (not polish-only)
+## 2026-09-14: Better design escalates to shape (not polish-only)
 
 **Context:** Asking for a "better design" routinely produced spacing/token tweaks because improve-existing intent was routed to critique → polish, which forbids IA change.
 
-**Decision:** `heyeddi-design` v2.5.1 — critique **ambition gate** (Escalate shape | Stay polish). Redesign phrases ("better design", "make it better", "redesign", "new look", "overhaul", "wow", "top notch") plus template/name-swap/missing signature triggers → **shape → craft → implement**. Polish only when gate says Stay.
+**Decision:** `heyeddi-design` v2.5.1: critique **ambition gate** (Escalate shape | Stay polish). Redesign phrases ("better design", "make it better", "redesign", "new look", "overhaul", "wow", "top notch") plus template/name-swap/missing signature triggers → **shape → craft → implement**. Polish only when gate says Stay.
 
 **Process:**
 1. Critique writes Ambition gate section
@@ -1021,13 +1021,13 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Notes:** Reinstall/sync skill into consumer `.agents/skills/` after publish; do not treat install trees as SSOT.
 
-## 2026-09-20 — Design briefs: named taste + hard rejects + 6-width done gate
+## 2026-09-20: Design briefs: named taste + hard rejects + 6-width done gate
 
 **Context:** First ships often landed as "random framework + dark mode" because briefs opened with adjectives ("professional", "clean") instead of named aesthetic + rejects. Three audit widths also missed large-phone, layout-hinge, and wide-stretch bugs.
 
 **Decision:**
-- **`heyeddi-design` v2.6.0** — ALWAYS-ON description for any design/look/feel talk. New `reference/brief-language.md` (auto-load): subject/metaphor, hard rejects, hero composition, type roles, accent vs edge, responsive contract, token SSOT, ask-next table, pasteable prompt. Design signature + discover/shape/ambition/aesthetic/ANTI_PATTERNS wired. Done = logo-off brand test + auditor `--preset done`.
-- **`visual-auditor` v3.2.0** — `fast` = `375,768,1440` (iteration); `done`/`flagship` = `375,430,768,1024,1440,1920`. `finalize_visual_review` defaults to done. Scripts: `_widths.py`, `--preset` on capture/contrast/finalize.
+- **`heyeddi-design` v2.6.0**: ALWAYS-ON description for any design/look/feel talk. New `reference/brief-language.md` (auto-load): subject/metaphor, hard rejects, hero composition, type roles, accent vs edge, responsive contract, token SSOT, ask-next table, pasteable prompt. Design signature + discover/shape/ambition/aesthetic/ANTI_PATTERNS wired. Done = logo-off brand test + auditor `--preset done`.
+- **`visual-auditor` v3.2.0**: `fast` = `375,768,1440` (iteration); `done`/`flagship` = `375,430,768,1024,1440,1920`. `finalize_visual_review` defaults to done. Scripts: `_widths.py`, `--preset` on capture/contrast/finalize.
 
 **Process:**
 1. Any design talk → load `brief-language.md` first; pin taste + rejects before craft
@@ -1036,7 +1036,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Files:** `skills/heyeddi-design/reference/brief-language.md`, `SKILL.md`, `discover.md`, `shape.md`, `design-ambition.md`, `aesthetic-direction.md`, `foundations.md`, `critique.md`, `ANTI_PATTERNS.md`, `VOCABULARY.md`, `EXAMPLES.md`, `manifest.json`; `skills/visual-auditor/` presets + docs; `skills-registry.json`
 
-## 2026-10-07 — @heyeddi routes design to taste, then product
+## 2026-10-07: @heyeddi routes design to taste, then product
 
 **Context:** `heyeddi-design` kept shipping generic UI because it is a process skill. Taste has to be a one-pass partner, not another discover/shape pipeline.
 
@@ -1049,7 +1049,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** `@heyeddi` → `@taste-penpot` → `@heyeddi-design` → handoff. Reinstall skills after publish.
 
-## 2026-10-22 — Vue design system and Penpot API MCP
+## 2026-10-22: Vue design system and Penpot API MCP
 
 **Context:** Vue UI was still routed through PrimeVue plus optional OpenProps, and Penpot visuals used the browser plugin MCP (`@penpot/mcp`, `execute_code`).
 
@@ -1067,7 +1067,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Notes:** MCP config for PrimeVue and Quasar is stdio `npx`. Penpot API MCP is HTTP on `127.0.0.1:3051`. Never print `PENPOT_ACCESS_TOKEN`.
 
-## 2026-10-22 — Visual verification and CLI stdout
+## 2026-10-22: Visual verification and CLI stdout
 
 **Context:** The Vue design system could route components but could not see the rendered page. PrimeVue and Quasar MCP servers do not render pixels. CLI skills stopped at the source file.
 
@@ -1075,7 +1075,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** GUI → `@motion-physics` → `@visual-verification` → `@visual-auditor`. CLI → run → read stdout.
 
-## 2026-10-23 — Local-first gate for Terraform and live cloud writes
+## 2026-10-23: Local-first gate for Terraform and live cloud writes
 
 **Context:** An agent was asked to prepare a calendar-account change and instead started changing live Google resources. Prompt text that says "do not apply" did not stop it.
 
@@ -1085,7 +1085,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Notes:** The hook does not wrap the human's own shell. There is no agent bypass flag.
 
-## 2026-10-23 — Local-first gate lives in the skill, for every agent
+## 2026-10-23: Local-first gate lives in the skill, for every agent
 
 **Context:** The first cut installed a Cursor user hook (`~/.cursor/hooks.json`). That only blocks Cursor. The request was to put the gate in the HeyEddi skills so every agent that loads them follows it.
 
@@ -1093,7 +1093,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** Edit the repo, checker, plan, warn, stop. Live apply stays in Cloud Build `terraform-release` after review, or in a terminal the human runs.
 
-## 2026-10-23 — Code-to-design, zcube Penpot, morph, and depth
+## 2026-10-23: Code-to-design, zcube Penpot, morph, and depth
 
 **Context:** Asking an agent to redesign an app from scratch kept the current look. Skills were design-to-code. The read-only Penpot API MCP could not create boards across projects.
 
@@ -1101,7 +1101,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** Audit → proposal → Penpot boards → stop. Build is a later request and follows `@vue-design-system` for the scoped pages only.
 
-## 2026-10-27 — Penpot skills use only @zcubekr/penpot-mcp-server
+## 2026-10-27: Penpot skills use only @zcubekr/penpot-mcp-server
 
 **Context:** `npx -y penpot-mcp-server` resolves to the unscoped npm package (Mart1M: `get_board`, `get_tokens`), which is the default Penpot MCP. Designer boards must use the scoped server instead. `@penpot/mcp` (plugin, `execute_code`) and `penpot-api-mcp` stay forbidden.
 
@@ -1109,7 +1109,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** `skills/taste-penpot/references/penpot-mcp.md` is the install contract. Plugin trees are symlinks to `skills/`. The live install under `~/.agents/skills/` was copied from those files on 2026-10-27.
 
-## 2026-10-29 — Penpot layout is Flex or CSS Grid
+## 2026-10-29: Penpot layout is Flex or CSS Grid
 
 **Context:** Penpot uses browser CSS Flexbox and CSS Grid on the canvas. Design skills still specified spacing and frames, so agents could fake stacks with absolute rectangles and hand off CSS that did not match Inspect.
 
@@ -1117,33 +1117,33 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** PLAN names the engine. ACT writes it on the frame when the MCP schema allows, otherwise into the demo brief and the HTML fallback. Handoff copies `display: flex` or `display: grid` into the Implementation spec. At 375 a sidebar track becomes the drawer.
 
-## 2026-10-29 — Penpot layout field names
+## 2026-10-29: Penpot layout field names
 
 **Context:** A plugin-API note used `layoutChild` sizing (`fix`, `fill`, `auto`), grid tracks, and TypeScript boards. `create_frame` on `@zcubekr/penpot-mcp-server` does not set those fields. Two names in the note were wrong, and the samples hardcoded a hex and a font.
 
 **Decision:** `taste-penpot` v1.1.1 records the file-format names in `references/flex-grid.md`. Child sizing is `fix`, `fill`, or `auto` (panel Fit Content is `auto`). Grid track type `flex` means `fr`. Track type `fixed` is px. Child `fix` is not track `fixed`. Placement is `appendChild(child, row, column)`. Span is `layoutCell.rowSpan` and `columnSpan`, not `layoutChild.rowSpan`. Do not set width or height on a child the layout owns. Do not call `@penpot/mcp` to run `penpot.createBoard()`. Hub **v3.8.3**. Design pack **v1.2.3**.
 
-## 2026-10-30 — Penpot 2.19 per-side strokes and shared tokens
+## 2026-10-30: Penpot 2.19 per-side strokes and shared tokens
 
 **Context:** Penpot 2.19 can set a stroke on each side of a board or rectangle, and tokens can be published from a shared library. A video note also included keyboard shortcuts, the path editor, and API calls that are not in the plugin schema.
 
 **Decision:** `taste-penpot` v1.2.0 owns `references/strokes-and-tokens.md`. A divider is `strokeWidthBottom` (and the other sides at 0), not a 1px flex child. Inspect CSS is `border-*-width`. Alignment is `center`, `inner`, or `outer`. Tokens bind by name with `applyToken`. A shared library publishes `design.md` roles. `create_frame` still sends one `strokeWidth` until the schema grows. Do not call `@penpot/mcp`. Hub **v3.8.4**. Design pack **v1.2.4**. CI pack **v1.4.4**.
 
-## 2026-11-02 — pr-respond thread resolve must never "not find" a thread
+## 2026-11-02: pr-respond thread resolve must never "not find" a thread
 
 **Context:** Agents running `@heyeddi-pr-respond` sometimes reported they could not find a GitHub thread and skipped the reply. Root causes: numeric discussion ids posted to `/pulls/.../comments/.../replies`, a non-existent `/issues/comments/{id}/replies` endpoint, child reply ids (GitHub rejects reply-to-reply), unpaginated fetches, and no MCP escape hatch.
 
-**Decision:** `heyeddi-pr-respond` v2.2.0 — `_comment_resolve.py` classifies every id (cache → live GET review comment → live GET issue comment → GraphQL node). Walk `in_reply_to_id` to the **root**. Inline: REST `/replies` then GraphQL `addPullRequestReviewThreadReply`. Discussion: **quote-reply** via `POST .../issues/{pr}/comments`. `fetch_pr_comments` paginates. New `resolve_reply_targets`. On any script error, agent **must** use GitHub MCP `add_reply_to_pull_request_comment` (inline root id) or `add_issue_comment` with quote — never stop with "thread not found". Primary path remains `gh` CLI.
+**Decision:** `heyeddi-pr-respond` v2.2.0: `_comment_resolve.py` classifies every id (cache → live GET review comment → live GET issue comment → GraphQL node). Walk `in_reply_to_id` to the **root**. Inline: REST `/replies` then GraphQL `addPullRequestReviewThreadReply`. Discussion: **quote-reply** via `POST .../issues/{pr}/comments`. `fetch_pr_comments` paginates. New `resolve_reply_targets`. On any script error, agent **must** use GitHub MCP `add_reply_to_pull_request_comment` (inline root id) or `add_issue_comment` with quote: never stop with "thread not found". Primary path remains `gh` CLI.
 
 **Process:** fetch (paginate) → inventory → fix/push → `post_thread_replies` → on error `resolve_reply_targets` + MCP → `verify_response --live`.
 
-## 2026-11-02 — Release hub v3.8.5 / CI pack v1.4.5
+## 2026-11-02: Release hub v3.8.5 / CI pack v1.4.5
 
 **Context:** Ship `heyeddi-pr-respond` v2.2.0 reliable thread resolve (REST → GraphQL → MCP fallback).
 
 **Decision:** Hub **v3.8.5**. CI pack **v1.4.5**. Design pack unchanged at 1.2.4.
 
-## 2026-11-02 — Design identity gate (≥3 options before pixels)
+## 2026-11-02: Design identity gate (≥3 options before pixels)
 
 **Context:** Design requests without a pinned style often shipped generic UI; users had to ask for a redo with a real identity.
 
@@ -1151,13 +1151,13 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** Design talk → taste identity gate (if unset) → choice → tokens → heyeddi-design record → craft/handoff.
 
-## 2026-11-02 — Release hub v3.8.6 / design pack v1.2.5
+## 2026-11-02: Release hub v3.8.6 / design pack v1.2.5
 
 **Context:** Ship design identity gate (`taste-penpot` v1.3.0, `heyeddi-design` v2.9.0).
 
 **Decision:** Hub **v3.8.6**. Design pack **v1.2.5**. CI pack unchanged at 1.4.5.
 
-## 2026-11-04 — Layout hard gates (hi-fi bar for taste + design)
+## 2026-11-04: Layout hard gates (hi-fi bar for taste + design)
 
 **Context:** Suite / settings passes shipped "words in a gray rectangle" because (1) `@zcubekr/penpot-mcp-server` only places absolute frames/rects/text (no Flex, no nest), and (2) agents treated connected MCP as done, skipped ACT 2.6 HTML, skipped separate field rows on an 8px grid, and skipped visual QA.
 
@@ -1175,7 +1175,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Verify:** Re-read gates on next settings/suite design; refuse text-wall before handoff.
 
-## 2026-11-04 — HeyEddi Penpot MCP fork (Flex/Grid + nesting)
+## 2026-11-04: HeyEddi Penpot MCP fork (Flex/Grid + nesting)
 
 **Context:** Layout hard gates required `hifi.html` because `@zcubekr/penpot-mcp-server` only placed absolute frames/rects/text (always parented to the page root). Penpot's update-file API already supports `layout` / `layoutFlexDir` / `layoutItemHSizing` and `parentId` nesting.
 
@@ -1189,34 +1189,34 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Notes:** npm publish needs org auth (`npm login` for `@heyeddi`). Local path `node …/dist/index.js` also works.
 
-## 2026-11-06 — Taste gates A–G (MCP Flex reality + design system first)
+## 2026-11-06: Taste gates A-G (MCP Flex reality + design system first)
 
 **Context:** Hi-fi Flex phones looked empty: API saved `layout: flex` / `parentId` while children stayed at `0,0`; `layoutItem*` on create often null; invented fonts (Sora/Nunito) missing in Penpot; `create_image` weaker than rect fills; `export_shape` hit Cloudflare; `audit_board` false-passed after hand coords. Fault was **both** MCP gaps and agent process.
 
 **Decision:** Hub **v3.8.9**. Design pack **v1.2.9**.
 - `@taste-penpot` **v1.6.0**: Gates E (design system + fonts), F (Flex reflow / `set_layout_item` / absolute 8px escape after one fail), G (page hygiene); Gate B/D tightened (0,0 ≠ Flex; PNG required; audit hint-only); `penpot-mcp.md` design-system-first order + known MCP limits table
-- `@heyeddi-design` **v2.11.0**: craft prerequisite 5 / setup 3k / ANTI_PATTERNS sync to A–G
-- `@heyeddi` **v3.4.1**: router points at design-system-first + gates A–G
+- `@heyeddi-design` **v2.11.0**: craft prerequisite 5 / setup 3k / ANTI_PATTERNS sync to A-G
+- `@heyeddi` **v3.4.1**: router points at design-system-first + gates A-G
 
 **Process:** colours/typographies → boards → `set_layout_item` + read x/y → escape if 0,0 → export PNG → CRITIQUE. Never rebuild nested Flex; never ship on audit alone.
 
 **Notes:** MCP Flex reflow / quieter audit / image paint remain server-side follow-ups; skills stop papering them over.
 
-## 2026-11-07 — Designer-thinking identity gate (3–5 options + .heyeddi docs)
+## 2026-11-07: Designer-thinking identity gate (3-5 options + .heyeddi docs)
 
 **Context:** Agents skipped `@taste-penpot` identity gate while scaffolding (e.g. “Fraunces + teal while EPUB works”), admitting the design skill pipeline did not run.
 
 **Decision:** Hub **v3.8.10**. Design pack **v1.2.10**.
-- `@taste-penpot` **v1.7.0**: `references/identity-gate.md` Phase 0 (project / peers / follow-vs-unique) → write `.heyeddi/designs/<feature>/identity-thinking.md`; ask 2–3 clarifying questions when blocked; present **3–5** What/Why/How options → `identity-options.md`; stop for A–E. Scaffolding/MVP never waives the gate.
+- `@taste-penpot` **v1.7.0**: `references/identity-gate.md` Phase 0 (project / peers / follow-vs-unique) → write `.heyeddi/designs/<feature>/identity-thinking.md`; ask 2-3 clarifying questions when blocked; present **3-5** What/Why/How options → `identity-options.md`; stop for A-E. Scaffolding/MVP never waives the gate.
 - `@heyeddi-design` **v2.12.0**: sync brief-language / shape / team / ANTI_PATTERNS; no craft while gate open.
 - `@heyeddi` **v3.4.2**: router points at designer-thinking gate.
 - Docs: `docs/design-excellence.md`, `docs/clarify-before-act.md`, `docs/heyeddi-folder.md`.
 
-**Process:** Design talk → taste Phase 0 (document + ask) → 3–5 options → user pick → PLAN → ACT → heyeddi-design record → craft/handoff.
+**Process:** Design talk → taste Phase 0 (document + ask) → 3-5 options → user pick → PLAN → ACT → heyeddi-design record → craft/handoff.
 
 **Notes:** Dogfood after release: reinstall skills, then any “design X” without a pinned look must stop at options, not ship a default type pairing.
 
-## 2026-11-07 — Prose anti-slop is universal (no UI/book carve-out)
+## 2026-11-07: Prose anti-slop is universal (no UI/book carve-out)
 
 **Context:** Agents skipped `PROSE_ANTI_SLOP` on book manuscripts, claiming the gate was UI/product/`.heyeddi` only. Always-on wording and `verify_prose` defaults made that excuse easy.
 
@@ -1227,7 +1227,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** Write clean → apply PROSE_ANTI_SLOP → run checker on defaults and `--glob` for other edited prose → never claim "not for books."
 
-## 2026-11-07 — PR review is line-level code review; respond handles self-review
+## 2026-11-07: PR review is line-level code review; respond handles self-review
 
 **Context:** `@heyeddi-pr-review` was a product/docs/gate checklist writing `.heyeddi` reports. Agents did not leave GitHub inline comments. `@heyeddi-pr-respond` skipped threads authored by the responding account, breaking self-review → respond.
 
@@ -1238,7 +1238,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 
 **Process:** Review posts inline findings → respond fixes/replies → pre-merge-gate for ship.
 
-## 2026-11-07 — pre-merge-gate v2 is the ship bar (--signoff)
+## 2026-11-07: pre-merge-gate v2 is the ship bar (--signoff)
 
 **Context:** After review→respond, agents still needed a hard merge gate: CI green, unresolved threads closed, clean/pushed tree, Flutter analyze/test, prose on changed md, and no silent emergency skips.
 
@@ -1251,7 +1251,7 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Process:** `@heyeddi-pr-review` → `@heyeddi-pr-respond` → `@pre-merge-gate --signoff` → authorize merge. Exit 0 required before merge-ready claims.
 
 
-## 2026-11-07 — Always-on via AGENTS.md + Cursor alwaysApply (not skill bodies)
+## 2026-11-07: Always-on via AGENTS.md + Cursor alwaysApply (not skill bodies)
 
 **Context:** Skill `ALWAYS-ON` descriptions are opt-in by relevance; agents skipped setup/engineering/prose/local-first gates.
 
@@ -1263,33 +1263,33 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Process:** Open Agent chat in a HeyEddi project → Cursor injects the rule/AGENTS block → agent runs the named skill/script when a gate fires.
 
 
-## 2026-11-07 — Always-on agents must test project fixes (not a skill)
+## 2026-11-07: Always-on agents must test project fixes (not a skill)
 
 **Context:** Agents in consumer projects fixed bugs / shipped code without adding tests. User clarified this is an **AGENTS.md / alwaysApply** gate, not a skills-hub TDD policy.
 
 **Decision:** Hub **v3.8.15**. Always-on checklist item **Tests (this project)**: bug → locking test then fix; new behavior → focused test with the change; skip only docs/typos/unautomatable. Delivered only via `AGENTS.md` + `.cursor/rules/heyeddi-always-on.mdc` templates (no new skill).
 
 
-## 2026-11-09 — Frontend bugs: Playwright on local, then ask
+## 2026-11-09: Frontend bugs: Playwright on local, then ask
 
 **Context:** Reproduce-first was a one-line always-on rule. Frontend bugs were still fixed without a browser test, and agents had no order for local vs hosted apps.
 
 **Decision:** Hub **v3.8.17**. Same gate, no new skill. `@heyeddi` **v3.4.10** `reference/reproduce-first.md`. A pure frontend bug is a Playwright test: project test login, navigate the flow, **local app first**. If local cannot reproduce, ask before a test env, and ask again before production. On any non-local environment: look and navigate only. No destructive action whatsoever. If the bug needs a write, stop and ask. Do not perform the write.
 
-## 2026-11-08 — @heyeddi hard gate: run ensure/sync before any chat
+## 2026-11-08: @heyeddi hard gate: run ensure/sync before any chat
 
 **Context:** Global skills install does not write project AGENTS.md. Agents could `@heyeddi` and answer without running a script, so always-on files never appeared.
 
 **Decision:** Hub **v3.8.16**. `@heyeddi` **v3.4.8**. First action on every invoke: run `ensure_always_on_agents.py` or `sync.py`; confirm AGENTS.md + alwaysApply rule; **forbidden** chat-only. Then route as usual.
 
 
-## 2026-11-12 — Browser platform: Modern Web Guidance and Chrome DevTools MCP
+## 2026-11-12: Browser platform: Modern Web Guidance and Chrome DevTools MCP
 
 **Context:** Frontend and design skills had no step to find outdated platform patterns in existing UI, and no way to check performance, memory, or reduced motion in a real browser.
 
 **Decision:** Hub **v3.8.19**. `@heyeddi` **v3.4.11** `reference/browser-platform.md`, added as always-on gate 5. Frontend and design skills run Modern Web Guidance `legacy-scan` on the files they will touch, verify each hit, then fix from the guide. Chrome DevTools MCP is optional and local only, on a fresh profile, for traces, memory, and `prefers-reduced-motion`. Quasar, PrimeVue Aura, and Aura tokens stay the components. Playwright stays the screenshot and signed-in test tool. A missing install never blocks a design-only pass. `install-skills.sh --agent` installs for agents other than Cursor (default stays `cursor`).
 
-## 2026-11-20 — Cost gate: estimate what a change costs to run
+## 2026-11-20: Cost gate: estimate what a change costs to run
 
 **Context:** A few decisions about Firestore reads ran to over 30 million reads a day on a project with almost no users, and the bill passed 1,000 USD. Nothing in the pipeline priced a change before it shipped, and usage-based cost never shows up in Terraform.
 
