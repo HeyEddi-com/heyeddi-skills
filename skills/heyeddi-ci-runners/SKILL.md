@@ -1,8 +1,8 @@
 ---
 name: heyeddi-ci-runners
-description: "Configure HeyEddi Spot runners — prefer GHA overflow/always with the HEYEDDI_RUNS_ON hook; author sealed eddi-ci.yaml pipeline jobs only for no-GHA or niche checks. Use when wiring runners, pipeline YAML, or Spot CI."
+description: "Configure HeyEddi Spot runners: prefer GHA overflow/always with the HEYEDDI_RUNS_ON hook; author sealed eddi-ci.yaml pipeline jobs only for no-GHA or niche checks. Use when wiring runners, pipeline YAML, or Spot CI."
 version: 2.0.0
-product-version: 3.8.22
+product-version: 3.8.23
 author: HeyEddi-com
 ---
 
@@ -31,16 +31,16 @@ runs-on: ${{ vars.HEYEDDI_RUNS_ON || 'ubuntu-latest' }}
 ```
 
 3. Tell the user to set workspace **Runners** mode on ci.heyeddi.com:
-   - **`overflow`** — GitHub minutes first; Spot JIT when exhausted
-   - **`always`** — Linux jobs on Spot from the first run
-   - **`off`** — hosted only
+   - **`overflow`**: GitHub minutes first; Spot JIT when exhausted
+   - **`always`**: Linux jobs on Spot from the first run
+   - **`off`**: hosted only
 4. Keep `eddi-ci.yaml` Reviewer-only with `pipeline: {}` (use `@heyeddi-ci-config`).
-5. Limits: Linux only; private repos; prepaid/entitled workspace; platform kill switch is ops-owned. Overflow reliability can still gap — do not promise “always works.”
+5. Limits: Linux only; private repos; prepaid/entitled workspace; platform kill switch is ops-owned. Overflow reliability can still gap: do not promise “always works.”
 
 ## Sealed `pipeline:` (advanced / no-GHA)
 
-1. `load_policy_contract` — living knobs only.
-2. `inspect_repo` — evidenced commands + path prefixes; never invent `pytest` / `npm test`.
+1. `load_policy_contract`: living knobs only.
+2. `inspect_repo`: evidenced commands + path prefixes; never invent `pytest` / `npm test`.
 3. Explicit user opt-in (billable runner time).
 4. Author argv-safe `run` (no shell operators, `sudo`, `curl`, `wget`), catalog `image`, `filter.paths` when possible.
 5. Jobs run on Spot when the workspace is entitled and Spot env is live; they post **`HeyEddi Runner: {job_id}`** Checks.

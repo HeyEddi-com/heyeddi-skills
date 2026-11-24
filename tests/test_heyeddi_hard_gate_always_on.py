@@ -11,7 +11,7 @@ ANTI = ROOT / "skills" / "heyeddi" / "context" / "ANTI_PATTERNS.md"
 
 def test_skill_declares_hard_gate_before_routing() -> None:
     body = SKILL.read_text(encoding="utf-8")
-    assert "## Hard gate (first action — no exceptions)" in body
+    assert "## Hard gate (first action, no exceptions)" in body
     assert "ensure_always_on_agents.py" in body
     assert "Forbidden:** Chat-only `@heyeddi`" in body or "Forbidden:** Chat-only" in body
     assert "Attaching the skill is not enough" in body

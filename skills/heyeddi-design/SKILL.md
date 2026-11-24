@@ -1,18 +1,18 @@
 ---
 name: heyeddi-design
-description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: designer thinking in .heyeddi/, then 3–5 What/Why/How options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Blocks handoff unless taste layout hard gates pass (no text-wall, hifi.html when MCP cannot Flex, visual QA). Screenshot gate still applies before done."
+description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: designer thinking in .heyeddi/, then 3-5 What/Why/How options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Blocks handoff unless taste layout hard gates pass (no text-wall, hifi.html when MCP cannot Flex, visual QA). Screenshot gate still applies before done."
 version: 2.13.1
-product-version: 3.8.22
+product-version: 3.8.23
 author: HeyEddi-com
 ---
 
 # HeyEddi Design
 
-**Stack-agnostic UI design** for HeyEddi apps: discovery, briefs, critique, and design-system documentation. **Implementation** (Vue, Flutter, CSS in components) belongs to stack skills — see `reference/implement-routing.md`.
+**Stack-agnostic UI design** for HeyEddi apps: discovery, briefs, critique, and design-system documentation. **Implementation** (Vue, Flutter, CSS in components) belongs to stack skills: see `reference/implement-routing.md`.
 
-**Team:** `@taste-penpot` owns the look in one pass (Anthropic frontend-design + tokens), including the **identity gate** (`references/identity-gate.md`: project/peers/stance documented under `.heyeddi/designs/`, then **3–5** What/Why/How options when no style is pinned). This skill owns product fit and implementation handoff. Read `reference/design-team.md` before any design turn. Do not author a second palette or restart discover → research → explore to find a look.
+**Team:** `@taste-penpot` owns the look in one pass (Anthropic frontend-design + tokens), including the **identity gate** (`references/identity-gate.md`: project/peers/stance documented under `.heyeddi/designs/`, then **3-5** What/Why/How options when no style is pinned). This skill owns product fit and implementation handoff. Read `reference/design-team.md` before any design turn. Do not author a second palette or restart discover → research → explore to find a look.
 
-**Auto-pickup:** Design talk still loads this skill, and it immediately loads `@taste-penpot` if identity/tokens are not locked. If taste must run the identity gate, **wait for clarifying answers and the user's A–E choice** before recording tokens or crafting. Scaffolding never skips that wait. `reference/brief-language.md` is product language for the brief, not a second art direction.
+**Auto-pickup:** Design talk still loads this skill, and it immediately loads `@taste-penpot` if identity/tokens are not locked. If taste must run the identity gate, **wait for clarifying answers and the user's A-E choice** before recording tokens or crafting. Scaffolding never skips that wait. `reference/brief-language.md` is product language for the brief, not a second art direction.
 
 ## Design vs implement (mandatory split)
 
@@ -27,12 +27,12 @@ Read **`reference/implement-routing.md`** every session that ends in shipped UI.
 
 ## Default behavior (no confirmation)
 
-- **Design talk of any kind:** load `brief-language.md` first; if identity unset → `@taste-penpot` identity gate (designer thinking in `.heyeddi/`, **3–5** options; wait for the pick in a design request, pick and record in a build request); then pin taste + subject + hard rejects before chrome
+- **Design talk of any kind:** load `brief-language.md` first; if identity unset → `@taste-penpot` identity gate (designer thinking in `.heyeddi/`, **3-5** options; wait for the pick in a design request, pick and record in a build request); then pin taste + subject + hard rejects before chrome
 - **Better design / redesign:** "better design", "make it better", "redesign", "new look", "overhaul", "wow", "top notch" → **do not polish-only**. Run critique ambition gate (`reference/critique.md`); if template-like or ambition fails → identity gate (if unset) → **`shape` → craft → implement**. Spacing/token tweaks alone are wrong for these phrases.
-- **Critique + fix (local):** "looks bad", "fix this page", "polish", "tweak spacing" → keep existing identity; critique **then** stack implementer + `@visual-auditor` — **unless** the ambition gate says escalate to `shape` (then identity gate if replacing look; do not ask).
+- **Critique + fix (local):** "looks bad", "fix this page", "polish", "tweak spacing" → keep existing identity; critique **then** stack implementer + `@visual-auditor`, **unless** the ambition gate says escalate to `shape` (then identity gate if replacing look; do not ask).
 - **Craft:** confirmed brief + locked identity → hand off to stack implementer in the same workflow. No craft while identity-thinking or options are still open.
-- **Ambition bar:** impressive craft is default on flagship routes — do not wait for user to ask
-- **Exception that requires confirmation:** in a **design request** only, identity Phase 0 questions + A–E choice when the gate applies, and brief confirmation after shape. In a build request neither stops (`@heyeddi` `reference/autonomy.md`).
+- **Ambition bar:** impressive craft is default on flagship routes: do not wait for user to ask
+- **Exception that requires confirmation:** in a **design request** only, identity Phase 0 questions + A-E choice when the gate applies, and brief confirmation after shape. In a build request neither stops (`@heyeddi` `reference/autonomy.md`).
 
 ## Subagents (default)
 
@@ -74,7 +74,7 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 3h. Read `reference/aesthetic-direction.md` on **any user-facing route**.
 3i. Read `context/PROSE_ANTI_SLOP.md` whenever you author prose (briefs, `design.md`, chat, docs, books). Writing anti-slop is general-use, not UI-only.
 3j. Read `reference/visual-tools.md` during **`explore`**, **`shape`**, and **`critique`** on flagship routes: use **GenerateImage** for direction probes and **Canvas** for compare/brief/critique summaries when the IDE provides them.
-3k. Before **craft** / handoff: read `@heyeddi` `reference/browser-platform.md` when the pass edits existing web UI, and run `legacy-scan` on those files first. Design-only passes (brief, tokens, Penpot) skip the scan. Then confirm `@taste-penpot` **layout hard gates A–G** (`taste-penpot/references/layout-hard-gates.md`): no text-wall; design system + real fonts; Flex only if reflow real (else absolute 8px / `hifi.html`); export PNG (not audit alone); no orphan empty pages. Missing any gate → send back to taste. Do not invent a second look to paper over a text-wall.
+3k. Before **craft** / handoff: read `@heyeddi` `reference/browser-platform.md` when the pass edits existing web UI, and run `legacy-scan` on those files first. Design-only passes (brief, tokens, Penpot) skip the scan. Then confirm `@taste-penpot` **layout hard gates A-G** (`taste-penpot/references/layout-hard-gates.md`): no text-wall; design system + real fonts; Flex only if reflow real (else absolute 8px / `hifi.html`); export PNG (not audit alone); no orphan empty pages. Missing any gate → send back to taste. Do not invent a second look to paper over a text-wall.
 4. After **shape** (brief confirmed), **critique**, or **polish**, append to **Decision log** in `.heyeddi/design.md`.
 5. After stack implementer finishes: `@visual-auditor` **fast** widths `375,768,1440` while iterating. **Before calling done** on flagship/marketing: **done** widths `375,430,768,1024,1440,1920` (`--preset done`) and fix what you see. Logo-off test: if it could be another startup after removing the brand, it is not done. Design-only / Penpot passes still need taste Gate D (export or render hi-fi, read pixels) before calling the design done.
 
@@ -121,7 +121,7 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 
 Use kebab-case for `<feature>`.
 
-## Foundations (design spec — implementer enforces in code)
+## Foundations (design spec: implementer enforces in code)
 
 Responsive, light/dark, `en`+`es` i18n, WCAG 2.2 AA, semantic tokens: see `reference/foundations.md`, `reference/token-strategy.md`, `reference/brief-language.md`.
 

@@ -239,3 +239,28 @@ def test_implementers_mention_engineering_gate(skill_name: str) -> None:
         or "check_engineering_plan" in body
         or "engineering-audit" in body
     )
+
+
+def test_plan_gate_warns_on_polling_without_event_path(tmp_path: Path) -> None:
+    _init_docs(tmp_path)
+    plan = "Add a Cloud Scheduler cron that runs every minute to find due retries. Cost: $1/month."
+    result = check_engineering_plan(tmp_path, plan, "plan.md")
+    rel = [f for f in result["findings"] if f["principle"] == "Reliability"]
+    assert rel and rel[0]["severity"] == "warn"
+    assert result["ok"]
+
+
+def test_plan_gate_accepts_polling_with_event_path_and_backstop(tmp_path: Path) -> None:
+    _init_docs(tmp_path)
+    plan = (
+        "Each retry schedules a Cloud Tasks wake-up at its due time. "
+        "A cron backstop every 15 minutes catches lost tasks. Cost: $1/month."
+    )
+    result = check_engineering_plan(tmp_path, plan, "plan.md")
+    assert not [f for f in result["findings"] if f["principle"] == "Reliability"]
+
+
+def test_plan_gate_checklist_names_event_driven_rules(tmp_path: Path) -> None:
+    _init_docs(tmp_path)
+    result = check_engineering_plan(tmp_path, None, "plan.md")
+    assert any("event-driven-work.md" in item for item in result["checklist"])

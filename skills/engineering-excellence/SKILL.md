@@ -1,8 +1,8 @@
 ---
 name: engineering-excellence
 description: "ALWAYS-ON: audits plans and code for KISS, YAGNI, DRY, SOLID, testability, and run cost against a budget; maintains .heyeddi/docs/engineering/. Use on every chat that plans or changes code, before merge, refactor, ADRs, or reuse-catalog work. Not for visual UX (ux-flow-auditor) or full CI (pre-merge-gate includes this audit)."
-version: 1.2.0
-product-version: 3.8.22
+version: 1.4.0
+product-version: 3.8.23
 author: HeyEddi-com
 ---
 
@@ -22,6 +22,7 @@ Simple solutions that scale: documented so the next agent does not over-build or
 - Refactor / architecture review: KISS, YAGNI, SOLID
 - User asks: "don't over-engineer", "document the system", "engineering notes"
 - A change adds infra, LLM calls, schedules, CI jobs, or polling: estimate its monthly cost
+- A change adds retries, timeouts, expiries, queues, or background jobs: follow `reference/event-driven-work.md`
 - User asks: "what will this cost", "stay on budget", "cheaper option"
 
 ## Subagents (default)
@@ -58,6 +59,7 @@ append_decision         → ADR when trade-off is non-obvious
 | **DRY** | Maintain `reuse-catalog.md`; chain `@no-duplicate-ui` for UI |
 | **SOLID** | Warn on fat routers; views thin, services fat |
 | **Testable** | Note views missing smoke specs |
+| **Reliability** | Timed work wakes up at its due time, failures arrive as events, queries read live rows only, one bounded backstop. Plan gate warns on polling with no event path. Detail: `reference/event-driven-work.md` |
 | **Budget** | Price each cost driver in the diff, including Firestore reads per day; plan gate warns when a plan adds one with no $/month; over budget or over the reads limit fails |
 
 ## `.heyeddi/` outputs

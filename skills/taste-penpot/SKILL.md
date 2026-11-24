@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
-description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST run the identity gate: designer thinking (project, peers, follow vs unique) documented under .heyeddi/designs/, ask clarifying questions when needed, then present 3–5 What/Why/How options. In a design request it waits for the pick before tokens or pixels; in a build request it picks the recommended option, records why, and continues. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A–G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow — absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
+description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST run the identity gate: designer thinking (project, peers, follow vs unique) documented under .heyeddi/designs/, ask clarifying questions when needed, then present 3-5 What/Why/How options. In a design request it waits for the pick before tokens or pixels; in a build request it picks the recommended option, records why, and continues. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A-G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow: absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
 version: 1.7.1
-product-version: 3.8.22
+product-version: 3.8.23
 author: HeyEddi-com
 ---
 
@@ -50,18 +50,18 @@ Full contract: `references/penpot-mcp.md`. Hard gates: `references/layout-hard-g
 
 After npm publish, prefer `"args": ["-y", "@heyeddi/penpot-mcp-server"]`. Keep `PENPOT_ACCESS_TOKEN` in the env Cursor passes to the server; never write it into `mcp.json` or chat. Hi-fi path: **design system first** (`add_color` / `add_typography`, fonts from `list_font_variants`) → `create_frame` with `layout` + children with `parentId` → `set_layout_item` + read `layout` / `parentId` / child `x,y` back → if children stuck at `0,0`, absolute 8px escape (do not rebuild Flex) → `export_shape` and look at the PNG. No PNG / Cloudflare ⇒ not done. `audit_board` alone never ships. `hifi.html` does not prove those boards. Absolute-only upstream zcubekr still requires ACT 2.6 `hifi.html`.
 
-Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present — **after**
+Run the whole skill in one pass: **PLAN → ACT → CRITIQUE**, then present it, **after**
 the identity is locked. Never ask the user to invoke a command.
 
 **Identity gate (hard):** If the user did not pin a style/brand and this is not a
 refine of an existing `design.md` system, load `references/identity-gate.md`
 **before any tokens or pixels**. Run **designer thinking** first (what the
 project is, what peers do, follow vs unique), write it to
-`.heyeddi/designs/<feature>/identity-thinking.md`, ask **2–3 clarifying
-questions** when job/audience cannot be inferred, then present **3–5**
+`.heyeddi/designs/<feature>/identity-thinking.md`, ask **2-3 clarifying
+questions** when job/audience cannot be inferred, then present **3-5**
 What/Why/How identities and write them to `identity-options.md`. In a
 **design request** (design, redesign, new look, `@taste-penpot` / `@heyeddi-design`
-shape): **stop and wait** for A–E (or a hybrid). In a **build request**
+shape): **stop and wait** for A-E (or a hybrid). In a **build request**
 (implement, build, fix, add a feature): pick the recommended option, mark it
 chosen in `identity-options.md` with two lines of why, and continue; the user
 can switch on the branch. Refine of an existing identity skips the gate. "You
@@ -102,7 +102,7 @@ Ground rules that override everything else:
 
 Deeper rules live in references. Load them when the pass needs them:
 
-- `references/identity-gate.md`: **designer thinking → 3–5 What/Why/How options
+- `references/identity-gate.md`: **designer thinking → 3-5 What/Why/How options
   + wait** when no style is pinned. Document under `.heyeddi/designs/`. Load at
   PLAN start for new looks / redesigns / adjective-only / scaffold first looks.
   Skip only for refine of an existing system or a pinned brand.
@@ -115,11 +115,11 @@ Deeper rules live in references. Load them when the pass needs them:
 - `references/flex-grid.md`: Penpot Flex (Shift+A) for one direction, CSS Grid
   (Ctrl/Cmd+Shift+A) for rows and columns together. Load during PLAN whenever
   the surface has structure, and in ACT when writing boards or the HTML fallback.
-- `references/layout-hard-gates.md`: **reject rules** Gates A–G (text-walls,
+- `references/layout-hard-gates.md`: **reject rules** Gates A-G (text-walls,
   Flex reflow / 0,0 children, HTML≠Penpot, PNG visual QA, design system first,
   layoutItem stickiness, page hygiene). Load at ACT start and before claiming
   done. Hi-fi bar = human settings/form craft, not a copy paste in a gray
-  rectangle. Known MCP limits are listed there — do not paper them over.
+  rectangle. Known MCP limits are listed there: do not paper them over.
 - `references/strokes-and-tokens.md`: Penpot 2.19 per-side strokes and shared
   token libraries. Load when a board or rectangle has a border, a divider, or
   a token binding.
@@ -146,9 +146,9 @@ destructive, see ACT safety).
 
 Load `references/identity-gate.md`. If the gate applies and the user has not
 chosen yet: run Phase 0 (project / peers / stance → `.heyeddi/…/identity-thinking.md`;
-ask if blocked), then present **3–5** What/Why/How options in chat and
+ask if blocked), then present **3-5** What/Why/How options in chat and
 `identity-options.md`. Design request: **end the turn** and do not continue to
-1.1–1.5 or ACT until they pick. Build request: pick the recommended option,
+1.1-1.5 or ACT until they pick. Build request: pick the recommended option,
 record why, continue. If the gate is skipped or already satisfied, state which
 identity is locked in one line and continue.
 
@@ -208,11 +208,11 @@ conviction beats a large one used timidly.
   `references/flex-grid.md`: Flex for a 1D stack, CSS Grid for a 2D skeleton.
   Child sizing is Fit Content, Fill, or Fix.
 - **Type**: one or two families with a clear job each; role scale from a ratio
-  (about 1.125–1.2 for Operate, 1.25 for most UI, 1.333+ for Persuade display);
-  body 16px floor on the web, measure 45–75 characters; weights per role.
+  (about 1.125-1.2 for Operate, 1.25 for most UI, 1.333+ for Persuade display);
+  body 16px floor on the web, measure 45-75 characters; weights per role.
 - **Colour**: pick a strategy first: *Restrained* (tinted neutrals + one accent),
-  *Committed* (one saturated colour owns 30–60% of the surface), *Full palette*
-  (3–4 named roles) or *Drenched* (the surface is the colour). Operate defaults to
+  *Committed* (one saturated colour owns 30-60% of the surface), *Full palette*
+  (3-4 named roles) or *Drenched* (the surface is the colour). Operate defaults to
   Restrained; Persuade and Experience may take the bolder ones. Then name roles:
   canvas, raised surface, text primary/secondary/muted, accent/action, focus,
   border, success/warning/error/info. Light or dark comes from one sentence of
@@ -235,8 +235,8 @@ into the plan. If none are given, use the mode's defaults.
 | The user says | Adjust |
 |---|---|
 | "bolder", "more punch", "more confident" | Push the existing system's strongest move further in one place: larger display step, the committed colour owns more area, one sharper focal composition. Quiet everything around it. No new fonts or colours unless asked. Never add effects as a substitute. |
-| "quieter", "calmer", "more premium", "less noisy" | Lower saturation (about 70–85% of current), fewer accent uses, lighter weights (900→600, 700→500), more air, flatter surfaces, less motion. Keep the point of view; quiet is not generic. |
-| "denser" / "more spacious" | Move the spacing scale one or two steps down/up and change component padding to match; Operate can go dense (8–32px), Persuade spacious (24–96px). |
+| "quieter", "calmer", "more premium", "less noisy" | Lower saturation (about 70-85% of current), fewer accent uses, lighter weights (900→600, 700→500), more air, flatter surfaces, less motion. Keep the point of view; quiet is not generic. |
+| "denser" / "more spacious" | Move the spacing scale one or two steps down/up and change component padding to match; Operate can go dense (8-32px), Persuade spacious (24-96px). |
 | "more colour" / "less colour" | Move along Restrained → Committed → Full → Drenched; keep contrast checks. |
 | "bigger type" / "smaller type" | Change the scale ratio or base step, never single sizes in isolation. |
 | "more motion" / "no motion" | Add or remove the one authored moment; feedback transitions stay either way. |
@@ -275,7 +275,7 @@ into the plan. If none are given, use the mode's defaults.
   with children still at `0,0` → **absolute 8px escape** (one try only). Do not
   write Flex hi-fi in `penpot-demo.md`.
 - **Gate D:** `export_shape` and read the PNG. Cloudflare / missing export ⇒
-  **not done** — say so. `audit_board` is a hint only. Prefer rect + cover
+  **not done**: say so. `audit_board` is a hint only. Prefer rect + cover
   image fill over `create_image`. `hifi.html` does not prove the Penpot file.
 - **Gate G:** do not leave empty Look/dated shells as the demo surface.
 - On a redesign, the current palette is not reusable. Summarize what stays
@@ -350,7 +350,7 @@ brief once `@heyeddi/penpot-mcp-server` is connected.
 
 ## 3. CRITIQUE
 
-**Hard stop:** do not present or hand off until Gates A–G in
+**Hard stop:** do not present or hand off until Gates A-G in
 `references/layout-hard-gates.md` pass. When Penpot boards exist, score the
 **canvas PNG**. `hifi.html` is not that canvas. `audit_board` alone is not
 done. Score each line 0-2 (0 = fails, 1 = acceptable, 2 = strong). Fix every 0,
@@ -360,12 +360,12 @@ pixels.** A board that stores type the canvas does not show is a fail.
 
 | # | Check | Pass looks like |
 |---|---|---|
-| 0 | **Hard gates** | Gates A–G: no text-wall; Flex only if reflow real (not 0,0); design system + real fonts; PNG read (or export block reported); no orphan empty pages (`layout-hard-gates.md`). Any fail = score 0 and stop. |
+| 0 | **Hard gates** | Gates A-G: no text-wall; Flex only if reflow real (not 0,0); design system + real fonts; PNG read (or export block reported); no orphan empty pages (`layout-hard-gates.md`). Any fail = score 0 and stop. |
 | 1 | **Specificity** | Cover the product name: it still could not be any other product. Not in a calibration cluster (anti-slop.md). |
 | 2 | **Mode fit** | Persuade: offer clear, action visible in its working form, proof shown. Operate: a regular user knows where everything is before noticing style. Read: comfortable column, clear wayfinding. Experience: the work leads. |
 | 3 | **Hierarchy** | Squint test: primary, secondary and groups readable in order; one focal point per view. |
 | 4 | **Layout and rhythm** | Grouping by proximity; tight inside groups, generous between; more space above headings than below; no monotone grid of identical cards. 1D regions are Flex; 2D regions are CSS Grid (`references/flex-grid.md`). Fit / Fill / Fix is explicit. Hi-fi CSS matches the spec. |
-| 5 | **Typography** | Role scale with visible steps; weight and colour carry hierarchy too; body ≥16px, measure 45–75ch; display ≤ about 96px, tracking not tighter than -0.04em; balanced headings. |
+| 5 | **Typography** | Role scale with visible steps; weight and colour carry hierarchy too; body ≥16px, measure 45-75ch; display ≤ about 96px, tracking not tighter than -0.04em; balanced headings. |
 | 6 | **Colour** | Strategy matches plan; every colour has a role; accent reserved for action/selection/state; secondary text on coloured grounds tinted from that hue, never grey. |
 | 7 | **Contrast and access** | Body ≥4.5:1, large text and controls ≥3:1; colour never the only signal; targets ≥44×44px (40 minimum); visible focus. |
 | 8 | **States** | Default, hover, focus, active, disabled, loading, error, empty, success where relevant; long text and empty data do not break layout. |

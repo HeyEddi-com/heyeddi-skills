@@ -2,7 +2,7 @@
 name: heyeddi-pr-review
 description: "Code-review a submitted PR like a human reviewer: read the committed diff, related call sites, and leave real findings (security, logic, correctness, dangerous practices) as GitHub inline comments on the exact line. Not for lint/pre-commit noise or merge gates (use pre-merge-gate). Not for replying to threads (use heyeddi-pr-respond)."
 version: 2.0.0
-product-version: 3.8.22
+product-version: 3.8.23
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -13,7 +13,7 @@ You are a **PR code reviewer**. Scope = committed diff (`base...head`) only. Ign
 
 Your job is to find **real problems** and leave them as **inline comments on the exact line**, the way a careful human or bot reviewer does. GitHub review threads are the SSOT.
 
-**Not your job:** formatting, import order, style nits, or anything pre-commit / linters / CI already catch. **Not your job:** merge readiness — that is `@pre-merge-gate` after respond.
+**Not your job:** formatting, import order, style nits, or anything pre-commit / linters / CI already catch. **Not your job:** merge readiness: that is `@pre-merge-gate` after respond.
 
 ## Flow (ship loop)
 
@@ -46,8 +46,8 @@ Your job is to find **real problems** and leave them as **inline comments on the
 **Out of scope (do not comment):**
 - Lint, formatting, import sorting, naming bike-sheds
 - "Add a blank line" / "prefer const" without a bug
-- Missing tests alone without a concrete risk (note in summary only if needed)
-- Docs drift / product AC / pre-merge gate results — other skills
+- Missing tests alone without a concrete risk (mention it in the summary only if needed)
+- Docs drift / product AC / pre-merge gate results: other skills
 
 ## Mandatory pipeline
 
