@@ -1,6 +1,6 @@
 ---
 name: heyeddi
-description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist — never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
+description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist: never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
 version: 3.4.11
 product-version: 3.8.23
 author: HeyEddi-com
@@ -14,7 +14,7 @@ Routes work to the right `@skill`, refreshes `.heyeddi/`, installs **thin always
 
 **Every-chat policy** is delivered via those agent/rule files (not by pasting full skill bodies). This skill remains the router + sync playbook. See `reference/always-on.md` and hub `docs/always-on-skills.md`.
 
-## Hard gate (first action — no exceptions)
+## Hard gate (first action, no exceptions)
 
 When this skill is invoked (`@heyeddi`, session start, or “what should we run”), **before** answering, routing, or reading other skills:
 
@@ -31,14 +31,14 @@ When this skill is invoked (`@heyeddi`, session start, or “what should we run�
 2. Confirm `AGENTS.md` and `.cursor/rules/heyeddi-always-on.mdc` exist (or `--check` passes).
 3. **Only then** continue: `verify_setup`, `suggest_skills` / `load_catalog`, routing, design, etc.
 
-**Forbidden:** Chat-only `@heyeddi` (explaining the skill, listing gates, or routing) without running a script that writes/verifies always-on files. Attaching the skill is not enough — a script must run.
+**Forbidden:** Chat-only `@heyeddi` (explaining the skill, listing gates, or routing) without running a script that writes/verifies always-on files. Attaching the skill is not enough: a script must run.
 
 ## When to use
 
 - **Every session start** on a HeyEddi project (`.heyeddi/` present or greenfield app request)
 - User asks "what skills do we have?" or "which skill should handle this?"
 - Before a multi-step pipeline (intake → scaffold → design → handoff → QA)
-- **Design / look / polish:** `@taste-penpot` first. If no style/identity is pinned and this is not a refine of an existing `design.md` system, taste runs the **identity gate** (`references/identity-gate.md`): designer thinking (project, peers, follow vs unique) written under `.heyeddi/designs/`, clarifying questions when needed, then **3–5** What/Why/How options. In a design request it waits for the user's pick. In a build request it picks the recommended option, records why, and keeps going (`reference/autonomy.md`). Then one pass for tokens. Prefer `@heyeddi/penpot-mcp-server` — **design system first** (colours/type/fonts), then boards; Flex only if reflow is real (else absolute 8px); PNG Gate D required (`taste-penpot/references/layout-hard-gates.md` A–G). Absolute-only MCP still needs `hifi.html`. Then `@heyeddi-design` records product context and **blocks handoff** on text-walls / empty phones / missing PNG. Vue implementation follows `@vue-design-system`. Do not let `@heyeddi-design` invent a second look. Never use unscoped `penpot-mcp-server` or `@penpot/mcp`.
+- **Design / look / polish:** `@taste-penpot` first. If no style/identity is pinned and this is not a refine of an existing `design.md` system, taste runs the **identity gate** (`references/identity-gate.md`): designer thinking (project, peers, follow vs unique) written under `.heyeddi/designs/`, clarifying questions when needed, then **3-5** What/Why/How options. In a design request it waits for the user's pick. In a build request it picks the recommended option, records why, and keeps going (`reference/autonomy.md`). Then one pass for tokens. Prefer `@heyeddi/penpot-mcp-server`: **design system first** (colours/type/fonts), then boards; Flex only if reflow is real (else absolute 8px); PNG Gate D required (`taste-penpot/references/layout-hard-gates.md` A-G). Absolute-only MCP still needs `hifi.html`. Then `@heyeddi-design` records product context and **blocks handoff** on text-walls / empty phones / missing PNG. Vue implementation follows `@vue-design-system`. Do not let `@heyeddi-design` invent a second look. Never use unscoped `penpot-mcp-server` or `@penpot/mcp`.
 - **Redesign / from scratch:** `@taste-penpot` loads `references/code-to-design.md`, then the **identity gate** (unless the user pinned the new identity). Scope is the whole app, the named pages, or one page. The pass writes the audit and the proposal. It does not edit Vue until the user asks to build (the request was for a design, not code).
 - **Any time one pillar runs**: bookend with `load_workflow_context` / `append_pillar_opinion`
 - After `@heyeddi-intake`: follow `skill-routing.json` downstream

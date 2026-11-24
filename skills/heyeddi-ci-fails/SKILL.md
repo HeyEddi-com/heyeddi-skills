@@ -1,6 +1,6 @@
 ---
 name: heyeddi-ci-fails
-description: "Diagnose and fix failing GitHub Checks on PR work by default: fetch evidence, write ephemeral ci-fails report, apply fixes, verify locally. Run automatically — do not wait for user to ask. Never merge without authorize merge. Companion to /heyeddi fails."
+description: "Diagnose and fix failing GitHub Checks on PR work by default: fetch evidence, write ephemeral ci-fails report, apply fixes, verify locally. Run automatically: do not wait for user to ask. Never merge without authorize merge. Companion to /heyeddi fails."
 version: 1.1.0
 product-version: 3.8.23
 author: HeyEddi-com
@@ -13,7 +13,7 @@ Local agent counterpart to App `/heyeddi fails`: fetch failing Checks, write a d
 
 ## Default behavior (no confirmation)
 
-Run this skill **automatically** on any PR work — open PR, PR branch, review request, or before `@heyeddi-pr-respond`. Do **not** wait for the user to mention CI or ask you to fix failures.
+Run this skill **automatically** on any PR work: open PR, PR branch, review request, or before `@heyeddi-pr-respond`. Do **not** wait for the user to mention CI or ask you to fix failures.
 
 - **Always** fetch and diagnose failing Checks
 - **Always** apply fixes when the diagnosis identifies actionable failures
@@ -35,7 +35,7 @@ Never commit these. GitHub Checks remain SSOT.
 fetch_failing_checks --pr <N>
 write_ci_fails_report --pr <N> --force
 → fill likely cause / proposed fix from logs
-apply fixes when diagnosis identifies actionable failures (default — do not ask)
+apply fixes when diagnosis identifies actionable failures (default: do not ask)
 discover_and_verify [--run]
 assert_no_merge --check
 → commit + push to PR branch when fixes applied

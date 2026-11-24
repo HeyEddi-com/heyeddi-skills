@@ -14,7 +14,7 @@ paths:
 
 **Always on**: before the first git action of a session, `verify_setup --check`. Missing prefs get detected defaults, not a stop. See `reference/setup-always-on.md` and hub `docs/always-on-skills.md`.
 
-Does **not** quiz frontend, backends, package manager, or CI — those are filled by scaffold / engineering / CI skills as the project evolves.
+Does **not** quiz frontend, backends, package manager, or CI: those are filled by scaffold / engineering / CI skills as the project evolves.
 
 ## When to use
 
@@ -82,9 +82,9 @@ python .agents/skills/heyeddi-setup/scripts/verify_setup.py --project-root . --c
 
 Read `.heyeddi/stack.json` before branch or PR-base assumptions:
 
-- `git.environments` — which branch maps to production / staging / (optional) dev
+- `git.environments`: which branch maps to production / staging / (optional) dev
 - `git.pr_base` / `git.default_branch`
-- `git.custom_workflow` — if set, follow that description over the preset
+- `git.custom_workflow`: if set, follow that description over the preset
 - Commit, push, PR, merge, release, env access: run `check_permission.py`; do not read `agent.*` by hand. Legacy `agent.commit` / `agent.push` keys are still honored.
 
 ## Never
@@ -105,8 +105,8 @@ Add `--route /path` or `--mode <sub-command>` when you know them. If the suggest
 
 ## Related
 
-- `reference/setup-always-on.md` — hard gate policy
-- `reference/stack-schema.md` — key list
-- `@heyeddi` — hard-route setup when prefs incomplete
-- `@pre-merge-gate` — runs `verify_setup --check`
-- `@project-engineering` / `@flutter-engineering` — discover and write tech into `stack.json`
+- `reference/setup-always-on.md`: hard gate policy
+- `reference/stack-schema.md`: key list
+- `@heyeddi`: hard-route setup when prefs incomplete
+- `@pre-merge-gate`: runs `verify_setup --check`
+- `@project-engineering` / `@flutter-engineering`: discover and write tech into `stack.json`

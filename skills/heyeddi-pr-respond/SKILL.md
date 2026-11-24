@@ -54,7 +54,7 @@ Review **submission bodies** often list findings like:
 
 ```
 **Commented on the diff**
-1. 🔴 Bug title — `path/to/file.py:185`
+1. 🔴 Bug title: `path/to/file.py:185`
 ```
 
 **Mandatory:**

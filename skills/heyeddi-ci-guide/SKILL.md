@@ -26,9 +26,9 @@ Human PR review stays on `@heyeddi-pr-review` / `@heyeddi-pr-respond`.
 
 On any PR work (open PR, PR branch, review request):
 
-1. **Always** run `@heyeddi-ci-fails` first — fetch failing Checks, diagnose, fix actionable failures, commit + push
-2. **Always** run `@heyeddi-pr-respond` — fix all review items, commit + push, post every reply in-thread
-3. **Never** ask "do you want me to fix?" or "should I comment on threads?" — that is always the default
+1. **Always** run `@heyeddi-ci-fails` first: fetch failing Checks, diagnose, fix actionable failures, commit + push
+2. **Always** run `@heyeddi-pr-respond`: fix all review items, commit + push, post every reply in-thread
+3. **Never** ask "do you want me to fix?" or "should I comment on threads?": that is always the default
 4. **Never** skip CI because the user did not mention it
 5. Only merge can need a question: merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
 
@@ -36,10 +36,10 @@ On any PR work (open PR, PR branch, review request):
 
 See `reference/commands.md`. Common:
 
-- `/heyeddi review` / `again` / `check` / `deep` — review passes
-- `/heyeddi ci` / `/heyeddi fails` — failed Checks analysis (billable path)
-- `/heyeddi ask …` / `/heyeddi debate …` — Q&A on findings
-- Reply on an inline HeyEddi finding — debate when parent looks like HeyEddi
+- `/heyeddi review` / `again` / `check` / `deep`: review passes
+- `/heyeddi ci` / `/heyeddi fails`: failed Checks analysis (billable path)
+- `/heyeddi ask …` / `/heyeddi debate …`: Q&A on findings
+- Reply on an inline HeyEddi finding: debate when parent looks like HeyEddi
 
 ## Auth matrix
 
@@ -63,7 +63,7 @@ Spot is **shipped**:
 
 - Prefer **GHA + workspace Runners mode** (`overflow` / `always`) with `runs-on: ${{ vars.HEYEDDI_RUNS_ON || 'ubuntu-latest' }}`
 - Sealed `pipeline:` jobs post `HeyEddi Runner: {job_id}` Checks for entitled workspaces
-- Claim a job ran only with Check/Spot evidence — see `@heyeddi-ci-runners`
+- Claim a job ran only with Check/Spot evidence: see `@heyeddi-ci-runners`
 
 ## Install
 
