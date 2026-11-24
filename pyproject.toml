@@ -37,6 +37,10 @@ dev = [
 [tool.uv]
 default-groups = []
 
+[tool.pytest.ini_options]
+# Scaffold and eval sample apps carry their own tests and dependencies.
+testpaths = ["tests"]
+
 [tool.poe]
 include = []
 
