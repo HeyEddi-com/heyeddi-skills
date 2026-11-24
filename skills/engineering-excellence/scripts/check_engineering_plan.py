@@ -21,6 +21,14 @@ COST_DRIVER = re.compile(
     r"macos runner|larger runner)",
     re.I,
 )
+POLL_WORK = re.compile(
+    r"(\bcron\b|polling|setInterval|Cloud Scheduler|scheduled job|"
+    r"every \d+ ?(?:s|sec|secs|seconds?|min|mins|minutes?)\b|every (?:second|minute))",
+    re.I,
+)
+EVENT_PATH = re.compile(
+    r"(Cloud Tasks|Pub/?Sub|Eventarc|webhook|log sink|event[- ]driven|due time|backstop)", re.I
+)
 COST_HINT = re.compile(r"(\bcost|\bbudget|\$\s?\d|per month|/mo\b|estimate_change_cost)", re.I)
 
 
@@ -88,6 +96,20 @@ def _plan_smells(plan_text: str, plan_label: str) -> list[dict]:
                 ),
             }
         )
+    poll = POLL_WORK.search(plan_text)
+    if poll and not EVENT_PATH.search(plan_text):
+        findings.append(
+            {
+                "principle": "Reliability",
+                "severity": "warn",
+                "file": plan_label,
+                "message": (
+                    f"Plan polls for work ({poll.group(0)}) with no event path. Schedule a "
+                    "wake-up at each due time, take failures as events, and keep a bounded "
+                    "backstop. See reference/event-driven-work.md."
+                ),
+            }
+        )
     return findings
 
 
@@ -98,6 +120,8 @@ def check_engineering_plan(root: Path, plan_text: str | None, plan_label: str) -
         "Prefer extend existing modules over new abstractions",
         "Keep views/routers thin; services/composables hold logic",
         "Cost drivers (infra, LLM calls, schedules, CI, polling): state $/month and the cheaper option",
+        "Timed or background work: follow reference/event-driven-work.md (wake-up at due time, "
+        "live rows only, bounded backstop)",
         "After edits: audit_engineering.py --check (errors fail; warns advisory)",
         "After edits: estimate_change_cost.py --check (over budget fails)",
     ]

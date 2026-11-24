@@ -92,7 +92,7 @@ Pick these unless the plan says why not:
 - Serverless before clusters. Cloud Run before GKE; a managed DB at the smallest tier before AlloyDB or Spanner.
 - No NAT for Google APIs. Private Google Access is free.
 - Model calls: prompt caching on the stable prefix, Batch API for work that can wait, lower effort. Measure a smaller model on real requests before you switch; do not swap models silently.
-- Schedules and polling: as slow as the user can tolerate; event triggers or SSE over timers.
+- Schedules and polling: as slow as the user can tolerate; event triggers or SSE over timers. For retries, timeouts, and background jobs follow `event-driven-work.md`: a wake-up at each due time, live rows only, one bounded backstop.
 - CI: `ubuntu-latest` unless the job needs more.
 - Non-prod: stop or shrink it outside working hours.
 

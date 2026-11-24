@@ -1,6 +1,6 @@
 {
   "skill": "engineering-excellence",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "tools": [
     {
       "name": "init_engineering_docs",
@@ -18,7 +18,7 @@
     },
     {
       "name": "check_engineering_plan",
-      "description": "Always-on plan gate: engineering docs ready + optional plan YAGNI/KISS smells.",
+      "description": "Always-on plan gate: engineering docs ready + optional plan YAGNI/KISS, budget, and polling-without-event-path smells.",
       "parameters": {
         "type": "object",
         "properties": {
