@@ -1,8 +1,8 @@
 ---
 name: heyeddi-pr-review
 description: "Code-review a submitted PR like a human reviewer: read the committed diff, related call sites, and leave real findings (security, logic, correctness, dangerous practices) as GitHub inline comments on the exact line. Not for lint/pre-commit noise or merge gates (use pre-merge-gate). Not for replying to threads (use heyeddi-pr-respond)."
-version: 2.0.1
-product-version: 3.8.21
+version: 2.0.0
+product-version: 3.8.22
 author: HeyEddi-com
 disable-model-invocation: true
 ---
