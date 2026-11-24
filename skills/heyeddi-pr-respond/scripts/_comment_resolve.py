@@ -410,6 +410,45 @@ def find_review_thread_id(
     return None
 
 
+_FIXED_REPLY = re.compile(r"^[\s*_>`#-]*(fixed|done|addressed)\b", re.IGNORECASE)
+
+
+def is_fixed_reply(body: str) -> bool:
+    """True when a reply opens with Fixed / Done / Addressed. Declines and partial fixes stay open."""
+    return bool(_FIXED_REPLY.match(body or ""))
+
+
+_RESOLVE_MUTATION = (
+    "mutation($threadId:ID!){resolveReviewThread(input:{threadId:$threadId})"
+    "{thread{id isResolved}}}"
+)
+
+
+def resolve_review_thread(
+    root: Path, repo: str, pr: int, root_comment_id: str
+) -> tuple[str, str | None]:
+    """Resolve the review thread that holds ``root_comment_id``. Returns (resolved|error, detail)."""
+    thread_id = find_review_thread_id(root, repo, pr, root_comment_id)
+    if not thread_id:
+        return "error", f"no review thread contains comment {root_comment_id}"
+    raw = run_command(
+        ["gh", "api", "graphql", "-f", f"query={_RESOLVE_MUTATION}", "-f", f"threadId={thread_id}"],
+        root,
+    )
+    if raw.startswith("[exit") or raw.startswith("[error]"):
+        return "error", raw[:300]
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return "error", "graphql non-JSON"
+    if data.get("errors"):
+        return "error", json.dumps(data["errors"])[:300]
+    thread = ((data.get("data") or {}).get("resolveReviewThread") or {}).get("thread") or {}
+    if not thread.get("isResolved"):
+        return "error", f"thread {thread_id} still unresolved"
+    return "resolved", thread_id
+
+
 def _latest_inline(root_id: str, index: dict[str, CommentRecord]) -> CommentRecord | None:
     members = [
         rec

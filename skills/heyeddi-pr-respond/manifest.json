@@ -69,7 +69,7 @@
     },
     {
       "name": "assert_no_merge",
-      "description": "Hard-fail merge plans unless user said authorize merge this turn.",
+      "description": "Hard-fail merge plans unless agent.permissions.merge is auto or the user said authorize merge this turn.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -119,7 +119,7 @@
     },
     {
       "name": "post_thread_replies",
-      "description": "Post every ## Comment <id> reply in-thread from --replies-text (REST→GraphQL; MCP hint on failure).",
+      "description": "Post every ## Comment <id> reply in-thread from --replies-text (REST→GraphQL; MCP hint on failure). Resolves threads whose reply starts with Fixed (--no-resolve to skip).",
       "parameters": {
         "type": "object",
         "properties": {

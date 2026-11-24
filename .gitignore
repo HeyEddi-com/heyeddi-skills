@@ -33,3 +33,7 @@ evals/runs/
 
 # Orchestrator sync artifact on the skills hub (consumer apps track .heyeddi/)
 /.heyeddi/
+
+# Flutter fixture build output (flutter pub get)
+fixtures/sample-flutter-app/.dart_tool/
+fixtures/sample-flutter-app/pubspec.lock

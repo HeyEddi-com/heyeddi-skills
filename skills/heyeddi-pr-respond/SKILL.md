@@ -1,7 +1,7 @@
 ---
 name: heyeddi-pr-respond
-description: "Respond to all PR review feedback — human reviewers, @heyeddi-pr-review inline findings, HeyEddi CI. Same GitHub user who left the review is fine. Auto-fix, commit+push, in-thread replies, CI check first. Not the reviewer skill (use heyeddi-pr-review) and not the merge gate (use pre-merge-gate)."
-version: 2.5.0
+description: "Respond to all PR review feedback: human reviewers, @heyeddi-pr-review inline findings, HeyEddi CI. Same GitHub user who left the review is fine. Auto-fix, commit+push, in-thread replies, CI check first. Not the reviewer skill (use heyeddi-pr-review) and not the merge gate (use pre-merge-gate)."
+version: 2.6.0
 product-version: 3.8.21
 author: HeyEddi-com
 disable-model-invocation: true
@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # HeyEddi PR Respond
 
-**PR author response to every review source** — human teammates, **`@heyeddi-pr-review` line findings**, bots, and **HeyEddi CI**.
+**PR author response to every review source**: human teammates, **`@heyeddi-pr-review` line findings**, bots, and **HeyEddi CI**.
 
 Same GitHub account may both review and respond. Unresolved **review-thread roots** stay postable even when authored by the responder. Skip only when the thread already ends with the responder's reply, or when the item is a non-thread issue comment.
 
@@ -26,7 +26,7 @@ There is **one** respond skill. Do not split human vs CI into different pipeline
 
 ## Default behavior (no confirmation)
 
-On any PR work, **do not ask** whether to fix findings, check CI, or post threaded replies — always do all three.
+On any PR work, **do not ask** whether to fix findings, check CI, or post threaded replies. Always do all three.
 
 1. **Always** run `@heyeddi-ci-fails` first (fetch, diagnose, fix actionable CI failures)
 2. **Fix** valid review items automatically
@@ -59,7 +59,7 @@ Review **submission bodies** often list findings like:
 
 **Mandatory:**
 
-1. Run `build_comment_inventory` after fetch — parses root summaries + inline IDs.
+1. Run `build_comment_inventory` after fetch. It parses root summaries + inline IDs.
 2. Every **postable** review thread gets fix/decline analysis, code change when needed, and `## Comment <id>` reply draft.
 3. Orphan items still get fix/decline in code and appear in `## Summary`.
 4. Do **not** treat the root summary as done after one top-level reply.
@@ -70,7 +70,7 @@ Review **submission bodies** often list findings like:
 Reviewers and HeyEddi debate only see **remote HEAD**.
 
 1. Apply fixes for every inventory item marked fix/partial
-2. **Commit** — do not ask
+2. **Commit**: do not ask
 3. **Push** to the PR branch
 4. Post in-thread replies
 
@@ -89,7 +89,11 @@ Reply only on **unresolved pull-request review threads**, at the **root** commen
 - **Do not** "Acknowledged review attachment…" spam
 - **Do not** tell the user a thread "could not be found" and stop
 
-### If `post_thread_replies` errors for a review-thread id — MCP fallback (mandatory)
+### Resolve fixed threads
+
+The HeyEddi Reviewer does not review a new commit while a thread is open. Start every fixed reply with **Fixed** (or Done / Addressed): `post_thread_replies` resolves that thread right after the reply posts. A decline or a partial fix starts with something else (**Declined:**, **Partially fixed:**) and stays open for the reviewer. `--no-resolve` leaves every thread open. A `resolve_errors` entry is not a failed reply: resolve that thread with GitHub MCP `resolve_review_thread` or `gh api graphql` `resolveReviewThread`.
+
+### If `post_thread_replies` errors for a review-thread id: MCP fallback (mandatory)
 
 Never give up on a real review thread. Use the GitHub MCP tool from that error's `mcp_fallback`:
 
@@ -117,8 +121,9 @@ assert_no_merge --check                  → passes on merge policy auto, or aut
 → if any fix: commit + push (automatic; check_permission decides, default balanced allows on a PR branch)
 assert_fixes_pushed --check
 → compose ## Comment <id> for every postable_reply_id + ## Summary last
-post_thread_replies --pr <N> --replies-text '...'
+post_thread_replies --pr <N> --replies-text '...'   → also resolves threads whose reply starts with Fixed
 → on any posted[].status=error: resolve_reply_targets + GitHub MCP reply (mandatory)
+→ on any resolve_errors entry: resolve that thread (MCP resolve_review_thread)
 verify_response --pr <N> --replies-text '...' --use-inventory --live --check
 → optional one Summary after verify
 ```
@@ -140,7 +145,7 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 | `assert_no_merge` | Merge hard gate |
 | `assert_fixes_pushed` | Commit+push gate before Fixed replies |
 | `resolve_reply_targets` | Map each id → root target + MCP fallback hint |
-| `post_thread_replies` | Post every draft in-thread (REST → GraphQL → MCP hint) |
+| `post_thread_replies` | Post every draft in-thread (REST → GraphQL → MCP hint); resolve threads answered with Fixed |
 | `verify_response` | Hard-fail if any postable ID missing |
 
 ## Requires

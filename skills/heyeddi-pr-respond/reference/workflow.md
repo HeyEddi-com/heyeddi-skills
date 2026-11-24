@@ -71,6 +71,8 @@ The comment cache keeps `<<<UNTRUSTED_` on `body` for the model. `body_raw` is t
 
 If any review-thread `posted[].status` is `error`: run `resolve_reply_targets`, then **GitHub MCP** `add_reply_to_pull_request_comment` with the root id. Never quote-reply an issue comment. Never stop with "thread not found".
 
+A reply that starts with **Fixed** (or Done / Addressed) resolves its thread after it posts, so the HeyEddi Reviewer can review the next commit. Declines and partial fixes stay open. `--no-resolve` turns this off. For each `resolve_errors` entry, resolve the thread with GitHub MCP `resolve_review_thread`.
+
 ## Phase 7: Verify
 
 ```bash
