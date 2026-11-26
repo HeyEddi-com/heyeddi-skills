@@ -25,7 +25,7 @@ Every HeyEddi skill that changes code follows this. TDD is the default. It is no
 
 Use the layers the change can break, not every layer every time. A new API field with a form needs an integration test and a component or Playwright test. A pure function needs a unit test.
 
-Skip a test only for docs, copy, typos, or pure styling that visual QA covers. Say which layers you skipped and why in the final summary.
+Skip a test only for docs, copy, typos, or pure styling that visual QA covers. Say which layers you skipped and why in the final summary. A layer the change can break is not skippable because it takes longer or needs setup: set it up and run it.
 
 ## Test login
 

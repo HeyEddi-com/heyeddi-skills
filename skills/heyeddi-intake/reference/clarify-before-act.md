@@ -8,7 +8,7 @@ Every skill follows this order when information is missing. It is the "missing i
 1. Read .heyeddi/     product.md, design.md, routing, skills-index, handoffs
 2. Run load/audit     your skill's readonly script
 3. Inspect repo       code, openapi, tests: objective facts
-4. Decide + record    the documented default or the most conservative reading;
+4. Decide + record    the documented default or the complete working version;
                       append_decision.py when it matters, else Assumptions in the summary
 5. Act                keep going
 ```

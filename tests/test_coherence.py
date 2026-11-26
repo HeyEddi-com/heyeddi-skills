@@ -128,3 +128,17 @@ def test_merge_rule_is_one_sentence_everywhere() -> None:
         if old.search(p.read_text(encoding="utf-8")) and "agent.permissions.merge" not in p.read_text(encoding="utf-8")
     ]
     assert not stale, "Merge rule restated without the policy: " + ", ".join(stale)
+
+
+def test_agreement_requires_finishing_instead_of_listing_leftovers() -> None:
+    """Agents ended runs with lists of work they had not done. Doing it is the rule."""
+    for path in (TEMPLATE, RULE):
+        body = path.read_text(encoding="utf-8")
+        assert "**Finish it**" in body, f"{path.name} lost the finish rule"
+        assert "Never report work you can do" in body
+    autonomy = (HEYEDDI_REF / "autonomy.md").read_text(encoding="utf-8")
+    assert "## Finish before you report" in autonomy
+    assert "is not a reason to skip" in autonomy
+    docs = [*_skill_docs(), *(ROOT / "docs").glob("*.md")]
+    vague = [str(p.relative_to(ROOT)) for p in docs if "most conservative reading" in p.read_text(encoding="utf-8")]
+    assert not vague, "'Most conservative reading' reads as 'do less': " + ", ".join(vague)

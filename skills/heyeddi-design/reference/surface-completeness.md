@@ -17,7 +17,7 @@ Agents often ship the **happy-path minimum** (two fields + button, a table with 
 **In scope:** everything a user would expect **on the screen(s) you're designing now**.  
 **Out of scope:** other routes: unless the brief explicitly includes them (e.g. settings inside app shell).
 
-Unwired backend is fine; **missing UI** for in-scope affordances is not. Record gaps in **`## Deferred wiring`**, not by omitting controls.
+In a design request, unwired backend is fine; **missing UI** for in-scope affordances is not. Record gaps in **`## Deferred wiring`**, not by omitting controls. In a build request, wire the backend too (`@heyeddi` `reference/autonomy.md`); **Deferred wiring** holds only what a missing secret or external service blocks.
 
 ## Core rule
 
@@ -88,7 +88,7 @@ Ask: *"What else would a user look for here?"*
 | Export CSV | Disabled button + tooltip | Export job + download URL |
 ```
 
-Craft implements the **Shipped as** column. Engineering picks up **Wire later**.
+Craft implements the **Shipped as** column. In a build request the same run then does **Wire later**.
 
 ---
 
