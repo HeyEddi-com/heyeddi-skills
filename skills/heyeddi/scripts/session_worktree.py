@@ -26,9 +26,16 @@ import json
 import os
 import subprocess
 import sys
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
+
+try:
+    import fcntl
+except ImportError:  # Windows
+    fcntl = None  # type: ignore[assignment]
+    import msvcrt
 
 MARKER_NAME = "heyeddi-session.json"
 SESSION_ENV_VARS = ("HEYEDDI_SESSION_ID", "CLAUDE_CODE_SESSION_ID")
@@ -78,9 +85,29 @@ def load_marker(worktree: Path) -> dict[str, Any] | None:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+@contextmanager
+def _locked(worktree: Path) -> Iterator[None]:
+    """Serialize read-modify-write so concurrent sessions never drop each other's entries."""
+    lock_path = marker_path(worktree).with_suffix(".lock")
+    with open(lock_path, "a+", encoding="utf-8") as handle:
+        if fcntl is not None:
+            fcntl.flock(handle, fcntl.LOCK_EX)
+        else:
+            handle.seek(0)
+            msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+        try:
+            yield
+        finally:
+            if fcntl is not None:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+            else:
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+
+
 def _save(worktree: Path, marker: dict[str, Any]) -> None:
     path = marker_path(worktree)
-    tmp = path.with_suffix(".tmp")
+    tmp = path.with_suffix(f".{os.getpid()}.tmp")
     tmp.write_text(json.dumps(marker, indent=2) + "\n", encoding="utf-8")
     tmp.replace(path)
 
@@ -110,6 +137,11 @@ def role_of(marker: dict[str, Any] | None, session: str) -> str:
 
 
 def claim(worktree: Path, session: str, *, task: str | None, pr: str | None) -> dict[str, Any]:
+    with _locked(worktree):
+        return _claim(worktree, session, task=task, pr=pr)
+
+
+def _claim(worktree: Path, session: str, *, task: str | None, pr: str | None) -> dict[str, Any]:
     marker = load_marker(worktree)
     now = _now()
     if marker is None:
@@ -163,6 +195,13 @@ def check(worktree: Path, session: str, action: str) -> tuple[int, dict[str, Any
 
 
 def handoff(
+    worktree: Path, session: str, to: str, *, user_approved: bool
+) -> tuple[int, dict[str, Any]]:
+    with _locked(worktree):
+        return _handoff(worktree, session, to, user_approved=user_approved)
+
+
+def _handoff(
     worktree: Path, session: str, to: str, *, user_approved: bool
 ) -> tuple[int, dict[str, Any]]:
     marker = load_marker(worktree)

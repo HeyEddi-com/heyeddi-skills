@@ -125,6 +125,24 @@ def test_cli_uses_session_env(repo: tuple[Path, Path], monkeypatch: pytest.Monke
     assert sw.main(["check", "--path", str(wt), "--action", "merge"]) == 0
 
 
+def test_concurrent_claims_keep_every_session(repo: tuple[Path, Path]) -> None:
+    _, wt = repo
+    script = SCRIPTS / "session_worktree.py"
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    procs = [
+        subprocess.Popen(
+            [sys.executable, str(script), "claim", "--path", str(wt), "--session", f"s-{i}"],
+            stdout=subprocess.DEVNULL,
+            env=env,
+        )
+        for i in range(12)
+    ]
+    assert all(p.wait() == 0 for p in procs)
+    marker = sw.load_marker(wt)
+    assert sorted(s["id"] for s in marker["sessions"]) == sorted(f"s-{i}" for i in range(12))
+    assert [s["role"] for s in marker["sessions"]].count("owner") == 1
+
+
 def test_cli_without_session_fails(repo: tuple[Path, Path]) -> None:
     _, wt = repo
     with pytest.raises(SystemExit):
