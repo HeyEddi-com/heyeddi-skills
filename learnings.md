@@ -1330,3 +1330,9 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** Agents ended runs with lists of work they had not done, or skipped work because a doc did not mention it. The autonomy rules banned ending a turn for status but never required the request to be finished.
 
 **Decision:** Hub **v3.8.25**, CI pack **v1.4.9**. The always-on block gains **Finish it**, `reference/autonomy.md` gains "Finish before you report", and "most conservative reading" is replaced by the reading that delivers a complete working feature.
+
+## 2026-11-26: Skill changes fail CI without a version bump
+
+**Context:** PR #71 changed skills and merged with the hub version unchanged, so the Release workflow passed and published nothing.
+
+**Decision:** Hub **v3.8.26**. `tests/test_version_bump.py` fails when `skills/` or `packs/` differ from the released tag and the hub, skill manifest, or pack version is not bumped. CI checks out full history for the tags.
