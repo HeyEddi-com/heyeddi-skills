@@ -4,7 +4,7 @@
 
 Always-on **policy** lives in consumer **`AGENTS.md`** (managed block) and **`.cursor/rules/heyeddi-always-on.mdc`** (`alwaysApply: true`). Cursor injects those every Agent chat. Skills stay playbooks + scripts.
 
-`@heyeddi` **must** install/verify those files on every invoke by running a script — not by chatting about them.
+`@heyeddi` **must** install/verify those files on every invoke by running a script, not by chatting about them.
 
 ## Required
 
