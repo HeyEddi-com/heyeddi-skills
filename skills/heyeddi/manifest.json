@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi",
-  "version": "3.4.11",
+  "version": "3.5.0",
   "tools": [
     {
       "name": "sync",
@@ -294,6 +294,61 @@
         ]
       },
       "script": "scripts/append_pillar_opinion.py",
+      "readonly": false
+    },
+    {
+      "name": "session_worktree",
+      "description": "Session marker for a git worktree: claim (owner or contributor), check an action (commit/push owner+contributor; merge/delete/rebase/force-push owner only), list worktrees with owners, handoff ownership. Marker lives in the worktree's git dir, never tracked.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "enum": [
+              "claim",
+              "check",
+              "handoff",
+              "list"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "description": "Worktree path (default .)"
+          },
+          "session": {
+            "type": "string",
+            "description": "Session id (default HEYEDDI_SESSION_ID or CLAUDE_CODE_SESSION_ID)"
+          },
+          "task": {
+            "type": "string"
+          },
+          "pr": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "commit",
+              "push",
+              "merge",
+              "delete",
+              "force-push",
+              "rebase",
+              "handoff"
+            ]
+          },
+          "to": {
+            "type": "string"
+          },
+          "user_approved": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "command"
+        ]
+      },
+      "script": "scripts/session_worktree.py",
       "readonly": false
     }
   ]

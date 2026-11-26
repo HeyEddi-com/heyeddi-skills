@@ -1,8 +1,8 @@
 ---
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist: never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
-version: 3.4.11
-product-version: 3.8.23
+version: 3.5.0
+product-version: 3.8.24
 author: HeyEddi-com
 ---
 
@@ -45,7 +45,7 @@ When this skill is invoked (`@heyeddi`, session start, or â€œwhat should we runâ
 
 ## Always-on siblings (every chat)
 
-After routing, the working agreement is the managed `AGENTS.md` block (`templates/always-on/AGENTS.section.md`): autonomy, setup, permissions, tests, engineering, cost, browser platform, prose, ship. Enforce it as written. Do not restate it in a skill. The gates it names: `@heyeddi-setup` `verify_setup`, `@heyeddi-local-first` `check_permission`, `@engineering-excellence` `check_engineering_plan` before code and `audit_engineering` plus `estimate_change_cost` after, `verify_prose`, `@pre-merge-gate --signoff`. Detail lives in `reference/autonomy.md` (run to completion, the only pauses, final summary) and `reference/testing.md` (test first, relevant layers). Host surfaces: `reference/host-surfaces.md`.
+After routing, the working agreement is the managed `AGENTS.md` block (`templates/always-on/AGENTS.section.md`): autonomy, setup, sessions and worktrees, permissions, tests, engineering, cost, browser platform, prose, ship. Enforce it as written. Do not restate it in a skill. The gates it names: `@heyeddi-setup` `verify_setup`, `@heyeddi-local-first` `check_permission`, `@engineering-excellence` `check_engineering_plan` before code and `audit_engineering` plus `estimate_change_cost` after, `verify_prose`, `@pre-merge-gate --signoff`. Detail lives in `reference/autonomy.md` (run to completion, the only pauses, final summary) and `reference/testing.md` (test first, relevant layers). Host surfaces: `reference/host-surfaces.md`.
 
 ## Automatic `.heyeddi/` + always-on upkeep
 
@@ -98,6 +98,7 @@ If `.heyeddi/docs/intake/skill-routing.json` exists, **follow route order**.
 | `init_workflow_sync.py` | Scaffold `.heyeddi/docs/workflow/` |
 | `load_workflow_context.py` | Sibling opinions + checklist for route |
 | `append_pillar_opinion.py` | Log opinion; request UX/design/product response |
+| `session_worktree.py` | Mark which session owns a worktree; gate commit, merge, and delete by role (`reference/session-worktrees.md`) |
 
 ## When the task is complete: suggest next skills
 
@@ -114,6 +115,7 @@ Add `--route /path` or `--mode <sub-command>` when you know them. If the suggest
 - `@engineering-excellence`: always-on plan + change gates
 - `reference/autonomy.md`: run the request to completion; the only pauses; one final summary
 - `reference/testing.md`: test first at the layers the change can break; hosted environments are look-only
+- `reference/session-worktrees.md`: act only on worktrees your session owns or joined; the session marker and its roles
 - `reference/browser-platform.md`: frontend and design skills load Modern Web Guidance (`legacy-scan` finds problems) and Chrome DevTools for agents. Quasar and PrimeVue stay the components. Playwright stays the screenshot tool. Localhost only.
 - `@heyeddi-intake`: upstream intake
 - `reference/host-surfaces.md`: prefer host plan/data/visual tools; portable degrade
