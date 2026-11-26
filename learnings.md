@@ -1324,3 +1324,9 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** On one machine several agent sessions run at once, each in its own worktree off a shared repository. Worktree and branch names describe the task, not the session, so after a summary an agent could not tell its own work from another session's: it misread which build was live, listed other sessions' worktrees as its own, and pushed a merge commit under a wrong author. That author came from a test that, run inside a pre-push hook, inherited `GIT_DIR` and wrote `user.name test` into the real repository's config; 113 commits on HeyEddi CI main carry it.
 
 **Decision:** Hub **v3.8.24**. `@heyeddi` **v3.5.0** adds `scripts/session_worktree.py` and `reference/session-worktrees.md`. A JSON marker in each worktree's git directory (never tracked, no `.gitignore` needed) names the owner session, contributors, task, PR, and handoffs. Owners do anything; contributors commit and push; unlisted sessions only read. Ownership moves by the owner or with the user's approval. The always-on block gains item 4, **Sessions and worktrees**. Tests that build fixture repos strip `GIT_*` from the environment.
+
+## 2026-11-26: Finish the request; never report leftovers
+
+**Context:** Agents ended runs with lists of work they had not done, or skipped work because a doc did not mention it. The autonomy rules banned ending a turn for status but never required the request to be finished.
+
+**Decision:** Hub **v3.8.25**, CI pack **v1.4.9**. The always-on block gains **Finish it**, `reference/autonomy.md` gains "Finish before you report", and "most conservative reading" is replaced by the reading that delivers a complete working feature.
