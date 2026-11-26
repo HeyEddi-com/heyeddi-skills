@@ -20,12 +20,22 @@ A request to build, fix, or change something approves the whole pipeline for it:
 - A next-step suggestion: if it is part of the request, run it yourself
 - A missing optional tool (Penpot server, `gh`, DevTools MCP): use the documented fallback
 
+## Finish before you report
+
+A list of things you did not do is not a result. Do them.
+
+Before the final summary, go through the request item by item and check the branch against it. Whatever the request needs to work is part of the request: the code, the wiring behind the UI, error and empty states, tests, migrations, config, docs, and the failures your change causes. If an item is missing, half-built, stubbed, untested, or failing, go back and do it. Repeat until the check is clean.
+
+Silence in a doc, spec, plan, brief, or ticket is not a reason to skip anything. Documents never list everything. Decide how the missing piece should work, build it, and record the choice.
+
+Never write "not done", "I did not do", "not covered", "the doc does not say", "remaining work", or "follow-up" about work you can do. The only items that may stay open are the ones in **The only pauses** below, each with the exact error or missing access that blocks it.
+
 ## When information is missing
 
 1. Read `.heyeddi/` (product.md, design.md, routing, stack.json).
 2. Run the skill's read-only scripts.
 3. Inspect the repo: code, OpenAPI, tests.
-4. Still open: take the default the skill documents, or the most conservative reading, and record it. A decision that matters goes to `append_decision.py`; the rest goes under **Assumptions** in the final summary.
+4. Still open: take the default the skill documents, or the reading that delivers a complete working feature, and record it. Careful applies to destructive and irreversible steps, not to how much of the request you build. A decision that matters goes to `append_decision.py`; the rest goes under **Assumptions** in the final summary.
 5. Keep going.
 
 ## The only pauses
@@ -51,6 +61,6 @@ One message at the end, in this order. Leave out empty sections. Every PR, issue
 **Done:** what changed, per feature, with links: PR, commits, CI runs
 **Tests:** layers run (unit / integration / frontend), layers skipped and why
 **Assumptions:** defaults you picked and where they are recorded
-**Needs you:** batched questions, asks from check_permission, denied steps, missing secrets
-**Next:** only work outside this request
+**Needs you:** only what you cannot do yourself: batched questions from the pause table, asks from check_permission, denied steps, missing secrets or logins
+**Next:** new work nobody asked for, one line at most. Never leftovers from this request
 ```
