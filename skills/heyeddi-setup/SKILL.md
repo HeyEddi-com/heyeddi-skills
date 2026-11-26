@@ -2,7 +2,7 @@
 name: heyeddi-setup
 description: "ALWAYS-ON prefs: ensures `.heyeddi/stack.json` holds git/env prefs and the agent permission preset. Missing prefs are filled with write_setup --defaults (no questions) so work never stops; the interview runs only when the user asks. Asks env layout, custom workflow escape hatch, worktrees, agent preset (cautious / balanced / autonomous). Tech stack is discovered by other skills. Use when setup is incomplete or the user says setup, preferences, or heyeddi-setup."
 version: 1.2.0
-product-version: 3.8.23
+product-version: 3.8.24
 author: HeyEddi-com
 paths:
   - ".heyeddi/stack.json"
