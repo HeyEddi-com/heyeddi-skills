@@ -14,4 +14,4 @@ Below production, pass `@pre-merge-gate --signoff` and merge. For production, me
 
 ## User asks if Spot ran their pipeline job
 
-Look up Checks (`gh pr checks` / `@heyeddi-ci-fails`). Cite `HeyEddi Runner: …` or the workflow Check conclusion. If none, say unknown — YAML lint is not execution. See `@heyeddi-ci-runners`.
+Look up Checks (`gh pr checks` / `@heyeddi-ci-fails`). Cite `HeyEddi Runner: …` or the workflow Check conclusion. If none, say unknown - YAML lint is not execution. See `@heyeddi-ci-runners`.

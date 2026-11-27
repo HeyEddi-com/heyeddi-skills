@@ -19,7 +19,7 @@ The marker records the owner session, the task, the PR, the branch, every sessio
 | Role | Who | May |
 |------|-----|-----|
 | Owner | The session that created or first claimed the worktree | Everything: commit, push, rebase, force-push, merge, delete |
-| Contributor | A later session that claimed it | Commit and push |
+| Contributor | A session the user let in (`claim --user-approved`) | Commit and push |
 | Not listed | Any other session | Read only |
 
 Ownership moves only with `handoff`: by the owner, or with `--user-approved` after the user says so. When the owner session has ended, the worktree stays read-only until the user hands it over; list it under **Needs you** in the final summary.
@@ -37,4 +37,8 @@ python3 $S handoff --path <worktree> --to <session> --user-approved
 
 `check` exits 0 when allowed, 1 when blocked, and 2 when the worktree has no marker. On 2, treat it as read-only, keep working, and list it under **Needs you** in the final summary so the user can say whose it is.
 
-Join someone else's worktree (`claim` as a contributor) only when the user asked you to work there.
+`claim` on another session's worktree is refused. Pass `--user-approved` only after the user asks you to work there. Otherwise make your own worktree on your own branch.
+
+## Stay in your repo
+
+Work only in the repo you were started in and in worktrees your session owns. Don't list, read, search, fetch, or run anything in sibling folders unless the user names them. You may reason about where something came from using what the user pasted and what this repo holds; if that isn't enough, ask.

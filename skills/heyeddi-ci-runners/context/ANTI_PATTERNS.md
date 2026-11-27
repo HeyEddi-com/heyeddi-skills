@@ -5,7 +5,7 @@
 - NEVER `gh pr merge` unless only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0
 - NEVER enable `auto_merge`
 - NEVER enable billable knobs / sealed `pipeline:` without opt-in
-- NEVER invent knobs — always `load_policy_contract`
+- NEVER invent knobs - always `load_policy_contract`
 - NEVER invent test commands / path filters
 
 ## Runner-specific

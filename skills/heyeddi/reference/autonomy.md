@@ -34,7 +34,7 @@ A check you are allowed to run is yours to run. "I haven't checked whether there
 
 A tool or package the work needs is yours to add: declare it in the project's dependencies, install it, and run the project's own script. "This machine doesn't seem to have Poetry" is never a result, and calling around the script is not the fix.
 
-Never ask to commit, push a feature branch, or open or update a PR when `check_permission` exits 0, in this repo or a second one the change touches.
+Never ask to commit, push a feature branch, or open or update a PR when `check_permission` exits 0, in this repo or a second one the user named. Never go into a sibling folder on your own (`reference/session-worktrees.md`).
 
 ## When information is missing
 

@@ -7,7 +7,8 @@ in a plain checkout). Git never tracks that directory, so the marker can't be
 committed and needs no ``.gitignore`` entry.
 
 One session is the owner: the one that created or claimed the worktree first.
-Other sessions that work there join as contributors. Owners may do anything;
+Another session joins as a contributor only with
+``--user-approved``; without it the claim is refused. Owners may do anything;
 contributors may commit and push; sessions not in the marker are read-only.
 Ownership moves only with ``handoff`` (by the owner, or with ``--user-approved``).
 
@@ -136,8 +137,18 @@ def role_of(marker: dict[str, Any] | None, session: str) -> str:
     return "none"
 
 
-def claim(worktree: Path, session: str, *, task: str | None, pr: str | None) -> dict[str, Any]:
+def claim(
+    worktree: Path, session: str, *, task: str | None, pr: str | None, user_approved: bool = False
+) -> dict[str, Any]:
     with _locked(worktree):
+        marker = load_marker(worktree)
+        if marker and role_of(marker, session) == "none" and not user_approved:
+            return {
+                "ok": False,
+                "owner": marker["owner"],
+                "reason": "another session owns this worktree. Make your own, or pass "
+                "--user-approved only after the user asks you to work in this one",
+            }
         return _claim(worktree, session, task=task, pr=pr)
 
 
@@ -265,6 +276,7 @@ def main(argv: list[str] | None = None) -> int:
             p.add_argument("--action", required=True, choices=ACTIONS)
         if name == "handoff":
             p.add_argument("--to", required=True)
+        if name in ("claim", "handoff"):
             p.add_argument("--user-approved", action="store_true")
     args = parser.parse_args(argv)
     path = Path(args.path).resolve()
@@ -278,8 +290,9 @@ def main(argv: list[str] | None = None) -> int:
 
     session = resolve_session(args.session)
     if args.cmd == "claim":
-        print(json.dumps(claim(path, session, task=args.task, pr=args.pr), indent=2))
-        return 0
+        result = claim(path, session, task=args.task, pr=args.pr, user_approved=args.user_approved)
+        print(json.dumps(result, indent=2))
+        return 0 if result["ok"] else 1
     if args.cmd == "check":
         code, result = check(path, session, args.action)
     else:

@@ -14,7 +14,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 import check_permission  # noqa: E402
 from check_permission import check  # noqa: E402
-from permission_policy import resolve_policy  # noqa: E402
+from permission_policy import load_stack, resolve_policy  # noqa: E402
 
 GIT = {"environments": {"production": "main", "staging": "staging"}, "default_branch": "main"}
 
@@ -240,3 +240,14 @@ def test_merge_that_skips_checks_or_hides_its_target_asks(pr_base: dict, command
 def test_unknown_merge_target_is_treated_as_production(pr_base: dict) -> None:
     pr_base["name"] = ""
     assert _decision("gh pr merge 4", _stack()) == "ask"
+
+
+def test_worktree_without_stack_json_uses_the_main_checkouts(tmp_path: Path) -> None:
+    main, tree = tmp_path / "main", tmp_path / "wt"
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@example.com"]
+    subprocess.run([*git, "init", "-q", str(main)], check=True)
+    subprocess.run([*git, "-C", str(main), "commit", "-qm", "r", "--allow-empty"], check=True)
+    subprocess.run([*git, "-C", str(main), "worktree", "add", "-q", str(tree)], check=True)
+    (main / ".heyeddi").mkdir()
+    (main / ".heyeddi" / "stack.json").write_text('{"git": {"environments": {"production": "release"}}}', encoding="utf-8")
+    assert load_stack(tree)["git"]["environments"]["production"] == "release"

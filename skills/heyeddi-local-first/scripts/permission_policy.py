@@ -86,6 +86,17 @@ def find_stack(start: Path | None) -> Path | None:
         candidate = folder / ".heyeddi" / "stack.json"
         if candidate.is_file():
             return candidate
+    # A linked worktree does not carry an ignored stack.json: read the main checkout's.
+    for folder in (cur, *cur.parents):
+        marker = folder / ".git"
+        if marker.is_file():
+            gitdir = marker.read_text(encoding="utf-8").removeprefix("gitdir:").strip()
+            main = (folder / gitdir).resolve()
+            if main.parent.name == "worktrees":
+                candidate = main.parents[2] / ".heyeddi" / "stack.json"
+                return candidate if candidate.is_file() else None
+        if marker.exists():
+            break
     return None
 
 
