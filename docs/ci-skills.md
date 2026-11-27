@@ -30,9 +30,9 @@ Human + HeyEddi CI reviews: `@heyeddi-pr-respond` only (one skill).
 
 ## Rules
 
-- Never merge without **authorize merge** in the current turn
+- Below production, merge once `@pre-merge-gate --signoff` exits 0. A production merge takes **authorize merge** in the current turn
 - Never commit `.heyeddi/docs/pr-*` scratch (gitignored; GitHub is SSOT)
-- Never invent knobs — `load_policy_contract`
+- Never invent knobs - `load_policy_contract`
 - Feedback: debate / `support@heyeddi.com` (no FP API yet)
 - Runners: Spot is shipped; claim execution only with Check/Spot evidence
 
@@ -43,7 +43,7 @@ Human + HeyEddi CI reviews: `@heyeddi-pr-respond` only (one skill).
 ./scripts/publish-ci-pack-repo.sh --out ../heyeddi-ci-skills --push
 ```
 
-After `--push`, the script also ensures GitHub topics for skills.sh discovery. The CI sibling still needs **real install telemetry** (same as the hub) before [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills) and the README badge populate — listing (`-l`) alone is not enough.
+After `--push`, the script also ensures GitHub topics for skills.sh discovery. The CI sibling still needs **real install telemetry** (same as the hub) before [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-com/heyeddi-ci-skills) and the README badge populate - listing (`-l`) alone is not enough.
 
 
 See also [pr-workflows.md](./pr-workflows.md).

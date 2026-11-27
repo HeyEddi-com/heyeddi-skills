@@ -218,6 +218,7 @@ Evals give the agent a **goal**, not a script. Each skill must run its real work
 | [docs/distribution.md](docs/distribution.md) | Single-package install + marketplaces |
 | [docs/skills-sh-official-listing.md](docs/skills-sh-official-listing.md) | skills.sh index + official listing playbook |
 | [docs/v2-skill-naming.md](docs/v2-skill-naming.md) | Historical ADR - v2 `heyeddi-*` spine renames (aliases removed in v3.0.0) |
+| [docs/agent-freedom.md](docs/agent-freedom.md) | What agents do alone, what waits for you, and the hooks |
 | [docs/pr-workflows.md](docs/pr-workflows.md) | Two PR workflows - submission review vs respond |
 | [docs/team-cheat-sheet.md](docs/team-cheat-sheet.md) | Designer + QA reference |
 | [docs/cloud-agent-integration.md](docs/cloud-agent-integration.md) | Pydantic AI / LangChain |
