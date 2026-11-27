@@ -77,3 +77,15 @@ def test_outdated_dependencies_are_reported_although_npm_exits_1(tmp_path: Path,
     monkeypatch.setattr(audit.shutil, "which", lambda name: f"/usr/bin/{name}")
     monkeypatch.setattr(audit, "_run", lambda cmd, cwd, timeout=600: (1, report if "--long" in cmd else "{}"))
     assert "vue: 1.0.0 -> latest 3.0.0" in audit.audit_dependencies(tmp_path)[1]
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'psql -h localhost -d --host db.internal -c "DELETE FROM users"',
+        'mysql -h 127.0.0.1 --database --host=db.internal -e "UPDATE t SET a=1"',
+        'psql -h localhost --dbname -hdb.internal -c "INSERT INTO t VALUES (1)"',
+    ],
+)
+def test_a_database_flag_cannot_swallow_the_real_host(command: str) -> None:
+    assert check(command, cwd=None, stack=STACK).decision != "auto"

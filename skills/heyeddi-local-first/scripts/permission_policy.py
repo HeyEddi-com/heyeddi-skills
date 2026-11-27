@@ -222,7 +222,8 @@ def detect_env(text: str, stack: dict[str, Any]) -> str | None:
 
 
 _DB_NAME_FLAGS = ("-d", "--dbname", "--database")
-_PLAIN_NAME = re.compile(r"[A-Za-z0-9_-]+")
+# Must not start with "-": that is the next flag (maybe the real --host), not a database name.
+_PLAIN_NAME = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_-]*")
 
 
 def _without_db_names(words: list[str], stack: dict[str, Any]) -> list[str]:
