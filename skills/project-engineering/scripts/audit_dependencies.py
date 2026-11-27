@@ -42,8 +42,9 @@ def audit_dependencies(root: Path, *, max_major_behind: int = 1) -> tuple[bool, 
             issues.append(f"stub script: {name}")
 
     if shutil.which("npm") and (root / "node_modules").is_dir():
-        code, out = _run(["npm", "outdated", "--json"], root, timeout=120)
-        if code == 0 and out.strip():
+        code, out = _run(["npm", "outdated", "--json", "--long"], root, timeout=120)
+        # npm exits 1 when something is outdated; --long adds the dependency type.
+        if code in (0, 1) and out.strip():
             try:
                 outdated = json.loads(out)
                 for dep, meta in outdated.items():

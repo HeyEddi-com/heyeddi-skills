@@ -64,3 +64,16 @@ def test_prose_check_allows_the_rule_that_lists_the_banned_words() -> None:
     rule = '- NEVER ship AI prose slop (em/en dashes, delve/leverage/tapestry, "Certainly!"); follow `context/PROSE_ANTI_SLOP.md`'
     assert scan_text(rule, "a.md") == []
     assert scan_text("We delve into the tapestry.", "a.md")
+
+
+def test_outdated_dependencies_are_reported_although_npm_exits_1(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    sys.path.insert(0, str(ROOT / "skills" / "project-engineering" / "scripts"))
+    import audit_dependencies as audit
+
+    (tmp_path / "package.json").write_text('{"name": "t"}', encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "node_modules").mkdir()
+    report = '{"vue": {"current": "1.0.0", "latest": "3.0.0", "type": "dependencies"}}'
+    monkeypatch.setattr(audit.shutil, "which", lambda name: f"/usr/bin/{name}")
+    monkeypatch.setattr(audit, "_run", lambda cmd, cwd, timeout=600: (1, report if "--long" in cmd else "{}"))
+    assert "vue: 1.0.0 -> latest 3.0.0" in audit.audit_dependencies(tmp_path)[1]
