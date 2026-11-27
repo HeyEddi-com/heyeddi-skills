@@ -1,6 +1,6 @@
 {
   "skill": "engineering-excellence",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "tools": [
     {
       "name": "init_engineering_docs",
@@ -68,7 +68,7 @@
     },
     {
       "name": "append_decision",
-      "description": "Append an engineering ADR to .heyeddi/docs/engineering/decisions.md.",
+      "description": "Append a typed entry (ADR, trade-off, gotcha, how-it-works) to .heyeddi/docs/engineering/decisions.md. Refuses credentials.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -76,6 +76,7 @@
           "title": { "type": "string" },
           "context": { "type": "string" },
           "decision": { "type": "string" },
+          "type": { "type": "string", "enum": ["decision", "trade-off", "gotcha", "how-it-works"] },
           "consequences": { "type": "string" }
         },
         "required": ["project_root", "title", "context", "decision"]

@@ -99,6 +99,16 @@ def run_skill_script(root: Path, skill_name: str, script_rel: str, extra_args: l
     return output.strip() or "(success, no output)"
 
 
+def run_context_secret_check(root: Path, rows: list[tuple[str, str, str]]) -> None:
+    """Decision and design logs are committed and fed back to agents: no credentials in them."""
+    docs = (".heyeddi/docs/engineering/decisions.md", ".heyeddi/design.md")
+    if not any((root / doc).is_file() for doc in docs):
+        rows.append(("context-secrets", "SKIP", "no .heyeddi decision or design log"))
+        return
+    out = run_skill_script(root, "heyeddi", "scripts/context_index.py", ["--check"])
+    rows.append(("context-secrets", status_from_output(out), " ".join(out.split())[:200]))
+
+
 def routes_for_visual_audit(root: Path) -> list[str]:
     product = root / ".heyeddi" / "product.md"
     routes: list[str] = []
@@ -801,6 +811,8 @@ def main() -> None:
     else:
         st = "FAIL" if signoff else "SKIP"
         rows.append(("setup-audit", st, "skipped via --skip-setup-audit"))
+
+    run_context_secret_check(root, rows)
 
     stack = detect_stack(root)
     run_frontend_checks(root, rows)

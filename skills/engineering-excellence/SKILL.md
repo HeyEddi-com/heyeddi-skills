@@ -1,8 +1,8 @@
 ---
 name: engineering-excellence
 description: "ALWAYS-ON: audits plans and code for KISS, YAGNI, DRY, SOLID, testability, and run cost against a budget; maintains .heyeddi/docs/engineering/. Use on every chat that plans or changes code, before merge, refactor, ADRs, or reuse-catalog work. Not for visual UX (ux-flow-auditor) or full CI (pre-merge-gate includes this audit)."
-version: 1.4.1
-product-version: 3.8.27
+version: 1.5.0
+product-version: 3.8.28
 author: HeyEddi-com
 ---
 
@@ -37,7 +37,7 @@ init_engineering_docs   → .heyeddi/docs/engineering/{architecture,reuse-catalo
 implement / refactor
 audit_engineering       → .heyeddi/docs/engineering-audit-<date>.md (--check = errors fail)
 estimate_change_cost    → .heyeddi/docs/cost-estimate-<date>.md (--check is for pre-merge-gate only)
-append_decision         → ADR when trade-off is non-obvious
+append_decision         → ADR, gotcha, or how-it-works note (--type)
 ```
 
 ## Instructions
@@ -68,7 +68,7 @@ append_decision         → ADR when trade-off is non-obvious
 |------|---------|
 | `.heyeddi/docs/engineering/architecture.md` | System map, data flow, boundaries |
 | `.heyeddi/docs/engineering/reuse-catalog.md` | What exists: do not rebuild |
-| `.heyeddi/docs/engineering/decisions.md` | Engineering ADRs (not design log) |
+| `.heyeddi/docs/engineering/decisions.md` | Engineering ADRs, trade-offs, gotchas, how-it-works notes (not design log). Read back with `@heyeddi` `context_index.py` |
 | `.heyeddi/docs/engineering/budget.json` | Cost limits, usage assumptions, rate overrides |
 | `.heyeddi/docs/engineering-audit-<date>.md` | Point-in-time audit report |
 | `.heyeddi/docs/cost-estimate-<date>.md` | Cost drivers, monthly range, cheaper options |

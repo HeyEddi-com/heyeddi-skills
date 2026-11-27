@@ -35,27 +35,28 @@ To make an agent ask before commits, use `agent.preset: cautious` or `agent.perm
 
 ## Hooks
 
-Written rules can be ignored. Two Claude Code hooks enforce the ones that matter most. Install once per machine from a checkout of this repo, then restart open sessions:
+Written rules can be ignored. Claude Code hooks enforce the ones that matter most and read project context back. Install once per machine from a checkout of this repo, then restart open sessions:
 
 ```bash
 python3 skills/heyeddi/scripts/worktree_guard.py --install
 ```
 
-This copies three scripts into `~/.claude/hooks/` and registers them in `~/.claude/settings.json`. Run it again after an update.
+This copies four scripts into `~/.claude/hooks/` and registers them in `~/.claude/settings.json`. Run it again after an update. The `SessionStart` hook arrived in hub v3.8.28.
 
 | Hook | Event | Does |
 |------|-------|------|
 | `worktree_guard.py` | `PreToolUse` | Denies file edits and shell writes in a worktree another session owns, and edits to the marker. Asks you before any `--user-approved` call |
 | `finish_guard.py` | `Stop` | Blocks, once, a turn that ends waiting for a "go". A second stop goes through, so real questions reach you |
+| `context_index.py` | `SessionStart` | Adds the index of the project's decisions and gotchas ([context recall](../skills/heyeddi/reference/context-recall.md)). Reads only |
 
 Limits:
 
 - A path that a script builds while it runs is invisible to `worktree_guard.py`.
 - A checkout with no session marker is not protected.
-- Both hooks are Claude Code only. Cursor and other hosts get the written rules.
+- The hooks are Claude Code only. Cursor and other hosts get the written rules.
 - `finish_guard.py` matches English phrases, so a new wording can get past it.
 
-To remove them, delete their two entries from `~/.claude/settings.json`.
+To remove them, delete their three entries from `~/.claude/settings.json`.
 
 ## Handing a worktree over
 

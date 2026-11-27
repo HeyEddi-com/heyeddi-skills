@@ -1,8 +1,8 @@
 ---
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist: never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
-version: 3.5.2
-product-version: 3.8.27
+version: 3.6.0
+product-version: 3.8.28
 author: HeyEddi-com
 ---
 
@@ -93,6 +93,7 @@ If `.heyeddi/docs/intake/skill-routing.json` exists, **follow route order**.
 | `ensure_always_on_agents.py` | Install/update `AGENTS.md` + Cursor alwaysApply rule |
 | `write_skills_index.py` | Scan → `.heyeddi/skills-index.*` |
 | `load_catalog.py` | Read cached index |
+| `context_index.py` | One line per entry in `decisions.md` and the design Decision log; `--query`, `--type`, `--check` for secrets, `--hook` at session start (`reference/context-recall.md`) |
 | `suggest_skills.py` | Rank skills for a prompt |
 | `suggest_next_skill.py` | Next @skill + command after any skill finishes |
 | `init_workflow_sync.py` | Scaffold `.heyeddi/docs/workflow/` |
@@ -114,6 +115,7 @@ Add `--route /path` or `--mode <sub-command>` when you know them. If the suggest
 - `@heyeddi-setup`: always-on prefs hard gate (`verify_setup --check`)
 - `@engineering-excellence`: always-on plan + change gates
 - `reference/autonomy.md`: run the request to completion; the only pauses; one final summary
+- `reference/context-recall.md`: read the project's decisions and gotchas back; record new ones
 - `reference/testing.md`: test first at the layers the change can break; hosted environments are look-only
 - `reference/session-worktrees.md`: act only on worktrees your session owns; the session marker and its roles
 - `reference/browser-platform.md`: frontend and design skills load Modern Web Guidance (`legacy-scan` finds problems) and Chrome DevTools for agents. Quasar and PrimeVue stay the components. Playwright stays the screenshot tool. Localhost only.

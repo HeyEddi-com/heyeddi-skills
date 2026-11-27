@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi",
-  "version": "3.5.2",
+  "version": "3.6.0",
   "tools": [
     {
       "name": "sync",
@@ -199,7 +199,7 @@
           },
           "mode": {
             "type": "string",
-            "description": "Sub-command just finished (shape, craft, audit, sync, \u2026)"
+            "description": "Sub-command just finished (shape, craft, audit, sync, …)"
           }
         },
         "required": [
@@ -350,6 +350,42 @@
       },
       "script": "scripts/session_worktree.py",
       "readonly": false
+    },
+    {
+      "name": "context_index",
+      "description": "Index the project's decisions and notes (one line each, path:line). check=true fails on a credential in them.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "decision",
+              "trade-off",
+              "gotcha",
+              "how-it-works",
+              "design"
+            ]
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "check": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_root"
+        ]
+      },
+      "script": "scripts/context_index.py",
+      "readonly": true
     }
   ]
 }
