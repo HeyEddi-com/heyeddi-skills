@@ -159,3 +159,18 @@ def test_report_links_the_pr_when_url_is_known() -> None:
     md_local, payload_local, _ = build_report([], pr=None, signoff=False, emergency_used=[])
     assert "none (local)" in md_local
     assert payload_local["pr_url"] is None
+
+
+def test_a_secret_in_a_context_doc_fails_the_gate(tmp_path: Path) -> None:
+    eng = tmp_path / ".heyeddi" / "docs" / "engineering"
+    eng.mkdir(parents=True)
+    key = "AKIA" + "ABCDEFGHIJKLMNOP"
+    (eng / "decisions.md").write_text(f"### 2026-01-01: t\n\n{key}\n", encoding="utf-8")
+    proc = _run(tmp_path, *_local_skips())
+    assert "| context-secrets | FAIL |" in proc.stdout
+    assert key not in proc.stdout
+    assert proc.returncode != 0
+
+
+def test_no_context_docs_skips_the_secret_check(tmp_path: Path) -> None:
+    assert "| context-secrets | SKIP |" in _run(tmp_path, *_local_skips()).stdout

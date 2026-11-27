@@ -6,7 +6,7 @@ another session refuses file edits and any shell command that is not clearly
 read-only. Moving ownership (`--user-approved`) always asks the user.
 
   worktree_guard.py             run as the hook
-  worktree_guard.py --install   copy it and finish_guard.py into ~/.claude/hooks and register both
+  worktree_guard.py --install   copy it, finish_guard.py and context_index.py into ~/.claude/hooks and register them
 
 A shell command that builds a path at run time (variables, scripts) cannot be
 seen from here. File tools and ordinary shell commands are covered.
@@ -231,7 +231,7 @@ def install(claude_dir: Path) -> None:
     hooks = claude_dir / "hooks"
     hooks.mkdir(parents=True, exist_ok=True)
     here = Path(__file__).resolve().parent
-    for name in ("worktree_guard.py", "session_worktree.py", "finish_guard.py"):
+    for name in ("worktree_guard.py", "session_worktree.py", "finish_guard.py", "context_index.py"):
         shutil.copy2(here / name, hooks / name)
     settings = claude_dir / "settings.json"
     data = json.loads(settings.read_text(encoding="utf-8")) if settings.is_file() else {}
@@ -245,6 +245,10 @@ def install(claude_dir: Path) -> None:
     finish = f'python3 "{hooks / "finish_guard.py"}"'
     if not any(h.get("command") == finish for e in stops for h in e.get("hooks", [])):
         stops.append({"hooks": [{"type": "command", "command": finish}]})
+    starts = data["hooks"].setdefault("SessionStart", [])
+    recall = f'python3 "{hooks / "context_index.py"}" --hook'
+    if not any(h.get("command") == recall for e in starts for h in e.get("hooks", [])):
+        starts.append({"hooks": [{"type": "command", "command": recall}]})
     settings.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 

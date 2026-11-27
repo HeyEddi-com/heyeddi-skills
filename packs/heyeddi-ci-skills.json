@@ -3,7 +3,7 @@
   "displayName": "HeyEddi CI Skills",
   "description": "HeyEddi CI skills: eddi-ci.yaml config, fails, Spot runners, guide, PR respond, plus the router, setup, permission, engineering, backlog, and merge-gate skills they call.",
   "plugin": "heyeddi-ci-skills",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "skills": [
     "heyeddi-ci-config",
     "heyeddi-ci-guide",

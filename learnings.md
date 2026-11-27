@@ -1354,3 +1354,9 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** The backlog is local for now and may move to a task or project manager over MCP. Documents may move elsewhere too.
 
 **Decision:** `.heyeddi/stack.json` holds `backlog.provider` (`local`, `mcp`) and `docs.provider` (`repo`, `mcp`, `external`); reasons go to `decisions.md`. No MCP server is wired yet: the script prints the operation for the agent to run.
+
+## 2026-11-27: Context recall, from a look at claude-mem
+
+**Context:** Projects wrote decisions into `.heyeddi/` and little made an agent read them back. claude-mem reads back well, but stores memory outside the repo and calls a model to record tool use.
+
+**Decision:** Hub **v3.8.28**, CI pack **v1.4.11**. Borrow the read side only: `context_index.py` (index first, entry on demand), a `SessionStart` hook, typed entries (`gotcha`, `how-it-works`), and a credential check in `append_decision.py` and the merge gate. No database, daemon, or automatic capture. Recall by file was left out.

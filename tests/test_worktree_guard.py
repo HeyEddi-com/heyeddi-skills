@@ -120,3 +120,12 @@ def test_install_adds_the_hook_once_and_keeps_other_settings(tmp_path: Path) -> 
     assert len(data["hooks"]["PreToolUse"]) == 2
     assert (tmp_path / "hooks" / "worktree_guard.py").is_file()
     assert (tmp_path / "hooks" / "session_worktree.py").is_file()
+
+
+def test_install_adds_the_session_start_index_once(tmp_path: Path) -> None:
+    for _ in range(2):
+        guard.install(tmp_path)
+    data = json.loads((tmp_path / "settings.json").read_text())
+    commands = [h["command"] for e in data["hooks"]["SessionStart"] for h in e["hooks"]]
+    assert len(commands) == 1 and commands[0].endswith('context_index.py" --hook')
+    assert (tmp_path / "hooks" / "context_index.py").is_file()
