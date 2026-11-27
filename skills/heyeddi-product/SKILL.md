@@ -1,7 +1,7 @@
 ---
 name: heyeddi-product
 description: "Product leadership: user stories, acceptance criteria, backlog, end-to-end reviews. Verifies the product works and is useful; delegates UX flow, design critique, visual contrast, and engineering audits; synthesizes plans and change recommendations. Use after @heyeddi-intake, before ship, or when the user asks for PM review, user stories, acceptance criteria, or \"is this feature good enough?\""
-version: 1.0.0
+version: 1.0.1
 product-version: 3.8.27
 author: HeyEddi-com
 ---
@@ -98,9 +98,10 @@ python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next
 
 1. `status: item`: build that item now on its own branch. Invoke the owner skills yourself (scaffold first when there is no app, then design craft or handoff, tests, audits, visual QA), commit, push, and open the PR.
 2. Run `@pre-merge-gate --signoff`. Fix every FAIL and rerun. On exit 0 merge into dev / test / staging; only a production merge needs the user.
-3. `backlog.py done "<feature>" --note "<PR URL>"`, then run `next` again.
+3. Before merging, update the documents the item changes, wherever `docs.provider` in `stack.json` puts them (`reference/backlog.md`). Then `backlog.py done "<feature>" --note "<PR URL>" --docs <files>` (or `--docs-none "<reason>"`) and run `next` again.
 4. Use `backlog.py block "<feature>" --reason "<exact error or missing access>"` only for something in **The only pauses**, then take the next item.
-5. `status: unfilled`: write the rows. `status: none`: the loop is over. Report any blocked rows under **Needs you**.
+5. New work you find: `backlog.py add "<feature>" --priority P1 --story "<why>"`, and do it in this run when you can. `status: external`: the backlog lives in a task manager; run the printed operation with its MCP tools (`reference/backlog.md`).
+6. `status: unfilled`: write the rows. `status: none`: the loop is over. Report any blocked rows under **Needs you**.
 
 ## Never
 

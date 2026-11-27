@@ -90,6 +90,19 @@ Protected branches: `main`, `master`, `git.environments.production`, `git.enviro
 
 Missing keys mean the same as the defaults: taste on, Penpot when connected. `write_setup` fills them. Do not quiz which of the 39 skills to install. `@heyeddi` sees which packs are installed (`heyeddi-skills`, `heyeddi-ci-skills`, `heyeddi-design-skills`).
 
+## Backlog and documents (stamped on write, not required to pass verify)
+
+| Path | Values |
+|------|--------|
+| `backlog.provider` | `local` (default) \| `mcp` |
+| `backlog.mcp.server` / `backlog.mcp.project` | which MCP server and project, when `mcp` |
+| `docs.provider` | `repo` (default) \| `mcp` \| `external` |
+| `docs.mcp.server` / `docs.mcp.space` | which MCP server and space, when `mcp` |
+| `docs.location` | where documents live, when `external` |
+| `docs.keep` | repo documents to keep current with each backlog item |
+
+Detail: `@heyeddi-product` `reference/backlog.md`. Commit `stack.json` in app repositories so every worktree reads the same choices. Record why in `decisions.md`.
+
 ## Custom workflow
 
 If the user wants gitflow or anything else: set `git.custom_workflow` to a short description and `git.preset` to `custom`. Still require production + staging environment branch names.

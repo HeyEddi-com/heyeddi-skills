@@ -9,7 +9,12 @@
         "type": "object",
         "properties": {
           "project_root": { "type": "string" },
-          "command": { "type": "string", "enum": ["next", "done", "block"] },
+          "command": { "type": "string", "enum": ["next", "add", "done", "block"] },
+          "local": { "type": "boolean" },
+          "priority": { "type": "string" },
+          "story": { "type": "string" },
+          "docs": { "type": "array", "items": { "type": "string" } },
+          "docs_none": { "type": "string" },
           "feature": { "type": "string" },
           "note": { "type": "string" },
           "reason": { "type": "string" }
