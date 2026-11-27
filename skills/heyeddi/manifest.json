@@ -298,7 +298,7 @@
     },
     {
       "name": "session_worktree",
-      "description": "Session marker for a git worktree: claim (owner or contributor), check an action (commit/push owner+contributor; merge/delete/rebase/force-push owner only), list worktrees with owners, handoff ownership. Marker lives in the worktree's git dir, never tracked.",
+      "description": "Session marker for a git worktree: claim, check an action (only the owner writes), list worktrees with owners, handoff ownership. Marker lives in the worktree's git dir, never tracked.",
       "parameters": {
         "type": "object",
         "properties": {

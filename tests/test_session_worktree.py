@@ -83,8 +83,8 @@ def test_first_claim_owns_later_claims_contribute(repo: tuple[Path, Path]) -> No
     [
         ("s-owner", "merge", 0),
         ("s-owner", "delete", 0),
-        ("s-helper", "commit", 0),
-        ("s-helper", "push", 0),
+        ("s-helper", "commit", 1),
+        ("s-helper", "push", 1),
         ("s-helper", "merge", 1),
         ("s-helper", "force-push", 1),
         ("s-stranger", "commit", 1),

@@ -115,7 +115,7 @@ Add `--route /path` or `--mode <sub-command>` when you know them. If the suggest
 - `@engineering-excellence`: always-on plan + change gates
 - `reference/autonomy.md`: run the request to completion; the only pauses; one final summary
 - `reference/testing.md`: test first at the layers the change can break; hosted environments are look-only
-- `reference/session-worktrees.md`: act only on worktrees your session owns or joined; the session marker and its roles
+- `reference/session-worktrees.md`: act only on worktrees your session owns; the session marker and its roles
 - `reference/browser-platform.md`: frontend and design skills load Modern Web Guidance (`legacy-scan` finds problems) and Chrome DevTools for agents. Quasar and PrimeVue stay the components. Playwright stays the screenshot tool. Localhost only.
 - `@heyeddi-intake`: upstream intake
 - `reference/host-surfaces.md`: prefer host plan/data/visual tools; portable degrade

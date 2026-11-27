@@ -12,6 +12,8 @@ A request to build, fix, or change something approves the whole pipeline for it:
 
 ## Never end the turn for
 
+- A "go". A request or an approved plan covers every step, phase, and ticket in it. Finish one, start the next. `scripts/finish_guard.py` is a Stop hook that sends the agent back to work
+
 - A status report or a gate result
 - Confirming a plan you were asked to carry out
 - Choosing between reasonable options: pick the one the skill recommends and record why
@@ -35,6 +37,10 @@ A check you are allowed to run is yours to run. "I haven't checked whether there
 A tool or package the work needs is yours to add: declare it in the project's dependencies, install it, and run the project's own script. "This machine doesn't seem to have Poetry" is never a result, and calling around the script is not the fix.
 
 Never ask to commit, push a feature branch, or open or update a PR when `check_permission` exits 0, in this repo or a second one the user named. Never go into a sibling folder on your own (`reference/session-worktrees.md`).
+
+## The backlog
+
+The backlog is work to do, not a place to park it. When the request is done, take the next backlog item you can do and do it, one branch and PR each, until none is left that you can do. Never move a doable item to the backlog, and never end a run by listing doable items. Only an item blocked on something in **The only pauses** stays.
 
 ## When information is missing
 

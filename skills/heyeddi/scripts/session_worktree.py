@@ -7,9 +7,9 @@ in a plain checkout). Git never tracks that directory, so the marker can't be
 committed and needs no ``.gitignore`` entry.
 
 One session is the owner: the one that created or claimed the worktree first.
-Another session joins as a contributor only with
-``--user-approved``; without it the claim is refused. Owners may do anything;
-contributors may commit and push; sessions not in the marker are read-only.
+Only the owner writes. Every other session is read-only, including one recorded
+as a contributor (``claim --user-approved``). ``worktree_guard.py`` enforces
+this as a Claude Code hook.
 Ownership moves only with ``handoff`` (by the owner, or with ``--user-approved``).
 
 Usage:
@@ -41,8 +41,8 @@ except ImportError:  # Windows
 MARKER_NAME = "heyeddi-session.json"
 SESSION_ENV_VARS = ("HEYEDDI_SESSION_ID", "CLAUDE_CODE_SESSION_ID")
 OWNER_ONLY_ACTIONS = frozenset({"merge", "delete", "force-push", "rebase", "handoff"})
-CONTRIBUTOR_ACTIONS = frozenset({"commit", "push"})
-ACTIONS = sorted(OWNER_ONLY_ACTIONS | CONTRIBUTOR_ACTIONS)
+WRITE_ACTIONS = frozenset({"commit", "push"})
+ACTIONS = sorted(OWNER_ONLY_ACTIONS | WRITE_ACTIONS)
 
 
 def _now() -> str:
@@ -193,14 +193,12 @@ def check(worktree: Path, session: str, action: str) -> tuple[int, dict[str, Any
     role = role_of(marker, session)
     if role == "owner":
         return 0, {"ok": True, "role": role}
-    if role == "contributor" and action in CONTRIBUTOR_ACTIONS:
-        return 0, {"ok": True, "role": role}
     if role == "contributor":
-        reason = f"{action} is owner-only; owner is session {marker['owner']}"
+        reason = f"only the owner writes here; ask the user for a handoff from session {marker['owner']}"
     else:
         reason = (
             f"session is not in this worktree's marker (owner {marker['owner']}); "
-            "treat it as read-only unless the user asks you to work here"
+            "treat it as read-only unless the user hands it off"
         )
     return 1, {"ok": False, "role": role, "reason": reason}
 
