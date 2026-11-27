@@ -21,6 +21,8 @@ from typing import Any
 from _skill_cli import degraded, emit, fail, gh_status, resolve_project_root, run_command
 
 MARKER = "<!-- heyeddi-pr-review -->"
+# A clean review of your own PR: GitHub only accepts COMMENT, so this marks the approval.
+SELF_CLEAN = "<!-- heyeddi-pr-review:self-clean -->"
 DEFAULT_APPROVE = (
     f"{MARKER}\n"
     "LGTM. No in-scope line findings (security, logic, correctness). "
@@ -98,6 +100,14 @@ def _head_sha(root: Path, pr: int) -> str:
     if not sha:
         fail("empty headRefOid")
     return sha
+
+
+def _is_own_pr(root: Path, pr: int) -> bool:
+    viewer = run_command(["gh", "api", "user", "-q", ".login"], root)
+    author = run_command(["gh", "pr", "view", str(pr), "--json", "author", "-q", ".author.login"], root)
+    if any(value.startswith(("[exit", "[error]")) for value in (viewer, author)):
+        return False
+    return viewer.strip().casefold() == author.strip().casefold()
 
 
 def main() -> None:
@@ -212,6 +222,14 @@ def main() -> None:
 
     repo = _repo(root)
     sha = _head_sha(root, pr=args.pr)
+    self_review = event != "COMMENT" and _is_own_pr(root, args.pr)
+    if self_review:
+        # GitHub rejects APPROVE and REQUEST_CHANGES on your own pull request.
+        if event == "APPROVE" and not comments:
+            summary = f"{summary}\n{SELF_CLEAN}"
+        else:
+            summary = f"{summary}\nSelf-review: posted as a comment; the findings still need fixing."
+        event = "COMMENT"
     api_body = {
         "commit_id": sha,
         "body": summary,
@@ -259,6 +277,7 @@ def main() -> None:
                 "pr": args.pr,
                 "repo": repo,
                 "event": event,
+                "self_review": self_review,
                 "comment_count": len(comments),
                 "review_id": review.get("id"),
                 "html_url": review.get("html_url"),

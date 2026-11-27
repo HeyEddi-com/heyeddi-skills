@@ -221,12 +221,40 @@ def detect_env(text: str, stack: dict[str, Any]) -> str | None:
     return "staging" if "staging" in found else found.pop()
 
 
-def is_local_target(text: str) -> bool:
+_DB_NAME_FLAGS = ("-d", "--dbname", "--database")
+_PLAIN_NAME = re.compile(r"[A-Za-z0-9_-]+")
+
+
+def _without_db_names(words: list[str], stack: dict[str, Any]) -> list[str]:
+    """Drop `-d appdb`: a plain database name does not say which server is used.
+
+    A connection string, a URL, or a name that says prod or staging is kept.
+    """
+    # A `host=` connection string anywhere may override the host flag: drop nothing.
+    if any(re.search(r"\bhost(addr)?=", word) for word in words):
+        return words
+    out: list[str] = []
+    skip = False
+    for i, word in enumerate(words):
+        if skip:
+            skip = False
+            continue
+        flag, sep, value = word.partition("=")
+        if flag in _DB_NAME_FLAGS:
+            name = value if sep else (words[i + 1] if i + 1 < len(words) else "")
+            if _PLAIN_NAME.fullmatch(name) and _env_of(name, stack) not in ("prod", "staging"):
+                skip = not sep
+                continue
+        out.append(word)
+    return out
+
+
+def is_local_target(text: str, stack: dict[str, Any] | None = None) -> bool:
     """True only when every target value is a local host. Comments and labels do not count."""
     words = shell_words(text)
     if words is None:
         return False
-    values = target_values(words)
+    values = target_values(_without_db_names(words, stack or {}))
     return bool(values) and all(_LOCAL_HOST.search(value) for value in values)
 
 

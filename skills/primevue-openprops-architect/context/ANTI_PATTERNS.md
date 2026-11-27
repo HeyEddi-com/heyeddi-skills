@@ -1,5 +1,5 @@
 
-# Anti-patterns: PrimeVue + OpenProps
+# Anti-patterns: PrimeVue + project tokens
 
 - NEVER use inline `style=""` attributes or hardcoded hex colors (`#fff`, `#333`).
 - NEVER invent PrimeVue props: check component API before use.

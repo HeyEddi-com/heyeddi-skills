@@ -10,6 +10,7 @@ from _skill_cli import emit, fail, resolve_project_root
 from _workflow_paths import (
     VALID_PILLARS,
     active_context_path,
+    open_requests,
     opinion_path,
     sync_log_path,
     workflow_dir,
@@ -39,10 +40,14 @@ def main() -> None:
 
     docs = [d.strip() for d in args.docs_updated.split(",") if d.strip()]
     requested = [p.strip() for p in args.request_pillars.split(",") if p.strip()]
-    if not requested:
-        requested = [p for p in SIBLING_PROMPTS[args.pillar]]
+    # A pillar that was asked is replying, and a reply asks nobody back.
+    reply = not requested and any(
+        args.pillar in item["waiting_for"] for item in open_requests(root, args.route)
+    )
+    if not requested and not reply:
+        requested = list(SIBLING_PROMPTS[args.pillar])
 
-    ts = datetime.now().isoformat(timespec="seconds")
+    ts = datetime.now().isoformat(timespec="microseconds")
     feature = args.feature or args.route.strip("/").replace("/", "-") or "home"
 
     block = [
@@ -52,7 +57,9 @@ def main() -> None:
         "",
         f"**Docs updated:** {', '.join(f'`{d}`' for d in docs) if docs else ' - '}",
         "",
-        f"**Requests:** {', '.join(f'`@{p}`' for p in requested)} must append opinion for this route",
+        f"**Requests:** {', '.join(f'`@{p}`' for p in requested)} must append opinion for this route"
+        if requested
+        else "**Reply:** answers an open request",
         "",
     ]
 
@@ -65,7 +72,8 @@ def main() -> None:
 
     log = sync_log_path(root)
     with log.open("a", encoding="utf-8") as fh:
-        fh.write(f"- `{ts}` **{args.pillar}** `{args.route}` → requests {', '.join(requested)}\n")
+        asked = f"requests {', '.join(requested)}" if requested else "reply"
+        fh.write(f"- `{ts}` **{args.pillar}** `{args.route}` → {asked}\n")
 
     active_context_path(root).write_text(
         json.dumps(
@@ -74,7 +82,7 @@ def main() -> None:
                 "feature": feature,
                 "last_pillar": args.pillar,
                 "updated": date.today().isoformat(),
-                "pending_pillars": requested,
+                "pending_pillars": sorted({w for item in open_requests(root, args.route) for w in item["waiting_for"]}),
             },
             indent=2,
         )
@@ -93,7 +101,9 @@ def main() -> None:
                 "next": [
                     f"Invoke sibling skills so each runs load_workflow_context + append_pillar_opinion for {args.route}",
                     "Do not mark route done until all requested pillars have entries in opinions/",
-                ],
+                ]
+                if requested
+                else ["Reply recorded. The route is done when load_workflow_context shows no pending_sibling_notes."],
             },
             indent=2,
         )

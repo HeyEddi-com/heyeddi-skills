@@ -49,7 +49,7 @@ Suggested `aspect_ratio`:
 
 After generation:
 
-- Ask which lane feels closest; what to carry forward
+- Design request: ask which lane feels closest and what to carry forward. Build request: pick the lane, record why, continue
 - Reference probe filenames or chat attachments in `brief.md` under **Visual direction**
 - Images are **lanes to test**, not handoff mockups (`@heyeddi-handoff` needs Implementation spec)
 

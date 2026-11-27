@@ -15,7 +15,7 @@ Order of work on a connected file:
 3. **Components** (when the surface repeats) — create/update components for nav, field row, CTA; instantiate instead of redrawing.
 4. **Boards** — phones at 375 / 768 / 1440 using those tokens. Prefer library-bound fills and type.
 5. **Layout proof** — `set_layout_item` + read-back. If Flex children stay at `0,0`, switch to absolute 8px (Gate F). Do not rebuild nested Flex.
-6. **Pixels** — `export_shape` and **look at the PNG** (Gate D). No PNG / Cloudflare ⇒ not done. `audit_board` is a hint, never the ship signal.
+6. **Pixels**, `export_shape` and **look at the PNG** (Gate D). No PNG / Cloudflare ⇒ not done (build request: Gate D fallback in `layout-hard-gates.md`, then continue). `audit_board` is a hint, never the ship signal.
 7. **Hygiene** — do not leave empty Look/dated shells as the demo surface (Gate G).
 
 Full reject rules: `references/layout-hard-gates.md` Gates A–G.

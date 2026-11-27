@@ -181,16 +181,15 @@ def test_discover_and_verify_empty_repo(tmp_path: Path) -> None:
 
 
 def test_write_ci_fails_report(tmp_path: Path) -> None:
-    docs = tmp_path / ".heyeddi" / "docs"
-    docs.mkdir(parents=True)
-    (docs / "pr-3-ci-fails.json").write_text(
+    raw = tmp_path / "raw.json"
+    raw.write_text(
         json.dumps(
             {
                 "pr": 3,
                 "head_sha": "abc",
                 "head_ref": "feat/x",
                 "url": "https://example.com/pr/3",
-                "failing_checks": [{"name": "test", "conclusion": "FAILURE", "detailsUrl": "u"}],
+                "failing": [{"name": "test", "state": "FAILURE", "detailsUrl": "u"}],
             }
         ),
         encoding="utf-8",
@@ -201,8 +200,11 @@ def test_write_ci_fails_report(tmp_path: Path) -> None:
         "3",
         "--project-root",
         str(tmp_path),
+        "--input",
+        str(raw),
         "--force",
     )
     assert proc.returncode == 0, proc.stderr + proc.stdout
-    md = (docs / "pr-3-ci-fails.md").read_text(encoding="utf-8")
-    assert "Ephemeral" in md or "ephemeral" in md.lower() or "authorize merge" in md.lower()
+    report = Path(json.loads(proc.stdout[proc.stdout.index("{") :])["path"])
+    md = report.read_text(encoding="utf-8")
+    assert "Ephemeral" in md and "### test" in md

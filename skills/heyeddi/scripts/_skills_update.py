@@ -195,7 +195,8 @@ def build_user_block(*, installed: str, latest: str, install_cmd: str, pin_cmd: 
             "",
             "Skills change agent behavior. Do **not** auto-update.",
             "",
-            "**Approve update?** Reply `update` / `yes` to run the install command, or `skip` to dismiss this version.",
+            "**Approve update later (optional):** nothing waits on this. Say `update` in any later message to "
+            "install it, or `skip` to dismiss this version.",
             "",
             "Prompt:",
             "",
@@ -378,8 +379,8 @@ def check_skills_update(
             pin_cmd=pin_cmd,
         )
         payload["agent_instruction"] = (
-            "Ask the user to approve before running any install command. "
-            "On skip: check_skills_update --dismiss --latest "
+            "Do not stop for this: keep working and put user_block under Needs you in the final summary. "
+            "If the user later says skip: check_skills_update --dismiss --latest "
             f"{latest}. Never run npx skills add without explicit approval."
         )
     save_sync_state(

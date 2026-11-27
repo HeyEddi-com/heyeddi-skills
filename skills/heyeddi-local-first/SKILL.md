@@ -8,7 +8,7 @@ author: HeyEddi-com
 
 # Local first
 
-**Always on** for every agent that loads HeyEddi skills (Cursor, Claude, Codex, Cloud Run, or any other host). Edit code and Terraform in the repo. Check the plan. Do not change live systems.
+**Always on** for every agent that loads HeyEddi skills (Cursor, Claude, Codex, Cloud Run, or any other host). Edit code and Terraform in the repo. `check_permission.py` alone decides what may run against a live system: under `balanced`, reads run, dev writes run, staging writes ask once, and prod writes are denied.
 
 ## Permission gate
 
@@ -52,7 +52,7 @@ A plan command is `terraform plan`, `tofu plan`, `pulumi preview`, or `ansible-p
 1. Change the Terraform, config, or app code in the working tree.
 2. Run the gate on the plan command. Exit 0 means run the plan.
 3. Warn the user. Quote the resource addresses the plan would add, change, or destroy.
-4. Commit and review that diff. Live apply stays in the project's deploy pipeline (Cloud Build `terraform-release` for HeyEddi CI) or in a terminal the human runs.
+4. Commit and review that diff. Run an apply when `check_permission.py` allows that exact command (a named dev target; staging after one yes). A prod apply stays in the project's deploy pipeline (Cloud Build `terraform-release` for HeyEddi CI). Then keep going with the rest of the task.
 
 ## What counts as a live write
 
@@ -72,7 +72,7 @@ Under `balanced` these run on dev, ask on staging, and are denied on prod or an 
 | Script | Purpose |
 |--------|---------|
 | `check_permission.py --check` | The gate. Exit 0 allow, 2 ask, 1 deny. `--approved` after the user's yes. |
-| `classify_command.py --check` | Infra classifier used by the gate. Exit 1 on a live mutation. Plan prints a warning and exits 0. |
+| `classify_command.py --check` | Internal to the gate: spots live infrastructure writes. Its exit 1 means "live write", not "forbidden"; `check_permission.py` decides. |
 
 ## Related
 

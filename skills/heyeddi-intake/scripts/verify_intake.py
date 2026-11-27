@@ -10,6 +10,7 @@ from pathlib import Path
 
 from _heyeddi_paths import canonical_product_path, designs_dir, intake_dir, product_md
 from _product_schema import (
+    handoff_features,
     load_json,
     product_json_path,
     validate_product_json,
@@ -34,7 +35,28 @@ def _disallowed_vue(root: Path) -> list[str]:
         rel = path.relative_to(root)
         if rel not in ALLOWED_VUE_REL:
             disallowed.append(str(rel))
+    changed = _changed_in_git(root)
+    if changed is not None:
+        # Views already committed belong to the app, not to this intake run.
+        disallowed = [rel for rel in disallowed if rel in changed]
     return sorted(disallowed)
+
+
+def _changed_in_git(root: Path) -> set[str] | None:
+    """Untracked, modified, or staged files under src/. None outside a git repo."""
+    git = shutil.which("git")
+    if git is None:
+        return None
+    changed: set[str] = set()
+    for args in (
+        ["ls-files", "--others", "--modified", "--exclude-standard", "--", "src"],
+        ["diff", "--cached", "--name-only", "--relative", "--", "src"],
+    ):
+        proc = subprocess.run([git, "-C", str(root), *args], capture_output=True, text=True, shell=False)
+        if proc.returncode != 0:
+            return None
+        changed.update(proc.stdout.splitlines())
+    return changed
 
 
 def _check_repo_buildable(root: Path) -> tuple[bool, str]:
@@ -110,29 +132,30 @@ def main() -> None:
             missing = sorted(page_routes - routed)
             record("routing-coverage", not missing, f"missing routes: {missing}" if missing else "all pages routed")
 
-    settings = designs_dir(root) / "settings"
-    has_wireframe = (settings / "wireframe.md").is_file()
-    has_png_pair = (settings / "desktop.png").is_file() and (settings / "mobile.png").is_file()
-    record(
-        "settings-handoff-visual",
-        has_wireframe or has_png_pair,
-        "wireframe.md or desktop.png+mobile.png required",
-    )
-    for artifact, label in (
-        (settings / "mockup-brief.md", "settings-brief"),
-        (settings / "handoff.json", "settings-handoff-json"),
-    ):
-        record(label, artifact.is_file(), str(artifact.relative_to(root)))
-
-    brief = settings / "mockup-brief.md"
-    if brief.is_file():
-        btext = brief.read_text(errors="replace")
-        record("brief-implementation-spec", "Implementation spec" in btext, "section present")
+    for feature in handoff_features(load_json(routing_path) if routing_path.is_file() else {}):
+        folder = designs_dir(root) / feature
+        has_wireframe = (folder / "wireframe.md").is_file()
+        has_png_pair = (folder / "desktop.png").is_file() and (folder / "mobile.png").is_file()
         record(
-            "brief-audience",
-            "## Audience" in btext and "Primary persona:" in btext and "_(missing" not in btext,
-            "audience block filled from product.md",
+            f"{feature}-handoff-visual",
+            has_wireframe or has_png_pair,
+            "wireframe.md or desktop.png+mobile.png required",
         )
+        for artifact, label in (
+            (folder / "mockup-brief.md", f"{feature}-brief"),
+            (folder / "handoff.json", f"{feature}-handoff-json"),
+        ):
+            record(label, artifact.is_file(), str(artifact.relative_to(root)))
+
+        brief = folder / "mockup-brief.md"
+        if brief.is_file():
+            btext = brief.read_text(errors="replace")
+            record(f"{feature}-brief-implementation-spec", "Implementation spec" in btext, "section present")
+            record(
+                f"{feature}-brief-audience",
+                "## Audience" in btext and "Primary persona:" in btext and "_(missing" not in btext,
+                "audience block filled from product.md",
+            )
 
     disallowed_vue = _disallowed_vue(root)
     if disallowed_vue:

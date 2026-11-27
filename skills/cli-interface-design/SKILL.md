@@ -32,34 +32,49 @@ npm install @clack/prompts consola picocolors
 
 ```js
 // cli/interactive-flow.js
-import { intro, outro, text, select, confirm, isCancel, cancel } from '@clack/prompts';
+import { intro, outro, text, select, isCancel, cancel } from '@clack/prompts';
 import pc from 'picocolors';
+import { pathToFileURL } from 'node:url';
 
-export async function runConfigWizard() {
+const DEFAULTS = { appName: 'core-runtime', platform: 'desktop' };
+
+function ensure(value) {
+  if (isCancel(value)) { cancel('Operation aborted.'); process.exit(0); }
+  return value;
+}
+
+export async function runConfigWizard(argv = process.argv.slice(2)) {
   intro(pc.bgMagenta(pc.black(' APPLICATION ARCHITECT ')));
 
-  const appName = await text({
-    message: 'What is the package name?',
-    placeholder: 'core-runtime',
-    validate: (value) => (!value ? 'Name cannot be empty' : undefined)
-  });
-  if (isCancel(appName)) { cancel('Operation aborted.'); process.exit(0); }
+  // Never wait for keys without a terminal: CI, scripts, and agents take the defaults.
+  const interactive = process.stdin.isTTY && !argv.includes('--yes');
+  let { appName, platform } = DEFAULTS;
 
-  const platform = await select({
-    message: 'Target build ecosystem:',
-    options: [
-      { value: 'desktop', label: 'Tauri Desktop', hint: 'Quasar Frame + PrimeVue Data' },
-      { value: 'mobile', label: 'Capacitor Mobile', hint: 'Quasar Layout + Touch Gestures' },
-      { value: 'cloud', label: 'Web SPA / PWA', hint: 'Aura Design Preset' }
-    ]
-  });
-  if (isCancel(platform)) { cancel('Operation aborted.'); process.exit(0); }
+  if (interactive) {
+    appName = ensure(await text({
+      message: 'What is the package name?',
+      placeholder: DEFAULTS.appName,
+      validate: (value) => (!value ? 'Name cannot be empty' : undefined)
+    }));
+    platform = ensure(await select({
+      message: 'Target build ecosystem:',
+      options: [
+        { value: 'desktop', label: 'Tauri Desktop', hint: 'Quasar Frame + PrimeVue Data' },
+        { value: 'mobile', label: 'Capacitor Mobile', hint: 'Quasar Layout + Touch Gestures' },
+        { value: 'cloud', label: 'Web SPA / PWA', hint: 'Aura Design Preset' }
+      ]
+    }));
+  }
 
   outro(pc.green(`Target [${pc.bold(appName)}] configured for [${platform}].`));
 }
+
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+  await runConfigWizard();
+}
 ```
 
-`confirm` is part of the import surface. Use it for destructive confirmations. Always handle `isCancel` before continuing.
+Use `confirm` for destructive confirmations. Always handle `isCancel` before continuing. A destructive step never defaults to yes: without a terminal it needs an explicit flag.
 
 ## Pattern B: real-time status and hierarchical logs
 
@@ -86,7 +101,8 @@ export function logSystemState(metrics) {
 2. One question per step. Validate empty required text. Exit 0 on cancel.
 3. Status uses `consola.start`, `consola.success`, `consola.error`, and `consola.box`. Do not print unstructured `console.log` banners for the same job.
 4. Do not render a fake terminal inside a Vue page unless the user asked for a GUI that displays logs. Log text in a GUI still comes from the product's data components (`@primevue-aura`), not from embedding clack.
-5. Run the script and read stdout before finishing. A wizard that was never executed is not done.
+5. Every prompt has a flag or a default, so the script also runs without a terminal. Before finishing, run that path under a time limit (`timeout 60 node cli/interactive-flow.js --yes < /dev/null`) and read stdout. A wizard that was never executed is not done.
+6. Put logic in plain functions and unit test them first, per `@heyeddi` `reference/testing.md`.
 
 ## When the task is complete: suggest next skills
 
@@ -94,4 +110,4 @@ export function logSystemState(metrics) {
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill cli-interface-design --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

@@ -1,6 +1,6 @@
 # HeyEddi
 
-**HeyEddi** is a **collaborative workspace for agents and humans**. Product context, design artifacts, and skill-generated reports live in `.heyeddi/` so AI agents and your team share one source of truth while building SaaS applications: Vue or Flutter frontends, FastAPI or Firebase backends, OpenProps + PrimeVue on web.
+**HeyEddi** is a **collaborative workspace for agents and humans**. Product context, design artifacts, and skill-generated reports live in `.heyeddi/` so AI agents and your team share one source of truth while building SaaS applications: Vue or Flutter frontends, FastAPI or Firebase backends, Quasar + PrimeVue Aura on web.
 
 This folder is that workspace **inside your repository**. Skills read and write here; humans review, decide, and merge like any other contributor.
 

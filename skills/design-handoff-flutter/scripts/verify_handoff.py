@@ -107,7 +107,7 @@ def _run_spec_table(root: Path, spec_text: str) -> list[dict]:
     return results
 
 
-def route_screen_checks(root: Path, route: str) -> list[tuple[str, list[str], list[str]]]:
+def route_screen_checks(root: Path, route: str, brief_text: str = "") -> list[tuple[str, list[str], list[str]]]:
     slug = route.strip("/").replace("/", "-") or "home"
     screen_name = "".join(part.capitalize() for part in slug.split("-")) + "Screen"
     rel = f"lib/screens/{slug}_screen.dart"
@@ -115,11 +115,11 @@ def route_screen_checks(root: Path, route: str) -> list[tuple[str, list[str], li
     paths = [rel]
     if not (root / rel).is_file() and (root / alt).is_file():
         paths = [alt]
-    return [
-        (f"{route} screen exists", paths, [r"class \w+Screen"]),
-        (f"{route} uses Card", paths, [r"Card\("]),
-        (f"{route} card padding", paths, [r"EdgeInsets"]),
-    ]
+    checks = [(f"{route} screen exists", paths, [r"class \w+Screen"])]
+    if re.search(r"\bCard\b", brief_text):
+        checks.append((f"{route} uses Card", paths, [r"Card\("]))
+        checks.append((f"{route} card padding", paths, [r"EdgeInsets"]))
+    return checks
 
 
 def verify_handoff(root: Path, feature_path: Path, route: str, *, phase: str = "full") -> dict:
@@ -134,7 +134,7 @@ def verify_handoff(root: Path, feature_path: Path, route: str, *, phase: str = "
     if phase in ("shell", "full"):
         checks.extend(_run_named_checks(root, SHELL_CHECKS))
     if phase == "full":
-        checks.extend(_run_named_checks(root, route_screen_checks(root, route)))
+        checks.extend(_run_named_checks(root, route_screen_checks(root, route, brief_text)))
 
     failed = [c for c in checks if not c.get("ok")]
     return {

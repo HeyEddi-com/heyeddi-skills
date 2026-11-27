@@ -123,7 +123,7 @@ def check_engineering_plan(root: Path, plan_text: str | None, plan_label: str) -
         "Timed or background work: follow reference/event-driven-work.md (wake-up at due time, "
         "live rows only, bounded backstop)",
         "After edits: audit_engineering.py --check (errors fail; warns advisory)",
-        "After edits: estimate_change_cost.py --check (over budget fails)",
+        "After edits: estimate_change_cost.py (never stops the work; only pre-merge-gate adds --check)",
     ]
     if plan_text is not None:
         findings.extend(_plan_smells(plan_text, plan_label))

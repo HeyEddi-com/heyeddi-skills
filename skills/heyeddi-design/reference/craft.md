@@ -6,9 +6,9 @@ Read **`reference/implement-routing.md`** first.
 
 ## Prerequisites (hard gates)
 
-1. **Confirmed design brief** at `designs/<feature>/brief.md` OR explicit brief confirmation from `shape`.
+1. **Design brief** at `designs/<feature>/brief.md`. A design request needs it confirmed in `shape`; in a build request the written brief counts.
 2. **`design.md` exists** — run `document` if missing.
-3. Run `load_context.py`: read `product.md` + `design.md`. Stop on `audience_blocker`.
+3. Run `load_context.py`: read `product.md` + `design.md`. On `audience_blocker`: in a build request, fill personas and per-route intent from the repo, record them as assumptions, and continue; in a design request, run `discover`.
 4. Brief **Audience** + **Design signature** sections filled.
 5. **Taste layout hard gates A–G** (`@taste-penpot` `references/layout-hard-gates.md`):
    - No text-wall mockups (multiline paste in a gray card ≠ settings/form UI)
@@ -16,10 +16,10 @@ Read **`reference/implement-routing.md`** first.
    - Flex claim only when reflow is real (children not stuck at `0,0`); else absolute 8px escape or `hifi.html`
    - `.heyeddi/designs/<feature>/hifi.html` when MCP cannot nest, **or** boards proven on canvas
    - `penpot-demo.md` (if present) labels honestly (Flex / absolute 8px / low-fi)
-   - Taste CRITIQUE read the **export PNG** (audit alone does not ship; Cloudflare export = not done)
+   - Taste CRITIQUE read the **export PNG** (audit alone does not ship; a blocked export follows the Gate D fallback)
    - Implementation spec CSS comes from `hifi.html` or real Inspect CSS, not from absolute geometry guesses or broken Flex flags
 
-If no brief, **stop and run `shape`**. If gate 5 fails, **stop and send back to `@taste-penpot` ACT / CRITIQUE**. Do not hand off a text-wall or empty phones.
+If no brief, run `shape` first. If gate 5 fails, run `@taste-penpot` ACT / CRITIQUE again, fix it, and continue. Do not hand off a text-wall or empty phones. When only the Penpot export is blocked in a build request, use the Gate D fallback and continue to code.
 
 ## Steps (design skill)
 
@@ -49,4 +49,4 @@ The stack skill:
 
 Summarize: route, feature slug, which implementer was chained, and open questions deferred.
 
-Recommend `@ux-flow-auditor` on flagship routes after visual-auditor passes.
+Run `@ux-flow-auditor` on flagship routes after visual-auditor passes, and fix what fails.

@@ -4,7 +4,6 @@ description: "Code-review a submitted PR like a human reviewer: read the committ
 version: 2.0.0
 product-version: 3.8.27
 author: HeyEddi-com
-disable-model-invocation: true
 ---
 
 # HeyEddi PR Review
@@ -84,7 +83,9 @@ Line must be a line that appears in the PR diff (GitHub rejects comments off-dif
 |-------|------|
 | **APPROVE** | No in-scope findings |
 | **REQUEST_CHANGES** | One or more in-scope findings posted inline |
-| **COMMENT** | Soft review only when the user asked for comment-only |
+| **COMMENT** | Soft review when the user asked for comment-only, and every self-review |
+
+GitHub rejects APPROVE and REQUEST_CHANGES on your own pull request. `post_inline_review` detects that and posts `COMMENT` (a clean one carries a self-clean marker that `verify_inline_review` accepts). The findings still need fixing.
 
 Never "Approve" in chat while leaving zero GitHub activity. Always submit the review.
 
@@ -121,4 +122,4 @@ Never "Approve" in chat while leaving zero GitHub activity. Always submit the re
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-pr-review --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

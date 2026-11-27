@@ -54,12 +54,12 @@ Follow [awesome-design-md extended sections](https://github.com/VoltAgent/awesom
 | CSS tokens, Vue components exist | **Scan**: extract into frontmatter + sections |
 | Empty / pre-implementation | **Seed**: interview, then fill scaffold template |
 
-Seed interview (2-3 questions per round): color strategy, light/dark, density, PrimeVue catalog, motion.
+Seed interview (design request only, 2-3 questions per round): color strategy, light/dark, density, PrimeVue catalog, motion. Build request: take the recommended defaults, record them, and continue.
 
 ## After writing
 
 - Do not delete **Decision log** history on refresh.
-- Confirm before overwriting a mature `design.md`.
+- Keep a mature `design.md`: add and update sections in place. Design request only: confirm before replacing it.
 - Optional: `npx @google/design.md lint .heyeddi/design.md` if the CLI is installed.
 
 See `design-talk.md` for Decision log entries. Template: `skills/project-engineering/scaffold/heyeddi/design.md`.

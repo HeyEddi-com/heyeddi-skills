@@ -89,8 +89,8 @@ Each `manifest.json` tool entry:
 | `visual-auditor` | 2 | Explicit | Designer, QA | Impeccable `audit`; Cursor preview pane |
 | `heyeddi-handoff` | 2 | Explicit | Designer | Figma MCP (deferred); screenshot-first |
 | `heyeddi-design` | 5 | Explicit | Designer | **Replaces impeccable** |
-| `pre-merge-gate` | 3 | Explicit | QA | Manual merge checklist |
-| `heyeddi-pr-respond` | 3 | Explicit | QA | Built-in `/babysit` (stricter, team rules) |
+| `pre-merge-gate` | 3 | Pipeline | Agent, QA | Manual merge checklist |
+| `heyeddi-pr-respond` | 3 | Pipeline | Agent, QA | Built-in `/babysit` (stricter, team rules) |
 | `design-system-generalizer` | 4 | Explicit | Designer, architect | Spread golden pages app-wide |
 | `no-duplicate-ui` | 4 | Auto (narrow) | Engineering | DRY / architecture enforcement |
 | `backend-type-bridger` | 4 | Auto (narrow) | AI during FE work | Guessed API shapes |
@@ -245,7 +245,7 @@ Notes: reuse SettingsSection; empty state on mobile
 | `scripts/pre_merge_gate.py` | Orchestrate checks; markdown report |
 | `manifest.json` | `run_pre_merge_gate` (readonly) |
 
-**Cursor / Cloud:** `disable-model-invocation: true` — QA runs `@pre-merge-gate`.
+**Cursor / Cloud:** the agent runs `@pre-merge-gate` itself as part of the ship pipeline; QA can run it too.
 
 ### 6. `heyeddi-pr-respond`
 
@@ -405,8 +405,8 @@ Notes: reuse SettingsSection; empty state on mobile
 | `visual-auditor` | Explicit | Explicit |
 | `heyeddi-handoff` | Explicit | Explicit |
 | `heyeddi-design` | Explicit | Explicit |
-| `pre-merge-gate` | Explicit | Explicit (QA webhook) |
-| `heyeddi-pr-respond` | Explicit | Explicit |
+| `pre-merge-gate` | Pipeline (agent runs it) | Pipeline (QA webhook too) |
+| `heyeddi-pr-respond` | Pipeline (agent runs it) | Pipeline |
 | `design-system-generalizer` | Explicit | Explicit |
 | `no-duplicate-ui` | Auto (narrow) | Auto on PR diff |
 | `backend-type-bridger` | Auto (narrow) | Auto when API files touched |

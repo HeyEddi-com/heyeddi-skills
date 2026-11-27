@@ -32,7 +32,7 @@ Base probes on:
 
 After generating:
 
-- Ask which **composition / density** feels closest within the locked identity
+- Design request: ask which **composition / density** feels closest within the locked identity. Build request: pick it, record why, continue
 - Do not treat images as final spec: they refine the brief, not reopen identity
 
 ## Phase B: Wireframes

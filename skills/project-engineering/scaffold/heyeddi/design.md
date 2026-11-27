@@ -3,7 +3,7 @@ version: alpha
 name: Project-name-design-system
 description: >-
   One paragraph in designer voice: mood, density, register (product app vs marketing),
-  how OpenProps surfaces and PrimeVue components should feel together. Name the north star
+  how token surfaces and PrimeVue components should feel together. Name the north star
   and the one thing agents must not get wrong.
 
 colors:
@@ -124,7 +124,7 @@ Mobile-first; audit at **375 / 768 / 1024 / 1440**. Touch targets ≥ 44px. Stac
 
 ### Color scheme
 
-**System default:** `prefers-color-scheme` via OpenProps `light-dark()` and `{colors.canvas}` / dark equivalents. User setting: `system` | `light` | `dark` (default **system**). WCAG 2.2 AA in both schemes.
+**System default:** `prefers-color-scheme` via `light-dark()` in `tokens.css` and `{colors.canvas}` / dark equivalents. User setting: `system` | `light` | `dark` (default **system**). WCAG 2.2 AA in both schemes.
 
 ### Internationalization
 
@@ -156,7 +156,7 @@ Loading, empty, error, and success patterns required on data views and forms.
 
 ### Token source
 
-Document once per project: **OpenProps** (HeyEddi scaffold: `tokens.css` aliases) | **custom** (`:root` vars only) | **other** (document waiver). See `heyeddi-design/reference/token-strategy.md`.
+Document once per project: **Aura bridge** (HeyEddi scaffold: `tokens.css`) | **custom** (`:root` vars only) | **other** (document waiver). See `heyeddi-design/reference/token-strategy.md`.
 
 ### Brand & Accent
 
@@ -199,7 +199,7 @@ _(System stack or project fonts. Note substitutes if brand fonts are unavailable
 
 ### Spacing system
 
-- **Base unit:** 8px via OpenProps `{spacing.*}`.
+- **Base unit:** 8px via `{spacing.*}`.
 - **Section padding:** …
 - **Form field gap:** …
 
@@ -263,7 +263,7 @@ _(App shell, tabs, breadcrumbs: PrimeVue component names.)_
 
 ### Do
 
-- Use semantic `var(--*)` from project `tokens.css` in Vue/CSS; reference tokens from frontmatter in prose. OpenProps when project uses `open-props`; custom vars otherwise.
+- Use semantic `var(--*)` from project `tokens.css` in Vue/CSS; reference tokens from frontmatter in prose. Existing `open-props` projects keep their aliases.
 - One primary action per view band when possible.
 - Append per-feature rationale to **Decision log** after craft, polish, or handoff.
 

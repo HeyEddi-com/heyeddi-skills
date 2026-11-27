@@ -12,7 +12,7 @@ Run `load_context.py`. Check for `PRODUCT.md` and `DESIGN.md` at paths returned 
 |-------|--------|
 | Neither file | Steps 2-4, then offer `document` |
 | PRODUCT only | Offer `document` for DESIGN |
-| Both exist | Ask what to refresh; never overwrite silently |
+| Both exist | Refresh only what the request touches; never overwrite silently (build request: edit in place and record it) |
 | PRODUCT missing Register | Add `## Register` (`product` or `brand`) |
 
 ## Step 2: Explore codebase
@@ -43,7 +43,7 @@ Minimum for PRODUCT.md:
 
 **Do not ask about colors, fonts, or radii here**: those belong in `DESIGN.md` via `document`.
 
-Write PRODUCT.md only after user confirms strategic answers.
+Design request: write PRODUCT.md after the user confirms the strategic answers. Build request: answer from the repo, write it, record the assumptions, and continue.
 
 ## Step 4: Write PRODUCT.md
 
@@ -77,7 +77,7 @@ Register value is bare `product` or `brand`.
 
 ## Step 5: DESIGN.md
 
-Offer `@heyeddi-design document`:
+Run `@heyeddi-design document` when the request needs DESIGN.md (design request: offer it first):
 
 - **Code exists:** scan tokens and components into DESIGN.md
 - **Greenfield:** seed DESIGN.md from quick visual questions (color strategy, type direction, density)

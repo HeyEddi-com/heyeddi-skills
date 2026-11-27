@@ -45,14 +45,14 @@ Or `"backends": ["firebase"]` or `["fastapi", "firebase"]`.
 
 ## Workflow
 
-1. **Prefs gate (always-on hard):** `@heyeddi-setup` `verify_setup --check` before git/CI/commit assumptions; incomplete → run setup until pass.
+1. **Prefs gate (always-on hard):** `@heyeddi-setup` `verify_setup --check` before git/CI/commit assumptions; incomplete → `write_setup.py --defaults` (no questions) and continue.
 2. **`audit_scaffold`**: per-layer JSON (flutter / fastapi / firebase).
-3. **`scaffold_stack --stack auto`**: fills gaps (`flutter`, `fastapi`, `firebase`, or `full`).
+3. **`scaffold_stack --stack auto`**: fills gaps (`flutter`, `fastapi`, `firebase`, or `full`). An existing app (its own package name) gets no demo screens: only the API client support files, plus `flutter pub add` for missing dependencies. Existing `.heyeddi/stack.json` values are kept.
 4. **`ensure_flutter`** + **`ensure_python`** (via `@project-engineering`) as needed.
 5. **`dev_server_info`**: Flutter web `:8085`, API `:8090`, Firebase emulators `:4000`.
 6. **Plan gate (always-on):** `@engineering-excellence` `check_engineering_plan --check` before feature code.
-7. Implement features (`@design-handoff-flutter`, `@flutter-patterns`, `@dart-type-bridger`).
-8. **`run_tests`** + **`run_backend_tests`** + **`verify_build`**.
+7. Per feature, write the failing test first (`@heyeddi` `reference/testing.md`), then implement (`@design-handoff-flutter`, `@flutter-patterns`, `@dart-type-bridger`) until it passes.
+8. **`run_tests`** + **`run_backend_tests`** + **`verify_build`**. A non-zero exit is a failure to fix. A missing Flutter SDK is not a skip: install it (https://docs.flutter.dev/get-started/install) and rerun.
 9. **Change gate (always-on):** `audit_engineering --check` (errors fail; warns advisory).
 
 ## Local dev servers
@@ -71,7 +71,7 @@ Set `FLUTTER_WEB_URL` (or `DEV_SERVER_URL`) for `@visual-auditor` when auditing 
 - `reference/dev-server.md`: Flutter web + mobile
 - `reference/fastapi-client.md`: Dio + OpenAPI types
 - `reference/firebase-client.md`: firebase_core + Firestore
-- `reference/heyeddi-handoff.md`: chain `@design-handoff-flutter`
+- `reference/design-handoff.md`: chain `@design-handoff-flutter`
 
 ## Related skills
 
@@ -85,4 +85,4 @@ Set `FLUTTER_WEB_URL` (or `DEV_SERVER_URL`) for `@visual-auditor` when auditing 
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill flutter-engineering --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

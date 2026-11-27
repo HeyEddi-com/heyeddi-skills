@@ -70,7 +70,7 @@ data = {
     "groupings": [
         {
             "title": "HeyEddi CI",
-            "description": "Configure eddi-ci.yaml, respond to HeyEddi findings, diagnose failing checks, and author pipeline YAML (Spot fail-closed).",
+            "description": "Configure eddi-ci.yaml, respond to HeyEddi findings, diagnose failing checks, and author pipeline YAML. Includes the permission and merge-gate skills they call.",
             "skills": skills,
         }
     ],
@@ -101,7 +101,7 @@ cat > "${OUT_DIR}/README.md" <<EOF
 
 Badge populates after skills.sh indexes the first installs.
 
-**Product-specific agent skills for [HeyEddi CI](https://ci.heyeddi.com)** — not a general CI toolkit. Use these when your GitHub App is HeyEddi CI: \`eddi-ci.yaml\`, PR findings, failing Checks, and Spot runners (placeholder / fail-closed).
+**Product-specific agent skills for [HeyEddi CI](https://ci.heyeddi.com)**, not a general CI toolkit. Use these when your GitHub App is HeyEddi CI: \`eddi-ci.yaml\`, PR findings, failing Checks, and Spot runners.
 
 **Product:** [ci.heyeddi.com](https://ci.heyeddi.com) · **Policy docs:** [ci.heyeddi.com/docs#policy](https://ci.heyeddi.com/docs#policy)
 
@@ -136,14 +136,20 @@ npx skills add HeyEddi-com/heyeddi-skills -a cursor -y --skill '*'
 | \`@heyeddi-ci-config\` | Author \`eddi-ci.yaml\` from the live policy contract |
 | \`@heyeddi-pr-respond\` | Reply to all PR review feedback (human + HeyEddi CI) |
 | \`@heyeddi-ci-fails\` | Diagnose failing GitHub Checks |
-| \`@heyeddi-ci-runners\` | PLACEHOLDER — \`pipeline:\` YAML only (Spot not executing) |
+| \`@heyeddi-ci-runners\` | Spot: GHA overflow/always and sealed \`pipeline:\` jobs |
 | \`@heyeddi-ci-guide\` | Commands, auth, feedback paths |
+| \`@heyeddi\` | Router, working agreement, next step |
+| \`@heyeddi-setup\` | Repo preferences |
+| \`@heyeddi-local-first\` | Permission check for commit, push, PR, merge |
+| \`@pre-merge-gate\` | Merge readiness |
+| \`@engineering-excellence\` | Engineering and cost audits |
+| \`@heyeddi-product\` | Backlog and product review |
 
 ## Product honesty
 
-- **No unauthorized merge**: merge follows the project's agent preset; the default asks for **authorize merge** in the current turn
+- **Merging**: below production the agent merges once \`@pre-merge-gate --signoff\` exits 0; a production merge takes **authorize merge** in the current turn
 - **No structured FP API yet** — use PR debate / \`support@heyeddi.com\`
-- **Runners fail-closed** — do not claim jobs ran
+- **Runners**: Spot is shipped; claim a job ran only with Check or Spot evidence
 - **PR scratch** under \`.heyeddi/docs/pr-*\` is ephemeral / gitignored
 
 ## Hub maintainer

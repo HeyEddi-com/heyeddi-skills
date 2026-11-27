@@ -3,7 +3,7 @@
 ```bash
 # Dev server running on :5173
 python scripts/load_visual_context.py --project-root . --route /settings --write-review
-python scripts/capture_screenshots.py --project-root . --route /settings
+python scripts/audit_ui.py --project-root . --route /settings
 python scripts/audit_contrast.py --project-root . --route /settings
 
 # Agent: read PNGs + product.md + design.md + mockup-brief

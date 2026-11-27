@@ -38,6 +38,8 @@ def main() -> None:
             indent=2,
         )
     )
+    if not ok:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

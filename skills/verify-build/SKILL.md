@@ -23,7 +23,7 @@ paths:
 1. Ensure dependencies are installed (`npm ci` or `npm install`).
 2. Run `bash scripts/verify_build.sh --project-root <root>`.
 3. If build fails, read the Rollup/Vite stack trace and fix imports or types.
-4. Re-run until output shows success.
+4. Re-run until the script exits 0. It exits non-zero when the build fails, npm is missing, or there is no `package.json`.
 
 ## Scripts
 

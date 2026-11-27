@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 from _heyeddi_paths import design_md, designs_dir, intake_dir, product_md
-from _product_schema import product_json_path, validate_product_json, validate_product_md
+from _product_schema import handoff_features, product_json_path, validate_product_json, validate_product_md
 from _skill_cli import emit, resolve_project_root
 
 
@@ -89,13 +89,16 @@ def main() -> None:
         gaps.append("missing skill-routing.json: run build_routing --write")
     if not list(intake.glob("translation-*.md")):
         gaps.append("missing translation-*.md: run write_translation")
-    settings = designs_dir(root) / "settings"
-    has_wireframe = (settings / "wireframe.md").is_file()
-    has_png_pair = (settings / "desktop.png").is_file() and (settings / "mobile.png").is_file()
-    if not has_wireframe and not has_png_pair:
-        gaps.append(
-            "missing designs/settings handoff: run generate_wireframe, ingest_mockups, or prepare_mockup_prompts + AI PNGs"
-        )
+    routing_path = intake / "skill-routing.json"
+    routing = json.loads(routing_path.read_text()) if routing_path.is_file() else {}
+    for feature in handoff_features(routing):
+        folder = designs_dir(root) / feature
+        has_png_pair = (folder / "desktop.png").is_file() and (folder / "mobile.png").is_file()
+        if not (folder / "wireframe.md").is_file() and not has_png_pair:
+            gaps.append(
+                f"missing designs/{feature} handoff: run generate_wireframe, ingest_mockups, "
+                "or prepare_mockup_prompts + AI PNGs"
+            )
 
     emit(
         json.dumps(

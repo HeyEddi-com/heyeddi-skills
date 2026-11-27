@@ -19,12 +19,12 @@ Do not morph every route change. Do not morph a data table into itself.
 
 ## Setup
 
-`Morph` is registered with Quasar in the bootstrap owned by `@primevue-aura`:
+`Morph` is a Quasar directive, registered in the bootstrap owned by `@primevue-aura`:
 
 ```js
-import { Quasar, Dialog, Notify, Morph } from 'quasar';
+import { Quasar, Morph } from 'quasar';
 
-app.use(Quasar, { plugins: { Dialog, Notify, Morph } });
+app.use(Quasar, { directives: { Morph } });
 ```
 
 No extra package. Quasar already ships `v-morph`.

@@ -44,6 +44,8 @@ finalize_visual_review --route / --check   # defaults to done
 
 ## Mandatory pipeline
 
+Start the dev server yourself. When Playwright or Pillow is missing, add it to the project and install it. The capture and contrast scripts exit non-zero when they did not run.
+
 Read **`reference/visual-review.md`** and **`reference/fix-loop.md`**.
 
 ```
@@ -99,7 +101,7 @@ Shell scripts for capture/contrast; **you** (main agent) read images, edit code,
 ## Chain
 
 - `@vue-design-system`: run after token/CSS fixes (Quasar, PrimeVue Aura, motion)
-- `@heyeddi-design polish`: if IA problems remain after visual pass
+- `@heyeddi-design polish`: run it when IA problems remain after the visual pass
 - `@pre-merge-gate`: after `finalize_visual_review --check` passes
 
 ## When the task is complete: suggest next skills
@@ -108,4 +110,4 @@ Shell scripts for capture/contrast; **you** (main agent) read images, edit code,
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill visual-auditor --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

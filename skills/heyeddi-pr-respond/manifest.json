@@ -69,12 +69,13 @@
     },
     {
       "name": "assert_no_merge",
-      "description": "Hard-fail production merge plans unless the user said authorize merge this turn. Pass --base <branch>.",
+      "description": "Run before a merge: fails when the planned command merges into production without the user's authorize merge. Below production it passes (run the pre-merge gate first). Pass base and planned_command.",
       "parameters": {
         "type": "object",
         "properties": {
-          "user_text": { "type": "string" },
+          "base": { "type": "string", "description": "PR target branch; missing means production" },
           "planned_command": { "type": "string" },
+          "user_text": { "type": "string" },
           "check": { "type": "boolean" },
           "project_root": { "type": "string" },
           "check_yaml": { "type": "boolean" }

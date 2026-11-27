@@ -19,10 +19,11 @@ paths:
 
 ## Instructions
 
+0. Write the failing test first per `@heyeddi` `reference/testing.md` (unit for repositories and providers, widget test for screens).
 1. Read `context/fastapi-dio.md` for REST + JWT projects.
 2. Read `context/firebase-client.md` for Firebase/Firestore projects.
 3. Read `context/riverpod.md` for provider conventions.
-4. Optional: `python scripts/validate_provider.py --path lib/providers/users_provider.dart`
+4. Optional: `python .agents/skills/flutter-patterns/scripts/validate_provider.py --project-root . --path lib/providers/users_provider.dart`
 
 ## Notes
 

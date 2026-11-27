@@ -17,68 +17,75 @@ Application frames, drawers, and native shells belong to `@quasar-foundation`. T
 - Building data grids, sorting, row expansion, virtual scrolling, and column filters.
 - Multi-tiered menus, tree-select dropdowns, cascade selects, and date or time range pickers.
 - In-app modals, floating tooltips, and popovers that require refined styling.
-- Scaffolding `vite.config.js` and `src/main.js` for a Quasar plus PrimeVue app.
+- Scaffolding `vite.config.ts` and `src/main.ts` for a Quasar plus PrimeVue app.
 
 ## Installation
 
 ```bash
-npm install primevue @primevue/themes primeicons
+npm install vue quasar @quasar/extras primevue @primevue/themes @primeuix/themes primeicons @vueuse/motion
+npm install -D vite @vitejs/plugin-vue @quasar/vite-plugin sass-embedded
 ```
 
 ## Hybrid harmony setup
 
-Quasar's CSS resets load first. PrimeVue Aura loads second so its components keep their styling.
+Quasar's CSS resets load first. PrimeVue Aura loads second so its components keep their styling. The `@project-engineering` Vue scaffold already has this setup. In an app without it, add:
 
-```js
-// vite.config.js
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
+import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
-  plugins: [
-    vue({ template: { transformAssetUrls } }),
-    quasar({ sassVariables: 'src/quasar-variables.sass' })
-  ]
+  plugins: [vue({ template: { transformAssetUrls } }), quasar()],
+  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
 });
 ```
 
-```js
-// src/main.js
-import { createApp } from 'vue';
+`sass-embedded` compiles `quasar/src/css/index.sass`. Mirror the `@` alias in `tsconfig` `paths`.
+
+```ts
+// src/main.ts
+import { createApp } from "vue";
+
+// 1. Quasar core and icons load FIRST to apply the base resets
+import { Quasar, Dialog, Notify, BottomSheet, Morph } from "quasar";
+import "@quasar/extras/material-icons/material-icons.css";
+import "quasar/src/css/index.sass";
+
+// 2. PrimeVue and the Aura preset load SECOND to win on components
+import PrimeVue from "primevue/config";
+import Aura from "@primevue/themes/aura";
+import "primeicons/primeicons.css";
+
+// 3. Motion engine
+import { MotionPlugin } from "@vueuse/motion";
+
 import App from "@/App.vue";
-
-// 1. Quasar core base & icon assets (Loads FIRST to apply foundational resets)
-import { Quasar, Dialog, Notify, Morph } from 'quasar';
-import '@quasar/extras/material-icons/material-icons.css';
-import 'quasar/src/css/index.sass';
-
-// 2. PrimeVue & Aura Preset (Loads SECOND to take precedence on components)
-import PrimeVue from 'primevue/config';
-import Aura from '@primevue/themes/aura';
-import 'primeicons/primeicons.css';
-
-// 3. Motion Engine
-import { MotionPlugin } from '@vueuse/motion';
+// 4. Token bridge (see @aura-design-tokens), after both libraries
+import "./styles/tokens.css";
 
 const app = createApp(App);
 
-app.use(Quasar, { plugins: { Dialog, Notify, Morph } });
+app.use(Quasar, { plugins: { Dialog, Notify, BottomSheet }, directives: { Morph } });
 
 app.use(PrimeVue, {
   theme: {
     preset: Aura,
     options: {
-      prefix: 'p',
-      darkModeSelector: '.dark-mode',
-      cssLayer: false
-    }
-  }
+      prefix: "p",
+      darkModeSelector: ".dark-mode",
+      cssLayer: false,
+    },
+  },
 });
 
 app.use(MotionPlugin);
-app.mount('#app');
+app.mount("#app");
 ```
+
+A brand color goes through `definePreset(Aura, ...)` from `@primeuix/themes`, as the scaffold does.
 
 `cssLayer: false` is required so Aura wins over Quasar resets on PrimeVue components. Dark mode uses the `.dark-mode` class from `@aura-design-tokens`.
 
@@ -100,7 +107,7 @@ Card body content goes in `<template #content>`.
 ## Instructions
 
 1. Confirm the surface is data, a complex control, or an overlay. Shell chrome stays Quasar.
-2. Import components from `primevue/<name>` (PascalCase path, unstyled entry is not used; Aura is the preset).
+2. Import components from `primevue/<lowercase name>`, for example `primevue/datatable` or `primevue/treeselect`. The unstyled entry is not used; Aura is the preset.
 3. When the PrimeVue MCP server is connected, confirm props there before inventing them.
 4. After the view exists, load `@motion-physics` for row and dialog entry. Do not add PrimeVue's default CSS transitions for spatial movement.
 5. Surfaces and text use `var(--app-*)` from `@aura-design-tokens`, which read `--p-*`.
@@ -111,4 +118,4 @@ Card body content goes in `<template #content>`.
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill primevue-aura --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

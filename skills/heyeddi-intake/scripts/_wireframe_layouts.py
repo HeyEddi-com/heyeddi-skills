@@ -321,15 +321,4 @@ def page_context_from_product(
 
 
 def feature_slug_from_route(route: str) -> str:
-    slug = route.strip("/").replace("/", "-") or "home"
-    if slug == "":
-        return "home"
-    if "settings" in route:
-        return "settings"
-    if "dashboard" in route:
-        return "dashboard"
-    if "login" in route:
-        return "login"
-    if route in ("/", ""):
-        return "marketing"
-    return slug
+    return route.strip("/").replace("/", "-") or "home"

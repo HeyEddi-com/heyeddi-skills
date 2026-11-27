@@ -8,4 +8,4 @@ CLI contract for Cursor and Cloud Run (Pydantic AI / LangChain):
 - **Idempotent**: safe to re-run.
 - Prefer **Python** (`.py`) for Cloud Run parity; shell for npm-only steps.
 
-Invocation from cloud agent: see `../../docs/cloud-agent-integration.md`.
+Invocation from cloud agent: see `../../../docs/cloud-agent-integration.md`.

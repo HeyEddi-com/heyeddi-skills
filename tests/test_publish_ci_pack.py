@@ -20,4 +20,8 @@ def test_publish_ci_pack_materialize(tmp_path: Path) -> None:
     assert (out / "skills.sh.json").is_file()
     reg = json.loads((out / "skills-registry.json").read_text(encoding="utf-8"))
     assert reg["version"] == pack["version"]
-    assert "HeyEddi-com/heyeddi-ci-skills" in (out / "README.md").read_text(encoding="utf-8")
+    readme = (out / "README.md").read_text(encoding="utf-8")
+    assert "HeyEddi-com/heyeddi-ci-skills" in readme
+    for name in pack["skills"]:
+        assert f"@{name}`" in readme, name
+    assert "PLACEHOLDER" not in readme and "fail-closed" not in readme

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import sys
 
 from _skill_cli import emit, resolve_project_root, run_command
 
@@ -26,12 +27,12 @@ def main() -> None:
                 {
                     "status": "fail",
                     "error": "flutter CLI not found",
-                    "hint": "Install Flutter SDK: https://docs.flutter.dev/get-started/install",
+                    "hint": "Install the Flutter SDK (https://docs.flutter.dev/get-started/install), then rerun",
                 },
                 indent=2,
             )
         )
-        return
+        sys.exit(1)
 
     if (root / "pubspec.lock").is_file() and not args.force:
         emit(json.dumps({"status": "ok", "skipped": True, "reason": "pubspec.lock present"}, indent=2))
@@ -40,6 +41,8 @@ def main() -> None:
     output = run_command(["flutter", "pub", "get"], root, timeout=300)
     ok = not output.startswith("[exit") and not output.startswith("[error]")
     emit(json.dumps({"status": "ok" if ok else "fail", "output": output[:8000]}, indent=2))
+    if not ok:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

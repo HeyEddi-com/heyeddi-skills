@@ -55,7 +55,7 @@ cd heyeddi-skills
 
 ### Install CI-only pack (sibling skills.sh repo)
 
-For [HeyEddi CI](https://ci.heyeddi.com) workflows (config, respond, fails, Spot runners, guide):
+For [HeyEddi CI](https://ci.heyeddi.com) workflows (config, respond, fails, Spot runners, guide, plus the router, setup, permission, engineering, backlog, and merge-gate skills they call):
 
 ```bash
 npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
@@ -148,7 +148,7 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `visual-auditor` | Review screenshots vs spec, fix visual issues, document fixes |
 | `verify-build` | Vite static build validator |
 | `pre-merge-gate` | QA merge-readiness checklist |
-| `heyeddi-pr-review` | Review submitted PR - diff, product, docs, engineering, tests |
+| `heyeddi-pr-review` | Review a submitted PR - inline findings on the committed diff and related call sites |
 | `design-system-generalizer` | Spread golden-page patterns across routes |
 | `no-duplicate-ui` | Detect duplicate Vue UI |
 

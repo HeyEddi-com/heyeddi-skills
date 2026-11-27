@@ -58,17 +58,17 @@ def _pm_questions(matrix: list[dict], pages: list[dict]) -> list[str]:
     for row in matrix:
         if row["status"] == "placeholder":
             questions.append(
-                f"Is `{row['route']}` actually useful yet, or should we cut/replace it before polish?"
+                f"Finish `{row['route']}`: replace the placeholder with the behaviour in its acceptance criteria."
             )
         if row["status"] == "missing":
             questions.append(
-                f"Should `{row['route']}` ship in this release? (see product.md purpose for route)"
+                f"Build `{row['route']}`: product.md lists it (see its purpose)."
             )
     if len(matrix) == 1:
-        questions.append("Single-route app: is scope too narrow for stated personas?")
+        questions.append("Single-route app: compare the scope with the stated personas.")
     if not questions:
-        questions.append("Routes exist: delegate @ux-flow-auditor: do tasks complete with acceptable friction?")
-        questions.append("Delegate @heyeddi-design critique: would a different layout serve the job better?")
+        questions.append("Routes exist: run @ux-flow-auditor and fix the friction it finds.")
+        questions.append("Run @heyeddi-design critique and apply its P0 and P1 fixes.")
     return questions
 
 

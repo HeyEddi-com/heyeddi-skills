@@ -29,20 +29,36 @@ def _parse_json(raw: str) -> dict[str, Any]:
     return data
 
 
+_TRUNK_NAMES = ("main", "master", "trunk")
+
+
+def _git_lines(root: Path, *args: str) -> list[str]:
+    try:
+        out = subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, timeout=5, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return []
+    return out.stdout.split() if out.returncode == 0 else []
+
+
 def _git_default_branch(root: Path) -> str:
-    """origin/HEAD, else the current branch, else main."""
-    for cmd in (
-        ["git", "symbolic-ref", "--short", "refs/remotes/origin/HEAD"],
-        ["git", "symbolic-ref", "--short", "HEAD"],
-    ):
-        try:
-            out = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=5, check=False)
-        except (OSError, subprocess.SubprocessError):
-            continue
-        name = out.stdout.strip().removeprefix("origin/")
-        if out.returncode == 0 and name and name != "HEAD":
+    """origin/HEAD, else a trunk name that exists, else the only branch, else main.
+
+    This becomes the production branch, so it is never just the branch checked
+    out: setup often runs from a feature branch.
+    """
+    head = _git_lines(root, "symbolic-ref", "--short", "refs/remotes/origin/HEAD")
+    if head:
+        return head[0].removeprefix("origin/")
+    local = _git_lines(root, "for-each-ref", "--format=%(refname:short)", "refs/heads")
+    remote = _git_lines(root, "for-each-ref", "--format=%(refname:short)", "refs/remotes/origin")
+    known = {*local, *(name.removeprefix("origin/") for name in remote)}
+    for name in _TRUNK_NAMES:
+        if name in known:
             return name
-    return "main"
+    if not known:  # a new repo with no commit yet
+        unborn = _git_lines(root, "symbolic-ref", "--short", "HEAD")
+        return unborn[0] if unborn else "main"
+    return local[0] if len(local) == 1 and not remote else "main"
 
 
 def main() -> None:

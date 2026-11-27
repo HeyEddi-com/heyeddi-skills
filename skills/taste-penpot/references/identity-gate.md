@@ -68,7 +68,8 @@ in the repo (skip missing files quietly):
 
 If job or audience is missing and cannot be inferred safely: **ask 2–3
 clarifying questions, document the answers into `identity-thinking.md`, and
-wait** before Phase 0.2. Do not invent customers or capabilities.
+wait** before Phase 0.2 (design request only; a build request answers from the
+repo and continues). Do not invent customers or capabilities.
 
 ### 0.2 What are others doing?
 
@@ -163,8 +164,9 @@ Phase 0 questions do not end the turn in a build request: answer them from
 
 ## Design requests: hard stop
 
-When the user asked for design (design, redesign, new look, overhaul,
-`@taste-penpot`, `@heyeddi-design shape`), after presenting the options:
+When the user's own message asks for design (design, redesign, new look,
+overhaul, `@taste-penpot`, `@heyeddi-design shape`), after presenting the options
+(a skill you chain inside a build request is not a design request):
 
 1. Ask the user to pick **A / B / C / D / E** (or a hybrid: "A type + B colour").
 2. **End the turn.** Do not PLAN tokens, open Penpot, write HTML, or craft UI
@@ -195,7 +197,7 @@ answers are needed. Do not invent a look while waiting.
 - NEVER ship a first look when the user only said "modern" / "clean" / "professional"
 - NEVER skip Phase 0 and dump three palettes
 - NEVER present three palette swaps of the same layout and call them identities
-- NEVER continue to ACT before a choice (unless the gate was correctly skipped)
+- NEVER, in a design request, continue to ACT before a choice (unless the gate was correctly skipped)
 - NEVER ignore a pinned brand to run the gate "for completeness"
 - NEVER invent a second identity after the user already chose in this chat
 - NEVER waive the gate for scaffolding, readers, demos, or "workable" UI

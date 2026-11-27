@@ -20,8 +20,8 @@ Never guess API field names: sync OpenAPI instead. Never guess routes: read rout
 Only when the repo cannot settle it and a wrong guess is expensive to undo:
 
 - Two readings lead to a different data model, public API, or irreversible migration
-- Irreversible stack choice (Flutter vs Vue, Firebase vs API-only) on a greenfield project
-- The user's message conflicts with `product.md` on what the product is for
+
+A greenfield stack choice or a message that differs from `product.md` is not a pause: the user's message and the documented default decide; record the choice.
 
 Build everything that does not depend on the answer first, then ask once, in the final summary under **Needs you**.
 

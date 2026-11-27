@@ -15,6 +15,7 @@ BACKLOG = """# Product backlog
 **Last updated:** {today}
 
 Prioritized by user value. PM owns order: engineering estimates inform but do not override user pain.
+Status is `planned`, `done`, or `blocked`. A build run repeats `backlog.py next` until no item is left.
 
 | Priority | Feature / route | User story (summary) | Status | Notes |
 |----------|-----------------|--------------------|--------|-------|

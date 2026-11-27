@@ -25,18 +25,8 @@ def infer_stack(data: dict) -> tuple[str, list[str]]:
 
 
 def feature_slug(route: str, view: str) -> str:
-    slug = route.strip("/").replace("/", "-") or "home"
-    if slug == "":
-        slug = "home"
-    if route == "/":
-        return "taskflow-marketing"
-    if "login" in route:
-        return "taskflow-login"
-    if "dashboard" in route:
-        return "taskflow-dashboard"
-    if "settings" in route:
-        return "settings"
-    return slug or view.replace("View", "").lower()
+    """The route slug: handoff and visual-auditor look for design folders under this name."""
+    return route.strip("/").replace("/", "-") or "home"
 
 
 def has_handoff_artifacts(root: Path, feature: str) -> bool:
@@ -62,15 +52,14 @@ def build_routing(root: Path, data: dict) -> dict:
         register = "brand" if route in ("/", "/login") else "product"
 
         if route == "/settings" or has_handoff_artifacts(root, feature):
-            feat = "settings" if "settings" in route else feature
             routes_out.append(
                 {
                     "route": route,
                     "register": register,
                     "skill": "heyeddi-handoff",
-                    "feature": feat,
-                    "mockups": f".heyeddi/designs/{feat}/",
-                    "brief": f".heyeddi/designs/{feat}/mockup-brief.md",
+                    "feature": feature,
+                    "mockups": f".heyeddi/designs/{feature}/",
+                    "brief": f".heyeddi/designs/{feature}/mockup-brief.md",
                     "notes": page.get("purpose", ""),
                 }
             )

@@ -19,6 +19,10 @@
           "pr": {
             "type": "integer",
             "description": "PR number (implies sign-off + CI/thread checks)"
+          },
+          "cost_approved": {
+            "type": "string",
+            "description": "The user's reason for accepting an over-budget change (passed to estimate_change_cost --approved). Only after the user approved it"
           }
         },
         "required": [

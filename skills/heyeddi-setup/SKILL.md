@@ -53,11 +53,13 @@ Permissions (commit, push, PR, merge, release, env reads and writes) are decided
 
 ### Agent presets
 
-| Preset | Commit, push feature branch, PR | Merge, release, push to main | Read staging / prod | Write staging | Write prod |
-|--------|------|------|------|------|------|
-| `cautious` | ask | ask | ask | deny | deny |
-| `balanced` | auto | ask | auto (look only) | ask | deny |
-| `autonomous` | auto | auto | auto | auto | ask |
+| Preset | Commit, push feature branch, PR | Merge below production | Production merge or push | Release | Read staging / prod | Write staging | Write prod |
+|--------|------|------|------|------|------|------|------|
+| `cautious` | ask | ask | ask | ask | ask | deny | deny |
+| `balanced` | auto | auto (after `pre-merge-gate`) | ask | ask | auto (look only) | ask | deny |
+| `autonomous` | auto | auto (after `pre-merge-gate`) | ask | auto | auto | auto | ask |
+
+A push to the staging branch follows `push_protected`: ask, or auto under `autonomous`.
 
 Per-action overrides go in `agent.permissions` (see `reference/stack-schema.md`). Hard limits no preset lifts: force push or delete on a protected branch, destructive statements on prod, `gh repo delete`, prod writes set to `auto`.
 
@@ -101,7 +103,7 @@ Read `.heyeddi/stack.json` before branch or PR-base assumptions:
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-setup --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
 
 ## Related
 

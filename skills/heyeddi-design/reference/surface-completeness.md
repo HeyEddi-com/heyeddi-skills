@@ -131,7 +131,7 @@ Every shape brief should include:
 
 **Critique:** Flag **missing archetype affordances**, **missing states**, and **spacing violations** as P0/P1 before polish.
 
-**Polish:** Addresses critique findings: does not invent missing regions; if IA is incomplete, recommend `shape` + brief update.
+**Polish:** Addresses critique findings: does not invent missing regions; if IA is incomplete, run `shape`, update the brief, and build it.
 
 ---
 

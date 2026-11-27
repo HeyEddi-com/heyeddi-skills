@@ -6,7 +6,7 @@ import argparse
 import json
 from pathlib import Path
 
-from _project_detect import BACKEND_DIR, detect, fastapi_root, has_fastapi, has_firebase, has_flutter
+from _project_detect import BACKEND_DIR, detect, fastapi_root, has_fastapi, has_firebase, has_flutter, is_existing_app
 from _skill_cli import emit, resolve_project_root
 
 FLUTTER_REQUIRED = (
@@ -44,10 +44,12 @@ def _audit_flutter(root: Path) -> dict:
     missing_recommended: list[str] = []
     warnings: list[str] = []
 
-    for rel in FLUTTER_REQUIRED:
+    existing = is_existing_app(root)
+    required = ("pubspec.yaml", "lib/main.dart") if existing else FLUTTER_REQUIRED
+    for rel in required:
         if not (root / rel).is_file():
             missing_required.append(rel)
-    for rel in FLUTTER_RECOMMENDED:
+    for rel in () if existing else FLUTTER_RECOMMENDED:
         if not (root / rel).is_file():
             missing_recommended.append(rel)
 

@@ -25,6 +25,12 @@ Browse: [skills.sh/heyeddi-com/heyeddi-ci-skills](https://www.skills.sh/heyeddi-
 | `@heyeddi-ci-fails` | Failing Checks diagnosis |
 | `@heyeddi-ci-runners` | Spot: GHA overflow/always + sealed `pipeline:` (evidence before claims) |
 | `@heyeddi-ci-guide` | Commands, auth, feedback |
+| `@heyeddi` | Router, working agreement, next step |
+| `@heyeddi-setup` | Repo preferences |
+| `@heyeddi-local-first` | Permission check for commit, push, PR, merge |
+| `@pre-merge-gate` | Merge readiness |
+| `@engineering-excellence` | Engineering and cost audits |
+| `@heyeddi-product` | Backlog and product review |
 
 Human + HeyEddi CI reviews: `@heyeddi-pr-respond` only (one skill).
 

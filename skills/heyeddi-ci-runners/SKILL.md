@@ -41,7 +41,7 @@ runs-on: ${{ vars.HEYEDDI_RUNS_ON || 'ubuntu-latest' }}
 
 1. `load_policy_contract`: living knobs only.
 2. `inspect_repo`: evidenced commands + path prefixes; never invent `pytest` / `npm test`.
-3. Explicit user opt-in (billable runner time).
+3. Explicit user opt-in (billable runner time); a request for sealed jobs is that opt-in.
 4. Author argv-safe `run` (no shell operators, `sudo`, `curl`, `wget`), catalog `image`, `filter.paths` when possible.
 5. Jobs run on Spot when the workspace is entitled and Spot env is live; they post **`HeyEddi Runner: {job_id}`** Checks.
 
@@ -81,5 +81,5 @@ assert_runners_claims --check --agent-text "<your summary>"
 - Never secrets in YAML
 - Never invent test commands
 - Never `auto_merge`
-- Never merge unless only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0
+- Merge into dev / test / staging yourself once `@pre-merge-gate --signoff` exits 0. A production merge takes the user's **authorize merge** in the current turn; never run it earlier.
 - Never claim correlated AI+runner timeline (Coming soon)

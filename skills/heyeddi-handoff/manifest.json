@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-handoff",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "tools": [
     {
       "name": "load_handoff",

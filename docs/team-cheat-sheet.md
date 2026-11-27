@@ -55,7 +55,7 @@ Place reference images in `designs/<feature>/` or attach in chat.
 
 | I want to… | Skill | How to invoke |
 |------------|-------|---------------|
-| **Review a submitted PR** (committed diff, product, docs, eng, tests) | `heyeddi-pr-review` | `@heyeddi-pr-review` + PR number |
+| **Review a submitted PR** (inline findings on the committed diff) | `heyeddi-pr-review` | `@heyeddi-pr-review` + PR number |
 | Approve a PR (CI pass/fail report) | `pre-merge-gate` | `@pre-merge-gate` |
 | **Respond to PR review comments** (fix vs decline, re-gate) | `heyeddi-pr-respond` | `@heyeddi-pr-respond` + PR number |
 | Verify production build | `verify-build` | `@verify-build` or automatic in CI context |

@@ -66,12 +66,13 @@ Packages:
 
 ## Instructions
 
+0. Write the failing test first per `@heyeddi` `reference/testing.md` (unit for logic, component or Playwright for UI flows). A screenshot does not replace it.
 1. Classify the prompt: visual UI or terminal. A GUI screen that also has a CLI is two skills, in that order.
 2. Read the primary skill's `SKILL.md` and its component table before choosing a component.
 3. Read the supporting skill. GUI work also reads `@motion-physics`, `@aura-design-tokens`, then `@layout-morph` only when a shared element moves, then `@fancy-ui-craft` only when depth was requested, then `@visual-verification`.
-4. App bootstrap (Vite plugin order, `main.js` load order) lives in `@primevue-aura`. Quasar CSS loads first. PrimeVue Aura loads second. Motion loads third.
+4. App bootstrap (Vite plugin order, `main.ts` load order) lives in `@primevue-aura`. Quasar CSS loads first. PrimeVue Aura loads second. Motion loads third.
 5. Map colors through `@aura-design-tokens`. Do not write raw hex in components.
-6. Designer visuals and Penpot demos: `@taste-penpot` using **only** `@zcubekr/penpot-mcp-server` (`npx -y @zcubekr/penpot-mcp-server`). If that server is missing, `@taste-penpot` installs it after the user approves. A redesign or from-scratch request loads `references/code-to-design.md` first. Never use unscoped `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), or `penpot-api-mcp`.
+6. Designer visuals and Penpot demos: `@taste-penpot` using **only** `@zcubekr/penpot-mcp-server` (`npx -y @zcubekr/penpot-mcp-server`). If that server is missing, follow `@taste-penpot`. In a build request do not wait for it: continue with the written spec and list the install under **Needs you**. A redesign or from-scratch request loads `references/code-to-design.md` first. Never use unscoped `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), or `penpot-api-mcp`.
 
 ## Agent directives
 
@@ -94,6 +95,8 @@ When generating or heavily refactoring a visual component:
 3. Inspect the image for visual overlap, broken flex wrap, misaligned padding, or unstyled raw fonts.
 4. Correct those defects before declaring the task complete.
 
+If the Playwright MCP is not connected, take the same screenshots with the project's own Playwright package (`npm install -D @playwright/test` and `npx playwright install chromium` when absent). The component or Playwright tests for the change must also pass.
+
 Desktop is 1440×900. Mobile is 390×844. Details are in `@visual-verification`.
 
 ### Terminal and CLI
@@ -102,7 +105,7 @@ Desktop is 1440×900. Mobile is 390×844. Details are in `@visual-verification`.
 - Use `@clack/prompts` for interactive question trees and inputs.
 - Use `consola` for badges, status reports, and structured log displays.
 - Keep output formatting within 16-color ANSI palettes using `picocolors`.
-- Run the script in the terminal and inspect stdout to verify alignment. Do not screenshot a CLI.
+- Run the script through its non-interactive path (`--yes`, see `@cli-interface-design`) and inspect stdout to verify alignment. Do not screenshot a CLI.
 
 ### Styling and tokens
 
@@ -155,7 +158,7 @@ PrimeVue, Quasar, Playwright, and Penpot run over stdio. Penpot is `@zcubekr/pen
 }
 ```
 
-Start the Penpot server only when a designer visual, a redesign, or a demo export is in scope. Add it to `.cursor/mcp.json` only after the user approves. `PENPOT_ACCESS_TOKEN` stays in the environment. Never print it and never write it into config. See `@taste-penpot` → `references/penpot-mcp.md`.
+Start the Penpot server only when a designer visual, a redesign, or a demo export is in scope. Adding it to `.cursor/mcp.json` follows `@taste-penpot`; a build request does not wait for that. `PENPOT_ACCESS_TOKEN` stays in the environment. Never print it and never write it into config. See `@taste-penpot` → `references/penpot-mcp.md`.
 
 `@primevue-openprops-architect` is a compatibility name. If it loads, follow this skill. Do not add OpenProps unless the project already depends on `open-props`.
 
@@ -165,4 +168,4 @@ Start the Penpot server only when a designer visual, a redesign, or a demo expor
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill vue-design-system --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

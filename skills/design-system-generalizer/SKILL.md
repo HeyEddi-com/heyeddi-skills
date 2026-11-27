@@ -4,7 +4,6 @@ description: Scans token and component usage patterns from a golden reference pa
 version: 1.0.0
 product-version: 3.8.27
 author: HeyEddi-com
-disable-model-invocation: true
 ---
 
 # Design System Generalizer
@@ -20,4 +19,4 @@ disable-model-invocation: true
 1. `python scripts/scan_patterns.py --route /golden --project-root <root>`
 2. `python scripts/diff_violations.py --golden /golden --target /other --project-root <root>`
 3. Use `--check` on diff to exit non-zero when target has hex colors or missing route files.
-4. Propose small PRs: never whole-app rewrite in one shot.
+4. Apply the fixes, one small PR per route (never a whole-app rewrite in one shot), until `diff_violations --check` passes on each.

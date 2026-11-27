@@ -140,7 +140,8 @@ def test_asking_before_commit_is_still_possible_through_permissions() -> None:
 
 def test_scaffold_does_not_write_legacy_keys() -> None:
     scaffold = ROOT / "skills" / "project-engineering" / "scaffold" / "heyeddi" / "stack.json"
-    assert json.loads(scaffold.read_text(encoding="utf-8"))["agent"] == {"preset": "balanced"}
+    stack = json.loads(scaffold.read_text(encoding="utf-8"))
+    assert not {"git", "agent", "setup"} & set(stack), "prefs belong to heyeddi-setup"
 
 
 def test_explicit_targets_beat_name_heuristics() -> None:

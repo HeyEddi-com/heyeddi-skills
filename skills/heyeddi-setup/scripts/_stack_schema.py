@@ -117,7 +117,7 @@ QUESTIONS: tuple[dict[str, Any], ...] = (
         "hints": {
             "cautious": "Ask before commit, push, PR, merge, release, and staging/prod reads",
             "balanced": "Commit, push feature branches, PRs, prod reads: auto. Merge below production after the pre-merge gate: auto. Production merge, release, push to main, staging writes: ask. Prod writes: pipeline only (default)",
-            "autonomous": "Everything auto except prod writes (ask) and the hard limits",
+            "autonomous": "Everything auto except production merge or push and prod writes (ask), and the hard limits",
         },
         "group": "agent",
     },

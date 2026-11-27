@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from _heyeddi_paths import heyeddi_dir
+from _project_detect import merge_stack
 from _skill_cli import emit, resolve_project_root
 
 SCAFFOLD_ROOT = Path(__file__).resolve().parent.parent.parent / "project-engineering" / "scaffold" / "heyeddi"
@@ -48,13 +49,11 @@ def main() -> None:
 
     stack_dest = base / "stack.json"
     stack_src = Path(__file__).resolve().parent.parent / "scaffold" / "stack-flutter.json"
-    if stack_src.is_file() and (not stack_dest.exists() or args.force):
-        if not args.dry_run:
-            base.mkdir(parents=True, exist_ok=True)
-            stack_dest.write_text(stack_src.read_text())
-        created.append(".heyeddi/stack.json")
-    elif stack_dest.exists():
-        skipped.append(".heyeddi/stack.json")
+    if stack_src.is_file():
+        if merge_stack(stack_dest, stack_src, dry_run=args.dry_run):
+            created.append(".heyeddi/stack.json")
+        else:
+            skipped.append(".heyeddi/stack.json")
 
     for sub in ("docs", "designs", "audits"):
         d = base / sub

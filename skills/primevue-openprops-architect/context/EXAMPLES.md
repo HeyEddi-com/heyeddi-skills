@@ -1,5 +1,5 @@
 
-# Examples: PrimeVue + OpenProps
+# Examples: PrimeVue + project tokens
 
 ## Good: token-based card
 
@@ -7,18 +7,20 @@
 <template>
   <Card class="settings-card">
     <template #title>Profile</template>
-    <p class="settings-card__hint">Update your display name.</p>
+    <template #content>
+      <p class="settings-card__hint">Update your display name.</p>
+    </template>
   </Card>
 </template>
 
 <style scoped>
 .settings-card {
-  background: var(--surface-2);
-  padding: var(--size-fluid-3);
+  background: var(--app-surface-card);
+  padding: 1rem;
 }
 .settings-card__hint {
-  color: var(--text-2);
-  font-size: var(--font-size-2);
+  color: var(--app-text-muted);
+  font-size: 0.875rem;
 }
 </style>
 ```

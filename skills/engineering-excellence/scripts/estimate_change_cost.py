@@ -184,8 +184,8 @@ def budget_gate(total_high: float, budget: dict, has_budget: bool, *, reads_per_
     if usage_driven and not billing_alert and not budget.get("billing_alert_acknowledged"):
         out.append({"severity": "warn", "message": (
             "Usage-based cost (Firestore, model calls) cannot be fully estimated from code, and no "
-            "google_billing_budget exists in this repo. Add budget alerts in Terraform (plan locally, "
-            "apply through the pipeline), or set billing_alert_acknowledged in budget.json.")})
+            "google_billing_budget exists in this repo. Add budget alerts in Terraform (plan locally; "
+            "the pipeline applies them), or set billing_alert_acknowledged in budget.json.")})
     if not has_budget:
         out.append({"severity": "warn", "message": "No budget.json: defaults used. Run init_engineering_docs.py and set limits."})
     warn_at, error_at = budget["change_warn_monthly"], budget["change_error_monthly"]

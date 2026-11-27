@@ -1,6 +1,6 @@
 {
   "skill": "engineering-excellence",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "tools": [
     {
       "name": "init_engineering_docs",

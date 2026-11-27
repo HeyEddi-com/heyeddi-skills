@@ -72,7 +72,16 @@ def discover(root: Path) -> list[dict[str, Any]]:
     if any((root / name).is_dir() for name in ("tests", "test")):
         if pyproject.is_file() or requirements.is_file() or has_pytest:
             has_pytest = True
-    if has_pytest and shutil.which("pytest"):
+    runner = [t for t in ("uv", "poetry") if (root / f"{t}.lock").is_file()]
+    if has_pytest and runner:
+        # The project declares its runner: use it, even when a global pytest exists.
+        tool = runner[0]
+        if tool == "poetry":
+            commands.append(
+                {"argv": ["poetry", "install", "--no-interaction"], "evidence": "poetry.lock", "kind": "pytest"}
+            )
+        commands.append({"argv": [tool, "run", "pytest"], "evidence": f"{tool}.lock", "kind": "pytest"})
+    elif has_pytest and shutil.which("pytest"):
         commands.append({"argv": ["pytest"], "evidence": "pytest config or tests/", "kind": "pytest"})
     elif has_pytest and shutil.which("python"):
         commands.append(
@@ -158,7 +167,7 @@ def main() -> None:
                             "status": "failed",
                             "discovered": commands,
                             "results": results,
-                            "note": "Do not invent alternate commands. Fix failures or report missing evidence.",
+                            "note": "Do not invent alternate commands. Fix failures; install a missing tool or dependency and rerun.",
                         },
                         indent=2,
                     )
