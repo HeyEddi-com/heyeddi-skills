@@ -1,7 +1,7 @@
 ---
 name: motion-physics
 description: "Spring micro-interactions for Vue 3 using @vueuse/motion. Use when introducing cards, dialogs, lists, hover, or press feedback. Forbids linear spatial easing, long staggers, and looping motion unless a loading state was requested."
-version: 1.0.0
+version: 1.0.1
 product-version: 3.8.27
 author: HeyEddi-com
 ---

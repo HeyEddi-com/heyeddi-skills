@@ -1,7 +1,7 @@
 ---
 name: flutter-engineering
 description: "Ensures HeyEddi Flutter projects have the right engineering stack: Flutter (Riverpod, go_router, Material 3), FastAPI backend, or Firebase tooling. Audits gaps, scaffolds as needed, runs flutter test/analyze, documents local dev servers. Use when frontend is Flutter or before design/feature work on a HeyEddi mobile/web app."
-version: 1.0.0
+version: 1.0.1
 product-version: 3.8.27
 author: HeyEddi-com
 paths:

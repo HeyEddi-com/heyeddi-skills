@@ -54,10 +54,10 @@ def test_next_returns_highest_priority_open_item(tmp_path: Path) -> None:
 
 def test_done_marks_one_row_and_next_moves_on(tmp_path: Path) -> None:
     path = _seed(tmp_path)
-    code, _, _ = _run(tmp_path, "done", "/dashboard", "--note", "PR 2")
+    code, _, _ = _run(tmp_path, "done", "/dashboard", "--docs-none", "test", "--note", "PR 2")
     assert code == 0
     text = path.read_text(encoding="utf-8")
-    assert "| P0 | /dashboard | See roster | done | PR 2 |" in text
+    assert "| P0 | /dashboard | See roster | done | PR 2; docs unchanged: test |" in text
     assert "Save profile \\| prefs | planned" in text
     assert "- SSO" in text
     _, data, _ = _run(tmp_path, "next")
@@ -67,8 +67,8 @@ def test_done_marks_one_row_and_next_moves_on(tmp_path: Path) -> None:
 
 def test_loop_ends_only_when_nothing_doable_is_left(tmp_path: Path) -> None:
     _seed(tmp_path)
-    _run(tmp_path, "done", "/dashboard")
-    _run(tmp_path, "done", "/settings")
+    _run(tmp_path, "done", "/dashboard", "--docs-none", "test")
+    _run(tmp_path, "done", "/settings", "--docs-none", "test")
     code, data, _ = _run(tmp_path, "next")
     assert code == 0
     assert data["status"] == "none"
@@ -86,7 +86,7 @@ def test_block_requires_a_reason(tmp_path: Path) -> None:
 
 def test_unknown_item_fails_without_writing(tmp_path: Path) -> None:
     path = _seed(tmp_path)
-    code, _, err = _run(tmp_path, "done", "/nope")
+    code, _, err = _run(tmp_path, "done", "/nope", "--docs-none", "test")
     assert code != 0
     assert "/dashboard" in err
     assert path.read_text(encoding="utf-8") == BACKLOG

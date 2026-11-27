@@ -96,7 +96,7 @@ def main() -> None:
         args.merge_stack = True
     patch = _parse_json(args.json)
 
-    nested_keys = {"git", "agent", "setup", "design", "frontend", "backends", "tools"}
+    nested_keys = {"git", "agent", "setup", "design", "backlog", "docs", "frontend", "backends", "tools"}
     answer_like = bool(patch) and all(
         isinstance(k, str)
         and (
@@ -114,7 +114,7 @@ def main() -> None:
             }
             or k.startswith("git.")
             or k.startswith("agent.")
-            or k.startswith("design.")
+            or k.startswith(("design.", "backlog.", "docs."))
         )
         for k in patch
     )

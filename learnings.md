@@ -1348,3 +1348,9 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** The owner wants agents to run to completion, above all once specs and a backlog exist. Four audits found that nothing drove the backlog, pipeline skills could not be self-invoked, a declined review thread deadlocked the merge gate, and several gates denied ordinary commands.
 
 **Decision:** `heyeddi-product/scripts/backlog.py` drives the backlog loop. The gate, permission, worktree and finish hooks, scaffolds and type bridges were fixed with tests (`tests/test_audit_*.py`). Rerun `worktree_guard.py --install` to refresh installed hooks.
+
+## 2026-11-26: Backlog and documents have a provider per repository
+
+**Context:** The backlog is local for now and may move to a task or project manager over MCP. Documents may move elsewhere too.
+
+**Decision:** `.heyeddi/stack.json` holds `backlog.provider` (`local`, `mcp`) and `docs.provider` (`repo`, `mcp`, `external`); reasons go to `decisions.md`. No MCP server is wired yet: the script prints the operation for the agent to run.
