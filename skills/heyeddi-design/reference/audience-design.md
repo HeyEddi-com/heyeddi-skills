@@ -10,7 +10,7 @@ This file = **who** and **why**: which direction fits this product.
 ## Step 1: Identify primary persona for this route
 
 From `product.md` → **Per-route intent** → `primary_persona`.  
-If missing, stop and run `discover` or `@heyeddi-intake`.
+If missing: in a build request, derive it from product.md and the repo, record the assumption, and continue; in a design request, run `discover` or `@heyeddi-intake`.
 
 ## Step 2: Map signals → direction
 

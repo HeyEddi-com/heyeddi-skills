@@ -11,6 +11,7 @@ from _skill_cli import emit, resolve_project_root
 from _workflow_paths import (
     PILLARS,
     active_context_path,
+    open_requests,
     opinion_path,
     workflow_dir,
 )
@@ -82,14 +83,12 @@ def _tail_opinion_headers(path: Path, route: str | None, limit: int = 5) -> list
 
 
 def _pending_requests(root: Path, route: str | None) -> list[str]:
-    pending: list[str] = []
     if not route:
-        return pending
-    for pillar in PILLARS:
-        for entry in _tail_opinion_headers(opinion_path(root, pillar), route, limit=3):
-            if entry.get("has_sibling_request"):
-                pending.append(f"{pillar}: {entry['header']}")
-    return pending
+        return []
+    return [
+        f"{item['from']}: waiting for {', '.join(item['waiting_for'])} ({item['at']})"
+        for item in open_requests(root, route)
+    ]
 
 
 def main() -> None:

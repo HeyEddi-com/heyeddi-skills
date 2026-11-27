@@ -13,9 +13,9 @@ Use the **Task** tool with `subagent_type` and a self-contained prompt (include 
 
 | `subagent_type` | Use for |
 |-----------------|---------|
-| `explore` | Read-only codebase search — catalog components, routes, existing patterns |
+| `explore` | Read-only codebase search - catalog components, routes, existing patterns |
 | `shell` | Skill scripts, `npm test`, `npm run build`, `gh`, `verify_*.py`, Playwright capture |
-| `generalPurpose` | Single focused phase — mockup interpret, critique report, one view implementation |
+| `generalPurpose` | Single focused phase - mockup interpret, critique report, one view implementation |
 | `bugbot` | Post-implementation diff review (optional) |
 | `security-review` | Auth, settings, secrets, Firestore rules |
 | `ci-watcher` | Watch PR checks after fixes |
@@ -48,10 +48,10 @@ Return: brief path + Implementation spec summary
 | **project-engineering** | Stack choice, audit interpretation | `audit_scaffold`, `scaffold_stack`, tests → `shell` |
 | **pre-merge-gate** | Report triage | `pre_merge_gate.py` → `shell` |
 | **heyeddi-pr-respond** | Tracking table, fix vs decline, re-gate | `fetch_pr_comments` + `post_thread_replies` + `verify_response` → `shell`; comment analysis → `generalPurpose` |
-| **heyeddi-pr-review** | Verdict on committed diff | `fetch_pr_context` + drift/audit → `shell`; PM delegates → `shell` |
-| **primevue-openprops-architect** | — | `validate_vue.py` → `shell` |
-| **verify-build** | — | build script → `shell` |
-| **backend-type-bridger** | — | `sync_openapi` / schema scripts → `shell` |
+| **heyeddi-pr-review** | Findings on committed diff | `fetch_pr_context` → `shell`; diff and call-site reading → `explore`; post and verify inline review → `shell` |
+| **primevue-openprops-architect** | - | `validate_vue.py` → `shell` |
+| **verify-build** | - | build script → `shell` |
+| **backend-type-bridger** | - | `sync_openapi` / schema scripts → `shell` |
 
 Skills not listed run inline unless their `reference/subagents.md` says otherwise.
 
@@ -72,7 +72,7 @@ Same phases; replace Task with `delegate_to_skill`:
 }
 ```
 
-Orchestrator service loads parent skill `SKILL.md`, registers only tools needed for that phase, and returns structured output to the parent run. **Same prompt text** as Cursor — no second workflow.
+Orchestrator service loads parent skill `SKILL.md`, registers only tools needed for that phase, and returns structured output to the parent run. **Same prompt text** as Cursor - no second workflow.
 
 ---
 

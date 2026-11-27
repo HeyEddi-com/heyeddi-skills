@@ -6,8 +6,11 @@ from pathlib import Path
 from typing import Any
 
 
-PLACEHOLDER_PATTERNS = re.compile(
-    r"(placeholder|lorem ipsum|todo:|coming soon|not implemented|fixme)",
+PLACEHOLDER_PATTERNS = re.compile(r"(lorem ipsum|todo:|coming soon|not implemented|fixme)", re.I)
+# The word "placeholder" counts only as text the user reads, not as an input attribute or CSS.
+PLACEHOLDER_ATTR = re.compile(r"""(?:v-bind:|:)?placeholder\s*=\s*(?:"[^"]*"|'[^']*')""", re.I)
+NOT_VISIBLE = re.compile(
+    r"""<(script|style)\b[\s\S]*?</\1>|<!--[\s\S]*?-->|\{\{[\s\S]*?\}\}|<(?:"[^"]*"|'[^']*'|[^'">])*>""",
     re.I,
 )
 
@@ -76,8 +79,10 @@ def view_placeholder_flags(path: Path) -> list[str]:
     flags: list[str] = []
     if len(text.splitlines()) < 12:
         flags.append("very_short_view")
-    for match in PLACEHOLDER_PATTERNS.finditer(text):
+    for match in PLACEHOLDER_PATTERNS.finditer(PLACEHOLDER_ATTR.sub("", text)):
         flags.append(f"placeholder:{match.group(1).lower()}")
+    if "placeholder" in NOT_VISIBLE.sub(" ", text).lower():
+        flags.append("placeholder:placeholder")
     if "<router-view" in text and "views/" not in text and path.name == "App.vue":
         pass
     elif re.search(r"<template>\s*</template>", text, re.I):

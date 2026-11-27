@@ -1,8 +1,8 @@
 ---
 name: heyeddi-ci-runners
 description: "Configure HeyEddi Spot runners: prefer GHA overflow/always with the HEYEDDI_RUNS_ON hook; author sealed eddi-ci.yaml pipeline jobs only for no-GHA or niche checks. Use when wiring runners, pipeline YAML, or Spot CI."
-version: 2.0.0
-product-version: 3.8.26
+version: 2.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -41,7 +41,7 @@ runs-on: ${{ vars.HEYEDDI_RUNS_ON || 'ubuntu-latest' }}
 
 1. `load_policy_contract`: living knobs only.
 2. `inspect_repo`: evidenced commands + path prefixes; never invent `pytest` / `npm test`.
-3. Explicit user opt-in (billable runner time).
+3. Explicit user opt-in (billable runner time); a request for sealed jobs is that opt-in.
 4. Author argv-safe `run` (no shell operators, `sudo`, `curl`, `wget`), catalog `image`, `filter.paths` when possible.
 5. Jobs run on Spot when the workspace is entitled and Spot env is live; they post **`HeyEddi Runner: {job_id}`** Checks.
 
@@ -81,5 +81,5 @@ assert_runners_claims --check --agent-text "<your summary>"
 - Never secrets in YAML
 - Never invent test commands
 - Never `auto_merge`
-- Never merge unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+- Merge into dev / test / staging yourself once `@pre-merge-gate --signoff` exits 0. A production merge takes the user's **authorize merge** in the current turn; never run it earlier.
 - Never claim correlated AI+runner timeline (Coming soon)

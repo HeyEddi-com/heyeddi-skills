@@ -1,8 +1,8 @@
 ---
 name: layout-morph
 description: "Shared-element morphs in Vue 3 with Quasar v-morph. Use when a card, row, or chip expands into its detail view in the same screen. GSAP Flip is only the fallback when the two states are not in one view. No React, no Tailwind."
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -19,12 +19,12 @@ Do not morph every route change. Do not morph a data table into itself.
 
 ## Setup
 
-`Morph` is registered with Quasar in the bootstrap owned by `@primevue-aura`:
+`Morph` is a Quasar directive, registered in the bootstrap owned by `@primevue-aura`:
 
 ```js
-import { Quasar, Dialog, Notify, Morph } from 'quasar';
+import { Quasar, Morph } from 'quasar';
 
-app.use(Quasar, { plugins: { Dialog, Notify, Morph } });
+app.use(Quasar, { directives: { Morph } });
 ```
 
 No extra package. Quasar already ships `v-morph`.

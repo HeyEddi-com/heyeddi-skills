@@ -1,10 +1,9 @@
 ---
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback: human reviewers, @heyeddi-pr-review inline findings, HeyEddi CI. Same GitHub user who left the review is fine. Auto-fix, commit+push, in-thread replies, CI check first. Not the reviewer skill (use heyeddi-pr-review) and not the merge gate (use pre-merge-gate)."
-version: 2.4.1
-product-version: 3.8.26
+version: 2.4.2
+product-version: 3.8.27
 author: HeyEddi-com
-disable-model-invocation: true
 ---
 
 # HeyEddi PR Respond
@@ -32,7 +31,7 @@ On any PR work, **do not ask** whether to fix findings, check CI, or post thread
 2. **Fix** valid review items automatically
 3. **Commit + push** automatically
 4. **Post** every reply in-thread automatically
-5. Only merge can need a question: merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+5. **Finish**: watch checks until green, run the pre-merge gate, merge. Merge into dev / test / staging yourself once `@pre-merge-gate --signoff` exits 0. A production merge takes the user's **authorize merge** in the current turn; never run it earlier.
 
 ## No project scratch files
 
@@ -91,7 +90,15 @@ Reply only on **unresolved pull-request review threads**, at the **root** commen
 
 ### Resolve fixed threads
 
-The HeyEddi Reviewer does not review a new commit while a thread is open. Start every fixed reply with **Fixed** (or Done / Addressed): `post_thread_replies` resolves that thread right after the reply posts. A decline or a partial fix starts with something else (**Declined:**, **Partially fixed:**) and stays open for the reviewer. `--no-resolve` leaves every thread open. A `resolve_errors` entry is not a failed reply: resolve that thread with GitHub MCP `resolve_review_thread` or `gh api graphql` `resolveReviewThread`.
+The HeyEddi Reviewer does not review a new commit while a thread is open. Start every fixed reply with **Fixed** (or Done / Addressed): `post_thread_replies` resolves that thread right after the reply posts.
+
+Every other reply stays open and MUST start with `**Declined:** <reason>`. The pre-merge gate passes an open thread only when its last reply is the PR author's and carries that marker with a reason, and it lists each one. Any other open thread blocks the merge.
+
+- **Partial:** fix the valid part, then `**Declined:** <what you left out and why>. The rest is fixed in <sha>.`
+- **Out-of-scope** but valid: fix it on its own branch and PR in this run, then `**Declined:** outside this PR; fixed in <PR URL>.`
+- A thread that already ends with your unmarked reply is skipped by the poster: add the marked reply with `gh api repos/<owner>/<repo>/pulls/<N>/comments/<ROOT_ID>/replies -f body=...`, or fix it and resolve the thread.
+
+ `--no-resolve` leaves every thread open. A `resolve_errors` entry is not a failed reply: resolve that thread with GitHub MCP `resolve_review_thread` or `gh api graphql` `resolveReviewThread`.
 
 ### If `post_thread_replies` errors for a review-thread id: MCP fallback (mandatory)
 
@@ -112,12 +119,11 @@ Primary path remains **`gh` CLI** inside the scripts. MCP is the agent escape ha
 fetch_pr_comments --pr <N>
 build_comment_inventory --pr <N> --write-cache
 → tracking table in chat (every item: id, type, fix|decline, status)
-for each item: analyze vs PR goals → fix | decline | partial | out-of-scope
+for each item: analyze vs PR goals → fix | decline | partial | out-of-scope (fixed on its own branch and PR)
 apply code/docs fixes when fix
 @heyeddi-setup verify_setup --check      → prefs (defaults when missing; never a stop)
 @engineering-excellence check_engineering_plan / audit_engineering --check  → always-on (errors fail)
 discover_and_verify [--run]              → evidenced commands only
-assert_no_merge --check                  → passes on merge policy auto, or authorize merge
 → if any fix: commit + push (automatic; check_permission decides, default balanced allows on a PR branch)
 assert_fixes_pushed --check
 → compose ## Comment <id> for every postable_reply_id + ## Summary last
@@ -126,9 +132,15 @@ post_thread_replies --pr <N> --replies-text '...'   → also resolves threads wh
 → on any resolve_errors entry: resolve that thread (MCP resolve_review_thread)
 verify_response --pr <N> --replies-text '...' --use-inventory --live --check
 → optional one Summary after verify
+gh pr checks <N> --watch                  → run in the background until every check finishes
+gh run view <run-id> --log-failed         → read each failure; fix, commit, push, watch again
+gh run rerun <run-id> --failed            → flaky or infrastructure failure with no code cause (once, then treat it as real)
+pre_merge_gate.py --signoff --project-root .  → (.agents/skills/pre-merge-gate/scripts/) fix every FAIL and rerun
+assert_no_merge --check --base <baseRefName> --planned-command "gh pr merge <N>" --project-root .
+gh pr merge <N> --merge                   → base below production: run it. Production base: only after authorize merge
 ```
 
-**Never** merge unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn).
+Merge into dev / test / staging yourself once `@pre-merge-gate --signoff` exits 0. A production merge takes the user's **authorize merge** in the current turn; never run it earlier.
 
 ## HeyEddi CI false positives
 
@@ -142,7 +154,7 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 | `build_comment_inventory` | Parse root summaries; postable ids are unresolved review threads only |
 | `filter_comments` | Optional `--scope heyeddi` (default `all`) |
 | `discover_and_verify` | Evidenced test/build commands |
-| `assert_no_merge` | Merge hard gate |
+| `assert_no_merge` | Check right before a merge: production needs authorize merge |
 | `assert_fixes_pushed` | Commit+push gate before Fixed replies |
 | `resolve_reply_targets` | Map each id → root target + MCP fallback hint |
 | `post_thread_replies` | Post every draft in-thread (REST → GraphQL → MCP hint); resolve threads answered with Fixed |
@@ -167,4 +179,4 @@ Reply in-thread with decline rationale; suggest debate or `support@heyeddi.com`.
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-pr-respond --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

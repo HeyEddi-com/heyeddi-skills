@@ -116,15 +116,15 @@ def _merge_gate(root: Path, agent: dict, *extra: str) -> subprocess.CompletedPro
     )
 
 
-def test_assert_no_merge_policy_auto_allows_without_phrase(tmp_path: Path) -> None:
-    proc = _merge_gate(tmp_path, {"preset": "balanced", "permissions": {"merge": "auto"}})
-    assert proc.returncode == 0, proc.stderr
+def test_assert_no_merge_below_production_needs_no_phrase(tmp_path: Path) -> None:
+    proc = _merge_gate(tmp_path, {"preset": "balanced"}, "--base", "staging")
+    assert proc.returncode == 0
     assert json.loads(proc.stdout)["merge_policy"] == "auto"
-    assert _merge_gate(tmp_path, {"preset": "autonomous"}).returncode == 0
 
 
-def test_assert_no_merge_policy_ask_still_takes_the_phrase(tmp_path: Path) -> None:
-    assert _merge_gate(tmp_path, {"preset": "balanced"}).returncode == 1
+def test_assert_no_merge_production_always_takes_the_phrase(tmp_path: Path) -> None:
+    for agent in ({"preset": "balanced"}, {"preset": "autonomous"}, {"permissions": {"merge": "auto"}}):
+        assert _merge_gate(tmp_path, agent, "--base", "main").returncode == 1
     assert _merge_gate(tmp_path, {"preset": "balanced"}, "--user-text", "ok, authorize merge").returncode == 0
 
 
@@ -181,16 +181,15 @@ def test_discover_and_verify_empty_repo(tmp_path: Path) -> None:
 
 
 def test_write_ci_fails_report(tmp_path: Path) -> None:
-    docs = tmp_path / ".heyeddi" / "docs"
-    docs.mkdir(parents=True)
-    (docs / "pr-3-ci-fails.json").write_text(
+    raw = tmp_path / "raw.json"
+    raw.write_text(
         json.dumps(
             {
                 "pr": 3,
                 "head_sha": "abc",
                 "head_ref": "feat/x",
                 "url": "https://example.com/pr/3",
-                "failing_checks": [{"name": "test", "conclusion": "FAILURE", "detailsUrl": "u"}],
+                "failing": [{"name": "test", "state": "FAILURE", "detailsUrl": "u"}],
             }
         ),
         encoding="utf-8",
@@ -201,8 +200,11 @@ def test_write_ci_fails_report(tmp_path: Path) -> None:
         "3",
         "--project-root",
         str(tmp_path),
+        "--input",
+        str(raw),
         "--force",
     )
     assert proc.returncode == 0, proc.stderr + proc.stdout
-    md = (docs / "pr-3-ci-fails.md").read_text(encoding="utf-8")
-    assert "Ephemeral" in md or "ephemeral" in md.lower() or "authorize merge" in md.lower()
+    report = Path(json.loads(proc.stdout[proc.stdout.index("{") :])["path"])
+    md = report.read_text(encoding="utf-8")
+    assert "Ephemeral" in md and "### test" in md

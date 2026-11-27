@@ -70,7 +70,7 @@ def fastapi_server(root: Path) -> dict | None:
     return {
         "name": "fastapi",
         "status": "ok",
-        "command": f"uvicorn app.main:app --reload --port {port}",
+        "command": f"poetry run uvicorn app.main:app --reload --port {port}",
         "cwd": str(api),
         "url": base,
         "port": port,

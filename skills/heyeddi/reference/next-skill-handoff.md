@@ -2,6 +2,8 @@
 
 **Inside the request, chain; don't hand back.** When the next pipeline skill is part of what the user asked for ("implement /settings" covers handoff, engineering audit, visual QA, and the PR), run it yourself in the same run (`reference/autonomy.md`). `suggest_next_skill.py` tells you which skill that is.
 
+**Backlog loop.** In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`. Build the returned item on its own branch, pass `@pre-merge-gate --signoff`, merge into dev / test / staging, mark it with `backlog.py done`, and ask again. The run ends when `next` returns no item. Only a production merge needs the user. See `@heyeddi-product` **Backlog loop**.
+
 Only when the request is done and the next step is **new work** the user did not ask for, suggest it with the **exact prompt** to paste in chat (`shape`, `craft`, `audit`, `sync`, `review`, etc.). Do **not** add this after every tool call or subagent phase.
 
 ## When to use
@@ -27,26 +29,23 @@ Only when the request is done and the next step is **new work** the user did not
    - `--route /settings`: route you finished
    - `--mode shape`: sub-command you just ran (improves suggestion, e.g. shape → craft)
 
-3. Next skill still inside the request: run it now. Outside the request: put the JSON **`user_block`** under **Next** in the final summary, so the user can **copy the Prompt line** into chat.
+3. Next skill still inside the request or the backlog: run it now. New work nobody asked for: one line under **Next** in the final summary. Never list leftovers there.
 
 ## Response format
 
-```markdown
-### Next step
-**Skill:** `@heyeddi-design`
-**Prompt:** @heyeddi-design craft /settings from the confirmed brief
-**Why:** Brief is confirmed: build the Vue screen before handoff or visual QA.
-```
+Only for new work, one line:
 
-The **Prompt** is the main deliverable: natural language with `@skill` and sub-command, not a `python scripts/...` path unless the user explicitly asked for CLI-only work.
+```markdown
+**Next:** `@heyeddi-design critique /pricing` (new work, not part of this request)
+```
 
 ## Examples by pipeline
 
 | Finished | Typical next prompt |
 |----------|---------------------|
 | `@heyeddi-setup` | `@heyeddi-intake: describe the app in plain language` |
-| `@heyeddi-intake` | `@heyeddi-product audit the product and write feature specs for each routed surface` |
-| `@heyeddi-product` | `@heyeddi-design shape /dashboard from product.md personas` |
+| `@heyeddi-intake` | `@heyeddi-product audit the product, write feature specs, and fill the backlog` |
+| `@heyeddi-product` | Backlog loop: `backlog.py next`, then build that item |
 | `@heyeddi-design shape` | `@heyeddi-handoff implement <route>` (or `@design-handoff-flutter` when `stack.json` → flutter) |
 | `@heyeddi-design craft` | Same as shape — stack implementer from brief |
 | `@heyeddi-design critique` | `@visual-auditor review and fix <route>` |
@@ -54,6 +53,7 @@ The **Prompt** is the main deliverable: natural language with `@skill` and sub-c
 | `@design-handoff-flutter` | `@engineering-excellence audit_engineering --check after Flutter handoff` |
 | `@engineering-excellence` | `@visual-auditor review and fix <route>` |
 | `@visual-auditor` | `@pre-merge-gate run the merge readiness checklist` |
+| `@pre-merge-gate` | Merge below production, then `backlog.py next` |
 | `@heyeddi sync` | `@heyeddi-setup: confirm stack + prefs in stack.json` |
 
 ## Priority order

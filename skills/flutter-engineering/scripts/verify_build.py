@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import sys
 
 from _skill_cli import emit, resolve_project_root, run_command
 
@@ -21,8 +22,9 @@ def main() -> None:
         return
 
     if not shutil.which("flutter"):
-        emit(json.dumps({"status": "skip", "reason": "flutter CLI not installed"}, indent=2))
-        return
+        hint = "Install the Flutter SDK (https://docs.flutter.dev/get-started/install), then rerun"
+        emit(json.dumps({"status": "fail", "error": "flutter CLI not found", "hint": hint}, indent=2))
+        sys.exit(1)
 
     steps: list[dict] = []
     analyze_out = run_command(["flutter", "analyze"], root, timeout=300)
@@ -37,6 +39,8 @@ def main() -> None:
 
     status = "pass" if analyze_ok and build_ok else "fail"
     emit(json.dumps({"status": status, "steps": steps}, indent=2))
+    if status == "fail":
+        sys.exit(1)
 
 
 if __name__ == "__main__":

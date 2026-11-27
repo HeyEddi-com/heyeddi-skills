@@ -4,7 +4,7 @@
 
 **HeyEddi’s open agent toolkit** for [Cursor](https://cursor.com) - free, public, and opinionated. Product intake → design → engineering → QA → PR review in one coherent pack, with a shared `.heyeddi/` workspace so agents and humans stay aligned.
 
-**Status:** **v3.8.26** · 39 skills · [skills-registry.json](skills-registry.json)
+**Status:** **v3.8.27** · 39 skills · [skills-registry.json](skills-registry.json)
 
 ### Who this is for
 
@@ -55,7 +55,7 @@ cd heyeddi-skills
 
 ### Install CI-only pack (sibling skills.sh repo)
 
-For [HeyEddi CI](https://ci.heyeddi.com) workflows (config, respond, fails, Spot runners, guide):
+For [HeyEddi CI](https://ci.heyeddi.com) workflows (config, respond, fails, Spot runners, guide, plus the router, setup, permission, engineering, backlog, and merge-gate skills they call):
 
 ```bash
 npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
@@ -148,7 +148,7 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `visual-auditor` | Review screenshots vs spec, fix visual issues, document fixes |
 | `verify-build` | Vite static build validator |
 | `pre-merge-gate` | QA merge-readiness checklist |
-| `heyeddi-pr-review` | Review submitted PR - diff, product, docs, engineering, tests |
+| `heyeddi-pr-review` | Review a submitted PR - inline findings on the committed diff and related call sites |
 | `design-system-generalizer` | Spread golden-page patterns across routes |
 | `no-duplicate-ui` | Detect duplicate Vue UI |
 
@@ -218,6 +218,7 @@ Evals give the agent a **goal**, not a script. Each skill must run its real work
 | [docs/distribution.md](docs/distribution.md) | Single-package install + marketplaces |
 | [docs/skills-sh-official-listing.md](docs/skills-sh-official-listing.md) | skills.sh index + official listing playbook |
 | [docs/v2-skill-naming.md](docs/v2-skill-naming.md) | Historical ADR - v2 `heyeddi-*` spine renames (aliases removed in v3.0.0) |
+| [docs/agent-freedom.md](docs/agent-freedom.md) | What agents do alone, what waits for you, and the hooks |
 | [docs/pr-workflows.md](docs/pr-workflows.md) | Two PR workflows - submission review vs respond |
 | [docs/team-cheat-sheet.md](docs/team-cheat-sheet.md) | Designer + QA reference |
 | [docs/cloud-agent-integration.md](docs/cloud-agent-integration.md) | Pydantic AI / LangChain |

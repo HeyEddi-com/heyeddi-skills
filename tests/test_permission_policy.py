@@ -12,10 +12,19 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "skills" / "heyeddi-local-first" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
+import check_permission  # noqa: E402
 from check_permission import check  # noqa: E402
-from permission_policy import resolve_policy  # noqa: E402
+from permission_policy import load_stack, resolve_policy  # noqa: E402
 
 GIT = {"environments": {"production": "main", "staging": "staging"}, "default_branch": "main"}
+
+
+@pytest.fixture(autouse=True)
+def pr_base(monkeypatch: pytest.MonkeyPatch) -> dict:
+    """Stand in for `gh pr view`: set base["name"] to the PR's target branch."""
+    base = {"name": "main"}
+    monkeypatch.setattr(check_permission, "_pr_base", lambda *_: base["name"], raising=False)
+    return base
 
 
 def _stack(preset: str | None = None, **agent: object) -> dict:
@@ -73,7 +82,8 @@ def test_cautious_asks_on_routine_git_and_denies_staging_writes() -> None:
     assert _decision("kubectl --context staging apply -f k.yaml", stack) == "deny"
 
 
-def test_autonomous_runs_merge_and_release_but_prod_write_still_asks() -> None:
+def test_autonomous_runs_merge_and_release_but_prod_write_still_asks(pr_base: dict) -> None:
+    pr_base["name"] = "staging"
     stack = _stack("autonomous")
     assert _decision("gh pr merge 3", stack) == "auto"
     assert _decision("gh release create v2", stack) == "auto"
@@ -109,16 +119,29 @@ def test_force_push_to_feature_branch_is_a_normal_push() -> None:
     assert _decision("git push --force-with-lease origin feat/x", _stack("balanced")) == "auto"
 
 
-def test_overrides_win_over_preset() -> None:
+def test_overrides_win_over_preset(pr_base: dict) -> None:
+    pr_base["name"] = "staging"
     stack = _stack("balanced", permissions={"merge": "auto", "write": {"staging": "auto"}})
     assert _decision("gh pr merge 4", stack) == "auto"
     assert _decision("gcloud run deploy api --project=acme-staging", stack) == "auto"
 
 
-def test_legacy_commit_push_keys_still_honored() -> None:
-    stack = {"git": dict(GIT), "agent": {"commit": "ask", "push": "auto"}}
-    assert _decision("git commit -m x", stack) == "ask"
+def test_legacy_commit_push_ask_no_longer_blocks() -> None:
+    stack = {"git": dict(GIT), "agent": {"commit": "ask", "push": "ask"}}
+    assert _decision("git commit -m x", stack) == "auto"
     assert _decision("git push origin feat/x", stack) == "auto"
+    assert _decision("git push origin main", stack) == "ask"
+
+
+def test_asking_before_commit_is_still_possible_through_permissions() -> None:
+    stack = _stack("balanced", permissions={"commit": "ask"})
+    assert _decision("git commit -m x", stack) == "ask"
+
+
+def test_scaffold_does_not_write_legacy_keys() -> None:
+    scaffold = ROOT / "skills" / "project-engineering" / "scaffold" / "heyeddi" / "stack.json"
+    stack = json.loads(scaffold.read_text(encoding="utf-8"))
+    assert not {"git", "agent", "setup"} & set(stack), "prefs belong to heyeddi-setup"
 
 
 def test_explicit_targets_beat_name_heuristics() -> None:
@@ -189,3 +212,43 @@ def test_legit_target_flags_still_resolve() -> None:
     assert _decision("gcloud run deploy api --project acme-dev", stack) == "auto"
     assert _decision("kubectl --context staging apply -f k.yaml", stack) == "ask"
     assert _decision("psql -h localhost -c 'update users set x=1'", stack) == "auto"
+
+
+@pytest.mark.parametrize("branch", ["staging", "dev", "test", "feat/stack-parent"])
+def test_merge_below_production_needs_no_user(pr_base: dict, branch: str) -> None:
+    pr_base["name"] = branch
+    verdict = check("gh pr merge 4 --squash", cwd=None, stack=_stack())
+    assert verdict.decision == "auto"
+    assert "pre_merge_gate" in verdict.reason
+
+
+@pytest.mark.parametrize("preset", ["cautious", "balanced", "autonomous"])
+def test_production_merge_and_push_always_wait_for_the_user(pr_base: dict, preset: str) -> None:
+    pr_base["name"] = "main"
+    assert _decision("gh pr merge 4", _stack(preset)) == "ask"
+    assert _decision("git push origin main", _stack(preset)) == "ask"
+
+
+@pytest.mark.parametrize(
+    "command",
+    ["gh pr merge 4 --admin", "cd ../other && gh pr merge 4", "gh api -X PUT repos/o/r/pulls/4/merge"],
+)
+def test_merge_that_skips_checks_or_hides_its_target_asks(pr_base: dict, command: str) -> None:
+    pr_base["name"] = "staging"
+    assert _decision(command, _stack()) == "ask"
+
+
+def test_unknown_merge_target_is_treated_as_production(pr_base: dict) -> None:
+    pr_base["name"] = ""
+    assert _decision("gh pr merge 4", _stack()) == "ask"
+
+
+def test_worktree_without_stack_json_uses_the_main_checkouts(tmp_path: Path) -> None:
+    main, tree = tmp_path / "main", tmp_path / "wt"
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@example.com"]
+    subprocess.run([*git, "init", "-q", str(main)], check=True)
+    subprocess.run([*git, "-C", str(main), "commit", "-qm", "r", "--allow-empty"], check=True)
+    subprocess.run([*git, "-C", str(main), "worktree", "add", "-q", str(tree)], check=True)
+    (main / ".heyeddi").mkdir()
+    (main / ".heyeddi" / "stack.json").write_text('{"git": {"environments": {"production": "release"}}}', encoding="utf-8")
+    assert load_stack(tree)["git"]["environments"]["production"] == "release"

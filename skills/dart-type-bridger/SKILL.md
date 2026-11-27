@@ -1,8 +1,8 @@
 ---
 name: dart-type-bridger
 description: Syncs a local FastAPI OpenAPI file to Dart model stubs and reads Firestore schema hints for Flutter projects. Use when writing Flutter repositories against FastAPI or Firebase backends.
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 paths:
   - "lib/models/**"
@@ -26,8 +26,8 @@ paths:
    curl -fsS http://127.0.0.1:8090/openapi.json -o openapi.json
    ```
 
-2. FastAPI models: `python scripts/sync_openapi.py --project-root <root>`: writes `lib/models/api_models.dart` from local `openapi.json` only (optional `--openapi path/rel.json`).
+2. FastAPI models: `python .agents/skills/dart-type-bridger/scripts/sync_openapi.py --project-root .`: writes `lib/models/api_models.dart` from local `openapi.json` only (optional `--openapi path/rel.json`).
 
-3. Firebase: `python scripts/fetch_firestore_schema.py --project-root <root>`
+3. Firebase: `python .agents/skills/dart-type-bridger/scripts/fetch_firestore_schema.py --project-root .`
 
-4. Import generated models in repositories: never guess field names.
+4. Import generated models in repositories: never guess field names. Each run overwrites `lib/models/api_models.dart`, so put extensions in another file. Enums arrive as their value type. The script exits 1 on a missing or invalid file: fix the input and rerun.

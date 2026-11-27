@@ -158,6 +158,11 @@ If the file has frames, Gate B and Gate D are about those frames.
 - Children still at 0,0, unparented, while the write-up says hi-fi
 - `audit_board` "pass" alone is treated as visual QA
 
+**Build request with a blocked export** (Cloudflare, auth, no tool): render
+`hifi.html`, screenshot it with Playwright, fix what you see, label the boards
+unverified under **Needs you**, and continue to code. This is the one case where
+`hifi.html` sits beside Penpot boards; it still does not prove them.
+
 **Pass:**
 
 1. Call `export_shape` on each phone and **read the PNG**. The image shows the
@@ -252,4 +257,5 @@ When Vue exists for the route, also chain `@visual-auditor`.
 - [ ] No orphan empty pages left as the demo surface (Gate G)
 - [ ] `penpot-demo.md` quotes the read-back and does not call broken Flex hi-fi
 
-Any unchecked box → **not done**.
+Any unchecked box → **not done**. The one exception: a blocked PNG export in a build
+request follows the build-request fallback in Gate D.

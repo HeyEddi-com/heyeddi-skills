@@ -1,8 +1,8 @@
 ---
 name: composable-patterns
 description: "Provides FastAPI JWT and Firebase client composable patterns for consistent auth and data layers. Context-first skill: use when writing or reviewing Vue composables for API access."
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 paths:
   - "**/composables/**"
@@ -19,9 +19,10 @@ paths:
 
 ## Instructions
 
+0. Write the failing test first per `@heyeddi` `reference/testing.md` (unit for logic, component or Playwright for UI flows). A screenshot does not replace it.
 1. Read `context/fastapi-jwt.md` for REST + JWT projects.
 2. Read `context/firebase-client.md` for Firebase/Firestore projects.
-3. Optional: `python scripts/validate_composable.py --path src/composables/useX.ts`
+3. Optional: `python .agents/skills/composable-patterns/scripts/validate_composable.py --project-root . --path src/composables/useX.ts`
 
 ## Notes
 

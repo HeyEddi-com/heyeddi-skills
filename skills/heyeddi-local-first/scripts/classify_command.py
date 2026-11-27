@@ -9,10 +9,13 @@ Deny: live mutations (apply, destroy, gcloud writes, Firebase deploy, and
 from __future__ import annotations
 
 import argparse
+import ast
+import io
 import json
 import re
 import shlex
 import sys
+import tokenize
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -180,6 +183,111 @@ def _basename(token: str) -> str:
     if name.endswith(".exe"):
         name = name[:-4]
     return name.lower()
+
+
+# Commands whose message arguments and stdin are text, never something the shell runs.
+_DATA_COMMAND = re.compile(
+    r"^\s*(?:git(?:\s+-C\s+[^\s'\"]+)?\s+(?:commit|tag|notes)\b"
+    r"|gh\s+(?:pr|issue|release)\s+(?:create|comment|edit|review|close|merge)\b)"
+)
+_MESSAGE_FLAG = re.compile(r"(?:^|\s)(?:-[a-zA-Z]*m|--message|-b|--body|-t|--title|-n|--notes)(?:\s+|=)?$")
+_STDIN_FLAG = re.compile(r"(?:^|\s)(?:-F|--file|--body-file|--notes-file)(?:\s+|=)-\s*$")
+_HEREDOC = re.compile(r"<<(-?)[ \t]*(['\"])([A-Za-z_]\w*)\2[ \t]*(?=\n)")
+
+
+def strip_inert_text(command: str) -> str:
+    """Drop text the shell never runs: comments, and git / gh messages quoted so nothing expands.
+
+    That means single-quoted message arguments and quoted heredocs fed to a git
+    or gh message. Anything this scanner does not fully understand is returned
+    unchanged, so it is judged as before.
+    """
+    blank: list[tuple[int, int]] = []
+    stack: list[list] = [["code", 0]]  # [kind, start of the current command]
+    i, n = 0, len(command)
+    while i < n:
+        kind, start = stack[-1]
+        char = command[i]
+        if char == "\\":
+            i += 2
+            continue
+        if char == "`":
+            end = command.find("`", i + 1)
+            if end < 0:
+                return command
+            i = end + 1
+            continue
+        if command.startswith("${", i):
+            end = command.find("}", i)
+            if end < 0 or any(c in command[i + 2 : end] for c in " \t\n#'\"`("):
+                return command
+            i = end + 1
+            continue
+        if command.startswith("$(", i):
+            stack.append(["subst", i + 2])
+            i += 2
+            continue
+        if kind == "dquote":
+            if char == '"':
+                stack.pop()
+            i += 1
+            continue
+        if char == "#" and (i == 0 or command[i - 1] in " \t\n;&|("):
+            end = command.find("\n", i)
+            end = n if end < 0 else end
+            blank.append((i, end))
+            i = end
+            continue
+        if char == "'":
+            if i and command[i - 1] == "$":
+                return command
+            end = command.find("'", i + 1)
+            if end < 0:
+                return command
+            before = command[start:i]
+            if _DATA_COMMAND.match(before) and _MESSAGE_FLAG.search(before):
+                blank.append((i + 1, end))
+            i = end + 1
+            continue
+        if command.startswith("<<<", i):
+            i += 3
+            continue
+        if command.startswith("<<", i):
+            doc = _HEREDOC.match(command, i)
+            if not doc:
+                return command
+            before = command[start:i]
+            from_stdin = len(stack) == 1 and _DATA_COMMAND.match(before) and _STDIN_FLAG.search(before)
+            # Only `git ... "$(cat <<'EOF'`: deeper nesting could hand the text to a shell.
+            through_cat = (
+                kind == "subst"
+                and before.strip() == "cat"
+                and [frame[0] for frame in stack[:-1]] in (["code"], ["code", "dquote"])
+                and _DATA_COMMAND.match(command[stack[0][1] : i])
+            )
+            if not (from_stdin or through_cat):
+                return command
+            indent = r"\t*" if doc.group(1) else ""
+            close = re.compile(rf"^{indent}{doc.group(3)}$", re.M).search(command, doc.end() + 1)
+            if not close:
+                return command
+            blank.append((doc.end() + 1, close.start()))
+            i = close.end()
+            continue
+        if char == '"':
+            stack.append(["dquote", i + 1])
+        elif char == "(":
+            stack.append(["paren", i + 1])
+        elif char == ")" and len(stack) > 1:
+            stack.pop()
+        elif char in ";\n&|":
+            stack[-1][1] = i + 1
+        i += 1
+    if len(stack) != 1:
+        return command
+    for begin, end in reversed(blank):
+        command = command[:begin] + command[end:]
+    return command
 
 
 def split_segments(command: str) -> list[str]:
@@ -461,6 +569,129 @@ def _script_text(token: str, cwd: Path | None) -> str | None:
         return None
 
 
+# The gate's own files hold command strings as data. Only an identical copy is trusted.
+_OWN_FILES = {"classify_command.py", "permission_policy.py", "check_permission.py",
+              "hook_before_shell.py", "hook_before_mcp.py"}
+_PROCESS_CALLS = {"run", "call", "check_call", "check_output", "Popen", "getoutput", "getstatusoutput"}
+_PASS_THROUGH = {"bash", "sh", "zsh", "dash", "ash", "env", "sudo", "nohup", "xargs", "ssh", "npx"}
+
+
+def _is_own_file(token: str, cwd: Path | None) -> bool:
+    path = Path(token)
+    if not path.is_absolute() and cwd is not None:
+        path = cwd / path
+    if path.name not in _OWN_FILES:
+        return False
+    try:
+        return path.read_bytes() == (Path(__file__).resolve().parent / path.name).read_bytes()
+    except OSError:
+        return False
+
+
+def _executable_python(text: str) -> str:
+    """Python source without what never runs a command: comments, docstrings, imports."""
+    try:
+        tree = ast.parse(text)
+        lines = [line.encode() for line in text.split("\n")]
+        for node in ast.walk(tree):
+            bare_string = (
+                isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)
+            )
+            if not (bare_string or isinstance(node, (ast.Import, ast.ImportFrom))):
+                continue
+            first, last = node.lineno - 1, node.end_lineno - 1
+            for row in range(first, last + 1):
+                begin = node.col_offset if row == first else 0
+                end = node.end_col_offset if row == last else len(lines[row])
+                lines[row] = lines[row][:begin] + b" " * (end - begin) + lines[row][end:]
+        source = b"\n".join(lines).decode()
+        rows = source.split("\n")
+        for token in tokenize.generate_tokens(io.StringIO(source).readline):
+            if token.type == tokenize.COMMENT:
+                row, column = token.start
+                rows[row - 1] = rows[row - 1][:column]
+        return "\n".join(rows)
+    except (SyntaxError, ValueError, tokenize.TokenError):
+        return text
+
+
+def _words_of(node: ast.AST, names: dict[str, list[ast.AST]], seen: set[str]) -> tuple[list[str], bool]:
+    """Literal words an expression can hold, and whether part of it is unknown."""
+    if isinstance(node, ast.Constant):
+        return ([node.value] if isinstance(node.value, str) else []), False
+    if isinstance(node, ast.Attribute) and ast.unparse(node) == "sys.executable":
+        return ["python3"], False
+    if isinstance(node, ast.Starred):
+        return _words_of(node.value, names, seen)
+    if isinstance(node, ast.Name) and node.id in names and node.id not in seen:
+        parts = [_words_of(value, names, seen | {node.id}) for value in names[node.id]]
+        return [w for words, _ in parts for w in words], any(unknown for _, unknown in parts)
+    if isinstance(node, (ast.List, ast.Tuple)) and node.elts:
+        parts = [_words_of(item, names, seen) for item in node.elts]
+        words = [w for found, _ in parts for w in found]
+        head = {_basename(w) for w in parts[0][0]}
+        # An unknown argument matters only when the program runs its arguments.
+        python_code = "-c" in words and any(h.startswith("python") for h in head)
+        runs_arguments = bool(head & _PASS_THROUGH) or python_code
+        return words, parts[0][1] or (runs_arguments and any(unknown for _, unknown in parts))
+    constants = [n.value for n in ast.walk(node) if isinstance(n, ast.Constant) and isinstance(n.value, str)]
+    return constants, True
+
+
+def _starts_process(module: str, name: str) -> bool:
+    if module == "subprocess":
+        return name in _PROCESS_CALLS
+    if module == "os":
+        return name in {"system", "popen"} or name.startswith(("exec", "spawn"))
+    return module == "asyncio" and name.startswith("create_subprocess_")
+
+
+def _test_file_runs_live(text: str, depth: int) -> Decision | None:
+    """For `python -m pytest <file>`: judge the commands its process calls run.
+
+    Test files quote live commands as data. When a call's program cannot be
+    read from the source, any live command in the file counts.
+    """
+    try:
+        tree = ast.parse(text)
+    except (SyntaxError, ValueError):
+        return _embedded_deny(text)
+    names: dict[str, list[ast.AST]] = {}
+    imported: set[str] = set()
+    modules = {"subprocess": "subprocess", "os": "os", "asyncio": "asyncio"}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    names.setdefault(target.id, []).append(node.value)
+        elif isinstance(node, ast.Import):
+            modules.update({a.asname: a.name for a in node.names if a.asname and a.name in modules})
+        elif isinstance(node, ast.ImportFrom) and node.module in modules:
+            imported.update(a.asname or a.name for a in node.names if _starts_process(node.module, a.name))
+    unknown_call = False
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        func = ast.unparse(node.func)
+        module, _, attr = func.rpartition(".")
+        module = modules.get(module, module)
+        if not (func in imported or _starts_process(module, attr)):
+            continue
+        arguments = list(node.args) or [k.value for k in node.keywords if k.arg in {"args", "cmd"}]
+        if module == "os" and attr.startswith(("exec", "spawn")):
+            arguments = [ast.List(elts=arguments)]
+        if not arguments:
+            unknown_call = True
+            continue
+        words, unknown = _words_of(arguments[0], names, set())
+        unknown_call = unknown_call or unknown
+        line = " ".join(words)
+        found = _embedded_deny(line) or classify(line, depth=depth + 1)
+        if found.action == ACTION_DENY:
+            return _deny("script", "test file runs a live infrastructure command")
+    return _embedded_deny(_executable_python(text)) if unknown_call else None
+
+
 def _classify_tokens(tokens: list[str], segment: str, cwd: Path | None, depth: int) -> Decision:
     if not tokens:
         return _allow()
@@ -493,15 +724,24 @@ def _classify_tokens(tokens: list[str], segment: str, cwd: Path | None, depth: i
                 if embedded is not None:
                     return embedded
                 return classify(payload, cwd=cwd, depth=depth + 1)
+        pytest_run = any(a == "-m" and b == "pytest" for a, b in zip(tokens, tokens[1:]))
         for token in tokens[1:]:
             text = _script_text(token, cwd) if depth < 2 else None
-            if text:
-                embedded = _embedded_deny(text)
-                if embedded is not None:
-                    return embedded
-                nested = classify(text, cwd=cwd, depth=depth + 1)
-                if nested.action != ACTION_ALLOW:
-                    return nested
+            if not text or _is_own_file(token, cwd):
+                continue
+            if pytest_run:
+                live = _test_file_runs_live(text, depth)
+                if live is not None:
+                    return live
+                continue
+            if token.endswith(".py"):
+                text = _executable_python(text)
+            embedded = _embedded_deny(text)
+            if embedded is not None:
+                return embedded
+            nested = classify(text, cwd=cwd, depth=depth + 1)
+            if nested.action != ACTION_ALLOW:
+                return nested
         return _allow()
     if binary in _TF_BINS:
         return _classify_terraform(tokens, binary)
@@ -530,7 +770,9 @@ def _classify_tokens(tokens: list[str], segment: str, cwd: Path | None, depth: i
         if http is not None:
             return http
     text = _script_text(tokens[0], cwd) if depth < 2 else None
-    if text:
+    if text and not _is_own_file(tokens[0], cwd):
+        if tokens[0].endswith(".py"):
+            text = _executable_python(text)
         embedded = _embedded_deny(text)
         if embedded is not None:
             return embedded
@@ -545,6 +787,7 @@ def _rank(decision: Decision) -> int:
 def classify(command: str, cwd: Path | None = None, depth: int = 0) -> Decision:
     if depth > 3 or not command or not command.strip():
         return _allow()
+    command = strip_inert_text(command)
     pieces = [command, *_substitutions(command)]
     decision = _allow()
     for piece in pieces:

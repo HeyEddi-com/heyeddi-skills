@@ -16,8 +16,8 @@
 
 ## Flow examples
 
-**Critique → polish:** orchestrator runs critique subagent → user confirms → polish subagent with critique path attached.
+**Critique → polish:** orchestrator runs critique subagent → polish subagent with critique path attached.
 
-**Shape → craft:** orchestrator confirms brief in main chat → craft subagent with brief path.
+**Shape → craft:** craft subagent with brief path. In a design request only, the user confirms the brief first.
 
 Optional: `bugbot` on craft diff; `security-review` for login/auth routes.

@@ -1,14 +1,14 @@
 ---
 name: heyeddi-local-first
 description: "ALWAYS-ON permission and local-first gate for every agent. check_permission.py decides allow / ask / deny for commit, push, PR, merge, release, and dev / staging / prod reads and writes from the agent preset in .heyeddi/stack.json (default balanced). terraform plan is allowed and must be summarized. Use before any git write, gh write, publish, database client, infra, Terraform, gcloud, Firebase, Kubernetes, or Google account change."
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
 # Local first
 
-**Always on** for every agent that loads HeyEddi skills (Cursor, Claude, Codex, Cloud Run, or any other host). Edit code and Terraform in the repo. Check the plan. Do not change live systems.
+**Always on** for every agent that loads HeyEddi skills (Cursor, Claude, Codex, Cloud Run, or any other host). Edit code and Terraform in the repo. `check_permission.py` alone decides what may run against a live system: under `balanced`, reads run, dev writes run, staging writes ask once, and prod writes are denied.
 
 ## Permission gate
 
@@ -31,7 +31,9 @@ The policy is `agent.preset` plus `agent.permissions` in `.heyeddi/stack.json` (
 | Action | `balanced` |
 |--------|-----------|
 | Commit, push a feature branch, open or update a PR, rerun CI | auto |
-| Push to `main` / production / staging branch, merge, release, publish, push a tag | ask |
+| Merge into dev, test, staging, or a stacked parent (after `@pre-merge-gate --signoff` exits 0) | auto |
+| Merge or push into the production branch (never better than ask, under any preset) | ask |
+| Push to the staging branch, release, publish, push a tag | ask |
 | Read dev, staging, prod (logs, describe, `SELECT`, look-and-navigate) | auto |
 | Write dev | auto |
 | Write staging | ask |
@@ -50,7 +52,7 @@ A plan command is `terraform plan`, `tofu plan`, `pulumi preview`, or `ansible-p
 1. Change the Terraform, config, or app code in the working tree.
 2. Run the gate on the plan command. Exit 0 means run the plan.
 3. Warn the user. Quote the resource addresses the plan would add, change, or destroy.
-4. Commit and review that diff. Live apply stays in the project's deploy pipeline (Cloud Build `terraform-release` for HeyEddi CI) or in a terminal the human runs.
+4. Commit and review that diff. Run an apply when `check_permission.py` allows that exact command (a named dev target; staging after one yes). A prod apply stays in the project's deploy pipeline (Cloud Build `terraform-release` for HeyEddi CI). Then keep going with the rest of the task.
 
 ## What counts as a live write
 
@@ -70,7 +72,7 @@ Under `balanced` these run on dev, ask on staging, and are denied on prod or an 
 | Script | Purpose |
 |--------|---------|
 | `check_permission.py --check` | The gate. Exit 0 allow, 2 ask, 1 deny. `--approved` after the user's yes. |
-| `classify_command.py --check` | Infra classifier used by the gate. Exit 1 on a live mutation. Plan prints a warning and exits 0. |
+| `classify_command.py --check` | Internal to the gate: spots live infrastructure writes. Its exit 1 means "live write", not "forbidden"; `check_permission.py` decides. |
 
 ## Related
 

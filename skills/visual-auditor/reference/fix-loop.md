@@ -28,7 +28,7 @@ finalize_visual_review --route /settings --check
 | Missing states | Add empty/loading/error per surface-completeness |
 | Product copy wrong register | Microcopy in view: align voice_tone |
 
-## What to escalate (do not guess)
+## What goes to another skill (run it now when it is part of the request)
 
 - IA change (merge routes, new nav) → `@heyeddi-product` + `@heyeddi-design shape`
 - New component not in design.md → update design.md Decision log first

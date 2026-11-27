@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import sys
 
 from _project_detect import fastapi_root
 from _skill_cli import emit, resolve_project_root, run_command
@@ -29,6 +30,8 @@ def main() -> None:
     output = run_command(cmd, api_root, timeout=300)
     ok = not output.startswith("[exit") and not output.startswith("[error]")
     emit(json.dumps({"status": "pass" if ok else "fail", "output": output[:8000]}, indent=2))
+    if not ok:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

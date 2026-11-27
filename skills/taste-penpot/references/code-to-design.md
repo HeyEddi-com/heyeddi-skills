@@ -27,7 +27,7 @@ Read the scoped source before choosing a look. Write `.heyeddi/designs/<feature>
 
 ## Redesign proposal
 
-After the audit, run the **identity gate** (`references/identity-gate.md`) unless the user already pinned the new identity. Document designer thinking under `.heyeddi/designs/`, then present **3–5** What/Why/How options grounded in the product (and the audit), then **stop until they choose**. Do not invent a single redesign look and draw it.
+After the audit, run the **identity gate** (`references/identity-gate.md`) unless the user already pinned the new identity. Document designer thinking under `.heyeddi/designs/`, then present **3-5** What/Why/How options grounded in the product (and the audit), then, in a design-only request, **stop until they choose**. If the request also asks to implement (a build request), pick the recommended option, record why, and continue. Do not draw an unrecorded look.
 
 Once identity is locked, `@taste-penpot` replaces the look for the scoped pages. Product behavior, routes, and real copy stay. The current palette, type, and layout are a hard reject for that scope. "Existing system first" does not apply to the visual system on a from-scratch or redesign request.
 
@@ -38,8 +38,8 @@ Record the proposal in `.heyeddi/designs/<feature>/redesign.md`:
 - Quasar shell versus PrimeVue content versus `@layout-morph` or `@fancy-ui-craft` only where the page needs them
 - Penpot project and file for this app, and the boards to create (375, 768, 1440 for responsive pages)
 
-Then draw the boards with `@heyeddi/penpot-mcp-server` as in `references/penpot-mcp.md` (Flex/Grid + `parentId`). If `list_teams` is missing, ask once and install that package only after the user approves (`github:HeyEddi-com/penpot-mcp-server` until npm). Several projects can be open. Use the project for this app. Do not delete a project, file, or team. Never call unscoped `penpot-mcp-server` or `@penpot/mcp`.
+Then draw the boards with `@heyeddi/penpot-mcp-server` as in `references/penpot-mcp.md` (Flex/Grid + `parentId`). If `list_teams` is missing, use the spec and HTML+CSS, offer the install under **Needs you**, and install that package only after the user approves (`github:HeyEddi-com/penpot-mcp-server` until npm). Several projects can be open. Use the project for this app. Do not delete a project, file, or team. Never call unscoped `penpot-mcp-server` or `@penpot/mcp`.
 
 `@heyeddi-design` copies the tokens and the page list into `.heyeddi/design.md`. It does not invent a second palette.
 
-Stop. Building is a later request. When the user asks to build, `@vue-design-system` implements only the scoped pages, then `@visual-verification` screenshots them.
+In a design-only request, end here: building is a later request. In a build request, continue now: `@vue-design-system` implements only the scoped pages, then `@visual-verification` screenshots them.

@@ -1,8 +1,8 @@
 ---
 name: taste-penpot
 description: "General design skill. ALWAYS use with @heyeddi-design on any design, UI, look, or polish request. Owns the look in one PLAN → ACT → CRITIQUE pass: subject, tokens, anti-slop. When no style/identity is pinned, MUST run the identity gate: designer thinking (project, peers, follow vs unique) documented under .heyeddi/designs/, ask clarifying questions when needed, then present 3-5 What/Why/How options. In a design request it waits for the pick before tokens or pixels; in a build request it picks the recommended option, records why, and continues. Penpot path is design-system-first (add_color/add_typography, list_font_variants) then boards via @heyeddi/penpot-mcp-server. Hard gates A-G: text-walls; Flex claim needs reflow (children not at 0,0); layoutItem via set_layout_item; PNG Gate D (audit alone never ships); no invented fonts; page hygiene. Flex API may not reflow: absolute 8px escape after one fail. Never use unscoped penpot-mcp-server or @penpot/mcp. Vue maps onto @vue-design-system. No React, no Tailwind."
-version: 1.7.1
-product-version: 3.8.26
+version: 1.7.2
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -13,8 +13,8 @@ make interfaces that feel authored for this product and this audience, not
 assembled from the category's defaults. The look is a written system of tokens
 and a layout. Penpot is the designer visual: boards and demo exports when
 `@heyeddi/penpot-mcp-server` is connected (Flex/Grid + `parentId` nesting). When
-it is missing and `design.penpot` is not `off`, ask once and install it only
-after the user says yes (`references/penpot-mcp.md`). Upstream
+it is missing and `design.penpot` is not `off`, offer the install under
+**Needs you** and install it only after the user says yes (`references/penpot-mcp.md`). Upstream
 `@zcubekr/penpot-mcp-server` is absolute-only; then ACT 2.6 HTML is required.
 The written spec and HTML+CSS are what `@heyeddi-design` records when Penpot
 stays off. Code follows `@vue-design-system`. When this pass edits existing web UI, load `@heyeddi` `reference/browser-platform.md` first: Modern Web Guidance `legacy-scan` finds legacy platform problems, and Chrome DevTools checks them on localhost. Quasar, PrimeVue, and these tokens still win over a raw platform widget. A look-only pass skips the scan.
@@ -28,7 +28,7 @@ stays off. Code follows `@vue-design-system`. When this pass edits existing web 
 | `@vue-design-system` | How the look is built in Vue 3 or a CLI. It does not choose a second look. |
 | `@heyeddi` | Routes design talk here first, then to `@heyeddi-design`. |
 
-`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto`, `on`, and a missing key use `@heyeddi/penpot-mcp-server` (`list_teams`, `create_frame`, prefer `set_frame_layout` / `parentId`). If that server is missing, ask once and install it into `.cursor/mcp.json` only after an explicit yes, then continue. `off` skips Penpot and does not ask. A no on the install falls through to ACT 2.6 and does not block the look. The unscoped npm package `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), and `penpot-api-mcp` are never a connection.
+`design.taste` in `.heyeddi/stack.json` stays **on**. `design.penpot` is `auto` (default), `on`, or `off`. `auto`, `on`, and a missing key use `@heyeddi/penpot-mcp-server` (`list_teams`, `create_frame`, prefer `set_frame_layout` / `parentId`). If that server is missing, continue with ACT 2.6 and offer the install under **Needs you**; install it into `.cursor/mcp.json` only after an explicit yes. `off` skips Penpot and does not ask. A no on the install falls through to ACT 2.6 and does not block the look. The unscoped npm package `penpot-mcp-server`, the plugin MCP (`@penpot/mcp`, `execute_code`), and `penpot-api-mcp` are never a connection.
 
 ### Penpot MCP install (HeyEddi)
 
@@ -275,7 +275,7 @@ into the plan. If none are given, use the mode's defaults.
   with children still at `0,0` → **absolute 8px escape** (one try only). Do not
   write Flex hi-fi in `penpot-demo.md`.
 - **Gate D:** `export_shape` and read the PNG. Cloudflare / missing export ⇒
-  **not done**: say so. `audit_board` is a hint only. Prefer rect + cover
+  **not done**: say so (build request: Gate D fallback, then continue). `audit_board` is a hint only. Prefer rect + cover
   image fill over `create_image`. `hifi.html` does not prove the Penpot file.
 - **Gate G:** do not leave empty Look/dated shells as the demo surface.
 - On a redesign, the current palette is not reusable. Summarize what stays
@@ -321,8 +321,8 @@ server disconnects.
 
 A from-scratch or redesign request already covers a new palette for the pages
 in scope. State that palette in the proposal and continue. For any other task,
-state a palette replacement in two or three lines and ask once if the request
-did not cover it. Never delete a library asset unless the user named it.
+keep the existing palette, record any replacement you would suggest under
+**Assumptions**, and continue. Never delete a library asset unless the user named it.
 
 ### 2.6 Hi-fi HTML (when MCP cannot Flex)
 
@@ -354,8 +354,8 @@ brief once `@heyeddi/penpot-mcp-server` is connected.
 `references/layout-hard-gates.md` pass. When Penpot boards exist, score the
 **canvas PNG**. `hifi.html` is not that canvas. `audit_board` alone is not
 done. Score each line 0-2 (0 = fails, 1 = acceptable, 2 = strong). Fix every 0,
-then fix the cheapest 1s. Do one fix round, re-check once (PNG again), and stop;
-open-ended polishing wastes the user's time. **You must look at the Penpot
+then fix the cheapest 1s. Re-check (PNG again) and repeat until no 0 is left;
+then end the polishing, because open-ended polishing wastes the user's time. **You must look at the Penpot
 pixels.** A board that stores type the canvas does not show is a fail.
 
 | # | Check | Pass looks like |

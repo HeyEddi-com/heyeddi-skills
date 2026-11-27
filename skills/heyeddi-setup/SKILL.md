@@ -1,8 +1,8 @@
 ---
 name: heyeddi-setup
 description: "ALWAYS-ON prefs: ensures `.heyeddi/stack.json` holds git/env prefs and the agent permission preset. Missing prefs are filled with write_setup --defaults (no questions) so work never stops; the interview runs only when the user asks. Asks env layout, custom workflow escape hatch, worktrees, agent preset (cautious / balanced / autonomous). Tech stack is discovered by other skills. Use when setup is incomplete or the user says setup, preferences, or heyeddi-setup."
-version: 1.2.0
-product-version: 3.8.26
+version: 1.2.1
+product-version: 3.8.27
 author: HeyEddi-com
 paths:
   - ".heyeddi/stack.json"
@@ -53,11 +53,13 @@ Permissions (commit, push, PR, merge, release, env reads and writes) are decided
 
 ### Agent presets
 
-| Preset | Commit, push feature branch, PR | Merge, release, push to main | Read staging / prod | Write staging | Write prod |
-|--------|------|------|------|------|------|
-| `cautious` | ask | ask | ask | deny | deny |
-| `balanced` | auto | ask | auto (look only) | ask | deny |
-| `autonomous` | auto | auto | auto | auto | ask |
+| Preset | Commit, push feature branch, PR | Merge below production | Production merge or push | Release | Read staging / prod | Write staging | Write prod |
+|--------|------|------|------|------|------|------|------|
+| `cautious` | ask | ask | ask | ask | ask | deny | deny |
+| `balanced` | auto | auto (after `pre-merge-gate`) | ask | ask | auto (look only) | ask | deny |
+| `autonomous` | auto | auto (after `pre-merge-gate`) | ask | auto | auto | auto | ask |
+
+A push to the staging branch follows `push_protected`: ask, or auto under `autonomous`.
 
 Per-action overrides go in `agent.permissions` (see `reference/stack-schema.md`). Hard limits no preset lifts: force push or delete on a protected branch, destructive statements on prod, `gh repo delete`, prod writes set to `auto`.
 
@@ -85,7 +87,7 @@ Read `.heyeddi/stack.json` before branch or PR-base assumptions:
 - `git.environments`: which branch maps to production / staging / (optional) dev
 - `git.pr_base` / `git.default_branch`
 - `git.custom_workflow`: if set, follow that description over the preset
-- Commit, push, PR, merge, release, env access: run `check_permission.py`; do not read `agent.*` by hand. Legacy `agent.commit` / `agent.push` keys are still honored.
+- Commit, push, PR, merge, release, env access: run `check_permission.py`; do not read `agent.*` by hand. Legacy `agent.commit` / `agent.push` keys are ignored; to make an agent ask, use `agent.preset` or `agent.permissions`.
 
 ## Never
 
@@ -101,7 +103,7 @@ Read `.heyeddi/stack.json` before branch or PR-base assumptions:
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-setup --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
 
 ## Related
 

@@ -45,7 +45,7 @@ PRESETS: dict[str, dict[str, Any]] = {
         "push": AUTO,
         "push_protected": ASK,
         "pr": AUTO,
-        "merge": ASK,
+        "merge": AUTO,
         "release": ASK,
         "read": {"dev": AUTO, "staging": AUTO, "prod": AUTO},
         "write": {"dev": AUTO, "staging": ASK, "prod": DENY},
@@ -86,6 +86,17 @@ def find_stack(start: Path | None) -> Path | None:
         candidate = folder / ".heyeddi" / "stack.json"
         if candidate.is_file():
             return candidate
+    # A linked worktree does not carry an ignored stack.json: read the main checkout's.
+    for folder in (cur, *cur.parents):
+        marker = folder / ".git"
+        if marker.is_file():
+            gitdir = marker.read_text(encoding="utf-8").removeprefix("gitdir:").strip()
+            main = (folder / gitdir).resolve()
+            if main.parent.name == "worktrees":
+                candidate = main.parents[2] / ".heyeddi" / "stack.json"
+                return candidate if candidate.is_file() else None
+        if marker.exists():
+            break
     return None
 
 
@@ -119,15 +130,16 @@ def _overlay(base: dict[str, Any], patch: Any) -> dict[str, Any]:
 
 
 def resolve_policy(stack: dict[str, Any]) -> dict[str, Any]:
-    """Preset, then legacy agent.commit/push, then explicit permissions, then hard limits."""
+    """Preset, then explicit permissions, then hard limits.
+
+    The old `agent.commit` / `agent.push` keys are ignored. Setup used to write
+    `ask` into every repo, which stopped agents on routine commits and pushes.
+    """
     agent = stack.get("agent") if isinstance(stack.get("agent"), dict) else {}
     preset = agent.get("preset")
     if preset not in PRESETS:
         preset = DEFAULT_PRESET
     policy = deepcopy(PRESETS[preset])
-    legacy = {k: agent[k] for k in ("commit", "push") if _valid_level(agent.get(k))}
-    if "preset" not in agent and "permissions" not in agent:
-        policy = _overlay(policy, legacy)
     policy = _overlay(policy, agent.get("permissions"))
     if _RANK[policy["write"]["prod"]] < _RANK[PROD_WRITE_FLOOR]:
         policy["write"]["prod"] = PROD_WRITE_FLOOR
@@ -209,13 +221,55 @@ def detect_env(text: str, stack: dict[str, Any]) -> str | None:
     return "staging" if "staging" in found else found.pop()
 
 
-def is_local_target(text: str) -> bool:
+_DB_NAME_FLAGS = ("-d", "--dbname", "--database")
+# Must not start with "-": that is the next flag (maybe the real --host), not a database name.
+_PLAIN_NAME = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_-]*")
+
+
+def _without_db_names(words: list[str], stack: dict[str, Any]) -> list[str]:
+    """Drop `-d appdb`: a plain database name does not say which server is used.
+
+    A connection string, a URL, or a name that says prod or staging is kept.
+    """
+    # A `host=` connection string anywhere may override the host flag: drop nothing.
+    if any(re.search(r"\bhost(addr)?=", word) for word in words):
+        return words
+    out: list[str] = []
+    skip = False
+    for i, word in enumerate(words):
+        if skip:
+            skip = False
+            continue
+        flag, sep, value = word.partition("=")
+        if flag in _DB_NAME_FLAGS:
+            name = value if sep else (words[i + 1] if i + 1 < len(words) else "")
+            if _PLAIN_NAME.fullmatch(name) and _env_of(name, stack) not in ("prod", "staging"):
+                skip = not sep
+                continue
+        out.append(word)
+    return out
+
+
+def is_local_target(text: str, stack: dict[str, Any] | None = None) -> bool:
     """True only when every target value is a local host. Comments and labels do not count."""
     words = shell_words(text)
     if words is None:
         return False
-    values = target_values(words)
+    values = target_values(_without_db_names(words, stack or {}))
     return bool(values) and all(_LOCAL_HOST.search(value) for value in values)
+
+
+def production_branches(stack: dict[str, Any]) -> set[str]:
+    """Branches that deploy production. main and master when stack.json names none."""
+    git = stack.get("git") if isinstance(stack.get("git"), dict) else {}
+    envs = git.get("environments") if isinstance(git.get("environments"), dict) else {}
+    name = envs.get("production")
+    return {name} if isinstance(name, str) and name else {"main", "master"}
+
+
+def ask_at_least(level: str) -> str:
+    """Hard limit for production: never better than "ask", whatever the preset says."""
+    return level if _RANK[level] >= _RANK[ASK] else ASK
 
 
 def level_for(policy: dict[str, Any], action: str, env: str | None = None) -> str:

@@ -1,8 +1,8 @@
 ---
 name: primevue-openprops-architect
 description: "Compatibility name for Vue UI checks. Follow @vue-design-system (Quasar, PrimeVue Aura, spring motion, CSS tokens). Do not add OpenProps, Tailwind, or React. Runs vue-tsc and stylelint when available."
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 paths:
   - "**/*.vue"
@@ -33,9 +33,9 @@ When chained from parent skills, **`validate_vue.py` runs in a `shell` subagent*
 
 1. Read `@vue-design-system` and the child skill for the surface. This file does not choose components.
 2. Read `context/VOCABULARY.md` and `context/ANTI_PATTERNS.md` before writing UI code.
-3. After edits, run `python scripts/validate_vue.py --project-root <root>`.
-4. Fix all reported issues before finishing.
+3. After edits, run `python .agents/skills/primevue-openprops-architect/scripts/validate_vue.py --project-root .`.
+4. Fix all reported issues before finishing. Exit 1 means a check failed or could not run (for example no `node_modules`): run `npm install` or fix the errors, then rerun.
 
 ## Scripts
 
-- `validate_vue.py`: runs `vue-tsc --noEmit` and stylelint if installed
+- `validate_vue.py`: runs `vue-tsc` (`-b` for project references, else `--noEmit`) and stylelint if installed

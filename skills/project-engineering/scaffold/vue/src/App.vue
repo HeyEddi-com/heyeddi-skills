@@ -10,7 +10,7 @@
 <style scoped>
 .app-shell {
   min-height: 100vh;
-  background: var(--surface-1, #f8fafc);
-  color: var(--text-1, #0f172a);
+  background: var(--app-bg);
+  color: var(--app-text-main);
 }
 </style>

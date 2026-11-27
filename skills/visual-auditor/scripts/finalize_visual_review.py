@@ -52,6 +52,8 @@ def main() -> None:
             if script == "audit_contrast.py" and args.strict:
                 cmd.append("--strict")
             result = subprocess.run(cmd, cwd=scripts)
+            if script == "audit_ui.py" and result.returncode != 0 and args.check:
+                fail("capture failed: see the message above, fix it, and run again")
             if script == "audit_contrast.py" and result.returncode != 0:
                 if args.check:
                     fail("contrast check failed after fixes: review fix-log.md")
@@ -90,7 +92,7 @@ def main() -> None:
         for p in sorted(shots):
             verify.append(f"- `{p.relative_to(root)}`")
         verify.append("")
-        verify.append(f"- [{'x' if contrast_errors else ' '}] `audit_contrast --check`")
+        verify.append(f"- [{' ' if contrast_errors else 'x'}] `audit_contrast --check`")
         if "## Re-verify (finalized)" not in text:
             text = text.rstrip() + "\n" + "\n".join(verify) + "\n"
             review_path.write_text(text, encoding="utf-8")

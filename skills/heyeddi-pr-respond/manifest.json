@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-pr-respond",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "tools": [
     {
       "name": "fetch_pr_comments",
@@ -69,12 +69,13 @@
     },
     {
       "name": "assert_no_merge",
-      "description": "Hard-fail merge plans unless agent.permissions.merge is auto or the user said authorize merge this turn.",
+      "description": "Run before a merge: fails when the planned command merges into production without the user's authorize merge. Below production it passes (run the pre-merge gate first). Pass base and planned_command.",
       "parameters": {
         "type": "object",
         "properties": {
-          "user_text": { "type": "string" },
+          "base": { "type": "string", "description": "PR target branch; missing means production" },
           "planned_command": { "type": "string" },
+          "user_text": { "type": "string" },
           "check": { "type": "boolean" },
           "project_root": { "type": "string" },
           "check_yaml": { "type": "boolean" }

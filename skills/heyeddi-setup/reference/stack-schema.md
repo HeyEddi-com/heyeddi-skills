@@ -77,7 +77,7 @@ Optional: `git.environments.dev` (present on `main_staging_dev`).
 | `agent.permissions.read.<env>` | same levels for `dev`, `staging`, `prod` |
 | `agent.permissions.write.<env>` | same levels; `write.prod` is never better than `ask` |
 | `targets.<env>` | strings (GCP project, kube context, DB host) that mark a command as that env. A prod entry counts anywhere in the command; dev and staging entries count only in a target flag (`--project`, `--context`, `--host`, ...) or connection URL. Without them, names containing prod / staging / dev decide the same way, and an unnamed remote write counts as prod. |
-| `agent.commit` / `agent.push` | legacy `ask` \| `auto`; honored only when `agent.preset` and `agent.permissions` are absent |
+| `agent.commit` / `agent.push` | legacy `ask` \| `auto`; accepted and ignored. Use `agent.preset` or `agent.permissions` |
 
 Protected branches: `main`, `master`, `git.environments.production`, `git.environments.staging`, and `git.default_branch`.
 
@@ -89,6 +89,19 @@ Protected branches: `main`, `master`, `git.environments.production`, `git.enviro
 | `design.penpot` | `auto` (default) \| `on` \| `off` |
 
 Missing keys mean the same as the defaults: taste on, Penpot when connected. `write_setup` fills them. Do not quiz which of the 39 skills to install. `@heyeddi` sees which packs are installed (`heyeddi-skills`, `heyeddi-ci-skills`, `heyeddi-design-skills`).
+
+## Backlog and documents (stamped on write, not required to pass verify)
+
+| Path | Values |
+|------|--------|
+| `backlog.provider` | `local` (default) \| `mcp` |
+| `backlog.mcp.server` / `backlog.mcp.project` | which MCP server and project, when `mcp` |
+| `docs.provider` | `repo` (default) \| `mcp` \| `external` |
+| `docs.mcp.server` / `docs.mcp.space` | which MCP server and space, when `mcp` |
+| `docs.location` | where documents live, when `external` |
+| `docs.keep` | repo documents to keep current with each backlog item |
+
+Detail: `@heyeddi-product` `reference/backlog.md`. Commit `stack.json` in app repositories so every worktree reads the same choices. Record why in `decisions.md`.
 
 ## Custom workflow
 

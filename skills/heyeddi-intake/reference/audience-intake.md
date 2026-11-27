@@ -78,7 +78,7 @@ One paragraph: plain/confident/technical; verb-first buttons; error voice.
 
 ## Clarify round
 
-If user prompt lacks audience hints, ask **one round** (2-3 questions):
+In a build request, infer personas and competitors from the repo and the prompt, record them as assumptions, and continue. In a discovery request (`@heyeddi-intake` from the user) with no audience hints, ask **one round** (2-3 questions):
 
 - Who uses this daily vs who buys/evaluates?
 - What do they compare you to?

@@ -16,13 +16,13 @@ ORCHESTRATOR_SCRIPT = (
 DEFAULT_NEXT: dict[str, dict[str, str]] = {
     "heyeddi-intake": {
         "skill": "heyeddi-product",
-        "prompt": "@heyeddi-product audit the product and write feature specs for each routed surface",
-        "why": "Validate product.md and backlog before design or scaffold.",
+        "prompt": "@heyeddi-product audit the product, write feature specs for each routed surface, and fill the backlog",
+        "why": "Specs and backlog drive the build loop.",
     },
     "heyeddi-product": {
-        "skill": "taste-penpot",
-        "prompt": "@taste-penpot design <route> in one pass from product.md, then @heyeddi-design records the tokens",
-        "why": "Look comes from taste before product handoff.",
+        "skill": "heyeddi-product",
+        "prompt": "build request: @heyeddi-product run the backlog loop: `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, then build that item through merge below production",
+        "why": "Specs and backlog are ready: build every doable item.",
     },
     "taste-penpot": {
         "skill": "heyeddi-design",
@@ -31,7 +31,7 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
     },
     "heyeddi": {
         "skill": "heyeddi-setup",
-        "prompt": "@heyeddi-setup: confirm stack + git/tools/agent prefs in .heyeddi/stack.json",
+        "prompt": "@heyeddi-setup run `write_setup.py --defaults` (no questions) to record stack + git/tools/agent prefs in .heyeddi/stack.json",
         "why": "Working prefs should exist before intake or scaffold.",
     },
     "heyeddi-setup": {
@@ -61,13 +61,13 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
     },
     "project-engineering": {
         "skill": "heyeddi-design",
-        "prompt": "@heyeddi-design shape the first user-facing route now that the stack is scaffolded",
-        "why": "Scaffold is up: design the first surface before more engineering.",
+        "prompt": "build request: @heyeddi-design craft the first user-facing route now that the stack is scaffolded",
+        "why": "Scaffold is up: build the first surface.",
     },
     "flutter-engineering": {
         "skill": "heyeddi-design",
-        "prompt": "@heyeddi-design shape the first Flutter route from product.md",
-        "why": "Flutter scaffold is up: brief the first screen before handoff.",
+        "prompt": "build request: @heyeddi-design craft the first Flutter route from product.md",
+        "why": "Flutter scaffold is up: build the first screen.",
     },
     "visual-auditor": {
         "skill": "pre-merge-gate",
@@ -75,9 +75,9 @@ DEFAULT_NEXT: dict[str, dict[str, str]] = {
         "why": "Full QA gate after visual fixes pass (includes engineering + prose + PR checks).",
     },
     "pre-merge-gate": {
-        "skill": "heyeddi",
-        "prompt": "@heyeddi confirm CI green then ask the user for authorize merge on PR #<number>",
-        "why": "Gates passed: merge still needs explicit authorize merge.",
+        "skill": "heyeddi-product",
+        "prompt": "Merge PR #<number> into dev / test / staging once --signoff exits 0, then run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next` and build that item",
+        "why": "Below production merges need no question; only a production merge waits for authorize merge.",
     },
     "heyeddi-pr-review": {
         "skill": "heyeddi-pr-respond",
@@ -171,15 +171,15 @@ MODE_NEXT: dict[str, dict[str, dict[str, str]]] = {
         },
         "document": {
             "skill": "heyeddi-design",
-            "prompt": "@heyeddi-design shape <route> for the next surface",
-            "why": "Design system is documented: shape the next route.",
+            "prompt": "build request: @heyeddi-design craft <route> for the next surface",
+            "why": "Design system is documented: build the next route.",
         },
     },
     "heyeddi-product": {
         "audit": {
-            "skill": "heyeddi-design",
-            "prompt": "@heyeddi-design shape <route> from the audit findings",
-            "why": "Product audit is done: design the highest-priority route.",
+            "skill": "heyeddi-product",
+            "prompt": "build request: @heyeddi-product add the audit findings to the backlog, then run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next` and build that item",
+            "why": "Product audit is done: fix and build in priority order.",
         },
         "review": {
             "skill": "pre-merge-gate",
@@ -210,8 +210,8 @@ MODE_NEXT: dict[str, dict[str, dict[str, str]]] = {
 
 DONE_NEXT: dict[str, str] = {
     "skill": "heyeddi",
-    "prompt": "@heyeddi: what skill should handle: <describe next task>",
-    "why": "Pipeline step complete: orchestrator picks the next @skill.",
+    "prompt": "Run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next` and build that item; with none left, @heyeddi: what skill should handle: <describe next task>",
+    "why": "Pipeline step complete: the backlog decides whether work remains.",
 }
 
 def _frontend_stack(project_root: Path) -> str:
@@ -275,7 +275,7 @@ def _prompt_for_route(route: dict[str, Any]) -> str:
 
     if skill == "heyeddi-design":
         sub = mode or "craft"
-        return f"@heyeddi-design {sub} {route_path}: feature `{feature}`"
+        return f"build request: @heyeddi-design {sub} {route_path}: feature `{feature}`"
     if skill == "heyeddi-handoff":
         return (
             f"@heyeddi-handoff implement {route_path} from "
@@ -356,19 +356,8 @@ def _next_from_routing(
     routes: list[dict[str, Any]] = list(routing.get("routes") or [])
 
     if current_skill == "heyeddi-intake":
-        scaffold = routing.get("scaffold") or []
-        if scaffold:
-            return _scaffold_entry(
-                str(scaffold[0]),
-                why="First scaffold step from skill-routing.json after intake.",
-            )
-        if routes:
-            first = routes[0]
-            return _route_entry(
-                str(first.get("skill") or ""),
-                first,
-                why="First routed surface after intake.",
-            )
+        # Specs and backlog come first (default chain); the backlog loop scaffolds and builds.
+        return None
 
     if current_skill in {"project-engineering", "flutter-engineering"}:
         scaffold = routing.get("scaffold") or []
@@ -496,7 +485,8 @@ def suggest_next_skill(
         "helper_command": helper,
         "user_block": format_user_block(next_step),
         "instruction": (
-            "When the user's task for this skill is complete, end your final reply with user_block. "
-            "The Prompt is what they paste in chat: @skill plus sub-command (shape, craft, sync, audit, etc.)."
+            "If the next step is part of the request, run it now. In a build request, keep going until "
+            "backlog.py next returns no item. Otherwise add one line under Next in the final summary; "
+            "never list leftovers."
         ),
     }

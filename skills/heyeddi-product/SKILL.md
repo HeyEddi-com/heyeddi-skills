@@ -1,8 +1,8 @@
 ---
 name: heyeddi-product
 description: "Product leadership: user stories, acceptance criteria, backlog, end-to-end reviews. Verifies the product works and is useful; delegates UX flow, design critique, visual contrast, and engineering audits; synthesizes plans and change recommendations. Use after @heyeddi-intake, before ship, or when the user asks for PM review, user stories, acceptance criteria, or \"is this feature good enough?\""
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -61,7 +61,9 @@ write_review_plan --force
   → delegate UX / design / visual / engineering rows
   → fill PM judgment + recommendations in plan
 write_feature_spec         (per route: stories + AC)
-verify_product --check     (gate)
+verify_product --check --skip-features   (spec gate, before code exists)
+backlog.py next            (build request: run the Backlog loop below)
+verify_product --check     (full gate, after the items are built)
 ```
 
 ## Modes
@@ -73,6 +75,7 @@ verify_product --check     (gate)
 | Spec vs code | `check_features` | `feature-status.json` + PM questions |
 | Stories + AC | `write_feature_spec` | `features/<slug>.md` |
 | Review scaffold | `write_review_plan` | `review-plan-<date>.md` |
+| Next backlog item | `backlog.py next` / `done` / `block` | JSON item |
 | Gate | `verify_product --check` | exit 0/1 |
 
 ## PM judgment (you write: not scripts)
@@ -83,14 +86,29 @@ Scripts find **gaps**. You answer:
 2. **Is it useful?**: persona `primary_job` satisfied vs competitors?
 3. **Would something else be better?**: cut scope, merge routes, different IA: cite delegated evidence?
 
-Update `backlog.md` when priorities change.
+Update `backlog.md` when priorities change. One row per feature or route; **Status** is `planned`, `done`, or `blocked`.
+
+## Backlog loop
+
+In a build request, specs and a backlog are the start of the work, not the end of the run (`@heyeddi` `reference/autonomy.md`, The backlog). Fill `backlog.md` with every feature and route, then repeat:
+
+```
+python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next
+```
+
+1. `status: item`: build that item now on its own branch. Invoke the owner skills yourself (scaffold first when there is no app, then design craft or handoff, tests, audits, visual QA), commit, push, and open the PR.
+2. Run `@pre-merge-gate --signoff`. Fix every FAIL and rerun. On exit 0 merge into dev / test / staging; only a production merge needs the user.
+3. Before merging, update the documents the item changes, wherever `docs.provider` in `stack.json` puts them (`reference/backlog.md`). Then `backlog.py done "<feature>" --note "<PR URL>" --docs <files>` (or `--docs-none "<reason>"`) and run `next` again.
+4. Use `backlog.py block "<feature>" --reason "<exact error or missing access>"` only for something in **The only pauses**, then take the next item.
+5. New work you find: `backlog.py add "<feature>" --priority P1 --story "<why>"`, and do it in this run when you can. `status: external`: the backlog lives in a task manager; run the printed operation with its MCP tools (`reference/backlog.md`).
+6. `status: unfilled`: write the rows. `status: none`: the loop is over. Report any blocked rows under **Needs you**.
 
 ## Never
 
 - Ship without acceptance criteria for flagship routes
 - Approve UI without delegating `@visual-auditor` contrast on marketing/app routes
 - Skip `@ux-flow-auditor` for multi-step tasks when usefulness is in question
-- Implement code: route to `@heyeddi-design`, `@heyeddi-handoff`, `@project-engineering`
+- Write code inside this skill. In a build request invoke the owner skill (`@heyeddi-design`, `@heyeddi-handoff`, `@project-engineering`) now, in the same run
 
 ## Chain
 
@@ -113,4 +131,4 @@ Update `backlog.md` when priorities change.
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-product --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

@@ -1,10 +1,10 @@
 {
   "skill": "heyeddi-ci-fails",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "tools": [
     {
       "name": "fetch_failing_checks",
-      "description": "Fetch failing PR Checks / rollup via gh (or fixture).",
+      "description": "Fetch failing and pending PR Checks via gh (or fixture) into the system temp directory.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -19,7 +19,7 @@
     },
     {
       "name": "write_ci_fails_report",
-      "description": "Write ephemeral .heyeddi/docs/pr-<N>-ci-fails.md from raw evidence.",
+      "description": "Write ephemeral pr-<N>-ci-fails.md in the system temp directory from raw evidence.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -50,13 +50,16 @@
     },
     {
       "name": "assert_no_merge",
-      "description": "Hard-fail merge-like plans unless authorize merge this turn.",
+      "description": "Run before a merge: fails when the planned command merges into production without the user's authorize merge. Below production it passes (run the pre-merge gate first). Pass base and planned_command.",
       "parameters": {
         "type": "object",
         "properties": {
-          "user_text": { "type": "string" },
+          "base": { "type": "string", "description": "PR target branch; missing means production" },
           "planned_command": { "type": "string" },
-          "check": { "type": "boolean" }
+          "user_text": { "type": "string" },
+          "check": { "type": "boolean" },
+          "project_root": { "type": "string" },
+          "check_yaml": { "type": "boolean" }
         },
         "required": []
       },

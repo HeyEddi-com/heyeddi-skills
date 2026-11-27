@@ -74,12 +74,10 @@ In a build request, shape writes the brief, records it under **Assumptions**, an
 
 ## After confirmation
 
-Recommend:
+When building is part of the request, run it now:
 
 ```
 @heyeddi-design craft <feature or route>
 ```
 
-Or user may implement manually using the brief.
-
-If `DESIGN.md` is missing or stale after shape, recommend `@heyeddi-design document` before craft.
+If `DESIGN.md` is missing or stale after shape, run `@heyeddi-design document` before craft.

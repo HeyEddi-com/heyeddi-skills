@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-local-first",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "tools": [
     {
       "name": "check_permission",
@@ -30,7 +30,7 @@
     },
     {
       "name": "classify_command",
-      "description": "Hard gate for every agent. Exit 1 on terraform apply and other live cloud mutations. Plan exits 0 and must be summarized.",
+      "description": "Internal classifier behind check_permission. Exit 1 marks a live infrastructure write; check_permission decides whether it may run. Plan exits 0 and must be summarized.",
       "parameters": {
         "type": "object",
         "properties": {

@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
 from _skill_cli import emit, resolve_project_root
@@ -29,52 +30,115 @@ def resolve_openapi_path(root: Path, relative: str) -> Path | None:
     return candidate
 
 
-def dart_type(openapi_type: str | None, fmt: str | None = None) -> str:
-    if fmt == "date-time":
-        return "DateTime"
-    mapping = {
-        "string": "String",
-        "integer": "int",
-        "number": "double",
-        "boolean": "bool",
-        "array": "List<dynamic>",
-        "object": "Map<String, dynamic>",
-    }
-    return mapping.get(openapi_type or "object", "dynamic")
+RESERVED = frozenset(
+    "assert break case catch class const continue default do else enum extends false final finally "
+    "for if in is new null rethrow return super switch this throw true try var void while with".split()
+)
 
 
-def render_class(name: str, schema: dict) -> str:
+def safe_name(name: str) -> str:
+    return re.sub(r"[^a-zA-Z0-9_]", "", name)
+
+
+def field_name(name: str) -> str:
+    out = re.sub(r"[^a-zA-Z0-9_$]", "_", name)
+    if not out or out[0].isdigit() or out[0] == "_":
+        out = f"f{out}" if out.startswith("_") else f"f_{out}"
+    return f"{out}_" if out in RESERVED else out
+
+
+def is_class(schema: dict) -> bool:
+    if any(key in schema for key in ("$ref", "enum", "anyOf", "oneOf", "allOf")):
+        return False
+    if "properties" in schema:
+        return True
+    return schema.get("type") == "object" and not isinstance(schema.get("additionalProperties"), dict)
+
+
+def dart_type(schema: dict, schemas: dict, seen: frozenset[str] = frozenset()) -> str:
+    """Dart type (without `?`) for one OpenAPI schema. Enums map to their value type."""
+    if "$ref" in schema:
+        name = schema["$ref"].rsplit("/", 1)[-1]
+        target = schemas.get(name)
+        if target is None or name in seen:
+            return "dynamic"
+        return safe_name(name) if is_class(target) else dart_type(target, schemas, seen | {name})
+    for key in ("anyOf", "oneOf", "allOf"):
+        if key in schema:
+            parts = [part for part in schema[key] if part.get("type") != "null"]
+            return dart_type(parts[0], schemas, seen) if len(parts) == 1 else "dynamic"
+    kind = schema.get("type")
+    if isinstance(kind, list):
+        kinds = [one for one in kind if one != "null"]
+        kind = kinds[0] if len(kinds) == 1 else None
+    if kind is None and schema.get("enum") and all(isinstance(v, str) for v in schema["enum"]):
+        kind = "string"
+    if kind == "string":
+        return "DateTime" if schema.get("format") == "date-time" else "String"
+    if kind == "array":
+        return f"List<{dart_type(schema.get('items', {}), schemas, seen)}>"
+    if kind == "object" or "properties" in schema:
+        return "Map<String, dynamic>"
+    return {"integer": "int", "number": "double", "boolean": "bool"}.get(kind, "dynamic")
+
+
+def convert(kind: str, source: str) -> str:
+    """Expression that turns a non-null JSON value into `kind`."""
+    if kind == "dynamic":
+        return source
+    if kind == "int":
+        return f"({source} as num).toInt()"
+    if kind == "double":
+        return f"({source} as num).toDouble()"
+    if kind == "DateTime":
+        return f"DateTime.parse({source} as String)"
+    if kind.startswith("List<"):
+        item = kind[5:-1]
+        if item == "dynamic":
+            return f"{source} as List<dynamic>"
+        return f"({source} as List<dynamic>).map((e) => {convert(item, 'e')}).toList()"
+    if kind in ("String", "bool", "Map<String, dynamic>"):
+        return f"{source} as {kind}"
+    return f"{kind}.fromJson({source} as Map<String, dynamic>)"
+
+
+def from_json(kind: str, key: str) -> str:
+    escaped = key.replace("\\", "\\\\").replace("'", "\\'").replace("$", "\\$")
+    source = f"json['{escaped}']"
+    if kind == "dynamic":
+        return source
+    if kind in ("String", "bool", "Map<String, dynamic>", "List<dynamic>"):
+        return f"{source} as {kind}?"
+    if kind in ("int", "double"):
+        return f"({source} as num?)?.to{'Int' if kind == 'int' else 'Double'}()"
+    return f"{source} != null ? {convert(kind, source)} : null"
+
+
+def render_class(name: str, schema: dict, schemas: dict) -> str:
     props = schema.get("properties", {})
     required = set(schema.get("required", []))
+    factory = f"  factory {name}.fromJson(Map<String, dynamic> json) {{"
+    if not props:
+        return "\n".join(
+            [f"class {name} {{", f"  const {name}();", "", factory, f"    return const {name}();", "  }", "}"]
+        )
+    fields = [(key, field_name(key), dart_type(meta, schemas)) for key, meta in props.items()]
     lines = [f"class {name} {{", f"  const {name}({{"]
-    for prop, meta in props.items():
-        t = dart_type(meta.get("type"), meta.get("format"))
-        req = "required " if prop in required else ""
-        lines.append(f"    {req}this.{prop},")
-    lines.append("  });")
-    lines.append("")
-    for prop, meta in props.items():
-        t = dart_type(meta.get("type"), meta.get("format"))
-        lines.append(f"  final {t}? {prop};")
-    lines.append("")
-    lines.append(f"  factory {name}.fromJson(Map<String, dynamic> json) {{")
-    lines.append(f"    return {name}(")
-    for prop, meta in props.items():
-        t = dart_type(meta.get("type"), meta.get("format"))
-        if t == "DateTime":
-            lines.append(
-                f"      {prop}: json['{prop}'] != null ? DateTime.parse(json['{prop}'] as String) : null,"
-            )
-        elif t == "int":
-            lines.append(f"      {prop}: (json['{prop}'] as num?)?.toInt(),")
-        elif t == "double":
-            lines.append(f"      {prop}: (json['{prop}'] as num?)?.toDouble(),")
-        else:
-            lines.append(f"      {prop}: json['{prop}'] as {t}?,")
-    lines.append("    );")
-    lines.append("  }")
-    lines.append("}")
+    for key, field, _ in fields:
+        lines.append(f"    {'required ' if key in required else ''}this.{field},")
+    lines += ["  });", ""]
+    for _, field, kind in fields:
+        lines.append(f"  final {kind}{'' if kind == 'dynamic' else '?'} {field};")
+    lines += ["", factory, f"    return {name}("]
+    for key, field, kind in fields:
+        lines.append(f"      {field}: {from_json(kind, key)},")
+    lines += ["    );", "  }", "}"]
     return "\n".join(lines)
+
+
+def fail_json(payload: dict) -> None:
+    emit(json.dumps(payload, indent=2))
+    sys.exit(1)
 
 
 def main() -> None:
@@ -92,26 +156,21 @@ def main() -> None:
 
     openapi_path = resolve_openapi_path(root, args.openapi)
     if openapi_path is None:
-        emit(
-            json.dumps(
-                {
-                    "error": "no local openapi file",
-                    "hint": (
-                        "Place OpenAPI JSON at openapi.json (or pass --openapi <relpath>). "
-                        "Do not fetch URLs inside this skill: export from FastAPI or: "
-                        "curl -fsS http://127.0.0.1:8090/openapi.json -o openapi.json"
-                    ),
-                },
-                indent=2,
-            )
+        fail_json(
+            {
+                "error": "no local openapi file",
+                "hint": (
+                    "Place OpenAPI JSON at openapi.json (or pass --openapi <relpath>). "
+                    "Do not fetch URLs inside this skill: export from FastAPI or: "
+                    "curl -fsS http://127.0.0.1:8090/openapi.json -o openapi.json"
+                ),
+            }
         )
-        return
 
     try:
         spec = json.loads(openapi_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        emit(json.dumps({"error": f"invalid openapi JSON: {exc}", "source": str(openapi_path)}, indent=2))
-        return
+        fail_json({"error": f"invalid openapi JSON: {exc}", "source": str(openapi_path)})
 
     schemas = spec.get("components", {}).get("schemas", {})
     out_dir = root / "lib" / "models"
@@ -119,17 +178,17 @@ def main() -> None:
     out_file = out_dir / "api_models.dart"
 
     parts = [
-        "// Generated stub from OpenAPI: refine types as needed.",
+        "// Generated from OpenAPI. Do not edit: put refinements in another file.",
         f"// Source: {openapi_path.name}",
         "",
     ]
     written: list[str] = []
-    for name, schema in list(schemas.items())[:40]:
+    for name, schema in schemas.items():
         safe = re.sub(r"[^a-zA-Z0-9_]", "", name)
         if not safe:
             continue
-        if schema.get("type") == "object" or "properties" in schema:
-            parts.append(render_class(safe, schema))
+        if is_class(schema):
+            parts.append(render_class(safe, schema, schemas))
             parts.append("")
             written.append(safe)
 

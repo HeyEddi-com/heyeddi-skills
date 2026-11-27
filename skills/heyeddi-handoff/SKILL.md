@@ -1,10 +1,9 @@
 ---
 name: heyeddi-handoff
 description: "Implements screens from briefs, wireframes, or designer screenshots. Vue 3 with Quasar shells and PrimeVue Aura. Two-pass for PNGs; single-pass from confirmed brief.md. Chains to @vue-design-system and @visual-auditor."
-version: 1.4.1
-product-version: 3.8.26
+version: 1.4.2
+product-version: 3.8.27
 author: HeyEddi-com
-disable-model-invocation: true
 ---
 
 # HeyEddi Handoff
@@ -48,7 +47,7 @@ mockup text.
 2. Read `.heyeddi/product.md`: **Personas** + **Per-route intent** for this route; align brief microcopy and hierarchy (`heyeddi-design/reference/audience-design.md`).
 3. Read `reference/interpret-mockups.md` (PNG) or `reference/low-fidelity-mockups.md` (`wireframe.md`): write `mockup-brief.md` with **Implementation spec** + **Theme notes**.
 4. Run `python scripts/describe_handoff.py --route <route> --sync-design`.
-5. **Stop**: do not write Vue until Implementation spec is complete.
+5. Gate: finish the Implementation spec before any Vue, then continue to Pass 2 in the same run.
 
 ### Pass 2: Implementer (build)
 
@@ -71,11 +70,11 @@ mockup text.
 - Screenshot (v1): `reference/screenshot-mode.md` + `reference/interpret-mockups.md` + `reference/handoff-to-code.md`
 - Wireframe / ASCII: `reference/low-fidelity-mockups.md` + `wireframe.md` (no PNG required)
 - PrimeVue Card slots: `reference/primevue-card-slots.md`: body content in `<template #content>`
-- Penpot demos: `reference/penpot-mode.md` (`@zcubekr/penpot-mcp-server` only; install after user approval)
+- Penpot demos: `reference/penpot-mode.md` (`@heyeddi/penpot-mcp-server`, with `@zcubekr/penpot-mcp-server` as absolute-only fallback; install after user approval)
 ## When the task is complete: suggest next skills
 
 ```bash
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-handoff --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

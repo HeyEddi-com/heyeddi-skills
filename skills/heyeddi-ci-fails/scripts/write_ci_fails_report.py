@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write ephemeral CI fails report under .heyeddi/docs/pr-<N>-ci-fails.md."""
+"""Write the ephemeral CI fails report pr-<N>-ci-fails.md in the system temp directory."""
 from __future__ import annotations
 
 import argparse
@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from _skill_cli import emit, resolve_project_root
+from _ci_temp import ci_temp_dir
 
 
 def main() -> None:
@@ -22,8 +23,7 @@ def main() -> None:
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
-    docs = root / ".heyeddi" / "docs"
-    docs.mkdir(parents=True, exist_ok=True)
+    docs = ci_temp_dir(root, args.pr)
     raw_path = Path(args.input) if args.input else docs / f"pr-{args.pr}-ci-fails-raw.json"
     if not raw_path.is_absolute():
         raw_path = root / raw_path
@@ -33,7 +33,7 @@ def main() -> None:
             json.dumps(
                 {
                     "status": "exists",
-                    "path": str(report_path.relative_to(root)),
+                    "path": str(report_path),
                     "hint": "Pass --force to overwrite",
                 },
                 indent=2,
@@ -89,7 +89,7 @@ def main() -> None:
             "",
             "## Merge lock",
             "",
-            "Merge follows `agent.permissions.merge` (default `ask`: **authorize merge** in the current turn).",
+            "Below production, merge once `@pre-merge-gate --signoff` exits 0. A production merge takes **authorize merge**.",
             "",
         ]
     )
@@ -98,7 +98,7 @@ def main() -> None:
         json.dumps(
             {
                 "status": "ok",
-                "path": str(report_path.relative_to(root)),
+                "path": str(report_path),
                 "failing_count": len(failing),
             },
             indent=2,

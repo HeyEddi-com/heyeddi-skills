@@ -12,7 +12,7 @@ from _skill_cli import emit, fail, resolve_project_root
 
 BRIEF_FILENAME = "mockup-brief.md"
 
-# Fallback checks when brief table is thin (settings / app-shell handoff).
+# Extra checks for the app-shell and settings layouts. Each runs only when the spec names its files or tokens.
 SHELL_CHECKS: list[tuple[str, list[str], list[str]]] = [
     (
         "Sidebar width token",
@@ -184,6 +184,19 @@ def _run_named_checks(
     return results
 
 
+def _named_in_spec(
+    checks: list[tuple[str, list[str], list[str]]], spec_text: str
+) -> list[tuple[str, list[str], list[str]]]:
+    """Keep checks whose component or token the Implementation spec mentions."""
+    selected = []
+    for check in checks:
+        names = [Path(p).stem for p in check[1] if p.endswith(".vue")]
+        names += [pattern for pattern in check[2] if pattern.startswith("--") and "|" not in pattern]
+        if any(name in spec_text for name in names):
+            selected.append(check)
+    return selected
+
+
 def _run_spec_table(root: Path, spec_text: str) -> list[dict]:
     results: list[dict] = []
     for line in spec_text.splitlines():
@@ -220,16 +233,14 @@ def verify_handoff(
     brief_text = bp.read_text() if bp.is_file() else ""
     spec_text = _extract_section(brief_text, "Implementation spec")
 
-    checks: list[dict] = []
+    checks: list[dict] = [{"name": "Implementation spec present", "ok": bool(spec_text)}]
     if spec_text:
         checks.extend(_run_spec_table(root, spec_text))
 
     if phase in ("shell", "full"):
-        checks.extend(_run_named_checks(root, SHELL_CHECKS))
+        checks.extend(_run_named_checks(root, _named_in_spec(SHELL_CHECKS, spec_text)))
     if phase == "full":
-        route_name = feature_path.name
-        if route_name == "settings" or "settings" in brief_text.lower():
-            checks.extend(_run_named_checks(root, ROUTE_CHECKS))
+        checks.extend(_run_named_checks(root, _named_in_spec(ROUTE_CHECKS, spec_text)))
 
     card_slot = verify_primevue_card_slots(root)
     checks.append(
@@ -242,7 +253,7 @@ def verify_handoff(
 
     failed = [c for c in checks if not c.get("ok")]
     return {
-        "ok": len(checks) > 0 and not failed,
+        "ok": not failed,
         "phase": phase,
         "has_implementation_spec": bool(spec_text),
         "checks": checks,

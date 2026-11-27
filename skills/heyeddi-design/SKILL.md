@@ -1,8 +1,8 @@
 ---
 name: heyeddi-design
 description: "Product design partner for @taste-penpot. Use on design, UI, look, polish, or handoff AFTER taste locks identity (identity gate: designer thinking in .heyeddi/, then 3-5 What/Why/How options when unset) and the look. Records personas, route job, and tokens into .heyeddi/design.md, then hands off to @heyeddi-handoff or @design-handoff-flutter. Does not invent a second palette, type system, or multi-step aesthetic. Blocks handoff unless taste layout hard gates pass (no text-wall, hifi.html when MCP cannot Flex, visual QA). Screenshot gate still applies before done."
-version: 2.13.2
-product-version: 3.8.26
+version: 2.13.3
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -12,7 +12,7 @@ author: HeyEddi-com
 
 **Team:** `@taste-penpot` owns the look in one pass (Anthropic frontend-design + tokens), including the **identity gate** (`references/identity-gate.md`: project/peers/stance documented under `.heyeddi/designs/`, then **3-5** What/Why/How options when no style is pinned). This skill owns product fit and implementation handoff. Read `reference/design-team.md` before any design turn. Do not author a second palette or restart discover → research → explore to find a look.
 
-**Auto-pickup:** Design talk still loads this skill, and it immediately loads `@taste-penpot` if identity/tokens are not locked. If taste must run the identity gate, **wait for clarifying answers and the user's A-E choice** before recording tokens or crafting. Scaffolding never skips that wait. `reference/brief-language.md` is product language for the brief, not a second art direction.
+**Auto-pickup:** Design talk still loads this skill, and it immediately loads `@taste-penpot` if identity/tokens are not locked. When taste runs the identity gate: in a design request, wait for clarifying answers and the user's A-E choice before recording tokens or crafting; in a build request, take the recommended option, record it, and continue. Scaffolding never skips the gate. `reference/brief-language.md` is product language for the brief, not a second art direction.
 
 ## Design vs implement (mandatory split)
 
@@ -36,7 +36,7 @@ Read **`reference/implement-routing.md`** every session that ends in shipped UI.
 
 ## Subagents (default)
 
-**Delegate by sub-command**: see `reference/subagents.md`. Main chat confirms briefs and merges results.
+**Delegate by sub-command**: see `reference/subagents.md`. Main chat merges results (and, in a design request only, confirms briefs).
 
 | Always delegate | Subagent |
 |-----------------|----------|
@@ -62,7 +62,7 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 ## Setup (every session)
 
 1. Run `python scripts/load_context.py --project-root <root>` once per session (skip if output is already in the conversation).
-2. If `product_exists` is false and the task needs strategic context, run **`init`** before shape/craft.
+2. If `product_exists` is false and the task needs strategic context, run **`init`** before shape/craft. In a build request `init` answers itself from the repo, records assumptions, and continues.
 3. Read the sub-command reference file for the invoked mode (required: do not skip).
 3a. Read **`reference/brief-language.md` first** on any design/look/feel talk (discover, shape, craft, critique, polish, or informal "make it look…"): subject/metaphor, hard rejects, hero/type/accent/responsive/SSOT, first-viewport checklist, done gate.
 3b. Read `reference/implement-routing.md` when shaping, crafting, critiquing, or polishing any route.
@@ -74,7 +74,7 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 3h. Read `reference/aesthetic-direction.md` on **any user-facing route**.
 3i. Read `context/PROSE_ANTI_SLOP.md` whenever you author prose (briefs, `design.md`, chat, docs, books). Writing anti-slop is general-use, not UI-only.
 3j. Read `reference/visual-tools.md` during **`explore`**, **`shape`**, and **`critique`** on flagship routes: use **GenerateImage** for direction probes and **Canvas** for compare/brief/critique summaries when the IDE provides them.
-3k. Before **craft** / handoff: read `@heyeddi` `reference/browser-platform.md` when the pass edits existing web UI, and run `legacy-scan` on those files first. Design-only passes (brief, tokens, Penpot) skip the scan. Then confirm `@taste-penpot` **layout hard gates A-G** (`taste-penpot/references/layout-hard-gates.md`): no text-wall; design system + real fonts; Flex only if reflow real (else absolute 8px / `hifi.html`); export PNG (not audit alone); no orphan empty pages. Missing any gate → send back to taste. Do not invent a second look to paper over a text-wall.
+3k. Before **craft** / handoff: read `@heyeddi` `reference/browser-platform.md` when the pass edits existing web UI, and run `legacy-scan` on those files first. Design-only passes (brief, tokens, Penpot) skip the scan. Then confirm `@taste-penpot` **layout hard gates A-G** (`taste-penpot/references/layout-hard-gates.md`): no text-wall; design system + real fonts; Flex only if reflow real (else absolute 8px / `hifi.html`); export PNG (not audit alone); no orphan empty pages. Missing any gate → run the taste pass again yourself and fix it (build request with a blocked PNG export: Gate D fallback), then continue. Do not invent a second look to paper over a text-wall.
 4. After **shape** (brief confirmed), **critique**, or **polish**, append to **Decision log** in `.heyeddi/design.md`.
 5. After stack implementer finishes: `@visual-auditor` **fast** widths `375,768,1440` while iterating. **Before calling done** on flagship/marketing: **done** widths `375,430,768,1024,1440,1920` (`--preset done`) and fix what you see. Logo-off test: if it could be another startup after removing the brand, it is not done. Design-only / Penpot passes still need taste Gate D (export or render hi-fi, read pixels) before calling the design done.
 
@@ -83,7 +83,7 @@ Read **`reference/cross-pillar-handoff.md`**. Bookend **craft**, **critique**, *
 | Command | Purpose |
 |---------|---------|
 | *(no sub-command)* | Vague design request → start **`discover`** |
-| `init` | Create or refresh `PRODUCT.md`; offer `document` for `DESIGN.md` |
+| `init` | Create or refresh `PRODUCT.md`; run `document` for `DESIGN.md` when the request needs it |
 | `discover` | Discovery interview only: no code, no final brief yet |
 | `research` | Web trend / reference research for current design direction |
 | `explore` | Concept images (GenerateImage) + Canvas compare + wireframes |
@@ -133,4 +133,4 @@ See `context/VOCABULARY.md`, `context/ANTI_PATTERNS.md`, `context/PROSE_ANTI_SLO
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-design --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

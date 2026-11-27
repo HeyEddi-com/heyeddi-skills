@@ -116,8 +116,8 @@ QUESTIONS: tuple[dict[str, Any], ...] = (
         "choices": list(AGENT_PRESETS),
         "hints": {
             "cautious": "Ask before commit, push, PR, merge, release, and staging/prod reads",
-            "balanced": "Commit, push feature branches, PRs, prod reads: auto. Merge, release, push to main, staging writes: ask. Prod writes: pipeline only (default)",
-            "autonomous": "Everything auto except prod writes (ask) and the hard limits",
+            "balanced": "Commit, push feature branches, PRs, prod reads: auto. Merge below production after the pre-merge gate: auto. Production merge, release, push to main, staging writes: ask. Prod writes: pipeline only (default)",
+            "autonomous": "Everything auto except production merge or push and prod writes (ask), and the hard limits",
         },
         "group": "agent",
     },
@@ -194,7 +194,23 @@ def normalize_custom_workflow(raw: Any) -> Any:
     return None
 
 
+BACKLOG_PROVIDERS = ("local", "mcp")
+DOCS_PROVIDERS = ("repo", "mcp", "external")
+DEFAULT_DOCS = ["README.md", ".heyeddi/product.md", ".heyeddi/docs/"]
+
+
 def validate_value(path: str, value: Any) -> str | None:
+    if path == "backlog.provider":
+        return None if value in BACKLOG_PROVIDERS else f"backlog.provider must be one of {BACKLOG_PROVIDERS}"
+    if path in ("backlog.mcp.server", "backlog.mcp.project"):
+        return None if isinstance(value, str) and value.strip() else f"{path} must be a non-empty string"
+    if path == "docs.provider":
+        return None if value in DOCS_PROVIDERS else f"docs.provider must be one of {DOCS_PROVIDERS}"
+    if path in ("docs.location", "docs.mcp.server", "docs.mcp.space"):
+        return None if isinstance(value, str) and value.strip() else f"{path} must be a non-empty string"
+    if path == "docs.keep":
+        ok = isinstance(value, list) and all(isinstance(v, str) and v for v in value)
+        return None if ok else "docs.keep must be a list of paths"
     if path == "git.preset":
         if value not in GIT_PRESETS:
             return f"git.preset must be one of {GIT_PRESETS}"
@@ -419,6 +435,12 @@ def stamp_setup(data: dict[str, Any]) -> dict[str, Any]:
         set_path(out, "design.taste", "on")
     if get_path(out, "design.penpot") is None:
         set_path(out, "design.penpot", "auto")
+    if get_path(out, "backlog.provider") is None:
+        set_path(out, "backlog.provider", "local")
+    if get_path(out, "docs.provider") is None:
+        set_path(out, "docs.provider", "repo")
+    if get_path(out, "docs.keep") is None:
+        set_path(out, "docs.keep", list(DEFAULT_DOCS))
     return out
 
 

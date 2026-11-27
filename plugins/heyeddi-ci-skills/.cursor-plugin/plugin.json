@@ -1,8 +1,8 @@
 {
   "name": "heyeddi-ci-skills",
   "displayName": "HeyEddi CI Skills",
-  "version": "1.4.9",
-  "description": "HeyEddi CI agent skills for https://ci.heyeddi.com \u2014 eddi-ci.yaml, CI respond, fails, Spot runners, guide. Published skills.sh mirror: HeyEddi-com/heyeddi-ci-skills.",
+  "version": "1.4.10",
+  "description": "HeyEddi CI agent skills for https://ci.heyeddi.com \u2014 eddi-ci.yaml, CI respond, fails, Spot runners, guide, plus the permission and merge-gate skills they call. Published skills.sh mirror: HeyEddi-com/heyeddi-ci-skills.",
   "author": {
     "name": "HeyEddi",
     "email": "eddi@heyeddi.com"

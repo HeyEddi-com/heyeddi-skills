@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-setup",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "tools": [
     {
       "name": "load_setup",

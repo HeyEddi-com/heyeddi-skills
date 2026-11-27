@@ -57,10 +57,20 @@ def test_marker_lives_in_git_dir_and_is_never_tracked(repo: tuple[Path, Path]) -
     assert _git(wt, "status", "--porcelain") == ""
 
 
+def test_claim_on_another_sessions_worktree_is_refused(repo: tuple[Path, Path]) -> None:
+    _, wt = repo
+    sw.claim(wt, "s-owner", task="fix login", pr=None)
+    out = sw.claim(wt, "s-stranger", task="me too", pr=None)
+    assert out["ok"] is False
+    assert [s["id"] for s in sw.load_marker(wt)["sessions"]] == ["s-owner"]
+    assert sw.check(wt, "s-stranger", "commit")[0] == 1
+    assert sw.main(["claim", "--path", str(wt), "--session", "s-stranger"]) == 1
+
+
 def test_first_claim_owns_later_claims_contribute(repo: tuple[Path, Path]) -> None:
     _, wt = repo
     assert sw.claim(wt, "s-owner", task="fix login", pr=None)["role"] == "owner"
-    assert sw.claim(wt, "s-helper", task="add test", pr=None)["role"] == "contributor"
+    assert sw.claim(wt, "s-helper", task="add test", pr=None, user_approved=True)["role"] == "contributor"
     marker = sw.load_marker(wt)
     assert marker["owner"] == "s-owner"
     assert marker["task"] == "fix login"
@@ -73,8 +83,8 @@ def test_first_claim_owns_later_claims_contribute(repo: tuple[Path, Path]) -> No
     [
         ("s-owner", "merge", 0),
         ("s-owner", "delete", 0),
-        ("s-helper", "commit", 0),
-        ("s-helper", "push", 0),
+        ("s-helper", "commit", 1),
+        ("s-helper", "push", 1),
         ("s-helper", "merge", 1),
         ("s-helper", "force-push", 1),
         ("s-stranger", "commit", 1),
@@ -84,7 +94,7 @@ def test_first_claim_owns_later_claims_contribute(repo: tuple[Path, Path]) -> No
 def test_check_gates_by_role(repo: tuple[Path, Path], session: str, action: str, code: int) -> None:
     _, wt = repo
     sw.claim(wt, "s-owner", task="t", pr=None)
-    sw.claim(wt, "s-helper", task=None, pr=None)
+    sw.claim(wt, "s-helper", task=None, pr=None, user_approved=True)
     assert sw.check(wt, session, action)[0] == code
 
 
@@ -98,7 +108,7 @@ def test_check_without_marker_is_read_only(repo: tuple[Path, Path]) -> None:
 def test_handoff_needs_owner_or_user(repo: tuple[Path, Path]) -> None:
     _, wt = repo
     sw.claim(wt, "s-owner", task="t", pr=None)
-    sw.claim(wt, "s-helper", task=None, pr=None)
+    sw.claim(wt, "s-helper", task=None, pr=None, user_approved=True)
     assert sw.handoff(wt, "s-helper", "s-helper", user_approved=False)[0] == 1
     assert sw.handoff(wt, "s-helper", "s-helper", user_approved=True)[0] == 0
     marker = sw.load_marker(wt)
@@ -131,7 +141,7 @@ def test_concurrent_claims_keep_every_session(repo: tuple[Path, Path]) -> None:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     procs = [
         subprocess.Popen(
-            [sys.executable, str(script), "claim", "--path", str(wt), "--session", f"s-{i}"],
+            [sys.executable, str(script), "claim", "--path", str(wt), "--session", f"s-{i}", "--user-approved"],
             stdout=subprocess.DEVNULL,
             env=env,
         )

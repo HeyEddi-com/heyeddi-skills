@@ -10,7 +10,7 @@ from pathlib import Path
 from _skill_cli import emit, fail, resolve_project_root
 
 USE_EXPORT = re.compile(r"export\s+(?:async\s+)?function\s+(use[A-Z]\w+)|export\s+const\s+(use[A-Z]\w+)")
-REF_OR_REACTIVE = re.compile(r"\b(ref|reactive|computed|shallowRef)\s*\(")
+REF_OR_REACTIVE = re.compile(r"\b(ref|reactive|computed|shallowRef)\s*(<[^()]*>)?\s*\(")
 LOADING_STATE = re.compile(r"\b(loading|isLoading|pending)\b")
 ERROR_STATE = re.compile(r"\b(error|lastError|fetchError)\b")
 LOCAL_STORAGE_REFRESH = re.compile(r"localStorage\.(setItem|getItem)\s*\([^)]*refresh", re.I)

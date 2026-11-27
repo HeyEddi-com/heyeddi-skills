@@ -34,9 +34,9 @@ update recommendations table
 
 ```
 verify_product --check
-confirm review plan P0 rows resolved or waived in backlog
+build every open review plan row; waive only what The only pauses block
 ```
 
 ## Waiver
 
-If shipping with known gaps, document in `backlog.md` under **Out of scope** with persona impact: not silent debt.
+A gap you can close, you close. Only an item blocked per `@heyeddi` `reference/autonomy.md` (The only pauses) may ship open: mark it `blocked` with `backlog.py block` and its persona impact. **Out of scope** holds only what the request or `product.md` excludes.

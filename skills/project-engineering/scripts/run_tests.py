@@ -33,6 +33,8 @@ def main() -> None:
     output = run_command(cmd, root, timeout=300)
     ok = not output.startswith("[exit") and not output.startswith("[error]")
     emit(json.dumps({"status": "pass" if ok else "fail", "output": output[:8000]}, indent=2))
+    if not ok:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

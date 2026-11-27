@@ -1336,3 +1336,21 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** PR #71 changed skills and merged with the hub version unchanged, so the Release workflow passed and published nothing.
 
 **Decision:** Hub **v3.8.26**. `tests/test_version_bump.py` fails when `skills/` or `packs/` differ from the released tag and the hub, skill manifest, or pack version is not bumped. CI checks out full history for the tags.
+
+## 2026-11-26: Legacy `agent.commit` / `agent.push` no longer block agents
+
+**Context:** Repos set up earlier still carried `"commit": "ask", "push": "ask"`, which overrode the `balanced` preset. An agent stopped to ask before committing and pushing a PR branch in `heyeddi-infra`. The project scaffold still wrote those keys.
+
+**Decision:** Hub **v3.8.27**, CI pack **v1.4.10**. The gate ignores both keys; asking needs `agent.preset: cautious` or `agent.permissions`. Under `balanced`, merges below the production branch are automatic once the pre-merge gate passes; production merges and pushes always ask, under every preset. `reference/autonomy.md` says an allowed check is the agent's to run and a missing dependency is the agent's to add and install. Agents stay out of sibling folders, and `session_worktree.py claim` now refuses another session's worktree without `--user-approved` (before, any session could join and then commit and push). Only the owner writes; `worktree_guard.py` enforces it as a Claude Code hook, and `finish_guard.py` stops a turn from ending on a wait for "go". Doable backlog items get done, not listed.
+
+## 2026-11-26: Audit of every skill for stops and contradictions
+
+**Context:** The owner wants agents to run to completion, above all once specs and a backlog exist. Four audits found that nothing drove the backlog, pipeline skills could not be self-invoked, a declined review thread deadlocked the merge gate, and several gates denied ordinary commands.
+
+**Decision:** `heyeddi-product/scripts/backlog.py` drives the backlog loop. The gate, permission, worktree and finish hooks, scaffolds and type bridges were fixed with tests (`tests/test_audit_*.py`). Rerun `worktree_guard.py --install` to refresh installed hooks.
+
+## 2026-11-26: Backlog and documents have a provider per repository
+
+**Context:** The backlog is local for now and may move to a task or project manager over MCP. Documents may move elsewhere too.
+
+**Decision:** `.heyeddi/stack.json` holds `backlog.provider` (`local`, `mcp`) and `docs.provider` (`repo`, `mcp`, `external`); reasons go to `decisions.md`. No MCP server is wired yet: the script prints the operation for the agent to run.

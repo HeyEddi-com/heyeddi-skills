@@ -24,10 +24,10 @@ Inline: reply on a finding whose parent has `<!-- heyeddi-ci-review -->` or a He
 
 ## Auth
 
-- Merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+- Below the production branch (dev, test, staging, a stacked parent): get `@pre-merge-gate --signoff` to exit 0, then merge without asking. A production merge takes **authorize merge** from the user
 - Never write `auto_merge` into `eddi-ci.yaml`
-- Commit + push are automatic during PR respond/fix workflow — do not ask first
-- Billable: `ai_review.on_ci_failure`, Spot `pipeline` jobs — opt-in only
+- Commit + push are automatic during PR respond/fix workflow - do not ask first
+- Billable: `ai_review.on_ci_failure`, Spot `pipeline` jobs - opt-in only
 
 ## Feedback
 
@@ -44,11 +44,11 @@ Product may offer Apply suggestions and reaction shortcuts. Apply is **not** mer
 
 ## Runners
 
-Spot is shipped. Prefer GHA + workspace `gha_spot_mode` with the `HEYEDDI_RUNS_ON` hook; keep `pipeline: {}` when workflows own CI. Sealed `pipeline:` jobs run on Spot for entitled workspaces and post `HeyEddi Runner: {job_id}` Checks. Claim execution only with Check/Spot evidence — `@heyeddi-ci-runners`.
+Spot is shipped. Prefer GHA + workspace `gha_spot_mode` with the `HEYEDDI_RUNS_ON` hook; keep `pipeline: {}` when workflows own CI. Sealed `pipeline:` jobs run on Spot for entitled workspaces and post `HeyEddi Runner: {job_id}` Checks. Claim execution only with Check/Spot evidence - `@heyeddi-ci-runners`.
 
 ## Related agent skills
 
-- `@heyeddi-ci-config` — living contract → YAML
-- `@heyeddi-pr-respond` — all PR review feedback (human + HeyEddi CI)
-- `@heyeddi-ci-fails` — local Check diagnosis
-- `@heyeddi-ci-runners` — GHA overflow/always + sealed pipeline
+- `@heyeddi-ci-config` - living contract → YAML
+- `@heyeddi-pr-respond` - all PR review feedback (human + HeyEddi CI)
+- `@heyeddi-ci-fails` - local Check diagnosis
+- `@heyeddi-ci-runners` - GHA overflow/always + sealed pipeline

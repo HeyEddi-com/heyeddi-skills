@@ -17,16 +17,28 @@ _FIREBASE_WRITE = re.compile(
 )
 
 
-def _strings(value: object) -> list[str]:
+# Fields that carry prose (a PR body, a commit message), unless the tool runs commands.
+_PROSE_KEYS = frozenset({"body", "title", "description", "message", "commit_message", "summary", "notes", "comment"})
+_RUNS_COMMANDS = re.compile(r"shell|bash|exec|run|command|terminal|ssh|script", re.IGNORECASE)
+
+
+def _strings(value: object, prose: frozenset[str]) -> list[str]:
     found: list[str] = []
     if isinstance(value, str):
+        # Some hosts send the tool input as a JSON string.
+        if value.lstrip().startswith("{"):
+            try:
+                return [value, *_strings(json.loads(value), prose)]
+            except json.JSONDecodeError:
+                pass
         found.append(value)
     elif isinstance(value, dict):
-        for item in value.values():
-            found.extend(_strings(item))
+        for key, item in value.items():
+            if str(key).lower() not in prose:
+                found.extend(_strings(item, prose))
     elif isinstance(value, list):
         for item in value:
-            found.extend(_strings(item))
+            found.extend(_strings(item, prose))
     return found
 
 
@@ -62,7 +74,8 @@ def main() -> int:
         )
         sys.stdout.write("\n")
         return 0
-    for text in _strings(payload):
+    prose = frozenset() if _RUNS_COMMANDS.search(name) else _PROSE_KEYS
+    for text in _strings(payload, prose):
         if len(text) > 4000:
             continue
         decision = classify(text)

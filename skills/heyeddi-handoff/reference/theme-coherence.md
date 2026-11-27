@@ -8,7 +8,7 @@
 
 ## Implementation checklist
 
-1. **`tokens.css`**: use OpenProps `light-dark()` (or `@media (prefers-color-scheme: dark)`) for `--surface-0`…`--text-2`, `--brand`, `--brand-subtle`. Set `color-scheme: light dark` on `:root`.
+1. **`tokens.css`**: use `light-dark()` (or `@media (prefers-color-scheme: dark)`) for `--surface-0`…`--text-2`, `--brand`, `--brand-subtle`. Set `color-scheme: light dark` on `:root`.
 2. **`main.ts`**: Aura preset with `primary` wired to `{brand}`; `darkModeSelector: 'system'` (default) **only after** tokens flip together.
 3. **PrimeVue overrides**: Card, InputText, Button surfaces in views or `src/styles/primevue-surfaces.css`:
    ```css

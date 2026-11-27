@@ -1,10 +1,9 @@
 ---
 name: ux-flow-auditor
 description: "Traces user task flows with Playwright: click depth, step success, friction: and writes reports to .heyeddi/docs/ux-flows/. Use when measuring ease of use, clicks to complete a task, or onboarding friction. Not for static visual critique (use heyeddi-design critique) or layout screenshots (use visual-auditor)."
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
-disable-model-invocation: true
 ---
 
 # UX Flow Auditor
@@ -42,7 +41,7 @@ See `reference/subagents.md`. Run `trace_flow.py` via **Task `shell`** (needs de
 init_ux_flows          → ux-flows.md index + example .flow.json
 define steps in ux-flows/<task>.flow.json
 trace_flow --task-id   → ux-flows/<task>.md + audit screenshot
-agent adds friction notes to report
+agent fixes friction, re-traces, notes it in the report
 ```
 
 ## Instructions
@@ -52,7 +51,7 @@ agent adds friction notes to report
 3. Add or edit ` .heyeddi/docs/ux-flows/<task-id>.flow.json` with steps (`expect`, `fill`, `click`).
 4. Start dev server; set `DEV_SERVER_URL` if not `http://localhost:5173`.
 5. `python scripts/trace_flow.py --task-id <id> --project-root <root> --check`
-6. Append **Friction notes** to the generated markdown report.
+6. Fix every failed step and friction point in the app code, then re-run `trace_flow --check` until it passes. Record what you fixed under **Friction notes** in the report.
 
 ## Flow JSON schema
 

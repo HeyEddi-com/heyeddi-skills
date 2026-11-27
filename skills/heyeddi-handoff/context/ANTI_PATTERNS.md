@@ -8,7 +8,7 @@
 - NEVER put Card body content outside `<template #content>`: PrimeVue drops default-slot children; cards render empty (see `reference/primevue-card-slots.md`).
 - NEVER leave PrimeVue on default Aura green when `design.md` defines `{colors.primary}`.
 - NEVER invent new components when catalog has a match.
-- NEVER skip mobile screenshot when desktop-only was provided: ask Designer.
+- NEVER skip the mobile layout when only a desktop mockup was provided: derive the 375px layout, record it in the brief as an assumption, and continue.
 - NEVER implement without loading `design.md` spacing and component rules.
 - NEVER use PrimeVue when layout needs a purpose-built component: create `src/components/` instead of CSS hacks.
 - NEVER create custom components when catalog or PrimeVue already fits: reuse first.

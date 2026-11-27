@@ -29,6 +29,15 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text())
 
 
+def handoff_features(routing: dict[str, Any]) -> list[str]:
+    """Design folders that skill-routing.json sends to @heyeddi-handoff."""
+    return [
+        str(row["feature"])
+        for row in routing.get("routes") or []
+        if isinstance(row, dict) and row.get("skill") == "heyeddi-handoff" and row.get("feature")
+    ]
+
+
 def validate_product_json(data: dict[str, Any]) -> tuple[bool, list[str]]:
     errors: list[str] = []
 

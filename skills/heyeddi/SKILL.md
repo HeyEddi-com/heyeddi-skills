@@ -1,8 +1,8 @@
 ---
 name: heyeddi
 description: "ALWAYS-ON router named @heyeddi. On every invoke: first run ensure_always_on_agents (or sync) so project AGENTS.md + Cursor alwaysApply gates exist: never chat-only. Then discover skills, sync .heyeddi/, and route. Design talk goes to @taste-penpot first then @heyeddi-design. Vue UI follows @vue-design-system. @heyeddi-orchestrator is a deprecated alias. Use at every session start, on ambiguous tasks, and when connecting product, UX, and design."
-version: 3.5.1
-product-version: 3.8.26
+version: 3.5.2
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -106,7 +106,7 @@ If `.heyeddi/docs/intake/skill-routing.json` exists, **follow route order**.
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
 
 ## Related
 
@@ -115,7 +115,7 @@ Add `--route /path` or `--mode <sub-command>` when you know them. If the suggest
 - `@engineering-excellence`: always-on plan + change gates
 - `reference/autonomy.md`: run the request to completion; the only pauses; one final summary
 - `reference/testing.md`: test first at the layers the change can break; hosted environments are look-only
-- `reference/session-worktrees.md`: act only on worktrees your session owns or joined; the session marker and its roles
+- `reference/session-worktrees.md`: act only on worktrees your session owns; the session marker and its roles
 - `reference/browser-platform.md`: frontend and design skills load Modern Web Guidance (`legacy-scan` finds problems) and Chrome DevTools for agents. Quasar and PrimeVue stay the components. Playwright stays the screenshot tool. Localhost only.
 - `@heyeddi-intake`: upstream intake
 - `reference/host-surfaces.md`: prefer host plan/data/visual tools; portable degrade

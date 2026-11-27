@@ -1,6 +1,6 @@
 # Always-on skills (every chat)
 
-**Date:** 2026-11-23
+**Date:** 2026-11-26
 
 These guards apply on **every Agent chat** that plans or changes work. They are not optional suggestions.
 
@@ -26,7 +26,7 @@ Skills alone are **opt-in by relevance**. True every-chat enforcement uses:
 | **`@engineering-excellence`** | **Plan gate** before coding; **change gate** after edits (`audit_engineering --check`); **cost estimate** after edits (`estimate_change_cost`). | Audit errors fail. Cost never stops the work: over budget leads the final summary, and `@pre-merge-gate` blocks the merge until the user approves |
 | **Prose anti-slop** | **Any prose the agent authors** (chat, books, docs, UI, PRs, `.heyeddi`): follow `context/PROSE_ANTI_SLOP.md`. Run `verify_prose --check` on default app surfaces; add `--glob` for manuscripts/other paths when those files were edited | Fail on em/en dashes and high-signal filler in authored text; no "not for books" carve-out |
 
-Plus **autonomy** (`@heyeddi` `reference/autonomy.md`): run the request to completion; when intent is missing, read `.heyeddi/` and the repo, take the documented default, record it, keep going.
+Plus **autonomy** (`@heyeddi` `reference/autonomy.md`): run the request to completion; when intent is missing, read `.heyeddi/` and the repo, take the documented default, record it, keep going. What agents may do alone, what waits for you, and the hooks that enforce it: [agent-freedom.md](agent-freedom.md).
 
 Plus **host surfaces** (`@heyeddi` → `reference/host-surfaces.md`): prefer this session's native plan / data / visual tools when listed; never require IDE-only surfaces on CLI or Cloud Run.
 
@@ -43,7 +43,7 @@ Incomplete prefs never stop work: `write_setup.py --defaults` detects the defaul
 | `@heyeddi-design` | Product side of design: personas, `design.md`, handoff. Consumes taste tokens. Does not invent a second look. |
 | `@visual-auditor` | After UI changes; flagship done = `--preset done` (6 widths) |
 | `@ux-flow-auditor` | Task flows / friction |
-| `@pre-merge-gate` | Before merge or ship claim — use `--signoff` (setup + engineering + prose + CI/threads) |
+| `@pre-merge-gate` | Before merge or ship claim - use `--signoff` (setup + engineering + prose + CI/threads) |
 | PR / CI skills | Review or respond loops only |
 
 Scaffolders, bridgers, and stack implementers run when the stack/task needs them.

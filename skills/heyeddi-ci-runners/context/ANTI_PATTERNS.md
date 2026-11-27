@@ -2,10 +2,10 @@
 
 ## Shared CI safety
 
-- NEVER `gh pr merge` unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+- NEVER merge into production before the user says **authorize merge** in the current turn. Below production, merge once `@pre-merge-gate --signoff` exits 0
 - NEVER enable `auto_merge`
 - NEVER enable billable knobs / sealed `pipeline:` without opt-in
-- NEVER invent knobs — always `load_policy_contract`
+- NEVER invent knobs - always `load_policy_contract`
 - NEVER invent test commands / path filters
 
 ## Runner-specific

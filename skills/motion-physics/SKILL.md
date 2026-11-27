@@ -1,8 +1,8 @@
 ---
 name: motion-physics
 description: "Spring micro-interactions for Vue 3 using @vueuse/motion. Use when introducing cards, dialogs, lists, hover, or press feedback. Forbids linear spatial easing, long staggers, and looping motion unless a loading state was requested."
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -24,12 +24,12 @@ Do not invent transition coordinates. Use the three presets below. Shell and dat
 npm install @vueuse/motion
 ```
 
-Register `MotionPlugin` after PrimeVue in `src/main.js`. The bootstrap block is in `@primevue-aura`.
+Register `MotionPlugin` after PrimeVue in `src/main.ts`. The bootstrap block is in `@primevue-aura`.
 
 ## Physics profiles
 
-```js
-// src/design/motion-presets.js
+```ts
+// src/design/motion-presets.ts (create it when missing)
 export const MotionPresets = {
   // Snappy feedback for clicks, toggles, and icon buttons
   microFeedback: {
@@ -49,7 +49,7 @@ export const MotionPresets = {
   },
 
   // Stagger helper for lists / tables
-  staggerItem: (index) => ({
+  staggerItem: (index: number) => ({
     initial: { opacity: 0, y: 12 },
     enter: {
       opacity: 1,
@@ -79,7 +79,7 @@ When a moment matches a preset, use the preset. The directive defaults apply onl
 
 ## Instructions
 
-1. Import `MotionPresets` from `src/design/motion-presets.js`. Do not copy the numbers into a component as one-off values.
+1. Import `MotionPresets` from `src/design/motion-presets.ts`. Do not copy the numbers into a component as one-off values.
 2. Bind `v-motion` to the preset that matches the moment.
 3. Do not animate layout properties that PrimeVue or Quasar already own (drawer width, virtual scroller position) unless the user asked for that motion.
 4. Loading indicators may loop. Everything else plays once.
@@ -90,4 +90,4 @@ When a moment matches a preset, use the preset. The directive defaults apply onl
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill motion-physics --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
