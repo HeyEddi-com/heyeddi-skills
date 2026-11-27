@@ -256,3 +256,22 @@ def test_other_ci_config_keeps_no_checks_failing(tmp_path: Path, monkeypatch: py
 def test_pending_checks_say_to_watch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     status, note = _checks(tmp_path, monkeypatch, "[exit 8]\nunit\tpending\t0\turl")
     assert status == "FAIL" and "gh pr checks 7 --watch" in note[:120]
+
+
+def _pr_check_row(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, output: str) -> tuple[str, str]:
+    gate = _gate()
+    monkeypatch.setattr(gate, "add_unverified_pr_rows", lambda *_: False)
+    monkeypatch.setattr(gate, "run_command", lambda cmd, *a, **k: output if cmd[1:3] == ["pr", "checks"] else "[error] stop")
+    rows: list = []
+    gate.run_pr_checks(tmp_path, 1, rows)
+    return next((st, note) for name, st, note in rows if name == "pr-checks")
+
+
+def test_a_skipped_review_of_the_latest_commit_is_not_a_pass(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    st, note = _pr_check_row(monkeypatch, tmp_path, "HeyEddi Reviewer\tskipping\t1m\turl\ntests\tpass\t1m\turl\n")
+    assert st == "FAIL" and "/heyeddi review" in note
+
+
+def test_other_skipped_jobs_still_pass(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    out = "HeyEddi Reviewer\tpass\t1m\turl\ndeploy\tskipping\t0\turl\n"
+    assert _pr_check_row(monkeypatch, tmp_path, out)[0] == "PASS"

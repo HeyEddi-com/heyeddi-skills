@@ -317,6 +317,10 @@ def run_pr_checks(
             rows.append(("pr-checks", "PASS", "no checks reported and the repo configures no CI"))
     elif st == "FAIL" and (checks.startswith("[exit 8]") or re.search(r"\bpending\b", checks)):
         rows.append(("pr-checks", st, f"checks pending: run {watch}, then rerun the gate. {checks}"[:200]))
+    elif st == "PASS" and re.search(r"(?m)^HeyEddi Reviewer\tskipping\b", checks):
+        # Seen when the automatic review cap is used up: the newest commit was never read.
+        note = f"HeyEddi Reviewer skipped the latest commit: comment `/heyeddi review` on PR {pr}, then {watch}"
+        rows.append(("pr-checks", "FAIL", note))
     else:
         rows.append(("pr-checks", st, checks[:200]))
 
