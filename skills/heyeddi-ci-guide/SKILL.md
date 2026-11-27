@@ -1,8 +1,8 @@
 ---
 name: heyeddi-ci-guide
 description: Reference for HeyEddi CI commands, authorize-merge auth, feedback via debate + support@, and Spot runners (GHA overflow + sealed pipeline). Use when asking how to work with HeyEddi CI.
-version: 1.1.0
-product-version: 3.8.26
+version: 1.1.1
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -30,7 +30,7 @@ On any PR work (open PR, PR branch, review request):
 2. **Always** run `@heyeddi-pr-respond`: fix all review items, commit + push, post every reply in-thread
 3. **Never** ask "do you want me to fix?" or "should I comment on threads?": that is always the default
 4. **Never** skip CI because the user did not mention it
-5. Only merge can need a question: merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+5. Only merge can need a question: only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0
 
 ## Commands (PR comments)
 
@@ -46,7 +46,7 @@ See `reference/commands.md`. Common:
 | Action | Allowed when |
 |--------|----------------|
 | Commit + push (PR workflow) | Automatic during `@heyeddi-ci-fails` / `@heyeddi-pr-respond` when `check_permission` allows (default `balanced`: yes). Do not ask |
-| Merge (`gh pr merge`) | `check_permission`: `auto` merges after green checks; `ask` (default) needs **authorize merge** in the current turn |
+| Merge (`gh pr merge`) | Below production: `check_permission` allows it once `@pre-merge-gate --signoff` exits 0. Production: needs **authorize merge** in the current turn, whatever `agent.permissions.merge` says |
 | `auto_merge` in YAML | Never (schema rejects / forbidden) |
 | Billable knobs (`on_ci_failure`, sealed runners) | Explicit opt-in |
 

@@ -1336,3 +1336,9 @@ npx skills add HeyEddi-com/heyeddi-ci-skills -a cursor -y --skill '*'
 **Context:** PR #71 changed skills and merged with the hub version unchanged, so the Release workflow passed and published nothing.
 
 **Decision:** Hub **v3.8.26**. `tests/test_version_bump.py` fails when `skills/` or `packs/` differ from the released tag and the hub, skill manifest, or pack version is not bumped. CI checks out full history for the tags.
+
+## 2026-11-26: Legacy `agent.commit` / `agent.push` no longer block agents
+
+**Context:** Repos set up earlier still carried `"commit": "ask", "push": "ask"`, which overrode the `balanced` preset. An agent stopped to ask before committing and pushing a PR branch in `heyeddi-infra`. The project scaffold still wrote those keys.
+
+**Decision:** Hub **v3.8.27**, CI pack **v1.4.10**. The gate ignores both keys; asking needs `agent.preset: cautious` or `agent.permissions`. Under `balanced`, merges below the production branch are automatic once the pre-merge gate passes; production merges and pushes always ask, under every preset. `reference/autonomy.md` says an allowed check is the agent's to run and a missing dependency is the agent's to add and install.

@@ -16,8 +16,7 @@
     "custom_workflow": null
   },
   "agent": {
-    "commit": "ask",
-    "push": "ask"
+    "preset": "balanced"
   },
   "setup": {
     "version": 1,

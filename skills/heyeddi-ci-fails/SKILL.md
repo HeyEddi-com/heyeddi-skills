@@ -1,8 +1,8 @@
 ---
 name: heyeddi-ci-fails
 description: "Diagnose and fix failing GitHub Checks on PR work by default: fetch evidence, write ephemeral ci-fails report, apply fixes, verify locally. Run automatically: do not wait for user to ask. Never merge without authorize merge. Companion to /heyeddi fails."
-version: 1.1.0
-product-version: 3.8.26
+version: 1.1.1
+product-version: 3.8.27
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -18,7 +18,7 @@ Run this skill **automatically** on any PR work: open PR, PR branch, review requ
 - **Always** fetch and diagnose failing Checks
 - **Always** apply fixes when the diagnosis identifies actionable failures
 - **Always** commit + push fixes as part of the PR workflow
-- Only merge can need a question: merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+- Only merge can need a question: only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0
 
 ## Ephemeral artifacts (do not commit)
 
@@ -46,7 +46,7 @@ Also tell the user they can comment `/heyeddi fails` on the PR for hosted App an
 ## Hard rules
 
 - Never invent failure causes without citing check evidence
-- Never merge unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+- Never merge unless only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0
 - Never claim Spot/GHA jobs ran without Check or Spot evidence
 
 ## Tools

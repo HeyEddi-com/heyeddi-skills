@@ -1,12 +1,12 @@
 # Autonomy: run the request to completion
 
-**Date:** 2026-11-23
+**Date:** 2026-11-26
 
 This is the working contract for every HeyEddi skill. Where a skill says something else about asking, waiting, or reporting, this file wins.
 
 ## The rule
 
-A request to build, fix, or change something approves the whole pipeline for it: plan gate, tests first, code, audits, cost estimate, visual QA, and the commit, push, and PR that `check_permission` allows. Do the work on a feature branch (a worktree when `git.worktrees` is true). The branch is the safety net. The user reviews the result and decides at merge.
+A request to build, fix, or change something approves the whole pipeline for it: plan gate, tests first, code, audits, cost estimate, visual QA, and the commit, push, and PR that `check_permission` allows. Do the work on a feature branch (a worktree when `git.worktrees` is true). The branch is the safety net. Merging into dev, test, or staging is part of the request: pass `@pre-merge-gate --signoff` (fix every FAIL and rerun), then merge. Only a production merge waits for the user.
 
 "Implement these 3 features" means all 3, end to end, in one run.
 
@@ -29,6 +29,12 @@ Before the final summary, go through the request item by item and check the bran
 Silence in a doc, spec, plan, brief, or ticket is not a reason to skip anything. Documents never list everything. Decide how the missing piece should work, build it, and record the choice.
 
 Never write "not done", "I did not do", "not covered", "the doc does not say", "remaining work", or "follow-up" about work you can do. The only items that may stay open are the ones in **The only pauses** below, each with the exact error or missing access that blocks it.
+
+A check you are allowed to run is yours to run. "I haven't checked whether there is data; look before merging" is unfinished work: run the read (`check_permission` allows reads on dev, staging, and prod under `balanced`) and report what you found.
+
+A tool or package the work needs is yours to add: declare it in the project's dependencies, install it, and run the project's own script. "This machine doesn't seem to have Poetry" is never a result, and calling around the script is not the fix.
+
+Never ask to commit, push a feature branch, or open or update a PR when `check_permission` exits 0, in this repo or a second one the change touches.
 
 ## When information is missing
 

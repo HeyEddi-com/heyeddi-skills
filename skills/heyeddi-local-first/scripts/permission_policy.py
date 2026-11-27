@@ -45,7 +45,7 @@ PRESETS: dict[str, dict[str, Any]] = {
         "push": AUTO,
         "push_protected": ASK,
         "pr": AUTO,
-        "merge": ASK,
+        "merge": AUTO,
         "release": ASK,
         "read": {"dev": AUTO, "staging": AUTO, "prod": AUTO},
         "write": {"dev": AUTO, "staging": ASK, "prod": DENY},
@@ -119,15 +119,16 @@ def _overlay(base: dict[str, Any], patch: Any) -> dict[str, Any]:
 
 
 def resolve_policy(stack: dict[str, Any]) -> dict[str, Any]:
-    """Preset, then legacy agent.commit/push, then explicit permissions, then hard limits."""
+    """Preset, then explicit permissions, then hard limits.
+
+    The old `agent.commit` / `agent.push` keys are ignored. Setup used to write
+    `ask` into every repo, which stopped agents on routine commits and pushes.
+    """
     agent = stack.get("agent") if isinstance(stack.get("agent"), dict) else {}
     preset = agent.get("preset")
     if preset not in PRESETS:
         preset = DEFAULT_PRESET
     policy = deepcopy(PRESETS[preset])
-    legacy = {k: agent[k] for k in ("commit", "push") if _valid_level(agent.get(k))}
-    if "preset" not in agent and "permissions" not in agent:
-        policy = _overlay(policy, legacy)
     policy = _overlay(policy, agent.get("permissions"))
     if _RANK[policy["write"]["prod"]] < _RANK[PROD_WRITE_FLOOR]:
         policy["write"]["prod"] = PROD_WRITE_FLOOR
@@ -216,6 +217,19 @@ def is_local_target(text: str) -> bool:
         return False
     values = target_values(words)
     return bool(values) and all(_LOCAL_HOST.search(value) for value in values)
+
+
+def production_branches(stack: dict[str, Any]) -> set[str]:
+    """Branches that deploy production. main and master when stack.json names none."""
+    git = stack.get("git") if isinstance(stack.get("git"), dict) else {}
+    envs = git.get("environments") if isinstance(git.get("environments"), dict) else {}
+    name = envs.get("production")
+    return {name} if isinstance(name, str) and name else {"main", "master"}
+
+
+def ask_at_least(level: str) -> str:
+    """Hard limit for production: never better than "ask", whatever the preset says."""
+    return level if _RANK[level] >= _RANK[ASK] else ASK
 
 
 def level_for(policy: dict[str, Any], action: str, env: str | None = None) -> str:

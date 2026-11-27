@@ -10,7 +10,7 @@ Point them to `/heyeddi ask …` or a threaded reply on the inline finding. Offe
 
 ## User asks to merge after CI respond
 
-Merge when `agent.permissions.merge` is `auto`, or when they said **authorize merge** this turn under the default `ask`. Otherwise explain the policy in one line.
+Below production, pass `@pre-merge-gate --signoff` and merge. For production, merge only when they said **authorize merge** this turn; otherwise say so in one line.
 
 ## User asks if Spot ran their pipeline job
 

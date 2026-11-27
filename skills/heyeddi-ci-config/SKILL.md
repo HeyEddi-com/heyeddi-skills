@@ -1,8 +1,8 @@
 ---
 name: heyeddi-ci-config
 description: Author or update eddi-ci.yaml for HeyEddi CI and Spot runners. Prefer GHA + HEYEDDI_RUNS_ON for existing workflows; sealed pipeline only when opted in. Loads the live policy contract from cihook.heyeddi.com so knobs stay current.
-version: 1.2.0
-product-version: 3.8.26
+version: 1.2.1
+product-version: 3.8.27
 author: HeyEddi-com
 paths:
   - "eddi-ci.yaml"
@@ -15,7 +15,7 @@ Authors a correct `eddi-ci.yaml` for HeyEddi Reviewer / optional Spot runners. *
 
 ## Safety
 
-- Never merge a PR unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn); never write `auto_merge`
+- Never merge a PR unless only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0; never write `auto_merge`
 - Billable knobs and sealed Spot `pipeline` jobs need explicit opt-in
 - Always `load_policy_contract` before authoring
 - Spot is **shipped**: jobs can run when the workspace is entitled; never claim a job **did** run without Check/Spot evidence (`@heyeddi-ci-runners`)

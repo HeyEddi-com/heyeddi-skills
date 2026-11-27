@@ -34,6 +34,8 @@ from permission_policy import (  # noqa: E402
     AUTO,
     DENY,
     _RANK,
+    ask_at_least,
+    production_branches,
     detect_env,
     is_local_target,
     level_for,
@@ -97,6 +99,46 @@ def _current_branch(cwd: Path | None) -> str:
     return out.stdout.strip() if out.returncode == 0 else ""
 
 
+_MERGE_VALUE_FLAGS = {"-R", "--repo", "-b", "--body", "-F", "--body-file", "-t", "--subject",
+                      "-A", "--author-email", "--match-head-commit"}
+
+
+def _pr_base(selector: str, repo: str, cwd: Path | None) -> str:
+    """Target branch of a PR, or "" when gh cannot say."""
+    cmd = ["gh", "pr", "view", *([selector] if selector else []), "--json", "baseRefName", "-q", ".baseRefName"]
+    if repo:
+        cmd += ["--repo", repo]
+    try:
+        out = subprocess.run(cmd, cwd=str(cwd) if cwd else None, capture_output=True, text=True, timeout=10, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    return out.stdout.strip() if out.returncode == 0 else ""
+
+
+def _merge(tokens: list[str], policy: dict, stack: dict, cwd: Path | None, moved: bool) -> Verdict:
+    """`gh pr merge`: free below production once the pre-merge gate passes; production asks."""
+    selector = repo = ""
+    args = iter(tokens[3:])
+    for word in args:
+        name, sep, value = word.partition("=")
+        if name in _MERGE_VALUE_FLAGS:
+            value = value if sep else next(args, "")
+            if name in {"-R", "--repo"}:
+                repo = value
+        elif not word.startswith("-") and not selector:
+            selector = word
+    level = level_for(policy, "merge")
+    if "--admin" in tokens:
+        return Verdict(ask_at_least(level), "merge", None, "gh pr merge --admin skips required checks")
+    # After a `cd` the PR lives somewhere this gate cannot see.
+    base = "" if moved else _pr_base(selector, repo, cwd)
+    production = production_branches(stack) | ({"main", "master"} if repo or "://" in selector else set())
+    if not base or base in production:
+        reason = f"merge into production branch {base}" if base else "merge into an unknown branch (treated as production)"
+        return Verdict(ask_at_least(level), "merge", "prod", reason)
+    return Verdict(level, "merge", None, f"merge into {base}: run pre_merge_gate --signoff first, exit 0 required")
+
+
 def _gated(policy: dict, action: str, reason: str, env: str | None = None) -> Verdict:
     return Verdict(level_for(policy, action, env), action, env, reason)
 
@@ -135,19 +177,21 @@ def _git(tokens: list[str], policy: dict, stack: dict, cwd: Path | None) -> Verd
     hits = [t for t in targets if t in protected]
     if hits and (force or deleting):
         return _hard("push_protected", f"force push or delete on protected branch {hits[0]}")
+    if set(targets) & production_branches(stack):
+        return Verdict(ask_at_least(policy["push_protected"]), "push_protected", "prod", "push to the production branch")
     if hits:
         return _gated(policy, "push_protected", f"push to protected branch {hits[0]}")
     return _gated(policy, "push", "git push to a feature branch")
 
 
-def _gh(tokens: list[str], policy: dict, segment: str) -> Verdict | None:
+def _gh(tokens: list[str], policy: dict, stack: dict, segment: str, cwd: Path | None, moved: bool) -> Verdict | None:
     if len(tokens) < 2:
         return None
     group = tokens[1]
     sub = tokens[2] if len(tokens) > 2 else ""
     if group == "pr":
         if sub == "merge":
-            return _gated(policy, "merge", "gh pr merge")
+            return _merge(tokens, policy, stack, cwd, moved)
         if sub in _GH_PR_READ or not sub:
             return None
         return _gated(policy, "pr", f"gh pr {sub}")
@@ -171,7 +215,7 @@ def _gh(tokens: list[str], policy: dict, segment: str) -> Verdict | None:
         if method == "GET":
             return None
         if "/merge" in segment:
-            return _gated(policy, "merge", f"gh api {method} merge")
+            return Verdict(ask_at_least(level_for(policy, "merge")), "merge", "prod", f"gh api {method} merge: use gh pr merge")
         if "/releases" in segment or "/git/refs/tags" in segment:
             return _gated(policy, "release", f"gh api {method} release")
         if "/git/refs" in segment and method in {"DELETE", "PATCH"}:
@@ -206,7 +250,7 @@ def _db(tokens: list[str], segment: str, policy: dict, stack: dict) -> Verdict:
     return _gated(policy, "write", f"{binary} write on {env}", env)
 
 
-def _segment(segment: str, policy: dict, stack: dict, cwd: Path | None) -> Verdict | None:
+def _segment(segment: str, policy: dict, stack: dict, cwd: Path | None, moved: bool = False) -> Verdict | None:
     raw = _tokenize(segment)
     if len(raw) >= 2 and (_basename(raw[0]), raw[1]) in _PUBLISH:
         return _gated(policy, "release", f"{_basename(raw[0])} {raw[1]}")
@@ -217,7 +261,7 @@ def _segment(segment: str, policy: dict, stack: dict, cwd: Path | None) -> Verdi
     if binary == "git":
         return _git(tokens, policy, stack, cwd)
     if binary == "gh":
-        return _gh(tokens, policy, segment)
+        return _gh(tokens, policy, stack, segment, cwd, moved)
     if binary in _DB_CLIS:
         return _db(tokens, segment, policy, stack)
     if binary == "gcloud" and "sql" in tokens and "connect" in tokens:
@@ -242,8 +286,10 @@ def check(command: str, cwd: Path | None = None, stack: dict | None = None) -> V
     policy = resolve_policy(stack)
     worst = Verdict(AUTO)
     for piece in [command, *_substitutions(command)]:
+        moved = False
         for segment in split_segments(piece):
-            verdict = _segment(segment, policy, stack, cwd)
+            moved = moved or segment.split()[:1] in (["cd"], ["pushd"])
+            verdict = _segment(segment, policy, stack, cwd, moved)
             if verdict is None:
                 continue
             if _RANK[verdict.decision] > _RANK[worst.decision] or worst.action == "local":

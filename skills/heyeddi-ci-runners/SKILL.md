@@ -1,8 +1,8 @@
 ---
 name: heyeddi-ci-runners
 description: "Configure HeyEddi Spot runners: prefer GHA overflow/always with the HEYEDDI_RUNS_ON hook; author sealed eddi-ci.yaml pipeline jobs only for no-GHA or niche checks. Use when wiring runners, pipeline YAML, or Spot CI."
-version: 2.0.0
-product-version: 3.8.26
+version: 2.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -81,5 +81,5 @@ assert_runners_claims --check --agent-text "<your summary>"
 - Never secrets in YAML
 - Never invent test commands
 - Never `auto_merge`
-- Never merge unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+- Never merge unless only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0
 - Never claim correlated AI+runner timeline (Coming soon)

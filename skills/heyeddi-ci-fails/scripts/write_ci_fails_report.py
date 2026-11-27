@@ -89,7 +89,7 @@ def main() -> None:
             "",
             "## Merge lock",
             "",
-            "Merge follows `agent.permissions.merge` (default `ask`: **authorize merge** in the current turn).",
+            "Below production, merge once `@pre-merge-gate --signoff` exits 0. A production merge takes **authorize merge**.",
             "",
         ]
     )

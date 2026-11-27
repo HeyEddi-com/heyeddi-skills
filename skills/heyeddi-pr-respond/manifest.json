@@ -1,6 +1,6 @@
 {
   "skill": "heyeddi-pr-respond",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "tools": [
     {
       "name": "fetch_pr_comments",
@@ -69,7 +69,7 @@
     },
     {
       "name": "assert_no_merge",
-      "description": "Hard-fail merge plans unless agent.permissions.merge is auto or the user said authorize merge this turn.",
+      "description": "Hard-fail production merge plans unless the user said authorize merge this turn. Pass --base <branch>.",
       "parameters": {
         "type": "object",
         "properties": {

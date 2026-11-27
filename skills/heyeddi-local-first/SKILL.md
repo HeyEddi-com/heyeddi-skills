@@ -1,8 +1,8 @@
 ---
 name: heyeddi-local-first
 description: "ALWAYS-ON permission and local-first gate for every agent. check_permission.py decides allow / ask / deny for commit, push, PR, merge, release, and dev / staging / prod reads and writes from the agent preset in .heyeddi/stack.json (default balanced). terraform plan is allowed and must be summarized. Use before any git write, gh write, publish, database client, infra, Terraform, gcloud, Firebase, Kubernetes, or Google account change."
-version: 1.0.0
-product-version: 3.8.26
+version: 1.0.1
+product-version: 3.8.27
 author: HeyEddi-com
 ---
 
@@ -31,7 +31,9 @@ The policy is `agent.preset` plus `agent.permissions` in `.heyeddi/stack.json` (
 | Action | `balanced` |
 |--------|-----------|
 | Commit, push a feature branch, open or update a PR, rerun CI | auto |
-| Push to `main` / production / staging branch, merge, release, publish, push a tag | ask |
+| Merge into dev, test, staging, or a stacked parent (after `@pre-merge-gate --signoff` exits 0) | auto |
+| Merge or push into the production branch (never better than ask, under any preset) | ask |
+| Push to the staging branch, release, publish, push a tag | ask |
 | Read dev, staging, prod (logs, describe, `SELECT`, look-and-navigate) | auto |
 | Write dev | auto |
 | Write staging | ask |

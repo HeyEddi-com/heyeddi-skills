@@ -24,7 +24,7 @@ Inline: reply on a finding whose parent has `<!-- heyeddi-ci-review -->` or a He
 
 ## Auth
 
-- Merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+- Below the production branch (dev, test, staging, a stacked parent): get `@pre-merge-gate --signoff` to exit 0, then merge without asking. A production merge takes **authorize merge** from the user
 - Never write `auto_merge` into `eddi-ci.yaml`
 - Commit + push are automatic during PR respond/fix workflow — do not ask first
 - Billable: `ai_review.on_ci_failure`, Spot `pipeline` jobs — opt-in only

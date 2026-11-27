@@ -1,8 +1,8 @@
 ---
 name: heyeddi-pr-respond
 description: "Respond to all PR review feedback: human reviewers, @heyeddi-pr-review inline findings, HeyEddi CI. Same GitHub user who left the review is fine. Auto-fix, commit+push, in-thread replies, CI check first. Not the reviewer skill (use heyeddi-pr-review) and not the merge gate (use pre-merge-gate)."
-version: 2.4.1
-product-version: 3.8.26
+version: 2.4.2
+product-version: 3.8.27
 author: HeyEddi-com
 disable-model-invocation: true
 ---
@@ -32,7 +32,7 @@ On any PR work, **do not ask** whether to fix findings, check CI, or post thread
 2. **Fix** valid review items automatically
 3. **Commit + push** automatically
 4. **Post** every reply in-thread automatically
-5. Only merge can need a question: merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn)
+5. Only merge can need a question: only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0
 
 ## No project scratch files
 
@@ -128,7 +128,7 @@ verify_response --pr <N> --replies-text '...' --use-inventory --live --check
 → optional one Summary after verify
 ```
 
-**Never** merge unless merge follows `agent.permissions.merge` (default `ask`: the user says **authorize merge** in the current turn).
+**Never** merge unless only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0.
 
 ## HeyEddi CI false positives
 

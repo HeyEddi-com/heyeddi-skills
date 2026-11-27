@@ -77,7 +77,7 @@ Optional: `git.environments.dev` (present on `main_staging_dev`).
 | `agent.permissions.read.<env>` | same levels for `dev`, `staging`, `prod` |
 | `agent.permissions.write.<env>` | same levels; `write.prod` is never better than `ask` |
 | `targets.<env>` | strings (GCP project, kube context, DB host) that mark a command as that env. A prod entry counts anywhere in the command; dev and staging entries count only in a target flag (`--project`, `--context`, `--host`, ...) or connection URL. Without them, names containing prod / staging / dev decide the same way, and an unnamed remote write counts as prod. |
-| `agent.commit` / `agent.push` | legacy `ask` \| `auto`; honored only when `agent.preset` and `agent.permissions` are absent |
+| `agent.commit` / `agent.push` | legacy `ask` \| `auto`; accepted and ignored. Use `agent.preset` or `agent.permissions` |
 
 Protected branches: `main`, `master`, `git.environments.production`, `git.environments.staging`, and `git.default_branch`.
 
