@@ -1,8 +1,8 @@
-# Design excellence — HeyEddi layers
+# Design excellence - HeyEddi layers
 
 **Date:** 2026-11-07
 
-How HeyEddi skills produce **world-class, audience-driven** UI — not generic “modern SaaS.”
+How HeyEddi skills produce **audience-driven** UI and not generic “modern SaaS.”
 
 ## Identity before craft (hard)
 
@@ -26,23 +26,23 @@ Scaffolding, MVP, readers, and “clean workable UI” never waive the thinking 
 | **4. Research** | `designs/<feature>/research.md` | Category + competitor + audience-specific trends (also informs gate Phase 0) |
 | **5. Direction** | `audience-design.md` + `modern-reference.md` + `aesthetic-direction.md` | Map persona → aesthetic; technique execution |
 | **6. Explore** | Wireframes + concept direction | User picks a direction before code |
-| **7. Brief** | `designs/<feature>/brief.md` | Confirmed contract — Design signature (taste, rejects, hero, type, accent, responsive, SSOT) |
+| **7. Brief** | `designs/<feature>/brief.md` | Confirmed contract - Design signature (taste, rejects, hero, type, accent, responsive, SSOT) |
 | **8. Craft / handoff** | `@heyeddi-design craft`, `@heyeddi-handoff` | Build from brief + DESIGN.md |
 | **9. Audience-fit critique** | `audience-fit.md` | “Would Alex trust this?” gate |
 | **10. Polish + visual proof** | `@visual-auditor` (`--preset done` on flagship), `@vue-design-system` | 6-width proof, logo-off brand test, token compliance |
 
 Skip a layer → cap quality at that layer.
 
-**Auto-pickup:** `@heyeddi-design` description matches design/look/feel talk without requiring `@` — agents must load `brief-language.md` in the same turn.
+**Auto-pickup:** `@heyeddi-design` description matches design/look/feel talk without requiring `@` - agents must load `brief-language.md` in the same turn.
 
 ## `product.md` contract (required for flagship routes)
 
 Sections every greenfield product should have:
 
-- **Personas** — name, role, job, anxiety, design implication
-- **Per-route intent** — register, mindset, success feeling, primary persona
-- **Competitors & anti-audience** — what users compare you to; who this is NOT for
-- **Voice & tone** — microcopy direction
+- **Personas** - name, role, job, anxiety, design implication
+- **Per-route intent** - register, mindset, success feeling, primary persona
+- **Competitors & anti-audience** - what users compare you to; who this is NOT for
+- **Voice & tone** - microcopy direction
 
 See `skills/heyeddi-intake/reference/audience-intake.md`.
 

@@ -1,7 +1,7 @@
 # Skills Roadmap
 
 **Date:** 2026-07-02  
-**Status:** Phase 0–5 scaffolded (2026-07-02) — skills in `skills/`, install via `install-skills.sh` or `npx skills add`.  
+**Status:** Phase 0 - 5 scaffolded (2026-07-02) - skills in `skills/`, install via `install-skills.sh` or `npx skills add`.  
 **Audience:** HeyEddi team (Designer, QA, engineering) + Cloud Run agent (Pydantic AI / LangChain)
 
 This document is the master plan to build, distribute, and operate the HeyEddi skill library. Every skill must work in **two runtimes**:
@@ -9,19 +9,19 @@ This document is the master plan to build, distribute, and operate the HeyEddi s
 | Runtime | How skills load | How scripts run |
 |---------|-----------------|-----------------|
 | **Cursor** (consumer project) | Installed `.agents/skills/<name>/` or `~/.cursor/skills/<name>/` | Agent runs `scripts/*` in the app workspace |
-| **Hub** (this repo) | `skills/<name>/` — authoring + subtree source | Same scripts; not auto-loaded until installed |
+| **Hub** (this repo) | `skills/<name>/` - authoring + subtree source | Same scripts; not auto-loaded until installed |
 | **Cloud Run agent** (Pydantic AI + LangChain) | Skill registry loads `SKILL.md` + `context/` into agent context | `manifest.json` tools mapped to Pydantic AI / LangChain callables that invoke the same scripts |
 
 ---
 
 ## Design principles (all skills)
 
-1. **Triad structure** — every skill ships `manifest.json`, `context/`, `scripts/` (see [skill-guides.md](./skill-guides.md)).
-2. **Scripts return text** — never crash silently; stdout/stderr become agent feedback.
-3. **Idempotent** — safe to re-run (especially in PR fix loops).
-4. **Read vs write** — separate audit tools from mutating tools in `manifest.json`.
-5. **Input adapters** — handoff and audit skills accept multiple input sources via a normalized brief (screenshots now, Penpot later).
-6. **Explicit vs auto** — document invocation mode in each skill's frontmatter (`disable-model-invocation`).
+1. **Triad structure** - every skill ships `manifest.json`, `context/`, `scripts/` (see [skill-guides.md](./skill-guides.md)).
+2. **Scripts return text** - never crash silently; stdout/stderr become agent feedback.
+3. **Idempotent** - safe to re-run (especially in PR fix loops).
+4. **Read vs write** - separate audit tools from mutating tools in `manifest.json`.
+5. **Input adapters** - handoff and audit skills accept multiple input sources via a normalized brief (screenshots now, Penpot later).
+6. **Explicit vs auto** - document invocation mode in each skill's frontmatter (`disable-model-invocation`).
 
 ### Standard skill directory
 
@@ -71,11 +71,11 @@ Each `manifest.json` tool entry:
 |---------|----------|
 | No local display | Playwright headless; artifacts to `/tmp` or GCS bucket via `ARTIFACT_BUCKET` env |
 | Ephemeral filesystem | Clone repo or mount workspace volume; pass `project_root` on every tool call |
-| Secrets | JWT/Firebase creds via Secret Manager — never in skill repos |
+| Secrets | JWT/Firebase creds via Secret Manager - never in skill repos |
 | Cold start | Keep scripts lean; heavy deps (Playwright) in container image, not per-invoke install |
 | Skill discovery | Hub publishes `skills-registry.json`; cloud agent loads enabled skills at boot |
 
-**Future (Phase 0 deliverable):** `scripts/cloud/register_tools.py` — reads all `manifest.json` files and emits Pydantic AI tool definitions (shared invoker).
+**Future (Phase 0 deliverable):** `scripts/cloud/register_tools.py` - reads all `manifest.json` files and emits Pydantic AI tool definitions (shared invoker).
 
 ---
 
@@ -95,10 +95,10 @@ Each `manifest.json` tool entry:
 | `no-duplicate-ui` | 4 | Auto (narrow) | Engineering | DRY / architecture enforcement |
 | `backend-type-bridger` | 4 | Auto (narrow) | AI during FE work | Guessed API shapes |
 | `composable-patterns` | 4 | Auto (narrow) | AI | FastAPI JWT + Firebase client consistency |
-| `heyeddi-intake` | 0 | Explicit | PM, architect | Upstream intake — personas, routing, mockups |
+| `heyeddi-intake` | 0 | Explicit | PM, architect | Upstream intake - personas, routing, mockups |
 | `heyeddi-orchestrator` | 0 | Auto | Everyone | Discover and suggest @skills from catalog |
 | `engineering-excellence` | 4 | Explicit | Engineering | KISS/YAGNI/DRY/SOLID audits + ADRs |
-| `ux-flow-auditor` | 4 | Explicit | Designer, QA | Task flow traces — click depth, friction |
+| `ux-flow-auditor` | 4 | Explicit | Designer, QA | Task flow traces - click depth, friction |
 | `flutter-engineering` | 1 | Auto | Mobile | Flutter + FastAPI/Firebase scaffold |
 | `flutter-patterns` | 4 | Auto (narrow) | Mobile AI | Riverpod repository patterns |
 | `dart-type-bridger` | 4 | Auto (narrow) | Mobile AI | OpenAPI / Firestore → Dart models |
@@ -106,15 +106,15 @@ Each `manifest.json` tool entry:
 
 ---
 
-## Phase 0 — Foundation (week 1)
+## Phase 0 - Foundation (week 1)
 
 **Goal:** One skill template and cloud wiring so every later skill is born compatible.
 
 ### Tasks
 
 - [ ] **(Software Architect)** Extend `templates/skill/` with `manifest.json`, `context/` stubs, `scripts/` README.
-- [ ] **(JAMStack Developer)** Add `docs/cloud-agent-integration.md` — env vars, tool registration pattern, artifact storage.
-- [ ] **(JAMStack Developer)** `scripts/cloud/register_tools.py` — manifest → tool list prototype.
+- [ ] **(JAMStack Developer)** Add `docs/cloud-agent-integration.md` - env vars, tool registration pattern, artifact storage.
+- [ ] **(JAMStack Developer)** `scripts/cloud/register_tools.py` - manifest → tool list prototype.
 - [ ] **(JAMStack Developer)** Define normalized handoff brief schema (`reference/handoff-brief.schema.json`).
 - [ ] **(Product Manager)** Require `DESIGN.md` + `PRODUCT.md` in app repos (consumed by design skills).
 - [ ] **(Technical Writer)** Designer + QA cheat sheet (which `@skill` for which task).
@@ -127,7 +127,7 @@ Each `manifest.json` tool entry:
 
 ---
 
-## Phase 1 — Guardrails (weeks 2–3)
+## Phase 1 - Guardrails (weeks 2 - 3)
 
 **Goal:** Stop bad frontend code before it reaches PR.
 
@@ -143,7 +143,7 @@ Each `manifest.json` tool entry:
 | `scripts/validate_vue.py` | `vue-tsc --noEmit` + stylelint; return warnings as text |
 | `manifest.json` | `validate_vue` (readonly) |
 
-**Cursor:** `disable-model-invocation` omitted — auto when editing `**/*.vue`, `**/*.css`.
+**Cursor:** `disable-model-invocation` omitted - auto when editing `**/*.vue`, `**/*.css`.
 
 **Cloud:** Run validator against cloned workspace; same script.
 
@@ -166,7 +166,7 @@ Each `manifest.json` tool entry:
 
 ---
 
-## Phase 2 — Design loop (weeks 4–6)
+## Phase 2 - Design loop (weeks 4 - 6)
 
 **Goal:** Unblock Designer with screenshots; prove UI visually.
 
@@ -183,11 +183,11 @@ Each `manifest.json` tool entry:
 
 **Env:** `DEV_SERVER_URL` (default `http://localhost:5173`), `ARTIFACT_BUCKET` (cloud).
 
-**Cursor:** `disable-model-invocation: true` — Designer calls `@visual-auditor`.
+**Cursor:** `disable-model-invocation: true` - Designer calls `@visual-auditor`.
 
 **Cloud:** Upload screenshots to GCS; return signed URLs in tool response.
 
-### 4. `heyeddi-handoff` (v1 — screenshot mode)
+### 4. `heyeddi-handoff` (v1 - screenshot mode)
 
 **Purpose:** Implement screens from designer screenshots without Figma MCP.
 
@@ -202,7 +202,7 @@ Each `manifest.json` tool entry:
 **Workflow:**
 
 1. Load `DESIGN.md` + component catalog.
-2. `load_handoff` — screenshots + optional `handoff.json` → brief.
+2. `load_handoff` - screenshots + optional `handoff.json` → brief.
 3. Map regions → existing PrimeVue components.
 4. Implement (agent code gen).
 5. Chain `primevue-openprops-architect` → `visual-auditor` → compare to reference.
@@ -224,7 +224,7 @@ Notes: reuse SettingsSection; empty state on mobile
 
 ---
 
-## Phase 3 — Team workflow (weeks 7–8)
+## Phase 3 - Team workflow (weeks 7 - 8)
 
 **Goal:** QA and PR loop skills for non-coders.
 
@@ -270,7 +270,7 @@ Notes: reuse SettingsSection; empty state on mobile
 
 ---
 
-## Phase 4 — Architecture (weeks 9–11)
+## Phase 4 - Architecture (weeks 9 - 11)
 
 **Goal:** Scale quality across the app; tighten backend ↔ frontend contract.
 
@@ -284,7 +284,7 @@ Notes: reuse SettingsSection; empty state on mobile
 | `scripts/diff_violations.py` | Compare routes against golden reference |
 | `manifest.json` | `scan_patterns`, `diff_violations` (readonly) |
 
-**Rule:** Propose PR-sized chunks — never whole-app rewrite in one shot.
+**Rule:** Propose PR-sized chunks - never whole-app rewrite in one shot.
 
 ### 8. `no-duplicate-ui`
 
@@ -317,7 +317,7 @@ Notes: reuse SettingsSection; empty state on mobile
 |-------|----------|
 | `context/fastapi-jwt.md` | Composables, interceptors, error handling |
 | `context/firebase-client.md` | Rules-aware reads, security patterns |
-| No heavy scripts — context-only skill; optional `validate_composable.py` later |
+| No heavy scripts - context-only skill; optional `validate_composable.py` later |
 
 ### Acceptance criteria
 
@@ -327,7 +327,7 @@ Notes: reuse SettingsSection; empty state on mobile
 
 ---
 
-## Phase 5 — Replace impeccable (weeks 12–14)
+## Phase 5 - Replace impeccable (weeks 12 - 14)
 
 **Goal:** Retire `~/.cursor/skills/impeccable` with stack-specific craft skill.
 
@@ -347,7 +347,7 @@ Notes: reuse SettingsSection; empty state on mobile
 | `scripts/load_context.py` | `PRODUCT.md` + `DESIGN.md` loader (like impeccable `context.mjs`) |
 | `manifest.json` | `load_design_context` (readonly) |
 
-**Cursor:** `disable-model-invocation: true` — explicit `@heyeddi-design craft`.
+**Cursor:** `disable-model-invocation: true` - explicit `@heyeddi-design craft`.
 
 **Migration:** Remove impeccable after Designer signs off on craft + handoff + audit flows.
 
@@ -361,7 +361,7 @@ Notes: reuse SettingsSection; empty state on mobile
 
 ## Future plans
 
-### Phase 6 — Penpot integration (Q3 2026+)
+### Phase 6 - Penpot integration (Q3 2026+)
 
 | Version | Input | Work |
 |---------|-------|------|
@@ -369,27 +369,27 @@ Notes: reuse SettingsSection; empty state on mobile
 | **v3** | Penpot REST API | Fetch frames/export without MCP |
 | **v4** | **Penpot MCP** (custom) | New skill or `heyeddi-handoff` adapter: live tokens, components, spacing |
 
-**Do not rebuild Figma MCP.** Penpot is open-source — MCP can live in a separate repo (`heyeddi/penpot-mcp`) and plug into `heyeddi-handoff` via `reference/penpot-mode.md` + manifest tool `fetch_penpot_frame`.
+**Do not rebuild Figma MCP.** Penpot is open-source - MCP can live in a separate repo (`heyeddi/penpot-mcp`) and plug into `heyeddi-handoff` via `reference/penpot-mode.md` + manifest tool `fetch_penpot_frame`.
 
-### Phase 7 — Cloud agent skill orchestration
+### Phase 7 - Cloud agent skill orchestration
 
-- [ ] `delegate_to_skill()` — child runs per `reference/subagents.md` (see [subagent-delegation.md](./subagent-delegation.md))
+- [ ] `delegate_to_skill()` - child runs per `reference/subagents.md` (see [subagent-delegation.md](./subagent-delegation.md))
 - [ ] Skill router in Pydantic AI: match user intent → skill `description` fields (same as Cursor Agent Decides).
 - [ ] LangChain fallback chain for tool-heavy steps.
 - [ ] Skill enablement per tenant/project in Cloud Run config.
 - [ ] Telemetry: which skills invoked, pass/fail rates on gates.
 
-### Phase 8 — Distribution
+### Phase 8 - Distribution
 
 - [ ] Each skill → standalone GitHub repo via subtree push.
 - [ ] `npx skills add heyeddi/<skill-name>` for external teams.
-- [ ] Optional Cursor plugin bundle (`heyeddi-team-kit`) for marketplace — skills + rules, no MCP required initially.
+- [ ] Optional Cursor plugin bundle (`heyeddi-team-kit`) for marketplace - skills + rules, no MCP required initially.
 
 ### Deferred / use builtins
 
 | Item | Decision |
 |------|----------|
-| Figma MCP | Skip — screenshots + Penpot path instead |
+| Figma MCP | Skip - screenshots + Penpot path instead |
 | `/babysit` | Use for quick PR loops; `heyeddi-pr-respond` for team rules |
 | `/review-security` | Use builtin unless stack-specific rules needed |
 | Generic impeccable | Retire after Phase 5 |
@@ -463,12 +463,12 @@ When a skill exits a phase:
 | Fix AI PR review comments | `@heyeddi-pr-respond` |
 | Spread a good page across the app | `@design-system-generalizer` |
 
-Guardrails (`primevue-openprops-architect`, etc.) run automatically — no action needed.
+Guardrails (`primevue-openprops-architect`, etc.) run automatically - no action needed.
 
 ---
 
 ## Related docs
 
-- [skill-guides.md](./skill-guides.md) — triad architecture and stack blueprints
-- [distribution.md](./distribution.md) — git subtree publish workflow
-- [cloud-agent-integration.md](./cloud-agent-integration.md) — Pydantic AI / LangChain wiring (Phase 0)
+- [skill-guides.md](./skill-guides.md) - triad architecture and stack blueprints
+- [distribution.md](./distribution.md) - git subtree publish workflow
+- [cloud-agent-integration.md](./cloud-agent-integration.md) - Pydantic AI / LangChain wiring (Phase 0)

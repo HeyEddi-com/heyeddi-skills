@@ -55,3 +55,12 @@ def test_generated_reports_are_ignored_by_scaffolded_projects() -> None:
     snippet = (ROOT / "skills/project-engineering/scaffold/gitignore-heyeddi-pr-scratch.snippet").read_text(encoding="utf-8")
     for line in (".heyeddi/docs/engineering-audit-*.md", ".heyeddi/docs/cost-estimate-*.md", ".heyeddi/audits/visual/*-contrast-*"):
         assert line in snippet
+
+
+def test_prose_check_allows_the_rule_that_lists_the_banned_words() -> None:
+    sys.path.insert(0, str(ROOT / "skills" / "heyeddi-design" / "scripts"))
+    from verify_prose import scan_text
+
+    rule = '- NEVER ship AI prose slop (em/en dashes, delve/leverage/tapestry, "Certainly!"); follow `context/PROSE_ANTI_SLOP.md`'
+    assert scan_text(rule, "a.md") == []
+    assert scan_text("We delve into the tapestry.", "a.md")

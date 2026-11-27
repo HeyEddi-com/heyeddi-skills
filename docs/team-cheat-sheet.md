@@ -1,9 +1,9 @@
-# Team Cheat Sheet — HeyEddi Skills
+# Team Cheat Sheet - HeyEddi Skills
 
 **Date:** 2026-07-02  
 **Audience:** Designer, QA, engineering
 
-Quick reference for which `@skill` to use. Guardrails run automatically — no action needed.
+Quick reference for which `@skill` to use. Guardrails run automatically - no action needed.
 
 ---
 
@@ -62,7 +62,7 @@ Place reference images in `designs/<feature>/` or attach in chat.
 | Visual regression on a route | `visual-auditor` | `@visual-auditor` + route |
 | Find duplicate UI components | `no-duplicate-ui` | `@no-duplicate-ui` |
 
-**Two PR workflows:** See [pr-workflows.md](./pr-workflows.md) — `@heyeddi-pr-review` (reviewer) vs `@heyeddi-pr-respond` (author responding).
+**Two PR workflows:** See [pr-workflows.md](./pr-workflows.md) - `@heyeddi-pr-review` (reviewer) vs `@heyeddi-pr-respond` (author responding).
 
 **PR review vs `/babysit`:** Use built-in `/babysit` for quick merge-ready loops. Use `@heyeddi-pr-respond` when you need team rules: reply to every comment, fix-vs-decline matrix, threaded inline replies.
 
@@ -70,7 +70,7 @@ Place reference images in `designs/<feature>/` or attach in chat.
 
 ## Engineering (automatic guardrails)
 
-These skills auto-invoke when editing matching files — no `@` needed:
+These skills auto-invoke when editing matching files - no `@` needed:
 
 | Skill | Triggers on |
 |-------|-------------|
@@ -96,6 +96,6 @@ Requires `GH_TOKEN` for `heyeddi-pr-respond`, `ARTIFACT_BUCKET` for `visual-audi
 
 ## Related docs
 
-- [skills-roadmap.md](./skills-roadmap.md) — full build plan
-- [cloud-agent-integration.md](./cloud-agent-integration.md) — tool wiring
-- [skill-guides.md](./skill-guides.md) — triad architecture
+- [skills-roadmap.md](./skills-roadmap.md) - full build plan
+- [cloud-agent-integration.md](./cloud-agent-integration.md) - tool wiring
+- [skill-guides.md](./skill-guides.md) - triad architecture

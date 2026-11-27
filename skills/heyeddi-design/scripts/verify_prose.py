@@ -181,6 +181,10 @@ def find_banned_violations(text: str, source: str) -> list[dict]:
 
 
 def scan_text(text: str, source: str) -> list[dict]:
+    # The anti-slop rule itself has to name the banned words: blank those lines, keeping numbering.
+    text = "\n".join(
+        "" if "AI prose slop" in line and "PROSE_ANTI_SLOP" in line else line for line in text.split("\n")
+    )
     issues: list[dict] = []
     issues.extend(find_dash_violations(text, source))
     issues.extend(find_banned_violations(text, source))
