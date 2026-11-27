@@ -81,10 +81,11 @@ def main() -> None:
 
     results.append(run_script(SCRIPTS / "scaffold_heyeddi.py", root, dry_run=args.dry_run, force=args.force))
 
+    failed = any(result.get("status") == "fail" for result in results)
     emit(
         json.dumps(
             {
-                "status": "ok",
+                "status": "fail" if failed else "ok",
                 "stacks": stacks,
                 "detected": detect(root),
                 "dry_run": args.dry_run,
@@ -94,6 +95,8 @@ def main() -> None:
             indent=2,
         )
     )
+    if failed:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

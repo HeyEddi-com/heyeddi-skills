@@ -1,7 +1,7 @@
 ---
 name: aura-design-tokens
 description: "Synchronizes PrimeVue Aura, Quasar, and custom CSS through CSS custom properties. Use for themes, color, surfaces, radii, and dark mode. No Tailwind utility classes and no raw hex in components."
-version: 1.0.0
+version: 1.0.1
 product-version: 3.8.27
 author: HeyEddi-com
 ---
@@ -20,49 +20,46 @@ Synchronizes color palettes, surface depths, and border radii across PrimeVue co
 
 ## Token bridge
 
-Add this to the primary stylesheet (`src/assets/design-tokens.css`) and import it after the PrimeVue setup in `src/main.js`.
+Add this to the primary stylesheet (`src/styles/tokens.css`) and import it after the PrimeVue setup in `src/main.ts`. The `@project-engineering` Vue scaffold already ships it, plus `--surface-*`, `--text-*`, and `--size-*` aliases.
 
 ```css
+/* Aura design tokens: PrimeVue (--p-*) bridged to app roles (--app-*) and Quasar (--q-*) */
 :root {
-  /* Surface hierarchy (Light mode default) */
-  --app-bg: var(--p-surface-50, #f8fafc);
-  --app-surface-card: var(--p-surface-0, #ffffff);
-  --app-border: var(--p-content-border-color, #e2e8f0);
-  --app-text-main: var(--p-text-color, #0f172a);
-  --app-text-muted: var(--p-text-muted-color, #64748b);
+  color-scheme: light;
+
+  /* Surface hierarchy. light-dark() follows color-scheme, which .dark-mode flips. */
+  --app-bg: light-dark(var(--p-surface-50, #f8fafc), var(--p-surface-950, #090d16));
+  --app-surface-card: light-dark(var(--p-surface-0, #ffffff), var(--p-surface-900, #111827));
+  --app-border: light-dark(var(--p-surface-200, #e2e8f0), var(--p-surface-800, #1f2937));
+  --app-text-main: light-dark(var(--p-surface-900, #0f172a), var(--p-surface-50, #f9fafb));
+  --app-text-muted: light-dark(var(--p-surface-500, #64748b), var(--p-surface-400, #9ca3af));
   --app-spotlight: color-mix(in srgb, var(--p-primary-color, #0ea5e9) 14%, transparent);
   --app-glass: color-mix(in srgb, var(--app-surface-card) 72%, transparent);
   --app-glass-border: color-mix(in srgb, var(--app-text-main) 12%, transparent);
-  --app-glass-rim: color-mix(in srgb, white 70%, transparent);
+  --app-glass-rim: light-dark(
+    color-mix(in srgb, white 70%, transparent),
+    color-mix(in srgb, white 28%, transparent)
+  );
 
-  /* Primary brand bridge (Synchronizes Quasar & PrimeVue) */
-  --q-primary: var(--p-primary-color, #0ea5e9);
+  /* Brand bridge (synchronizes Quasar and PrimeVue) */
+  --brand: var(--p-primary-color, #0ea5e9);
+  --brand-subtle: color-mix(in srgb, var(--brand) 14%, var(--app-surface-card));
+  --q-primary: var(--brand);
   --q-secondary: var(--p-surface-700, #334155);
 }
 
 .dark-mode {
-  /* Surface hierarchy (Dark mode) */
-  --app-bg: var(--p-surface-950, #090d16);
-  --app-surface-card: var(--p-surface-900, #111827);
-  --app-border: var(--p-surface-800, #1f2937);
-  --app-text-main: var(--p-surface-50, #f9fafb);
-  --app-text-muted: var(--p-surface-400, #9ca3af);
-  --app-spotlight: color-mix(in srgb, var(--p-primary-color, #38bdf8) 18%, transparent);
-  --app-glass: color-mix(in srgb, var(--app-surface-card) 55%, transparent);
-  --app-glass-border: color-mix(in srgb, white 16%, transparent);
-  --app-glass-rim: color-mix(in srgb, white 28%, transparent);
+  color-scheme: dark;
 
-  /* Quasar dark surface sync */
   --q-dark: var(--app-bg);
   --q-dark-page: var(--app-bg);
 }
 
-/* Base resets relying on variables */
 body {
+  margin: 0;
   background-color: var(--app-bg);
   color: var(--app-text-main);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-  margin: 0;
   -webkit-font-smoothing: antialiased;
 }
 ```
@@ -71,7 +68,7 @@ Fallbacks exist only inside this file, so a missing Aura variable still paints. 
 
 ## Instructions
 
-1. Import `design-tokens.css` after Quasar and PrimeVue so `--p-*` exists before the bridge reads it.
+1. Import `tokens.css` after Quasar and PrimeVue so `--p-*` exists before the bridge reads it.
 2. Toggle dark mode by adding or removing `.dark-mode` on an ancestor. That matches PrimeVue `darkModeSelector: '.dark-mode'`.
 3. Do not introduce Tailwind, OpenProps, or a parallel hex scale. If `open-props` is already a dependency, leave it; new surfaces still use `--app-*`.
 4. Radius and shadow for custom CSS should reference Aura when present (`var(--p-border-radius-md)`, `var(--p-content-border-radius)`) rather than a new numeric scale in each component.
@@ -83,4 +80,4 @@ Fallbacks exist only inside this file, so a missing Aura variable still paints. 
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill aura-design-tokens --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

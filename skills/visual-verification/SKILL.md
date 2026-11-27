@@ -1,14 +1,14 @@
 ---
 name: visual-verification
 description: "Visual self-correction for Vue UI through the Playwright MCP. After a layout or dashboard change, screenshot the Vite dev server and fix overlap, wrap, padding, and unstyled type before done. Uses browser_navigate, browser_resize, and browser_take_screenshot. Not Puppeteer. Not a substitute for @visual-auditor's recorded review."
-version: 1.0.1
+version: 1.0.2
 product-version: 3.8.27
 author: HeyEddi-com
 ---
 
 # Visual Verification Loop
 
-`@primevue/mcp` and `@quasar/mcp` understand component code. They do not render pixels. This skill uses the **Playwright MCP** (`@playwright/mcp`) so the agent can see the live Vite page and fix what it sees.
+`@primevue/mcp` and `@quasar/mcp` understand component code. They do not render pixels. This skill uses the **Playwright MCP** (`@playwright/mcp`) so the agent can see the live Vite page and fix what it sees. If the MCP is not available, screenshot with the Playwright package instead (`npm install -D playwright && npx playwright install chromium`); a missing MCP is never a stop.
 
 Do not use Puppeteer or `@modelcontextprotocol/server-puppeteer`.
 
@@ -83,7 +83,7 @@ Then the same pair at 390×844 with `dashboard-mobile.png`.
 
 3. Read the saved PNG. Look for overlap, broken flex wrap, padding that does not match the token scale, unstyled fonts, and horizontal scroll that the layout did not intend.
 
-4. Edit the Vue or CSS. Wait for HMR. Screenshot again. One fix round is the default. A second round only if the first screenshot still shows a defect.
+4. Edit the Vue or CSS. Wait for HMR. Screenshot again. Repeat until the screenshot shows no defect.
 
 `browser_snapshot` is the accessibility tree. Use it to find a control. Use `browser_take_screenshot` when the question is visual.
 
@@ -100,4 +100,4 @@ Then the same pair at 390×844 with `dashboard-mobile.png`.
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill visual-verification --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

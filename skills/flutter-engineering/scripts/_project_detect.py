@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 BACKEND_DIR = "backend"
@@ -40,6 +41,36 @@ def has_flutter(root: Path) -> bool:
     if pubspec and "flutter" in pubspec.get("dependencies", {}):
         return True
     return (root / "lib" / "main.dart").is_file() and (root / "pubspec.yaml").is_file()
+
+
+SCAFFOLD_PACKAGE = "heyeddi_app"
+
+
+def is_existing_app(root: Path) -> bool:
+    """A pubspec the scaffold did not write: the demo app files do not belong in it."""
+    pubspec = root / "pubspec.yaml"
+    if not pubspec.is_file():
+        return False
+    match = re.search(r"(?m)^name:\s*(\S+)", pubspec.read_text(encoding="utf-8", errors="replace"))
+    return not match or match.group(1) != SCAFFOLD_PACKAGE
+
+
+def merge_stack(dest: Path, template: Path, *, dry_run: bool) -> bool:
+    """Add missing keys from the template. Never replace a value the project set."""
+    defaults = json.loads(template.read_text(encoding="utf-8"))
+    current: dict = {}
+    if dest.is_file():
+        try:
+            current = json.loads(dest.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return False
+    merged = {**defaults, **current}
+    if merged == current:
+        return False
+    if not dry_run:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(json.dumps(merged, indent=2) + "\n", encoding="utf-8")
+    return True
 
 
 def has_vue(root: Path) -> bool:

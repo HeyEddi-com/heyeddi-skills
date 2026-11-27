@@ -1,7 +1,7 @@
 {
   "pack": "heyeddi-ci-skills",
   "displayName": "HeyEddi CI Skills",
-  "description": "CI-only HeyEddi skills \u2014 eddi-ci.yaml config, fails, Spot runners, guide; PR respond via heyeddi-pr-respond.",
+  "description": "HeyEddi CI skills: eddi-ci.yaml config, fails, Spot runners, guide, PR respond, plus the router, setup, permission, engineering, backlog, and merge-gate skills they call.",
   "plugin": "heyeddi-ci-skills",
   "version": "1.4.10",
   "skills": [
@@ -9,6 +9,12 @@
     "heyeddi-ci-guide",
     "heyeddi-pr-respond",
     "heyeddi-ci-fails",
-    "heyeddi-ci-runners"
+    "heyeddi-ci-runners",
+    "heyeddi",
+    "heyeddi-setup",
+    "heyeddi-local-first",
+    "pre-merge-gate",
+    "engineering-excellence",
+    "heyeddi-product"
   ]
 }

@@ -12,8 +12,15 @@ import re
 import sys
 from pathlib import Path
 
+# A "go" the agent waits for, not the Go language: quoted, "go-ahead", or lowercase `go`
+# followed by what ends a request ("your go.", "on your go", "your go before ...").
+_GO_NEXT = r"(?=\s*(?:$|[,!?;:)]|\.(?!\w))|\s+(?:on|before|to|and|first)\b)"
 WAITING = re.compile(
-    r"waiting (for|on) (your|you)\b|\b(your|the) [\"']?go[\"']?[ .,]|\bsay [\"']?go\b|if you say\b"
+    r"waiting (for|on) (your|you)\b|if you say\b"
+    r"|\b(your|the) (?:[\"'\u2018\u201c]go[\"'\u2019\u201d]|go[- ]ahead\b)"
+    rf"|\byour (?-i:go){_GO_NEXT}"
+    rf"|\b(?:wait\w*|await\w*|need\w*)\b[^.\n]{{0,30}}\bthe (?-i:go){_GO_NEXT}"
+    rf"|\bsay [\"']?(?-i:go)\b[\"']?{_GO_NEXT}"
     r"|\b(should|shall|can|may) i\b[^.\n]*\?|\b(want|would you like) me to\b|let me know (if|when|whether)",
     re.IGNORECASE,
 )

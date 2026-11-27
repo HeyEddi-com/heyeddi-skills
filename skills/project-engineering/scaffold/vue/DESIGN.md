@@ -1,3 +1,3 @@
 # Design
 
-Use OpenProps tokens (`var(--surface-1)`, `var(--text-1)`, `var(--size-3)`). PrimeVue for UI primitives.
+Quasar for the app frame, PrimeVue Aura for data and form primitives, spring motion from `@vueuse/motion`. Colors come from `var(--app-*)` in `src/styles/tokens.css`.

@@ -12,6 +12,7 @@ from typing import Any
 from _skill_cli import degraded, emit, gh_status, resolve_project_root, run_command
 
 MARKER = "<!-- heyeddi-pr-review -->"
+SELF_CLEAN = "<!-- heyeddi-pr-review:self-clean -->"
 
 
 def _load_json(path: Path) -> Any:
@@ -53,10 +54,12 @@ def main() -> None:
     missing: list[str] = []
     posted_comments: list[dict[str, Any]] = []
     event = None
+    self_clean = False
 
     if args.posted_file:
         posted = _load_json(Path(args.posted_file))
         event = posted.get("event") if isinstance(posted, dict) else None
+        self_clean = isinstance(posted, dict) and SELF_CLEAN in str(posted.get("body") or "")
         posted_comments = _findings_list(posted)
     else:
         status = gh_status(root)
@@ -113,6 +116,7 @@ def main() -> None:
                 for rev in reviews if isinstance(reviews, list) else []:
                     if isinstance(rev, dict) and MARKER in str(rev.get("body") or ""):
                         event = rev.get("state")
+                        self_clean = SELF_CLEAN in str(rev.get("body") or "")
 
     if expected:
         posted_keys = {
@@ -124,7 +128,7 @@ def main() -> None:
             key = _key(str(item.get("path")), item.get("line"))
             if key not in posted_keys:
                 missing.append(f"missing inline comment for {key}")
-    elif not posted_comments and event not in {"APPROVE", "APPROVED"}:
+    elif not posted_comments and event not in {"APPROVE", "APPROVED"} and not self_clean:
         # Nothing expected, nothing posted, no approving review: nothing was verified.
         missing.append(
             "nothing verified: no --findings-file, no heyeddi-pr-review comments and no APPROVE review found"

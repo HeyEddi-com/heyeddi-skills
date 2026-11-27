@@ -1,7 +1,7 @@
 ---
 name: verify-build
 description: Runs npm run build to catch Vite/Rollup failures before merge. Use when validating frontend changes or in CI pre-merge loops.
-version: 1.0.0
+version: 1.0.1
 product-version: 3.8.27
 author: HeyEddi-com
 paths:
@@ -23,7 +23,7 @@ paths:
 1. Ensure dependencies are installed (`npm ci` or `npm install`).
 2. Run `bash scripts/verify_build.sh --project-root <root>`.
 3. If build fails, read the Rollup/Vite stack trace and fix imports or types.
-4. Re-run until output shows success.
+4. Re-run until the script exits 0. It exits non-zero when the build fails, npm is missing, or there is no `package.json`.
 
 ## Scripts
 

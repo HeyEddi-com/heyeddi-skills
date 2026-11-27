@@ -26,30 +26,11 @@ Delegate scaffold/audit/test scripts to **Task** `shell`; repo discovery to `exp
 
 | Stack | When | Tooling added |
 |-------|------|----------------|
-| **Vue** | Always for frontend work | Vite, Vitest, npm scripts, router |
+| **Vue** | Always for frontend work | Vite, Vitest, router, Quasar, PrimeVue Aura, spring motion, CSS tokens |
 | **FastAPI** | REST API backend | `backend/`, pytest, `openapi.json`, uvicorn |
 | **Firebase** | Firestore / Auth client | `firebase.json`, rules, emulators, env template |
 
-Declare intent prefs via `@heyeddi-setup` (git/env + agent). Tech keys in `.heyeddi/stack.json` are filled by scaffold / this skill as the project evolves:
-
-```json
-{
-  "frontend": "vue",
-  "backends": ["fastapi"],
-  "api_port": 8090,
-  "web_port": 8085,
-  "git": {
-    "preset": "main_staging_dev",
-    "default_branch": "dev",
-    "pr_base": "dev",
-    "environments": { "production": "main", "staging": "staging", "dev": "dev" },
-    "worktrees": false,
-    "custom_workflow": null
-  },
-  "agent": { "preset": "balanced" },
-  "setup": { "version": 1, "updated": "2026-09-06" }
-}
-```
+The scaffold writes only the tech keys in `.heyeddi/stack.json`, and never replaces a value already there. Git, agent, and setup prefs belong to `@heyeddi-setup` (`write_setup.py --defaults` fills them from the repo).
 
 ```json
 { "frontend": "vue", "backends": ["fastapi"], "api_port": 8090 }
@@ -77,14 +58,14 @@ Every HeyEddi app should have a **`.heyeddi/`** folder (created by `scaffold_sta
 
 ## Workflow
 
-1. **Prefs gate (always-on hard):** `@heyeddi-setup` `verify_setup --check` before git/CI/commit assumptions; incomplete → run setup until pass.
+1. **Prefs gate (always-on hard):** `@heyeddi-setup` `verify_setup --check` before git/CI/commit assumptions; incomplete → `write_setup.py --defaults` (no questions) and continue.
 2. **`audit_scaffold`**: per-layer JSON (vue / fastapi / firebase).
 3. **`scaffold_stack --stack auto`**: fills gaps (preferred over `scaffold_vue` alone).
-4. **`ensure_npm`** + **`ensure_python`** as needed.
+4. **`ensure_npm`** + **`ensure_python`** as needed (`ensure_python` installs the dev extras: pytest and ruff).
 5. **`dev_server_info`**: all local servers (Vue :5173, API :8090, Firebase emulators :4000).
 6. **Plan gate (always-on):** `@engineering-excellence` `check_engineering_plan --check` before feature code; read reuse-catalog.
-7. Implement features (design skills, composables, etc.).
-8. **`write_test_stub`** + **`run_tests`** + **`run_backend_tests`**.
+7. Per feature, write the failing test first (`@heyeddi` `reference/testing.md`; `write_test_stub` gives a starting file), then implement until it passes.
+8. **`run_tests`** + **`run_backend_tests`**.
 9. **Change gate (always-on):** `audit_engineering --check` (errors fail; warns advisory).
 10. **`verify-build`** + **`pre-merge-gate`**.
 
@@ -115,4 +96,4 @@ Run `dev_server_info` for project-specific steps. Each server needs its **own te
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill project-engineering --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

@@ -1,6 +1,6 @@
-# Token strategy: OpenProps optional
+# Token strategy: follow the project
 
-**OpenProps is a HeyEddi scaffold default, not a global requirement.** Follow whatever token system the **project** already uses.
+**New HeyEddi scaffolds use PrimeVue Aura tokens bridged in `src/styles/tokens.css`, without OpenProps.** Follow whatever token system an existing **project** already uses.
 
 ## Detect before styling
 
@@ -15,7 +15,7 @@ If none of the above mention OpenProps, **do not add** `open-props` unless the u
 
 | Signal | Use OpenProps |
 |--------|----------------|
-| HeyEddi `project-engineering` Vue scaffold | Yes: already wired in `tokens.css` |
+| An existing app that already imports `open-props` | Yes: keep it |
 | Need fluid type/spacing scales without maintaining tables | Yes |
 | Want `light-dark()` / gray ramps from a shared palette | Yes |
 | `design.md` says token source is OpenProps | Yes |
@@ -43,7 +43,7 @@ Pattern: `@import "open-props/style"` then **semantic aliases** in `:root` (`--s
 ## Decision log snippet
 
 ```markdown
-**Token source:** OpenProps via `tokens.css` aliases (project scaffold).
+**Token source:** Aura tokens via `tokens.css` aliases (project scaffold).
 
 **We rejected:** Adding Tailwind: stack is PrimeVue + semantic CSS vars per design.md.
 ```
@@ -58,6 +58,6 @@ Or:
 
 | Skill | Behavior |
 |-------|----------|
-| `@heyeddi-design` | Prefer OpenProps on **new** HeyEddi scaffolds; respect existing project token source on brownfield |
+| `@heyeddi-design` | Aura tokens on **new** HeyEddi scaffolds; respect existing project token source on brownfield |
 | `@heyeddi-handoff` | Match project token strategy; mockups never dictate hex |
 | `@primevue-openprops-architect` | Enforce PrimeVue + **project** semantic tokens; OpenProps rules apply only when package is present |

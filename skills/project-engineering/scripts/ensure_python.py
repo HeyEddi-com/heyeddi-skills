@@ -24,7 +24,8 @@ def main() -> None:
         return
 
     if shutil.which("poetry"):
-        cmd = ["poetry", "install"]
+        # --all-extras installs the dev tools (pytest, ruff) the gates run.
+        cmd = ["poetry", "install", "--all-extras"]
         if args.force:
             cmd.append("--sync")
         output = run_command(cmd, api_root, timeout=600)

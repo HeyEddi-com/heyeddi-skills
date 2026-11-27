@@ -3,11 +3,8 @@
 | Step | Subagent | Readonly | Worker prompt |
 |------|----------|----------|---------------|
 | `fetch_pr_context` | `shell` | yes | PR number; `--fixture` in evals |
-| `check_doc_drift` | `shell` | yes | Same PR context |
-| `audit_pr_changes` | `shell` | yes | Same PR context |
-| `load_product_context` / `check_features` | `shell` | yes | Scope to `routes_touched` |
-| UI delegates (`visual-auditor`, etc.) | `shell` / `generalPurpose` | mixed | Only when UI files in diff |
-| `pre_merge_gate` | `shell` | yes | Full gate before verdict |
-| Verdict + report prose | main |: | Fill Summary, Product fit, Verdict |
+| Read the diff and related call sites | `explore` | yes | Touched symbols; return path, line, severity, issue |
+| `post_inline_review` | main | no | One review with every finding on its line |
+| `verify_inline_review --check` | `shell` | yes | Same findings file |
 
-Main chat owns the **verdict** and ensures scope stays on committed diff.
+Main chat owns the findings and the review event, and keeps the scope on the committed diff. The merge gate is not part of this skill: it runs after `@heyeddi-pr-respond`.

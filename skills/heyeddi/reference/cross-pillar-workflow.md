@@ -24,6 +24,8 @@ One feature route is owned by **three pillars**. They stay connected through `.h
 → siblings MUST respond before route is "done"
 ```
 
+A sibling's reply asks nobody back. `load_workflow_context` lists open requests under `pending_sibling_notes`; the route is done when that list is empty.
+
 ## When pillar X runs, siblings must opine
 
 | You run | You maintain | UX must | Design must | Product must |

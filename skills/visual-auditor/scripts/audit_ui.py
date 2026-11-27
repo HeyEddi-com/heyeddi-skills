@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 from _heyeddi_paths import screenshot_dir, visual_audit_dir
-from _skill_cli import emit, resolve_project_root
+from _skill_cli import emit, fail, resolve_project_root
 from _widths import FAST_WIDTHS, resolve_widths
 
 
@@ -47,15 +47,10 @@ def main() -> None:
     try:
         from playwright.sync_api import sync_playwright  # noqa: PLC0415
     except ImportError:
-        emit(
-            "[skip] Playwright not installed.\n"
-            "Install: pip install playwright && playwright install chromium\n"
-            "Fallback: python scripts/layout_tree.py --route "
-            + args.route
-            + " --project-root "
-            + str(root)
+        fail(
+            "Playwright not installed, so nothing was captured. Add it to the project and run again: "
+            "pip install playwright && playwright install chromium"
         )
-        return
 
     artifacts: list[str] = []
     url = base_url.rstrip("/") + args.route
@@ -66,9 +61,8 @@ def main() -> None:
             try:
                 page.goto(url, wait_until="networkidle", timeout=15000)
             except Exception as exc:
-                emit(f"[warn] navigation failed for {url}: {exc}")
                 browser.close()
-                return
+                fail(f"navigation failed for {url}: {exc}. Start the dev server (or set DEV_SERVER_URL) and run again.")
             slug = args.route.strip("/").replace("/", "_") or "home"
             path = out_dir / f"{slug}_{w}px.png"
             page.screenshot(path=str(path), full_page=True)

@@ -29,6 +29,8 @@ def main() -> None:
         text=True,
     )
     emit(proc.stdout or proc.stderr)
+    if proc.returncode != 0:
+        sys.exit(proc.returncode)
 
 
 if __name__ == "__main__":

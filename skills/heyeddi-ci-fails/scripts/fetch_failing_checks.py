@@ -9,10 +9,34 @@ from pathlib import Path
 from typing import Any
 
 from _skill_cli import degraded, emit, gh_status, resolve_project_root, run_command
+from _ci_temp import ci_temp_dir
+
+FAILED_STATES = {"FAILURE", "FAILED", "ERROR", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED", "STARTUP_FAILURE"}
 
 
-def _docs_dir(root: Path) -> Path:
-    return root / ".heyeddi" / "docs"
+def classify_rollup(rollup: list[Any]) -> tuple[list[dict[str, Any]], list[str]]:
+    """(failing checks, names of checks still running). Pending is not green."""
+    failing: list[dict[str, Any]] = []
+    pending: list[str] = []
+    for item in rollup:
+        if not isinstance(item, dict):
+            continue
+        name = item.get("name") or item.get("context")
+        state = str(item.get("state") or item.get("conclusion") or "").upper()
+        status = str(item.get("status") or "").upper()
+        if state in FAILED_STATES:
+            failing.append(
+                {
+                    "name": name,
+                    "state": state,
+                    "detailsUrl": item.get("detailsUrl") or item.get("targetUrl"),
+                    "description": item.get("description") or item.get("title"),
+                    "workflowName": item.get("workflowName"),
+                }
+            )
+        elif state in {"PENDING", "EXPECTED"} or (status and status != "COMPLETED"):
+            pending.append(str(name))
+    return failing, pending
 
 
 def _gh_json(root: Path, args: list[str]) -> Any:
@@ -36,9 +60,7 @@ def main() -> None:
     )
     args = parser.parse_args()
     root = resolve_project_root(args.project_root)
-    docs = _docs_dir(root)
-    docs.mkdir(parents=True, exist_ok=True)
-    out_path = docs / f"pr-{args.pr}-ci-fails-raw.json"
+    out_path = ci_temp_dir(root, args.pr) / f"pr-{args.pr}-ci-fails-raw.json"
 
     if args.fixture:
         fixture = Path(args.fixture)
@@ -50,7 +72,7 @@ def main() -> None:
             json.dumps(
                 {
                     "pr": args.pr,
-                    "path": str(out_path.relative_to(root)),
+                    "path": str(out_path),
                     "source": "fixture",
                     "failing_count": len(data.get("failing") or []),
                 },
@@ -76,22 +98,7 @@ def main() -> None:
         emit(json.dumps({"error": "gh pr view failed", "detail": pr}, indent=2))
         raise SystemExit(1)
 
-    rollup = pr.get("statusCheckRollup") or []
-    failing: list[dict[str, Any]] = []
-    for item in rollup:
-        if not isinstance(item, dict):
-            continue
-        state = str(item.get("state") or item.get("conclusion") or "").upper()
-        if state in {"FAILURE", "FAILED", "ERROR", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED"}:
-            failing.append(
-                {
-                    "name": item.get("name") or item.get("context"),
-                    "state": state,
-                    "detailsUrl": item.get("detailsUrl") or item.get("targetUrl"),
-                    "description": item.get("description") or item.get("title"),
-                    "workflowName": item.get("workflowName"),
-                }
-            )
+    failing, pending = classify_rollup(pr.get("statusCheckRollup") or [])
 
     # Best-effort: failed check runs on head SHA
     head = str(pr.get("headRefOid") or "")
@@ -118,6 +125,7 @@ def main() -> None:
         "head_ref": pr.get("headRefName"),
         "url": pr.get("url"),
         "failing": failing,
+        "pending": pending,
         "check_runs": check_runs,
         "note": (
             "Read-only evidence. For hosted App analysis the user can comment "
@@ -129,8 +137,12 @@ def main() -> None:
         json.dumps(
             {
                 "pr": args.pr,
-                "path": str(out_path.relative_to(root)),
+                "path": str(out_path),
                 "failing_count": len(failing),
+                "pending_count": len(pending),
+                "pending": pending,
+                "green": not failing and not pending,
+                "next": f"gh pr checks {args.pr} --watch" if pending else None,
                 "head_sha": head,
             },
             indent=2,

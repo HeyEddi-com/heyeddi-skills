@@ -1,10 +1,9 @@
 ---
 name: design-system-generalizer
 description: Scans token and component usage patterns from a golden reference page and diffs violations on other routes. Use when spreading a well-built page's patterns across the app in PR-sized chunks.
-version: 1.0.0
+version: 1.0.1
 product-version: 3.8.27
 author: HeyEddi-com
-disable-model-invocation: true
 ---
 
 # Design System Generalizer
@@ -20,4 +19,4 @@ disable-model-invocation: true
 1. `python scripts/scan_patterns.py --route /golden --project-root <root>`
 2. `python scripts/diff_violations.py --golden /golden --target /other --project-root <root>`
 3. Use `--check` on diff to exit non-zero when target has hex colors or missing route files.
-4. Propose small PRs: never whole-app rewrite in one shot.
+4. Apply the fixes, one small PR per route (never a whole-app rewrite in one shot), until `diff_violations --check` passes on each.

@@ -68,4 +68,4 @@ See `@heyeddi-design` → `reference/implement-routing.md`.
 
 Default answer to all: **yes, do it now**.
 
-Only merge can need a question: only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0.
+Merge into dev / test / staging yourself once `@pre-merge-gate --signoff` exits 0. A production merge takes the user's **authorize merge** in the current turn; never run it earlier.

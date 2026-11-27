@@ -43,6 +43,24 @@ def _append_gitignore_snippet(root: Path, *, dry_run: bool) -> str | None:
     return ".gitignore (created with pr-* scratch rules)"
 
 
+def merge_stack(dest: Path, template: Path, *, dry_run: bool) -> bool:
+    """Add missing keys from the template. Never replace a value the project set."""
+    defaults = json.loads(template.read_text(encoding="utf-8"))
+    current: dict = {}
+    if dest.is_file():
+        try:
+            current = json.loads(dest.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return False
+    merged = {**defaults, **current}
+    if merged == current:
+        return False
+    if not dry_run:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(json.dumps(merged, indent=2) + "\n", encoding="utf-8")
+    return True
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Scaffold .heyeddi workspace folder")
     parser.add_argument("--project-root", default=None)
@@ -72,13 +90,11 @@ def main() -> None:
 
     stack_dest = base / "stack.json"
     stack_src = SCAFFOLD_ROOT / "stack.json"
-    if stack_src.is_file() and (not stack_dest.exists() or args.force):
-        if not args.dry_run:
-            base.mkdir(parents=True, exist_ok=True)
-            stack_dest.write_text(stack_src.read_text())
-        created.append(".heyeddi/stack.json")
-    elif stack_dest.exists():
-        skipped.append(".heyeddi/stack.json")
+    if stack_src.is_file():
+        if merge_stack(stack_dest, stack_src, dry_run=args.dry_run):
+            created.append(".heyeddi/stack.json")
+        else:
+            skipped.append(".heyeddi/stack.json")
 
     for sub in ("docs", "designs", "audits"):
         d = base / sub

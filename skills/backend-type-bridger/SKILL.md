@@ -1,7 +1,7 @@
 ---
 name: backend-type-bridger
 description: Syncs a local FastAPI OpenAPI file to TypeScript types and reads Firestore schema hints. Use when writing Vue composables against FastAPI or Firebase backends.
-version: 1.0.0
+version: 1.0.1
 product-version: 3.8.27
 author: HeyEddi-com
 paths:
@@ -26,8 +26,8 @@ paths:
    curl -fsS http://127.0.0.1:8090/openapi.json -o openapi.json
    ```
 
-2. FastAPI types: `python scripts/sync_openapi.py --project-root <root>`: writes `src/types/api.ts` from local `openapi.json` only (optional `--openapi path/rel.json`).
+2. FastAPI types: `python .agents/skills/backend-type-bridger/scripts/sync_openapi.py --project-root .`: writes `src/types/api.ts` from local `openapi.json` only (optional `--openapi path/rel.json`).
 
-3. Firebase: `python scripts/fetch_firestore_schema.py --project-root <root>`
+3. Firebase: `python .agents/skills/backend-type-bridger/scripts/fetch_firestore_schema.py --project-root .`
 
-4. Import generated types in composables: never guess field names. Refine generated interfaces if OpenAPI uses `$ref` heavily.
+4. Import generated types in composables: never guess field names. Each run overwrites `src/types/api.ts`, so put narrower or derived types in another file. The script exits 1 on a missing or invalid file: fix the input and rerun.

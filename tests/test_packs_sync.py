@@ -28,7 +28,10 @@ def test_ci_pack_is_subset() -> None:
     ci = set(json.loads((PACKS / "heyeddi-ci-skills.json").read_text(encoding="utf-8"))["skills"])
     assert ci <= full
     assert "heyeddi-pr-respond" in ci
-    assert all(n.startswith("heyeddi-ci-") or n == "heyeddi-pr-respond" for n in ci)
+    # The CI skills call these for permissions, the gate, setup, and next steps.
+    support = {"heyeddi", "heyeddi-setup", "heyeddi-local-first", "pre-merge-gate", "engineering-excellence", "heyeddi-product"}
+    assert support <= ci
+    assert all(n.startswith("heyeddi-ci-") or n in support | {"heyeddi-pr-respond"} for n in ci)
 
 
 def test_write_release_notes(tmp_path: Path) -> None:

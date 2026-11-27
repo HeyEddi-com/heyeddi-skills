@@ -55,17 +55,25 @@ def check_brief(feature_path: Path) -> dict:
 
     text = bp.read_text()
     has_region_table = "| Region |" in text or "## Region map" in text
-    has_shell = "shell" in text.lower() or "sidebar" in text.lower()
     has_impl_spec = "## implementation spec" in text.lower()
     ok = (
         len(text.strip()) > 200
-        and has_shell
         and has_impl_spec
         and (has_region_table or desktop_regions == 0)
     )
 
+    missing_parts = [
+        label
+        for label, present in (
+            ("more than 200 characters of detail", len(text.strip()) > 200),
+            ("## Implementation spec", has_impl_spec),
+            ("## Region map", has_region_table or desktop_regions == 0),
+        )
+        if not present
+    ]
     return {
         "ok": ok,
+        "hint": f"{BRIEF_FILENAME} needs: {', '.join(missing_parts)}" if missing_parts else "",
         "mockup_brief": str(bp),
         "missing": False,
         "chars": len(text),

@@ -28,6 +28,7 @@ from classify_command import (  # noqa: E402
     _unwrap,
     classify,
     split_segments,
+    strip_inert_text,
 )
 from permission_policy import (  # noqa: E402
     ASK,
@@ -42,6 +43,7 @@ from permission_policy import (  # noqa: E402
     load_stack,
     protected_branches,
     resolve_policy,
+    shell_words,
 )
 
 _REMOTE_CLIS = {"gcloud", "kubectl", "bq", "gsutil", "aws", "helm", "firebase", "firebase-tools", "gam", "pulumi"}
@@ -61,6 +63,10 @@ _PUBLISH = {
     ("cargo", "publish"), ("twine", "upload"), ("gem", "push"), ("poetry", "publish"),
     ("uv", "publish"), ("flutter", "pub"), ("dart", "pub"),
 }
+# `v2`, `1.2.3`, `v1.0.0-rc.1`. A branch such as `42-add-login` or `v2-api` is not a tag.
+_VERSION_TAG = re.compile(r"\+?(?:v\d+|v?\d+(?:\.\d+)+(?:[-+][0-9A-Za-z.+-]+)?)")
+_SQL_FILE_CLIS = {"psql", "cqlsh", "mongosh", "mongo"}
+_SQL_OPAQUE = re.compile(r"\\(i|ir|include|include_relative|copy|!)")
 _GH_PR_READ = {"view", "list", "checks", "diff", "status", "checkout"}
 _GH_RELEASE_READ = {"view", "list", "download"}
 
@@ -147,9 +153,37 @@ def _hard(action: str, reason: str, env: str | None = None) -> Verdict:
     return Verdict(DENY, action, env, reason, hard_limit=True)
 
 
-def _git(tokens: list[str], policy: dict, stack: dict, cwd: Path | None) -> Verdict | None:
+def _enter(base: Path | None, target: str) -> Path | None:
+    """The directory `cd target` or `-C target` lands in, or None when it cannot be known."""
+    if target == "-" or any(c in target for c in "$`*?"):
+        return None
+    path = (base or Path.cwd()) / Path(target).expanduser()
+    return path if path.is_dir() else None
+
+
+def _tag_exists(name: str, cwd: Path | None) -> bool:
+    try:
+        out = subprocess.run(
+            ["git", "show-ref", "--verify", "--quiet", f"refs/tags/{name}"],
+            cwd=str(cwd) if cwd else None, capture_output=True, timeout=5, check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return out.returncode == 0
+
+
+def _git(
+    tokens: list[str], policy: dict, stack: dict, cwd: Path | None, moved: bool = False, lost: bool = False
+) -> Verdict | None:
     args = [t for t in tokens[1:]]
-    while args and args[0] in {"-C", "-c"} and len(args) > 1:
+    while args and (args[0] in {"-C", "-c"} or args[0].startswith(("--git-dir", "--work-tree"))) and len(args) > 1:
+        if args[0].startswith("--"):  # another repository: its current branch is unknown here
+            moved = lost = True
+            args = args[1:] if "=" in args[0] else args[2:]
+            continue
+        if args[0] == "-C":
+            entered = None if lost else _enter(cwd, args[1])
+            moved, lost, cwd = True, entered is None, entered or cwd
         args = args[2:]
     if not args:
         return None
@@ -162,21 +196,34 @@ def _git(tokens: list[str], policy: dict, stack: dict, cwd: Path | None) -> Verd
     deleting = "--delete" in rest or "-d" in rest
     positional = [t for t in rest if not t.startswith("-")]
     refspecs = positional[1:]
-    if "--tags" in rest or any("refs/tags/" in r or re.fullmatch(r"\+?v?\d+(\.\d+)*\S*", r) for r in refspecs):
+    if "--tags" in rest or any(
+        "refs/tags/" in r or _VERSION_TAG.fullmatch(r) or (not lost and _tag_exists(r.lstrip("+"), cwd))
+        for r in refspecs
+    ):
         return _gated(policy, "release", "git push of a tag")
+    if "--all" in rest or "--branches" in rest:
+        return Verdict(ask_at_least(policy["push_protected"]), "push_protected", "prod", "push of every branch includes production")
     protected = protected_branches(stack)
     targets: list[str] = []
-    for ref in refspecs or [_current_branch(cwd)]:
+    unknown = False
+    for ref in refspecs or ["HEAD"]:
         if ref.startswith("+"):
             force = True
             ref = ref[1:]
         dest = ref.split(":", 1)[-1]
         if ref.startswith(":"):
             deleting = True
+        if dest in {"HEAD", "@"}:
+            dest = "" if lost else _current_branch(cwd)
+            # After `cd` or `-C`, a branch we cannot read may be production.
+            unknown = unknown or (moved and dest in {"", "HEAD"})
         targets.append(dest.removeprefix("refs/heads/"))
     hits = [t for t in targets if t in protected]
     if hits and (force or deleting):
         return _hard("push_protected", f"force push or delete on protected branch {hits[0]}")
+    if unknown:
+        return Verdict(ask_at_least(policy["push_protected"]), "push_protected", "prod",
+                       "push from a directory whose branch cannot be read (treated as production)")
     if set(targets) & production_branches(stack):
         return Verdict(ask_at_least(policy["push_protected"]), "push_protected", "prod", "push to the production branch")
     if hits:
@@ -224,14 +271,43 @@ def _gh(tokens: list[str], policy: dict, stack: dict, segment: str, cwd: Path | 
     return None
 
 
-def _db(tokens: list[str], segment: str, policy: dict, stack: dict) -> Verdict:
+def _sql_files(tokens: list[str]) -> list[str]:
+    """Files named by -f / --file."""
+    found: list[str] = []
+    for i, word in enumerate(tokens[1:], 1):
+        if word in {"-f", "--file"}:
+            found.append(tokens[i + 1] if i + 1 < len(tokens) else "")
+        elif word.startswith("--file="):
+            found.append(word.split("=", 1)[1])
+        elif word.startswith("-f") and len(word) > 2:
+            found.append(word[2:])
+    return found
+
+
+def _file_sql(name: str, cwd: Path | None, lost: bool) -> str | None:
+    """Contents of a SQL file, or None when it cannot be read or pulls in more."""
+    if lost:
+        return None
+    path = (cwd or Path.cwd()) / Path(name).expanduser()
+    try:
+        if not name or not path.is_file() or path.stat().st_size > 1_000_000:
+            return None
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    return None if _SQL_OPAQUE.search(text) else text
+
+
+def _db(
+    tokens: list[str], segment: str, policy: dict, stack: dict, cwd: Path | None = None, lost: bool = False
+) -> Verdict:
     binary = _basename(tokens[0])
     remote_hint = any(
         t.startswith(("-h", "--host")) or "://" in t or t.startswith("$") or "_URL" in t.upper()
         for t in tokens[1:]
     )
     env = detect_env(segment, stack)
-    if is_local_target(segment) or (env is None and not remote_hint):
+    if is_local_target(segment, stack) or (env is None and not remote_hint):
         return Verdict(AUTO, "local", None, f"{binary} on a local database")
     env = env or "prod"
     payload_flags = {"-c", "--command", "-e", "--execute", "--eval", "-f", "--file"}
@@ -243,14 +319,23 @@ def _db(tokens: list[str], segment: str, policy: dict, stack: dict) -> Verdict:
         writes = bool(_SQL_WRITE.search(segment))
     else:
         writes = True  # an interactive session can do anything
+    sql = segment
+    if binary in _SQL_FILE_CLIS:
+        for name in _sql_files(tokens):
+            content = _file_sql(name, cwd, lost)
+            writes = writes or content is None or bool(_SQL_WRITE.search(content))
+            sql += "\n" + (content or "")
     if not writes:
         return _gated(policy, "read", f"{binary} read on {env}", env)
-    if env == "prod" and _DESTRUCTIVE.search(segment):
+    if env == "prod" and _DESTRUCTIVE.search(sql):
         return _hard("write", f"destructive {binary} statement on prod", env)
     return _gated(policy, "write", f"{binary} write on {env}", env)
 
 
-def _segment(segment: str, policy: dict, stack: dict, cwd: Path | None, moved: bool = False) -> Verdict | None:
+def _segment(
+    segment: str, policy: dict, stack: dict, cwd: Path | None, moved: bool = False,
+    where: Path | None = None, lost: bool = False,
+) -> Verdict | None:
     raw = _tokenize(segment)
     if len(raw) >= 2 and (_basename(raw[0]), raw[1]) in _PUBLISH:
         return _gated(policy, "release", f"{_basename(raw[0])} {raw[1]}")
@@ -259,11 +344,11 @@ def _segment(segment: str, policy: dict, stack: dict, cwd: Path | None, moved: b
         return None
     binary = _basename(tokens[0])
     if binary == "git":
-        return _git(tokens, policy, stack, cwd)
+        return _git(tokens, policy, stack, where, moved, lost)
     if binary == "gh":
         return _gh(tokens, policy, stack, segment, cwd, moved)
     if binary in _DB_CLIS:
-        return _db(tokens, segment, policy, stack)
+        return _db(tokens, segment, policy, stack, where, lost)
     if binary == "gcloud" and "sql" in tokens and "connect" in tokens:
         return _db(["psql", *tokens[1:], "--host"], segment, policy, stack)
     infra = classify(segment, cwd=cwd)
@@ -285,11 +370,18 @@ def check(command: str, cwd: Path | None = None, stack: dict | None = None) -> V
     stack = stack if stack is not None else load_stack(cwd)
     policy = resolve_policy(stack)
     worst = Verdict(AUTO)
+    command = strip_inert_text(command)
     for piece in [command, *_substitutions(command)]:
-        moved = False
+        moved, lost, where = False, False, cwd
         for segment in split_segments(piece):
-            moved = moved or segment.split()[:1] in (["cd"], ["pushd"])
-            verdict = _segment(segment, policy, stack, cwd, moved)
+            first = segment.split()[:1]
+            if first in (["cd"], ["pushd"], ["popd"]):
+                words = shell_words(segment) or []
+                # With `||` the `cd` may be skipped, so where later commands run is unknown.
+                known = first != ["popd"] and len(words) == 2 and not lost and "||" not in piece
+                entered = _enter(where, words[1]) if known else None
+                moved, lost, where = True, entered is None, entered or where
+            verdict = _segment(segment, policy, stack, cwd, moved, where, lost)
             if verdict is None:
                 continue
             if _RANK[verdict.decision] > _RANK[worst.decision] or worst.action == "local":

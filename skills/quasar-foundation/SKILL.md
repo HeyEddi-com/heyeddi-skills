@@ -1,7 +1,7 @@
 ---
 name: quasar-foundation
-description: "Quasar application frames, drawers, mobile gestures, and Capacitor or Tauri shells for Vue 3. Use for headers, footers, navigation, pull-to-refresh, bottom sheets, and quasar build targets. Not for data tables or CLI."
-version: 1.0.0
+description: "Quasar application frames, drawers, mobile gestures, and Capacitor or Tauri shells for Vue 3. Use for headers, footers, navigation, pull-to-refresh, bottom sheets, and Capacitor or Tauri packaging. Not for data tables or CLI."
+version: 1.0.1
 product-version: 3.8.27
 author: HeyEddi-com
 ---
@@ -16,16 +16,29 @@ Load `@vue-design-system` first if this skill was opened alone. Data grids, comp
 
 - Defining application scaffolding: headers, footers, responsive side drawers, and page containers.
 - Touch-first mobile layouts requiring pull-to-refresh, swipeable tabs, or bottom sheets.
-- Configuring multi-platform target builds (`quasar build -m capacitor`, `quasar build -m tauri`).
+- Packaging for mobile (Capacitor) or desktop (Tauri). See Native targets below.
 
 ## Installation
 
 ```bash
 npm install quasar @quasar/extras
-npm install -D @quasar/vite-plugin
+npm install -D @quasar/vite-plugin sass-embedded
 ```
 
-Vite and `main.js` load order is the hybrid setup in `@primevue-aura`. Quasar core CSS loads **first**. Do not let Quasar components replace PrimeVue data components.
+Vite and `main.ts` load order is the hybrid setup in `@primevue-aura`. Quasar core CSS loads **first**. Do not let Quasar components replace PrimeVue data components.
+
+## Native targets
+
+This setup uses the Quasar Vite plugin, not the Quasar CLI, so build with Vite and package with the platform's own CLI. Install what the target needs:
+
+```bash
+# Mobile: set webDir to "dist" in capacitor.config
+npm install @capacitor/core && npm install -D @capacitor/cli
+npx cap init && npm run build && npx cap sync
+# Desktop
+npm install -D @tauri-apps/cli
+npx tauri init && npx tauri build
+```
 
 ## Component responsibility
 
@@ -36,7 +49,7 @@ Use Quasar only for these primitives:
 | Layout framing | `<q-layout>`, `<q-page-container>`, `<q-page>` | Handles viewport calculation and native safe areas automatically. |
 | Side navigation | `<q-drawer>` | Built-in touch swipe, responsive breakpoints, mini-mode toggles. |
 | Application bars | `<q-header>`, `<q-footer>`, `<q-toolbar>` | Sticky positioning and elevation handling without manual CSS. |
-| Mobile actions | `<q-bottom-sheet>`, `<q-fab>`, `<q-pull-to-refresh>` | Hardware-optimized touch listeners. |
+| Mobile actions | `BottomSheet` plugin (`$q.bottomSheet()`), `<q-fab>`, `<q-pull-to-refresh>` | Hardware-optimized touch listeners. |
 
 ## Instructions
 
@@ -52,4 +65,4 @@ Use Quasar only for these primitives:
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill quasar-foundation --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.

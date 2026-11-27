@@ -27,10 +27,10 @@ Human PR review stays on `@heyeddi-pr-review` / `@heyeddi-pr-respond`.
 On any PR work (open PR, PR branch, review request):
 
 1. **Always** run `@heyeddi-ci-fails` first: fetch failing Checks, diagnose, fix actionable failures, commit + push
-2. **Always** run `@heyeddi-pr-respond`: fix all review items, commit + push, post every reply in-thread
+2. **Always** run `@heyeddi-pr-respond`: fix all review items, commit + push, post every reply in-thread, watch checks until green, run the gate, merge below production
 3. **Never** ask "do you want me to fix?" or "should I comment on threads?": that is always the default
 4. **Never** skip CI because the user did not mention it
-5. Only merge can need a question: only a production merge needs the user (**authorize merge** in the current turn); below production, merge once `@pre-merge-gate --signoff` exits 0
+5. Merge into dev / test / staging yourself once `@pre-merge-gate --signoff` exits 0. A production merge takes the user's **authorize merge** in the current turn; never run it earlier.
 
 ## Commands (PR comments)
 

@@ -100,11 +100,10 @@ def main() -> None:
     try:
         from playwright.sync_api import sync_playwright  # noqa: PLC0415
     except ImportError:
-        emit(
-            "[skip] Playwright not installed.\n"
-            "Install: uv sync --group evals-quality && playwright install chromium"
+        fail(
+            "Playwright not installed, so contrast was not checked. Add it to the project and run again: "
+            "pip install playwright && playwright install chromium"
         )
-        return
 
     if args.fixture:
         fixture = Path(args.fixture).resolve()

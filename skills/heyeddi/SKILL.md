@@ -106,7 +106,7 @@ If `.heyeddi/docs/intake/skill-routing.json` exists, **follow route order**.
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
 
 ## Related
 

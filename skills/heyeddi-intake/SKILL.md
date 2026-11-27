@@ -1,7 +1,7 @@
 ---
 name: heyeddi-intake
 description: "Translates vague user prompts into HeyEddi product docs (personas, route intent, voice), route-specific handoff artifacts (wireframes, user mockups, or briefs), and skill-routing under .heyeddi/. Use first on new projects before @heyeddi-design, @heyeddi-handoff, or @flutter-engineering. Never hand-write product.md: use write_product."
-version: 1.3.1
+version: 1.3.2
 product-version: 3.8.27
 author: HeyEddi-com
 paths:
@@ -13,7 +13,7 @@ paths:
 
 **Upstream intake agent**: turns vague user language into `.heyeddi/product.md`, handoff artifacts, and skill routing for downstream HeyEddi skills.
 
-You are **not** the implementer. You interpret, document, produce handoff artifacts, route, and **verify**.
+This skill does not write feature code. You interpret, document, produce handoff artifacts, route, and **verify**. In a build request the run continues after intake: `@heyeddi-product` writes the specs and backlog, then the Backlog loop builds every item.
 
 ## When to use
 
@@ -46,7 +46,8 @@ See **`reference/pipeline.md`**. Summary:
 4. `write_translation`
 5. Handoff features: **`generate_wireframe`** (or `ingest_mockups` / AI PNGs per strategy) → **`seed_brief --force`**
 6. **`build_routing --write --save-input`**
-7. **`verify_intake --check`**: must pass before you stop
+7. **`verify_intake --check`**: must pass before intake is complete
+8. Build request: `@heyeddi-product` (specs, `backlog.md`, Backlog loop)
 
 ## Never
 
@@ -72,7 +73,7 @@ See **`reference/pipeline.md`**. Summary:
 
 ## Clarify before act
 
-Read `reference/clarify-before-act.md`. One round if personas/competitors missing from user prompt.
+Read `reference/clarify-before-act.md`. A discovery request: one round if personas/competitors are missing from the user prompt. A build request: infer them from the repo, record them, and continue.
 
 ## When the task is complete: suggest next skills
 
@@ -80,7 +81,7 @@ Read `reference/clarify-before-act.md`. One round if personas/competitors missin
 python .agents/skills/heyeddi/scripts/suggest_next_skill.py --current-skill heyeddi-intake --project-root .
 ```
 
-Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. Otherwise put the script's **`### Next step`** block under **Next** in the final summary. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
+Add `--route /path` or `--mode <sub-command>` when you know them. If the suggested skill is still part of the user's request, run it now; do not hand it back. In a build request, once the request is done, run `python .agents/skills/heyeddi-product/scripts/backlog.py --project-root . next`, build the item it returns through merge below production, and repeat until it returns none. Only new work nobody asked for goes under **Next** in the final summary, in one line; never list leftovers there. See `@heyeddi` `reference/next-skill-handoff.md` and `reference/autonomy.md`.
 
 ## Related
 

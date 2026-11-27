@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
 from _skill_cli import emit, resolve_project_root
@@ -30,53 +31,80 @@ def resolve_openapi_path(root: Path, relative: str) -> Path | None:
     return candidate
 
 
-def ts_type(openapi_type: str | None, fmt: str | None = None) -> str:
-    if fmt == "date-time":
-        return "string"
-    if fmt == "uuid":
-        return "string"
-    mapping = {
-        "string": "string",
-        "integer": "number",
-        "number": "number",
-        "boolean": "boolean",
-        "array": "unknown[]",
-        "object": "Record<string, unknown>",
-    }
-    return mapping.get(openapi_type or "object", "unknown")
+def safe_name(name: str) -> str:
+    return re.sub(r"[^a-zA-Z0-9_]", "", name)
 
 
-def render_interface(name: str, schema: dict) -> str:
-    props = schema.get("properties", {})
-    required = set(schema.get("required", []))
-    lines = [f"export interface {name} {{"]
-    for prop, meta in props.items():
-        optional = "" if prop in required else "?"
-        prop_type = ts_type(meta.get("type"), meta.get("format"))
-        if "$ref" in meta:
-            ref_name = meta["$ref"].rsplit("/", 1)[-1]
-            prop_type = ref_name
-        elif meta.get("type") == "array" and "items" in meta:
-            item = meta["items"]
-            if "$ref" in item:
-                item_type = item["$ref"].rsplit("/", 1)[-1]
-            else:
-                item_type = ts_type(item.get("type"), item.get("format"))
-            prop_type = f"{item_type}[]"
-        lines.append(f"  {prop}{optional}: {prop_type};")
-    lines.append("}")
-    return "\n".join(lines)
+def property_key(name: str) -> str:
+    return name if re.fullmatch(r"[A-Za-z_$][A-Za-z0-9_$]*", name) else json.dumps(name)
 
 
-def resolve_refs(spec: dict, schema: dict) -> dict:
-    """Inline simple $ref for code generation."""
+def union(parts: list[str], joiner: str = " | ") -> str:
+    return joiner.join(dict.fromkeys(parts)) or "unknown"
+
+
+def ts_type(schema: dict) -> str:
+    """TypeScript type for one OpenAPI 3.0 or 3.1 schema."""
     if "$ref" in schema:
-        ref = schema["$ref"]
-        if ref.startswith("#/components/schemas/"):
-            name = ref.rsplit("/", 1)[-1]
-            components = spec.get("components", {}).get("schemas", {})
-            return dict(components.get(name, schema))
-    return schema
+        base = safe_name(schema["$ref"].rsplit("/", 1)[-1])
+    elif "const" in schema:
+        base = json.dumps(schema["const"])
+    elif "enum" in schema:
+        base = union([json.dumps(value) for value in schema["enum"]])
+    elif "anyOf" in schema or "oneOf" in schema:
+        base = union([ts_type(part) for part in schema.get("anyOf") or schema.get("oneOf")])
+    elif "allOf" in schema:
+        base = union([ts_type(part) for part in schema["allOf"]], " & ")
+    else:
+        kind = schema.get("type")
+        if isinstance(kind, list):
+            base = union([ts_type({**schema, "type": one}) for one in kind])
+        elif kind == "array":
+            item = ts_type(schema.get("items", {}))
+            base = f"({item})[]" if " " in item else f"{item}[]"
+        elif kind == "object" or "properties" in schema:
+            extra = schema.get("additionalProperties")
+            if "properties" in schema:
+                base = "{ " + " ".join(render_fields(schema)) + " }"
+            elif isinstance(extra, dict):
+                base = f"Record<string, {ts_type(extra)}>"
+            else:
+                base = "Record<string, unknown>"
+        else:
+            base = {
+                "string": "string",
+                "integer": "number",
+                "number": "number",
+                "boolean": "boolean",
+                "null": "null",
+            }.get(kind, "unknown")
+    if schema.get("nullable") and base != "null":
+        base = f"{base} | null"
+    return base
+
+
+def render_fields(schema: dict) -> list[str]:
+    required = set(schema.get("required", []))
+    return [
+        f"{property_key(name)}{'' if name in required else '?'}: {ts_type(meta)};"
+        for name, meta in schema.get("properties", {}).items()
+    ]
+
+
+def render_declaration(name: str, schema: dict) -> str:
+    composed = any(key in schema for key in ("$ref", "enum", "const", "anyOf", "oneOf", "allOf"))
+    plain_object = "properties" in schema or (
+        schema.get("type") == "object" and not isinstance(schema.get("additionalProperties"), dict)
+    )
+    if plain_object and not composed and not schema.get("nullable"):
+        lines = [f"export interface {name} {{", *(f"  {line}" for line in render_fields(schema)), "}"]
+        return "\n".join(lines)
+    return f"export type {name} = {ts_type(schema)};"
+
+
+def fail_json(payload: dict) -> None:
+    emit(json.dumps(payload, indent=2))
+    sys.exit(1)
 
 
 def main() -> None:
@@ -95,46 +123,39 @@ def main() -> None:
 
     openapi_path = resolve_openapi_path(root, args.openapi)
     if openapi_path is None:
-        emit(
-            json.dumps(
-                {
-                    "error": "no local openapi file",
-                    "hint": (
-                        "Place OpenAPI JSON at openapi.json (or pass --openapi <relpath>). "
-                        "Do not fetch URLs inside this skill: export from FastAPI or: "
-                        "curl -fsS http://127.0.0.1:8090/openapi.json -o openapi.json"
-                    ),
-                },
-                indent=2,
-            )
+        fail_json(
+            {
+                "error": "no local openapi file",
+                "hint": (
+                    "Place OpenAPI JSON at openapi.json (or pass --openapi <relpath>). "
+                    "Do not fetch URLs inside this skill: export from FastAPI or: "
+                    "curl -fsS http://127.0.0.1:8090/openapi.json -o openapi.json"
+                ),
+            }
         )
-        return
 
     try:
         spec = json.loads(openapi_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        emit(json.dumps({"error": f"invalid openapi JSON: {exc}", "source": str(openapi_path)}, indent=2))
-        return
+        fail_json({"error": f"invalid openapi JSON: {exc}", "source": str(openapi_path)})
 
     schemas = spec.get("components", {}).get("schemas", {})
     out_file = root / args.output
     out_file.parent.mkdir(parents=True, exist_ok=True)
 
     parts = [
-        "/** Generated from OpenAPI: refine types as needed. */",
+        "/** Generated from OpenAPI. Do not edit: put refinements in another file. */",
         f"// Source: {openapi_path.name}",
         "",
     ]
     written: list[str] = []
-    for name, raw_schema in list(schemas.items())[:40]:
-        safe = re.sub(r"[^a-zA-Z0-9_]", "", name)
+    for name, schema in schemas.items():
+        safe = safe_name(name)
         if not safe:
             continue
-        schema = resolve_refs(spec, raw_schema)
-        if schema.get("type") == "object" or "properties" in schema:
-            parts.append(render_interface(safe, schema))
-            parts.append("")
-            written.append(safe)
+        parts.append(render_declaration(safe, schema))
+        parts.append("")
+        written.append(safe)
 
     content = "\n".join(parts).rstrip() + "\n"
     out_file.write_text(content)

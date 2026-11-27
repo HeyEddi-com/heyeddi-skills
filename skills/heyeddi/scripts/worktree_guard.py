@@ -28,6 +28,13 @@ FILE_TOOLS = {"Edit", "Write", "NotebookEdit", "MultiEdit"}
 _READ_ONLY = {"ls", "cat", "head", "tail", "grep", "rg", "wc", "pwd", "cd", "stat", "file", "diff", "which", "echo", "true"}
 _READ_ONLY_GIT = {"status", "log", "diff", "show", "rev-parse", "ls-files", "ls-tree", "blame", "grep", "cat-file", "describe"}
 _SEPARATORS = {"&&", "||", ";", "|", "&"}
+# Redirects that write nowhere. A backslash before one changes its meaning, so it must follow a space.
+_NO_WRITE_REDIRECT = re.compile(r"(?<!\S)(?:[12]?>{1,2}[ \t]*/dev/null|&>[ \t]*/dev/null|[12]?>&[12])(?=$|[\s;&|])")
+_GH_PR_LOOK = {"view", "list", "checks", "diff", "status"}
+_WORKTREE_ADD_FLAGS = {"--detach", "-d", "--track", "--no-track", "-q", "--quiet", "--lock", "--checkout", "--no-checkout"}
+_FETCH_FLAGS = {"--all", "--prune", "-p", "--tags", "-t", "--no-tags", "-q", "--quiet", "-v", "--verbose"}
+_CLAIM_FLAGS = {"--path", "--task", "--pr", "--session"}  # exact: argparse accepts abbreviations
+_BRANCH_LOOK_FLAGS = {"--list", "-a", "--all", "-r", "--remotes", "--show-current", "-v", "-vv", "--verbose", "--no-color"}
 
 
 def _owner_of(path: Path) -> str:
@@ -50,19 +57,103 @@ def _owner_of(path: Path) -> str:
     return ""
 
 
-def _words(command: str) -> list[str] | None:
+def _words(command: str, comments: bool = True) -> list[str] | None:
     lexer = shlex.shlex(command.replace("\n", " ; "), posix=True, punctuation_chars=True)
     lexer.whitespace_split = True
+    if not comments:  # newlines are already gone, so a comment would hide every later line
+        lexer.commenters = ""
     try:
         return list(lexer)
     except ValueError:
         return None
 
 
-def _read_only(words: list[str] | None, command: str) -> bool:
-    if words is None or "$(" in command or "`" in command or any(">" in w for w in words):
+def _resolve(base: Path, value: str, moved: bool) -> Path | None:
+    """A path argument, or None when it cannot be known (relative after a `cd`, or a variable)."""
+    path = Path(value).expanduser()
+    if "$" in value or (moved and not path.is_absolute()):
+        return None
+    return (base / path).resolve()
+
+
+def _not_foreign(path: Path | None, session: str) -> bool:
+    return path is not None and _owner_of(path) in ("", session)
+
+
+def _adds_own_worktree(args: list[str], base: Path, session: str, moved: bool) -> bool:
+    """`git worktree add` that creates a new folder outside any foreign worktree."""
+    positional: list[str] = []
+    words = iter(args)
+    for word in words:
+        if word == "-b":  # -b fails on an existing branch; -B and -f would move or reuse one.
+            next(words, "")
+        elif word.startswith("-"):
+            if word not in _WORKTREE_ADD_FLAGS:
+                return False
+        else:
+            positional.append(word)
+    return len(positional) in (1, 2) and _not_foreign(_resolve(base, positional[0], moved), session)
+
+
+def _safe_git(args: list[str], base: Path, session: str, moved: bool) -> bool:
+    while len(args) > 1 and args[0] == "-C":
+        entered = _resolve(base, args[1], moved)
+        if entered is None:
+            return False
+        base, args = entered, args[2:]
+    if not args:
+        return False
+    sub, rest = args[0], args[1:]
+    if sub == "grep" and any(a.startswith(("-O", "--open-files-in-pager")) for a in rest):
+        return False
+    if sub in _READ_ONLY_GIT:
+        return not any(a.startswith("--output") for a in rest)
+    if sub == "worktree" and rest:
+        if rest[0] == "list":
+            return all(a in {"--porcelain", "-v", "--verbose", "-z"} for a in rest[1:])
+        return rest[0] == "add" and _adds_own_worktree(rest[1:], base, session, moved)
+    if sub == "fetch":  # Remote-tracking refs only: no refspec may write a local branch.
+        return all(a in _FETCH_FLAGS or re.fullmatch(r"[A-Za-z0-9_][\w./-]*", a) for a in rest)
+    if sub == "branch":
+        flags = [a for a in rest if a.startswith("-")]
+        return all(f in _BRANCH_LOOK_FLAGS for f in flags) and (len(flags) == len(rest) or "--list" in flags)
+    return False
+
+
+def _safe_session_script(args: list[str], base: Path, session: str, moved: bool) -> bool:
+    """`session_worktree.py list | check`, or `claim` of a worktree that is not someone else's."""
+    if len(args) < 2 or args[0].startswith("-"):
+        return False
+    script = _resolve(base, args[0], moved)
+    if script is None or script.name != "session_worktree.py":
+        return False
+    try:
+        if script.read_bytes() != Path(sw.__file__).read_bytes():
+            return False
+        # A module beside the script must not shadow one it imports.
+        if any(p.stem in sys.stdlib_module_names for p in script.parent.iterdir()):
+            return False
+    except OSError:
+        return False
+    sub, rest = args[1], args[2:]
+    if sub in {"list", "check"}:
+        return True
+    flags = [a for a in rest if a.startswith("-")]
+    if sub != "claim" or "--path" not in rest[:-1] or any(f not in _CLAIM_FLAGS for f in flags):
+        return False
+    paths = [rest[i + 1] for i, a in enumerate(rest[:-1]) if a == "--path"]
+    return all(_not_foreign(_resolve(base, p, moved), session) for p in paths)
+
+
+def _read_only(command: str, cwd: Path, session: str) -> bool:
+    """True when nothing here can change another session's worktree."""
+    if "$(" in command or "`" in command or "<(" in command:
+        return False
+    words = _words(_NO_WRITE_REDIRECT.sub(" ", command), comments=False)
+    if words is None or any(">" in w for w in words):
         return False
     segment: list[str] = []
+    moved = False
     for word in [*words, ";"]:
         if word not in _SEPARATORS:
             segment.append(word)
@@ -70,12 +161,17 @@ def _read_only(words: list[str] | None, command: str) -> bool:
         if segment:
             name, rest = Path(segment[0]).name, segment[1:]
             if name == "git":
-                while len(rest) > 1 and rest[0] == "-C":
-                    rest = rest[2:]
-                if not rest or rest[0] not in _READ_ONLY_GIT or any(a.startswith("--output") for a in rest):
+                if not _safe_git(rest, cwd, session, moved):
                     return False
-            elif name not in _READ_ONLY:
+            elif name == "gh":
+                if len(rest) < 2 or rest[0] != "pr" or rest[1] not in _GH_PR_LOOK:
+                    return False
+            elif name in {"python", "python3"}:
+                if not _safe_session_script(rest, cwd, session, moved):
+                    return False
+            elif name not in _READ_ONLY or (name == "rg" and any(a.startswith("--pre") for a in rest)):
                 return False
+            moved = moved or name == "cd"
         segment = []
     return True
 
@@ -116,7 +212,7 @@ def decide(event: dict) -> tuple[str, str]:
     words = _words(command)
     if "session_worktree.py" in command and "--user-approved" in command:
         return "ask", "this lets a session into another session's worktree"
-    if _read_only(words, command):
+    if _read_only(command, cwd, session):
         return "allow", ""
     if sw.MARKER_NAME in command:
         return "deny", "the session marker is changed only by session_worktree.py"

@@ -313,7 +313,7 @@ def define_verify_build() -> None:
                   echo "[error] package.json not found in $PROJECT_ROOT"
                   exit 0
                 fi
-                npm run build 2>&1 || true
+                npm run build 2>&1
             '''),
         }
     }
@@ -327,7 +327,6 @@ def define_visual_auditor() -> None:
                 name,
                 "Captures responsive screenshots via Playwright when available, or extracts a layout JSON tree as fallback. "
                 "Use when checking mobile/desktop layout, spacing, or comparing UI to a reference image.",
-                disable=True,
                 body=dedent("""
                     # Visual Auditor
 
@@ -556,7 +555,6 @@ def define_design_handoff() -> None:
                 "Implements screens from designer screenshots and handoff notes. "
                 "Loads DESIGN.md, maps regions to PrimeVue components, chains validation and visual audit. "
                 "Use when Designer provides route, attachments, and notes — not for greenfield design.",
-                disable=True,
                 body=dedent("""
                     # Design Handoff
 
@@ -718,7 +716,6 @@ def define_pre_merge_gate() -> None:
                 name,
                 "Runs pre-merge checks (tests, build, types, optional UI audit) and returns a markdown pass/fail report. "
                 "Use when QA approves a PR or before merge to main.",
-                disable=True,
                 body=dedent("""
                     # Pre-merge Gate
 
@@ -858,7 +855,6 @@ def define_pr_review_responder() -> None:
                 name,
                 "Fetches all PR comment types (inline, review, discussion) via gh api for team review workflow. "
                 "Use when addressing PR review feedback with fix-vs-decline rules — stricter than built-in /babysit.",
-                disable=True,
                 body=dedent("""
                     # PR Review Responder
 
@@ -1008,7 +1004,6 @@ def define_design_system_generalizer() -> None:
                 name,
                 "Scans token and component usage patterns from a golden reference page and diffs violations on other routes. "
                 "Use when spreading a well-built page's patterns across the app in PR-sized chunks.",
-                disable=True,
                 body=dedent("""
                     # Design System Generalizer
 
@@ -1683,7 +1678,6 @@ def define_heyeddi_design() -> None:
                 "Designs new screens within OpenProps, PrimeVue, and DESIGN.md constraints. "
                 "Sub-commands: craft (new screen), shape (IA/layout), polish (refine). "
                 "Replaces impeccable for HeyEddi stack — explicit invocation only.",
-                disable=True,
                 body=dedent("""
                     # HeyEddi Design
 

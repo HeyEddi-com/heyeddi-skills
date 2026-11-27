@@ -16,17 +16,17 @@ BACKEND = "backend"
 
 
 def _cors_origins(root: Path) -> list[str]:
-    origins: set[str] = {"http://localhost:5173"}
+    ports: set[int] = {5173}
     stack_path = root / ".heyeddi" / "stack.json"
     if stack_path.is_file():
         cfg = load_json(stack_path) or {}
-        frontend = cfg.get("frontend")
         web_port = cfg.get("web_port")
-        if frontend == "flutter":
-            origins = {f"http://localhost:{web_port or 8085}"}
+        if cfg.get("frontend") == "flutter":
+            ports = {web_port or 8085}
         elif web_port:
-            origins.add(f"http://localhost:{web_port}")
-    return sorted(origins)
+            ports.add(web_port)
+    # The browser treats localhost and 127.0.0.1 as different origins.
+    return sorted(f"http://{host}:{port}" for port in ports for host in ("localhost", "127.0.0.1"))
 
 
 def _patch_cors(root: Path) -> None:
