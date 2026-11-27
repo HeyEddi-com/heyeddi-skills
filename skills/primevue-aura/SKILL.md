@@ -64,7 +64,7 @@ import { MotionPlugin } from "@vueuse/motion";
 
 import App from "@/App.vue";
 // 4. Token bridge (see @aura-design-tokens), after both libraries
-import "./styles/tokens.css";
+import "@/styles/tokens.css";
 
 const app = createApp(App);
 
