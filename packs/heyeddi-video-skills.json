@@ -3,7 +3,7 @@
   "displayName": "HeyEddi Video Skills",
   "description": "Videos made locally with HyperFrames and local voices: cartoons, launches, explainers, data stories, vertical clips, kinetic type.",
   "plugin": "heyeddi-video-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "skills": [
     "heyeddi-video"
   ]

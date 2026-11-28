@@ -1,0 +1,154 @@
+{
+ "checked": "2026-11-28",
+ "sources": [
+  {
+   "name": "Kenney",
+   "url": "https://kenney.nl/assets",
+   "licence": "CC0",
+   "note": "2D, 3D, UI and sound packs. The download button needs a browser: save the zip, then `asset add <file>`"
+  },
+  {
+   "name": "KayKit",
+   "url": "https://github.com/KayKit-Game-Assets",
+   "licence": "CC0",
+   "note": "low-poly 3D characters and sets"
+  },
+  {
+   "name": "Quaternius",
+   "url": "https://quaternius.com",
+   "licence": "CC0 or QAL, per kit",
+   "note": "QAL forbids direct reselling: read the kit, add only CC0 ones"
+  },
+  {
+   "name": "Poly Haven",
+   "url": "https://polyhaven.com",
+   "licence": "CC0",
+   "note": "HDRI skies, textures, models. Their API has its own terms: download files by hand"
+  },
+  {
+   "name": "ambientCG",
+   "url": "https://ambientcg.com",
+   "licence": "CC0",
+   "note": "materials and textures"
+  }
+ ],
+ "items": [
+  {
+   "id": "kaykit-mage",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "commit": "672074b73ba276876a19e8816ecdc5241817ab47",
+   "files": [
+    "addons/kaykit_character_pack_adventures/Characters/gltf/Mage.glb"
+   ],
+   "about": "hooded spellcaster"
+  },
+  {
+   "id": "kaykit-rogue",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "commit": "672074b73ba276876a19e8816ecdc5241817ab47",
+   "files": [
+    "addons/kaykit_character_pack_adventures/Characters/gltf/Rogue.glb"
+   ],
+   "about": "light adventurer"
+  },
+  {
+   "id": "kaykit-rogue-hooded",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "commit": "672074b73ba276876a19e8816ecdc5241817ab47",
+   "files": [
+    "addons/kaykit_character_pack_adventures/Characters/gltf/Rogue_Hooded.glb"
+   ],
+   "about": "adventurer with a hood"
+  },
+  {
+   "id": "kaykit-knight",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "commit": "672074b73ba276876a19e8816ecdc5241817ab47",
+   "files": [
+    "addons/kaykit_character_pack_adventures/Characters/gltf/Knight.glb"
+   ],
+   "about": "armoured knight"
+  },
+  {
+   "id": "kaykit-barbarian",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+   "commit": "672074b73ba276876a19e8816ecdc5241817ab47",
+   "files": [
+    "addons/kaykit_character_pack_adventures/Characters/gltf/Barbarian.glb"
+   ],
+   "about": "large warrior"
+  },
+  {
+   "id": "kaykit-skeleton-minion",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+   "commit": "15b62b9bad122f72926c10fb14d622c73819fa54",
+   "files": [
+    "addons/kaykit_character_pack_skeletons/Characters/gltf/Skeleton_Minion.glb"
+   ],
+   "about": "small skeleton"
+  },
+  {
+   "id": "kaykit-skeleton-mage",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+   "commit": "15b62b9bad122f72926c10fb14d622c73819fa54",
+   "files": [
+    "addons/kaykit_character_pack_skeletons/Characters/gltf/Skeleton_Mage.glb"
+   ],
+   "about": "skeleton spellcaster"
+  },
+  {
+   "id": "kaykit-skeleton-warrior",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+   "commit": "15b62b9bad122f72926c10fb14d622c73819fa54",
+   "files": [
+    "addons/kaykit_character_pack_skeletons/Characters/gltf/Skeleton_Warrior.glb"
+   ],
+   "about": "skeleton fighter"
+  },
+  {
+   "id": "kaykit-skeleton-rogue",
+   "kind": "rigged 3D character (glb, animated)",
+   "licence": "CC0",
+   "author": "Kay Lousberg",
+   "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+   "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+   "commit": "15b62b9bad122f72926c10fb14d622c73819fa54",
+   "files": [
+    "addons/kaykit_character_pack_skeletons/Characters/gltf/Skeleton_Rogue.glb"
+   ],
+   "about": "skeleton thief"
+  }
+ ]
+}
