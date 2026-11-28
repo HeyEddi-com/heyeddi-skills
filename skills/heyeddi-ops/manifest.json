@@ -1,0 +1,36 @@
+{
+  "skill": "heyeddi-ops",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "ops_docs",
+      "description": "Scaffold or check threat model, runbook and incident lessons under .heyeddi/docs/ops/.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "project_root": {
+            "type": "string",
+            "description": "Workspace root path"
+          },
+          "init": {
+            "type": "boolean",
+            "description": "Create missing documents"
+          },
+          "service": {
+            "type": "string",
+            "description": "Runbook name for --init"
+          },
+          "check": {
+            "type": "boolean",
+            "description": "Exit non-zero while a required part is empty"
+          }
+        },
+        "required": [
+          "project_root"
+        ]
+      },
+      "script": "scripts/ops_docs.py",
+      "readonly": false
+    }
+  ]
+}

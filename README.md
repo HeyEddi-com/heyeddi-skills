@@ -138,7 +138,8 @@ Install counts on the leaderboard come from the Vercel CLI's own [install teleme
 | `composable-patterns` | Vue composables for FastAPI / Firebase access |
 | `flutter-patterns` | Riverpod repositories - Dio + Firebase patterns |
 | `heyeddi-local-first` | Local Terraform and config first. `terraform plan` warns. `classify_command.py --check` exits 1 on apply and other live cloud writes |
-| `engineering-excellence` | KISS/YAGNI/DRY/SOLID audits + `.heyeddi/docs/engineering/` |
+| `engineering-excellence` | KISS/YAGNI/DRY/SOLID and CI hardening audits + `.heyeddi/docs/engineering/` |
+| `heyeddi-ops` | Threat model, runbooks, incident lessons, teardown in `.heyeddi/docs/ops/` |
 | `heyeddi-ci-config` | Author `eddi-ci.yaml` from the live policy contract (Reviewer + optional Spot; GHA-first) |
 | `heyeddi-ci-guide` | HeyEddi CI commands, auth matrix, Spot runners, feedback paths |
 | `@heyeddi-pr-respond` | Respond to all PR review feedback (human + HeyEddi CI) |
