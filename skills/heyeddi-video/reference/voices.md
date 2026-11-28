@@ -5,7 +5,7 @@ All of them run on this machine on the CPU. Pick one engine per video. Timings a
 | Engine | Use it for | Speed | Directions | Licence |
 | --- | --- | --- | --- | --- |
 | Qwen3-TTS 1.7B | Characters and anything that needs acting | 7 to 9 times slower than real time | Yes, plain English | Apache-2.0 code; check the model card |
-| Qwen3-TTS VoiceDesign + Base | A character of your own: invent the voice once, reuse it | About the same | Through one reference clip per mood | Apache-2.0 code; check the model card |
+| Qwen3-TTS VoiceDesign + Base | A character of your own: invent the voice once, reuse it | 25 to 30 times slower than real time: plan on 13 minutes per half minute of speech | Through one reference clip per mood | Apache-2.0 code; check the model card |
 | Pocket TTS | Fast natural narration, many takes | About 4 times faster than real time | No | MIT code, CC-BY-4.0 weights: credit Kyutai |
 | Kokoro | Default, nothing extra to install | A few seconds a line | No | Apache-2.0 weights |
 
