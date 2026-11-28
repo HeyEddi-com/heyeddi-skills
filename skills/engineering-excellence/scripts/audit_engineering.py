@@ -119,6 +119,65 @@ def _scan_src(root: Path) -> list[dict]:
     return findings
 
 
+USES = re.compile(r"^\s*(?:-\s*)?uses:\s*['\"]?([^\s'\"#]+)")
+PIPE_TO_SHELL = re.compile(r"\b(?:curl|wget)\b[^\n|]*\|\s*(?:sudo\s+)?(?:ba|z)?sh\b")
+RUN = re.compile(r"^(\s*(?:-\s*)?)run:\s*(.*)$")
+
+
+def _run_blocks(text: str) -> list[str]:
+    """Return each `run:` step body, found by indentation (no YAML dependency)."""
+    lines = text.splitlines()
+    blocks: list[str] = []
+    for index, line in enumerate(lines):
+        match = RUN.match(line)
+        if not match:
+            continue
+        if not match.group(2).startswith(("|", ">")):
+            blocks.append(match.group(2))
+            continue
+        body: list[str] = []
+        for following in lines[index + 1 :]:
+            if following.strip() and len(following) - len(following.lstrip()) <= len(match.group(1)):
+                break
+            body.append(following)
+        blocks.append("\n".join(body))
+    return blocks
+
+
+def _workflow_problems(text: str) -> list[str]:
+    refs = [m.group(1) for m in map(USES.match, text.splitlines()) if m]
+    problems = [
+        f"Action not pinned by commit SHA: {ref}"
+        for ref in refs
+        if not ref.startswith(("./", "docker://")) and not re.search(r"@[0-9a-f]{40}$", ref)
+    ]
+    if not re.search(r"^\s*permissions:", text, re.MULTILINE):
+        problems.append("No permissions block: the job token keeps its default scope")
+    explicit_bash = re.search(r"^\s*shell:\s*bash\s*$", text, re.MULTILINE)
+    for block in _run_blocks(text):
+        if not explicit_bash and "pipefail" not in block and re.search(r"(?<![|>])\|(?!\|)", block):
+            problems.append("Pipe without pipefail: a failure before the pipe is ignored")
+            break
+    return problems
+
+
+def scan_ci(root: Path) -> list[dict]:
+    """Warn on CI and shell habits that hide failures or widen reach."""
+    workflows = sorted((root / ".github" / "workflows").glob("*.y*ml"))
+    scripts = sorted((root / "scripts").rglob("*.sh"))
+    findings: list[dict] = []
+    for path in workflows + scripts:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        problems = _workflow_problems(text) if path in workflows else []
+        if any(PIPE_TO_SHELL.search(line) for line in text.splitlines() if not line.lstrip().startswith("#")):
+            problems.append("Downloaded script piped into a shell: download, verify, then run")
+        findings += [
+            {"principle": "CI", "severity": "warn", "file": str(path.relative_to(root)), "message": message}
+            for message in problems
+        ]
+    return findings
+
+
 def _check_docs(root: Path) -> list[dict]:
     issues: list[dict] = []
     eng = engineering_docs_dir(root)
@@ -180,7 +239,7 @@ def _write_report(root: Path, findings: list[dict]) -> Path:
 
 
 def audit_engineering(root: Path) -> dict:
-    findings = _scan_src(root) + _check_docs(root)
+    findings = _scan_src(root) + scan_ci(root) + _check_docs(root)
     errors = [f for f in findings if f["severity"] == "error"]
     warns = [f for f in findings if f["severity"] == "warn"]
     report = _write_report(root, findings)

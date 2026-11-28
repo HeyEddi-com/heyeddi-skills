@@ -10,6 +10,8 @@ Yes, we want these habits in skills. Not as a new set.
 * **Operating documents** (threat model, runbook, restore, incident, teardown) go into one on-demand skill, `heyeddi-ops`.
 * **Learning for a person** is the lessons document. A skill changes what an agent does; it does not teach its owner.
 
+**Built (2026-11-27):** the habits file and CI check in `@engineering-excellence`, this repository's pinned workflows, and `@heyeddi-ops`. The sections below describe the state before that work.
+
 ## Source and coverage
 
 The [Enterprise engineering habits](https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Enterprise-Engineering-Habits) page is part of the [Clouds-Against-Humanity wiki](https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki) (Apache-2.0, by ChiefGyk3D), a teaching repository for a small cloud lab. The wiki has 176 pages and about 1.2 million words.
@@ -84,7 +86,7 @@ Put them in `reference/engineering-habits.md`, loaded for every change:
 
 Warn on: an action pinned by tag, a workflow with no `permissions` block, `curl` piped into a shell, and a shell step with a pipe and no `pipefail`.
 
-This repository would trip it today: [ci.yml](../../.github/workflows/ci.yml) pins `actions/checkout@v4`, `actions/setup-python@v5`, `astral-sh/setup-uv@v5` and `actions/setup-node@v4` by tag and has no `permissions` block.
+This repository tripped it: [ci.yml](../../.github/workflows/ci.yml) pinned `actions/checkout@v4`, `actions/setup-python@v5`, `astral-sh/setup-uv@v5` and `actions/setup-node@v4` by tag and had no `permissions` block.
 
 ## Order
 

@@ -1,8 +1,8 @@
 ---
 name: engineering-excellence
 description: "ALWAYS-ON: audits plans and code for KISS, YAGNI, DRY, SOLID, testability, and run cost against a budget; maintains .heyeddi/docs/engineering/. Use on every chat that plans or changes code, before merge, refactor, ADRs, or reuse-catalog work. Not for visual UX (ux-flow-auditor) or full CI (pre-merge-gate includes this audit)."
-version: 1.5.0
-product-version: 3.8.28
+version: 1.6.0
+product-version: 3.9.0
 author: HeyEddi-com
 ---
 
@@ -13,6 +13,8 @@ Simple solutions that scale: documented so the next agent does not over-build or
 **Always on** for every chat that plans or changes code. See `reference/engineering-always-on.md` and hub `docs/always-on-skills.md`.
 
 **All artifacts go under `.heyeddi/docs/`**: never repo root.
+
+**Habits:** read `reference/engineering-habits.md` before changing code or infrastructure.
 
 ## When to use
 
@@ -60,6 +62,7 @@ append_decision         → ADR, gotcha, or how-it-works note (--type)
 | **SOLID** | Warn on fat routers; views thin, services fat |
 | **Testable** | Note views missing smoke specs |
 | **Reliability** | Timed work wakes up at its due time, failures arrive as events, queries read live rows only, one bounded backstop. Plan gate warns on polling with no event path. Detail: `reference/event-driven-work.md` |
+| **CI hardening** | The audit warns on actions not pinned by commit SHA, no `permissions` block, a download piped into a shell, and a pipe without `pipefail` |
 | **Budget** | Price each cost driver in the diff, including Firestore reads per day; plan gate warns when a plan adds one with no $/month; over budget or over the reads limit fails |
 
 ## `.heyeddi/` outputs
@@ -80,6 +83,7 @@ Design decisions stay in `.heyeddi/design.md` Decision log: do not mix.
 - `@heyeddi`: always-on router before this skill when the task is ambiguous
 - `@project-engineering`: scaffold first
 - `@composable-patterns` / `@backend-type-bridger`: after architecture notes exist
+- `@heyeddi-ops`: threat model, runbook, incident lessons, teardown
 - `@pre-merge-gate`: final CI; includes `audit_engineering --check`
 
 ## When the task is complete: suggest next skills

@@ -2,7 +2,7 @@
 name: heyeddi-local-first
 description: "ALWAYS-ON permission and local-first gate for every agent. check_permission.py decides allow / ask / deny for commit, push, PR, merge, release, and dev / staging / prod reads and writes from the agent preset in .heyeddi/stack.json (default balanced). terraform plan is allowed and must be summarized. Use before any git write, gh write, publish, database client, infra, Terraform, gcloud, Firebase, Kubernetes, or Google account change."
 version: 1.0.1
-product-version: 3.8.28
+product-version: 3.9.0
 author: HeyEddi-com
 ---
 

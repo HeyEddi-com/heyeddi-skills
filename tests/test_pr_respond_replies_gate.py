@@ -127,7 +127,8 @@ def test_post_dry_run_skips_review_bodies_no_top_level(tmp_path: Path) -> None:
 
 
 def test_live_check_ignores_issue_comment_ids() -> None:
-    sys.modules.pop("verify_response", None)
+    for name in ("verify_response", "_skill_cli"):  # other skills ship the same module names
+        sys.modules.pop(name, None)
     if str(SCRIPTS) in sys.path:
         sys.path.remove(str(SCRIPTS))
     sys.path.insert(0, str(SCRIPTS))
