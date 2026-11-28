@@ -24,6 +24,11 @@
       "name": "heyeddi-design-skills",
       "source": "heyeddi-design-skills",
       "description": "HeyEddi design pack \u2014 taste-penpot owns the look; heyeddi-design records product context and hands off"
+    },
+    {
+      "name": "heyeddi-video-skills",
+      "source": "heyeddi-video-skills",
+      "description": "HeyEddi video pack: local videos with HyperFrames and local voices"
     }
   ],
   "version": "3.5.0"

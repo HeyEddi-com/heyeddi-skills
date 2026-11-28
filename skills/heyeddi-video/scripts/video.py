@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One entry point for local HyperFrames work: setup, hf, words, render, verify.
+"""One entry point for local HyperFrames work: setup, hf, say, words, render, verify.
 
 Everything stays on this machine. Heavy steps (Chrome, FFmpeg) take a lock, so
 several agents on one machine run them one at a time.
@@ -20,6 +20,9 @@ from pathlib import Path
 HYPERFRAMES = "0.9.104"
 CHROME = "158.0.8127.88"
 LOUDNESS_RANGE = (-18.0, -12.0)
+# Extra voice engines, each in its own environment. Kokoro needs none: `hf <project> -- tts`.
+ENGINES = {"pocket": ["pocket-tts", "soundfile"], "qwen": ["qwen-tts", "soundfile"]}
+CPU_WHEELS = "https://download.pytorch.org/whl/cpu"
 # CLI commands that upload, bill, sign in or report usage.
 LEAVES_MACHINE = {"publish", "cloud", "lambda", "cloudrun", "auth", "events", "feedback", "usage"}
 # Commands that start a browser or encode video.
@@ -121,6 +124,32 @@ def measure_loudness(path: Path) -> float | None:
     return parse_loudness(out.stderr)
 
 
+def say_command(home: Path, engine: str, jobs: Path) -> tuple[list[str], dict[str, str]]:
+    python = home / "engines" / engine / "bin" / "python"
+    if not python.exists():
+        raise FileNotFoundError(f"The {engine} voice is not installed. Run: video.py setup --voice {engine}")
+    command = [str(python), str(Path(__file__).with_name("say.py")), engine, str(jobs)]
+    env = {"HF_HUB_DISABLE_TELEMETRY": "1"}
+    if engine == "qwen":
+        env["HF_HUB_OFFLINE"] = "1"
+    return command, env
+
+
+def install_voice(home: Path, engine: str) -> None:
+    folder = home / "engines" / engine
+    python = folder / "bin" / "python"
+    if not python.exists():
+        subprocess.run(["uv", "venv", "-q", "-p", "3.12", str(folder)], check=True)
+    pip = ["uv", "pip", "install", "-q", "-p", str(python)]
+    # CPU builds of torch: the default Linux wheels pull gigabytes of CUDA.
+    subprocess.run([*pip, "torch", "torchaudio", "--index-url", CPU_WHEELS], check=True)
+    subprocess.run([*pip, *ENGINES[engine], "--extra-index-url", CPU_WHEELS, "--index-strategy", "unsafe-best-match"], check=True)
+    if engine == "qwen":
+        scripts = str(Path(__file__).parent)
+        code = f"import sys; sys.path.insert(0, {scripts!r}); import say; say.qwen_path(download=True)"
+        subprocess.run([str(python), "-c", code], env={**os.environ, "HF_HUB_DISABLE_TELEMETRY": "1"}, check=True)
+
+
 def words_command(home: Path, audio: Path) -> list[str]:
     python = home / "venv" / "bin" / "python"
     if not any(home.glob("venv/lib/*/site-packages/faster_whisper")):
@@ -191,6 +220,10 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     install = sub.add_parser("setup", help="install the local voice and headless Chrome, turn telemetry off")
     install.add_argument("--captions", action="store_true", help="also install local word timings")
+    install.add_argument("--voice", choices=sorted(ENGINES), action="append", default=[], help="also install a voice engine")
+    speak = sub.add_parser("say", help="speak a jobs file with a local voice engine")
+    speak.add_argument("engine", choices=sorted(ENGINES))
+    speak.add_argument("jobs", type=Path)
     timing = sub.add_parser("words", help="print word timings of a speech file as JSON")
     timing.add_argument("file", type=Path)
     run_cli = sub.add_parser("hf", help="run a local hyperframes command: video.py hf <project> -- check")
@@ -207,7 +240,17 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "setup":
+        for engine in args.voice:
+            install_voice(tools_home(), engine)
         return setup(args.captions)
+    if args.command == "say":
+        try:
+            command, extra = say_command(tools_home(), args.engine, args.jobs.resolve())
+        except FileNotFoundError as error:
+            print(error, file=sys.stderr)
+            return 2
+        with one_heavy_job():
+            return subprocess.run(command, env={**os.environ, **extra}).returncode
     if args.command == "words":
         try:
             command = words_command(tools_home(), args.file.resolve())

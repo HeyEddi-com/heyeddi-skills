@@ -1,0 +1,28 @@
+{
+  "name": "heyeddi-video-skills",
+  "displayName": "HeyEddi Video Skills",
+  "version": "1.0.0",
+  "description": "HeyEddi video pack: local videos with HyperFrames and local voices.",
+  "author": {
+    "name": "HeyEddi",
+    "email": "eddi@heyeddi.com"
+  },
+  "homepage": "https://github.com/HeyEddi-com/heyeddi-skills",
+  "repository": "https://github.com/HeyEddi-com/heyeddi-skills",
+  "license": "MIT",
+  "logo": "assets/logo.svg",
+  "keywords": [
+    "heyeddi",
+    "video",
+    "agent-skills",
+    "hyperframes",
+    "tts"
+  ],
+  "category": "developer-tools",
+  "tags": [
+    "skills",
+    "video",
+    "heyeddi"
+  ],
+  "skills": "./skills/"
+}

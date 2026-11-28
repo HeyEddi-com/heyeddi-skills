@@ -5,6 +5,7 @@
 - `setup`: local voice, headless Chrome, telemetry off.
 - `hf <project> -- <hyperframes args>`: one local CLI command, queued behind other heavy jobs.
 - `setup --captions` once, then `words <file>.wav`: word timings as JSON, computed locally.
+- `setup --voice qwen` or `--voice pocket` once, then `say <engine> <jobs.json>`: see `../reference/voices.md`.
 - `render <project> -o <file>.mp4`: check, render, normalise loudness, verify.
 - `verify <file>.mp4`: streams, loudness, and a frame sheet.
 

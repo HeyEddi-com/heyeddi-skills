@@ -21,7 +21,7 @@ Read the matching type file in the official `/hyperframes` skill too. This table
 
 ## Sound
 
-- Voice: Kokoro through `hyperframes tts`. Spell names the way they should sound.
+- Voice: pick an engine in `voices.md`. Spell names the way they should sound.
 - Effects: copy from the set above and keep `CREDITS.md` with them.
 - Music: synthesise a bed with numpy, or use a track the user supplies. Duck it under the voice.
 

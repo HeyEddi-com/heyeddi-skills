@@ -137,3 +137,54 @@ def test_taking_the_queue_never_truncates_what_the_lock_path_points_at(tmp_path,
     with video.one_heavy_job():
         pass
     assert victim.read_text() == "keep me"
+
+
+def test_the_video_skill_installs_on_its_own():
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    pack = json.loads((root / "packs" / "heyeddi-video-skills.json").read_text())
+    assert pack["skills"] == ["heyeddi-video"]
+    market = json.loads((root / ".cursor-plugin" / "marketplace.json").read_text())
+    assert "heyeddi-video-skills" in [plugin["name"] for plugin in market["plugins"]]
+    others = [s.name for s in (root / "skills").iterdir() if s.name != "heyeddi-video"]
+    for doc in (root / "skills" / "heyeddi-video").rglob("*.md"):
+        text = doc.read_text()
+        assert "engineering-excellence" not in text, doc
+        assert not [name for name in others if f"@{name}" in text], doc
+
+
+def _installed(home, engine):
+    (home / "engines" / engine / "bin").mkdir(parents=True)
+    (home / "engines" / engine / "bin" / "python").write_text("")
+
+
+def test_say_runs_inside_the_engine_environment_and_stays_offline(tmp_path):
+    _installed(tmp_path, "qwen")
+    command, env = video.say_command(tmp_path, "qwen", tmp_path / "jobs.json")
+    assert command[0] == str(tmp_path / "engines/qwen/bin/python")
+    assert command[1].endswith("say.py") and command[2:] == ["qwen", str(tmp_path / "jobs.json")]
+    assert env == {"HF_HUB_OFFLINE": "1", "HF_HUB_DISABLE_TELEMETRY": "1"}
+
+
+def test_say_names_the_install_command_for_a_missing_engine(tmp_path):
+    with pytest.raises(FileNotFoundError, match="setup --voice pocket"):
+        video.say_command(tmp_path, "pocket", tmp_path / "jobs.json")
+
+
+def test_only_qwen_takes_acting_directions():
+    say = load_skill_script("heyeddi-video", "say")
+    job = {"text": "Ship it.", "voice": "alba", "out": "a.wav", "direction": "smug"}
+    with pytest.raises(ValueError, match="direction"):
+        say.check_jobs("pocket", [job])
+    say.check_jobs("qwen", [{**job, "voice": "Aiden"}])
+
+
+@pytest.mark.parametrize("missing", ["text", "voice", "out"])
+def test_every_line_needs_text_voice_and_output(missing):
+    say = load_skill_script("heyeddi-video", "say")
+    job = {"text": "Ship it.", "voice": "Aiden", "out": "a.wav"}
+    del job[missing]
+    with pytest.raises(ValueError, match=missing):
+        say.check_jobs("qwen", [job])
