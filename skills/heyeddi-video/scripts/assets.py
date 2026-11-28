@@ -8,6 +8,8 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
+import fcntl
 import hashlib
 import json
 import os
@@ -83,6 +85,15 @@ def read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
 
+@contextlib.contextmanager
+def locked(home: Path):
+    """One writer at a time: several agents share the inventory and may share a project."""
+    home.mkdir(parents=True, exist_ok=True)
+    with (home / "inventory.lock").open("a") as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX)
+        yield
+
+
 def record(home: Path, name: str, entry: dict) -> None:
     index = read_json(home / "inventory.json")
     index[name] = entry
@@ -114,14 +125,15 @@ def get(item: dict, home: Path, into: Path, fetch=download) -> Path:
     check_licence(item["licence"], item.get("author", ""))
     name = item["id"]
     folder = home / name
-    if name not in read_json(home / "inventory.json") or not folder.is_dir():
-        folder.mkdir(parents=True, exist_ok=True)
-        base = f"https://raw.githubusercontent.com/{item['repo']}/{item['commit']}/"
-        for path in item["files"]:
-            fetch(base + urllib.parse.quote(path), folder / Path(path).name)
-        names = [Path(path).name for path in item["files"]]
-        record(home, name, entry_for(folder, names, item["licence"], item["source"], item.get("author", "")))
-    return deliver(home, name, into)
+    with locked(home):
+        if name not in read_json(home / "inventory.json") or not folder.is_dir():
+            folder.mkdir(parents=True, exist_ok=True)
+            base = f"https://raw.githubusercontent.com/{item['repo']}/{item['commit']}/"
+            for path in item["files"]:
+                fetch(base + urllib.parse.quote(path), folder / Path(path).name)
+            names = [Path(path).name for path in item["files"]]
+            record(home, name, entry_for(folder, names, item["licence"], item["source"], item.get("author", "")))
+        return deliver(home, name, into)
 
 
 def add(location: str, name: str, licence: str, source: str, author: str, home: Path, into: Path) -> Path:
@@ -129,25 +141,25 @@ def add(location: str, name: str, licence: str, source: str, author: str, home: 
     check_licence(licence, author)
     if Path(name).name != name or name in ("", ".", ".."):
         raise AssetError(f"--id is a plain folder name: {name!r}")
-    folder = home / name
-    if folder.exists():
-        raise AssetError(f"{name} is already in the inventory: `get` it, or pick another id")
-    home.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=home) as work:
-        local = Path(location)
-        if not local.is_file():
-            local = Path(work) / (Path(urllib.parse.urlparse(location).path).name or name)
-            download(location, local)
-        staged = Path(work) / "files"
-        if zipfile.is_zipfile(local) and local.suffix.lower() == ".zip":
-            files = unpack(local, staged)
-        else:
-            staged.mkdir()
-            shutil.copy2(local, staged / local.name)
-            files = [local.name]
-        staged.rename(folder)
-    record(home, name, entry_for(folder, files, licence, source, author))
-    return deliver(home, name, into)
+    with locked(home):
+        folder = home / name
+        if folder.exists():
+            raise AssetError(f"{name} is already in the inventory: `get` it, or pick another id")
+        with tempfile.TemporaryDirectory(dir=home) as work:
+            local = Path(location)
+            if not local.is_file():
+                local = Path(work) / (Path(urllib.parse.urlparse(location).path).name or name)
+                download(location, local)
+            staged = Path(work) / "files"
+            if zipfile.is_zipfile(local) and local.suffix.lower() == ".zip":
+                files = unpack(local, staged)
+            else:
+                staged.mkdir()
+                shutil.copy2(local, staged / local.name)
+                files = [local.name]
+            staged.rename(folder)
+        record(home, name, entry_for(folder, files, licence, source, author))
+        return deliver(home, name, into)
 
 
 def listing(words: str, home: Path) -> list[dict]:
@@ -187,7 +199,8 @@ def main(argv: list[str]) -> int:
             if args.id in items:
                 placed = get(items[args.id], home, args.into.resolve())
             elif args.id in read_json(home / "inventory.json"):
-                placed = deliver(home, args.id, args.into.resolve())
+                with locked(home):
+                    placed = deliver(home, args.id, args.into.resolve())
             else:
                 raise AssetError(f"{args.id} is neither in the catalog nor the inventory")
     except (AssetError, OSError, zipfile.BadZipFile) as error:

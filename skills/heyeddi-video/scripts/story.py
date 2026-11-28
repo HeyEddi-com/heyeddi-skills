@@ -12,6 +12,7 @@ import math
 import re
 import subprocess
 import sys
+import tempfile
 import wave
 from pathlib import Path
 
@@ -71,6 +72,8 @@ def job(line: dict, character: dict, cast: Path) -> dict:
         # A cloned voice acts through its reference clip, one clip per mood.
         reference = cast / (moods[mood] if mood else voice)
         voice = str(reference)
+        if not reference.is_file():
+            raise ScriptError(f"{line['speaker']} is missing its reference clip: {reference}")
         changes = reference.read_bytes()
     elif engine == "qwen":
         direction = ", ".join(part for part in (character.get("direction"), moods.get(mood)) if part)
@@ -198,12 +201,14 @@ def run_character(args) -> int:
         made = {"engine": "design", "text": SAMPLE_TEXT, "voice": args.voice_design, "out": f"{stem}.wav"}
         if mood:
             made["direction"] = moods[mood]
-        # A new description replaces the old clip.
-        (folder / made["out"]).unlink(missing_ok=True)
         jobs.append(made)
-        (folder / f"{stem}.txt").write_text(SAMPLE_TEXT + "\n")
     try:
-        speak(jobs, folder)
+        # Made aside and moved in only when every clip worked: a failure keeps the old voice.
+        with tempfile.TemporaryDirectory(dir=folder) as work:
+            speak(jobs, Path(work))
+            for stem in clips.values():
+                (Path(work) / f"{stem}.wav").replace(folder / f"{stem}.wav")
+                (folder / f"{stem}.txt").write_text(SAMPLE_TEXT + "\n")
     except ScriptError as error:
         print(error, file=sys.stderr)
         return 2

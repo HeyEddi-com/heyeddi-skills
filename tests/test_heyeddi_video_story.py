@@ -1,7 +1,6 @@
 """heyeddi-video: designed voices, the asset inventory, and script to timeline."""
 from __future__ import annotations
 
-import io
 import json
 import math
 import struct
@@ -195,3 +194,86 @@ def test_every_catalog_entry_is_pinned_and_licensed():
     for item in assets.catalog()["items"]:
         assets.check_licence(item["licence"], item.get("author", ""))
         assert len(item["commit"]) == 40 and item["files"] and item["source"].startswith("https://")
+
+
+def _locked(path):
+    import fcntl
+
+    with path.open("a") as second:
+        try:
+            fcntl.flock(second, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return True
+    return False
+
+
+def test_story_speech_runs_inside_the_heavy_queue(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    monkeypatch.setenv("HEYEDDI_VIDEO_HOME", str(tmp_path))
+    (tmp_path / "engines/pocket/bin").mkdir(parents=True)
+    (tmp_path / "engines/pocket/bin/python").write_text("")
+    # speak() imports the script by name, as it does when run from its folder.
+    monkeypatch.setitem(sys.modules, "video", video)
+    held = []
+
+    def engine(command, **_kwargs):
+        held.append(_locked(video.lock_path(tmp_path)))
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(video.subprocess, "run", engine)
+    monkeypatch.setattr(story, "trim", lambda source, target: None)
+    story.speak([{"engine": "pocket", "text": "Hi.", "voice": "alba", "out": "a.wav"}], tmp_path / "voices")
+    assert held == [True]
+
+
+def test_the_inventory_is_locked_while_an_asset_is_fetched_and_recorded(tmp_path):
+    held = []
+
+    def fetch(url, target):
+        held.append(_locked(tmp_path / "inv/inventory.lock"))
+        target.write_bytes(b"model")
+
+    item = {"id": "hero", "licence": "CC0", "source": "s", "repo": "o/r", "commit": "abc", "files": ["Hero.glb"]}
+    assets.get(item, tmp_path / "inv", tmp_path / "p", fetch=fetch)
+    assert held == [True]
+    assert not _locked(tmp_path / "inv/inventory.lock")
+
+
+def test_redesigning_a_character_keeps_the_old_voice_when_it_fails(tmp_path, monkeypatch):
+    import argparse
+
+    cast = _cast(tmp_path)
+
+    def broken(jobs, folder):
+        raise story.ScriptError("the design voice failed with exit 1")
+
+    monkeypatch.setattr(story, "speak", broken)
+    args = argparse.Namespace(name="maya", cast=cast, voice_design="Someone new.", mood=[])
+    assert story.run_character(args) == 2
+    assert (cast / "voices/maya.wav").read_bytes() == b"one"
+
+
+def test_a_missing_reference_clip_is_named(tmp_path):
+    cast = _cast(tmp_path)
+    (cast / "voices/maya.wav").unlink()
+    with pytest.raises(story.ScriptError, match="maya.wav"):
+        story.job(_line("maya"), story.load_character(cast, "maya"), cast)
+
+
+def test_a_redesigned_character_gets_the_new_clips(tmp_path, monkeypatch):
+    import argparse
+
+    cast = _cast(tmp_path)
+
+    def spoken(jobs, folder):
+        for made in jobs:
+            (folder / made["out"]).write_bytes(b"new")
+
+    monkeypatch.setattr(story, "speak", spoken)
+    args = argparse.Namespace(name="maya", cast=cast, voice_design="Someone new.", mood=["calm=Calm."])
+    assert story.run_character(args) == 0
+    assert (cast / "voices/maya.wav").read_bytes() == b"new"
+    assert (cast / "voices/maya-calm.wav").read_bytes() == b"new"
+    assert (cast / "voices/maya-calm.txt").read_text().strip() == story.SAMPLE_TEXT
