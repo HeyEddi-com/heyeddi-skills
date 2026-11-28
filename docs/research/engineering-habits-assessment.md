@@ -4,20 +4,20 @@ Date: 2026-11-27.
 
 ## Answer
 
-Not a set. Add **one** on-demand skill for operating a system, put the every-change habits into `@engineering-excellence`, and add a script check for CI hardening.
+Yes, we want these habits in skills. Not as a new set.
 
-A set would repeat what the hub already has: the plan gate, the engineering audit, the cost budget, the permission gate, the pre-merge gate, and PR review.
+* **Every-change habits** go into `@engineering-excellence`, which already runs on every change: one reference file with the [lessons](engineering-lessons.md) that apply to code and infrastructure work, plus script checks where a rule can be checked. A second always-on skill would compete with it.
+* **Operating documents** (threat model, runbook, restore, incident, teardown) go into one on-demand skill, `heyeddi-ops`.
+* **Learning for a person** is the lessons document. A skill changes what an agent does; it does not teach its owner.
 
 ## Source and coverage
 
 The [Enterprise engineering habits](https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Enterprise-Engineering-Habits) page is part of the [Clouds-Against-Humanity wiki](https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki) (Apache-2.0, by ChiefGyk3D), a teaching repository for a small cloud lab. The wiki has 176 pages and about 1.2 million words.
 
-* All 176 are listed in the [page catalog](clouds-against-humanity-wiki-catalog.md).
-* Read in full: habits, [lessons learned](https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Lessons-Learned), [CI and cost gate](https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/CI-Tests-and-Cost-Gate), [threat model](https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Threat-Model), [teardown checklist](https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Teardown-Checklist).
-* Read in part: secrets, plans and drift, project planning, working in a company.
-* The other 167 pages were not read. A habit that appears only in them is missing here.
+* All 176 pages were read, split into ten batches, one agent each. Every page has an entry in the [page notes](wiki-notes/), and all are listed in the [page catalog](clouds-against-humanity-wiki-catalog.md).
+* The recurring habits are collected in [engineering lessons](engineering-lessons.md).
 
-The wiki's claims about vendors were not re-checked.
+The notes are agent summaries. The wiki's claims about vendors were not re-checked.
 
 ## The ten habits against our skills
 
@@ -36,7 +36,7 @@ The wiki's claims about vendors were not re-checked.
 | Verify, then record how and when | Test rules, gate reports | No rule to date a claim about a vendor or a live system |
 | Boring, replaceable choices | KISS and YAGNI audit | No "what would leaving cost" question |
 
-## More habits found in the other pages read
+## More habits from the other pages
 
 | Habit | Source | Fits |
 | --- | --- | --- |
@@ -69,10 +69,16 @@ It should write these from the repository, not hand the user a blank form. Keep 
 
 ### 2. Additions to `@engineering-excellence` (always on, so keep them short)
 
+Put them in `reference/engineering-habits.md`, loaded for every change:
+
 * Check the end state, not the exit code.
 * Anything new that listens or grants access starts denied, with the narrowest scope.
 * Confirm a platform feature is available on this account before designing on it.
 * A claim about a vendor or live system carries the date and how it was checked.
+* A new check or guard is shown to fail on bad input before it counts.
+* A scheduled job or alert is visible when it stops running.
+* Name the way back before a change that is hard to undo.
+* Say what a passing result does not cover.
 
 ### 3. CI hardening check in `audit_engineering.py`
 
