@@ -20,8 +20,12 @@ from pathlib import Path
 HYPERFRAMES = "0.9.104"
 CHROME = "158.0.8127.88"
 LOUDNESS_RANGE = (-18.0, -12.0)
-# Extra voice engines, each in its own environment. Kokoro needs none: `hf <project> -- tts`.
-ENGINES = {"pocket": ["pocket-tts", "soundfile"], "qwen": ["qwen-tts", "soundfile"]}
+# Extra voice environments. Kokoro needs none: `hf <project> -- tts`.
+PACKAGES = {"pocket": ["pocket-tts", "soundfile"], "qwen": ["qwen-tts", "soundfile"]}
+# Each engine, and the environment it runs in.
+ENGINES = {"pocket": "pocket", "qwen": "qwen", "design": "qwen", "clone": "qwen"}
+# `setup --voice design` fetches what is needed to invent a voice and keep using it.
+INSTALLS = {"pocket": [], "qwen": ["qwen"], "design": ["design", "clone"]}
 CPU_WHEELS = "https://download.pytorch.org/whl/cpu"
 # CLI commands that upload, bill, sign in or report usage.
 LEAVES_MACHINE = {"publish", "cloud", "lambda", "cloudrun", "auth", "events", "feedback", "usage"}
@@ -125,28 +129,29 @@ def measure_loudness(path: Path) -> float | None:
 
 
 def say_command(home: Path, engine: str, jobs: Path) -> tuple[list[str], dict[str, str]]:
-    python = home / "engines" / engine / "bin" / "python"
+    python = home / "engines" / ENGINES[engine] / "bin" / "python"
     if not python.exists():
-        raise FileNotFoundError(f"The {engine} voice is not installed. Run: video.py setup --voice {engine}")
+        install = "design" if engine == "clone" else engine
+        raise FileNotFoundError(f"The {engine} voice is not installed. Run: video.py setup --voice {install}")
     command = [str(python), str(Path(__file__).with_name("say.py")), engine, str(jobs)]
     env = {"HF_HUB_DISABLE_TELEMETRY": "1"}
-    if engine == "qwen":
+    if ENGINES[engine] == "qwen":
         env["HF_HUB_OFFLINE"] = "1"
     return command, env
 
 
 def install_voice(home: Path, engine: str) -> None:
-    folder = home / "engines" / engine
+    folder = home / "engines" / ENGINES[engine]
     python = folder / "bin" / "python"
     if not python.exists():
         subprocess.run(["uv", "venv", "-q", "-p", "3.12", str(folder)], check=True)
     pip = ["uv", "pip", "install", "-q", "-p", str(python)]
     # CPU builds of torch: the default Linux wheels pull gigabytes of CUDA.
     subprocess.run([*pip, "torch", "torchaudio", "--index-url", CPU_WHEELS], check=True)
-    subprocess.run([*pip, *ENGINES[engine], "--extra-index-url", CPU_WHEELS, "--index-strategy", "unsafe-best-match"], check=True)
-    if engine == "qwen":
+    subprocess.run([*pip, *PACKAGES[ENGINES[engine]], "--extra-index-url", CPU_WHEELS, "--index-strategy", "unsafe-best-match"], check=True)
+    for model in INSTALLS[engine]:
         scripts = str(Path(__file__).parent)
-        code = f"import sys; sys.path.insert(0, {scripts!r}); import say; say.qwen_path(download=True)"
+        code = f"import sys; sys.path.insert(0, {scripts!r}); import say; say.model_path({model!r}, download=True)"
         subprocess.run([str(python), "-c", code], env={**os.environ, "HF_HUB_DISABLE_TELEMETRY": "1"}, check=True)
 
 
@@ -220,12 +225,23 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     install = sub.add_parser("setup", help="install the local voice and headless Chrome, turn telemetry off")
     install.add_argument("--captions", action="store_true", help="also install local word timings")
-    install.add_argument("--voice", choices=sorted(ENGINES), action="append", default=[], help="also install a voice engine")
+    install.add_argument("--voice", choices=sorted(INSTALLS), action="append", default=[], help="also install a voice engine")
     speak = sub.add_parser("say", help="speak a jobs file with a local voice engine")
     speak.add_argument("engine", choices=sorted(ENGINES))
     speak.add_argument("jobs", type=Path)
     timing = sub.add_parser("words", help="print word timings of a speech file as JSON")
     timing.add_argument("file", type=Path)
+    tell = sub.add_parser("story", help="speak a script with its cast and write the timeline")
+    tell.add_argument("script", type=Path)
+    tell.add_argument("--cast", type=Path, required=True)
+    tell.add_argument("--out", type=Path, required=True)
+    person = sub.add_parser("character", help="invent a voice and save it as a character")
+    person.add_argument("name")
+    person.add_argument("--cast", type=Path, required=True)
+    person.add_argument("--voice-design", required=True, help="plain English: age, gender, tone, accent")
+    person.add_argument("--mood", action="append", default=[], metavar="NAME=DIRECTION")
+    fetch = sub.add_parser("asset", help="get licensed assets into a project: list, get, add")
+    fetch.add_argument("args", nargs=argparse.REMAINDER)
     run_cli = sub.add_parser("hf", help="run a local hyperframes command: video.py hf <project> -- check")
     run_cli.add_argument("project", type=Path)
     run_cli.add_argument("args", nargs=argparse.REMAINDER)
@@ -253,6 +269,14 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         with one_heavy_job():
             return subprocess.run(command, env={**os.environ, **extra}).returncode
+    if args.command in ("story", "character"):
+        import story
+
+        return story.run_story(args) if args.command == "story" else story.run_character(args)
+    if args.command == "asset":
+        import assets
+
+        return assets.main(args.args)
     if args.command == "words":
         try:
             command = words_command(tools_home(), args.file.resolve())

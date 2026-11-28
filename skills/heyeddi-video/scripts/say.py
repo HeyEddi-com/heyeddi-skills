@@ -3,6 +3,8 @@
 
 Run through `video.py say`, which uses the engine's own environment.
 Jobs file: [{"text": ..., "voice": ..., "out": ..., "direction": ...}]
+`voice` is a speaker name (qwen, pocket), a description of the voice to invent
+(design), or a reference .wav with its transcript in a .txt beside it (clone).
 """
 from __future__ import annotations
 
@@ -11,7 +13,12 @@ import sys
 import time
 from pathlib import Path
 
-QWEN_MODEL = "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"
+MODELS = {
+    "qwen": ["Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"],
+    "design": ["Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"],
+    "clone": ["Qwen/Qwen3-TTS-12Hz-1.7B-Base"],
+}
+DIRECTED = {"qwen", "design"}
 
 
 def check_jobs(engine: str, jobs: list[dict]) -> None:
@@ -19,33 +26,69 @@ def check_jobs(engine: str, jobs: list[dict]) -> None:
         for key in ("text", "voice", "out"):
             if not job.get(key):
                 raise ValueError(f"line {number} needs {key!r}")
-        if job.get("direction") and engine != "qwen":
-            raise ValueError(f"line {number}: only qwen follows a direction, {engine} would ignore it")
+        if job.get("direction") and engine not in DIRECTED:
+            raise ValueError(f"line {number}: {engine} cannot follow a direction and would ignore it")
 
 
-def qwen_path(download: bool = False) -> str:
+def model_path(engine: str, download: bool = False) -> str:
     from huggingface_hub import snapshot_download
 
     # A local folder: given a model name, the library asks the network on every load.
-    return snapshot_download(QWEN_MODEL, local_files_only=not download)
+    return snapshot_download(MODELS[engine][0], local_files_only=not download)
 
 
-def qwen_speaker():
-    import soundfile as sf
+def load_model(engine: str):
     import torch
     from qwen_tts import Qwen3TTSModel
 
-    torch.manual_seed(7)
-    model = Qwen3TTSModel.from_pretrained(qwen_path(), device_map="cpu", dtype=torch.float32)
+    return Qwen3TTSModel.from_pretrained(model_path(engine), device_map="cpu", dtype=torch.float32)
+
+
+def writer(generate):
+    import soundfile as sf
 
     def speak(job: dict) -> float:
-        wavs, rate = model.generate_custom_voice(
-            text=job["text"], language="English", speaker=job["voice"], instruct=job.get("direction", "")
-        )
+        import torch
+
+        # The same seed per line: a line sounds the same whatever else is in the batch.
+        torch.manual_seed(7)
+        wavs, rate = generate(job)
         sf.write(job["out"], wavs[0], rate)
         return len(wavs[0]) / rate
 
     return speak
+
+
+def qwen_speaker():
+    model = load_model("qwen")
+    return writer(lambda job: model.generate_custom_voice(
+        text=job["text"], language="English", speaker=job["voice"], instruct=job.get("direction", "")
+    ))
+
+
+def design_speaker():
+    model = load_model("design")
+    return writer(lambda job: model.generate_voice_design(
+        text=job["text"], language="English",
+        instruct=" ".join(part for part in (job["voice"], job.get("direction")) if part),
+    ))
+
+
+def clone_speaker():
+    model = load_model("clone")
+    prompts: dict = {}
+
+    def generate(job: dict):
+        reference = Path(job["voice"])
+        if job["voice"] not in prompts:
+            prompts[job["voice"]] = model.create_voice_clone_prompt(
+                ref_audio=str(reference), ref_text=reference.with_suffix(".txt").read_text(encoding="utf-8").strip()
+            )
+        return model.generate_voice_clone(
+            text=job["text"], language="English", voice_clone_prompt=prompts[job["voice"]]
+        )
+
+    return writer(generate)
 
 
 def pocket_speaker():
@@ -71,8 +114,11 @@ def main(engine: str, jobs_file: str) -> int:
     # Output paths are relative to the jobs file.
     for job in jobs:
         job["out"] = str(Path(jobs_file).resolve().parent / job["out"])
+        if engine == "clone":
+            job["voice"] = str(Path(jobs_file).resolve().parent / job["voice"])
         Path(job["out"]).parent.mkdir(parents=True, exist_ok=True)
-    speak = {"qwen": qwen_speaker, "pocket": pocket_speaker}[engine]()
+    speakers = {"qwen": qwen_speaker, "design": design_speaker, "clone": clone_speaker, "pocket": pocket_speaker}
+    speak = speakers[engine]()
     for job in jobs:
         start = time.time()
         seconds = speak(job)

@@ -1,8 +1,8 @@
 ---
 name: heyeddi-video
-description: "Makes finished videos locally with HyperFrames: cartoons and character stories, product launches, explainers, data stories, vertical social clips with captions, and kinetic type. Use when asked to make, animate, or render a video, promo, reel, story, or cartoon. Rides on the official HyperFrames skills for craft and adds local-only rendering, truth rules, and a verified finished file. Not for UI motion inside an app (motion-physics) or for posting to social networks."
-version: 1.0.0
-product-version: 3.10.0
+description: "Makes finished videos locally with HyperFrames: cartoons, scripted 2D and 3D character stories with reusable voices, product launches, explainers, data stories, vertical social clips with captions, and kinetic type. Use when asked to make, animate, or render a video, promo, reel, story, or cartoon. Rides on the official HyperFrames skills for craft and adds local-only rendering, truth rules, and a verified finished file. Not for UI motion inside an app (motion-physics) or for posting to social networks."
+version: 1.1.0
+product-version: 3.11.0
 author: HeyEddi-com
 ---
 
@@ -15,7 +15,7 @@ The finished MP4 on this machine is the output. Posting is not part of this skil
 1. Official craft skills (once per machine). If `hyperframes` is not in the skill list:
    `DISABLE_TELEMETRY=1 npx skills add heygen-com/hyperframes -g -a claude-code cursor -y --skill hyperframes hyperframes-cli hyperframes-registry media-use remotion-to-hyperframes figma slideshow`
 2. Local tools (once per machine): `python3 scripts/video.py setup`. It installs the Kokoro voice and headless Chrome under `~/.cache/heyeddi-video` and turns telemetry off. Needs Node 22+, FFmpeg, and `uv`.
-3. Load `/hyperframes` and the reference it names for this kind of video. Then read `reference/video-types.md` and `reference/voices.md`; for a character, also `reference/cartoon.md`.
+3. Load `/hyperframes` and the reference it names for this kind of video. Then read `reference/video-types.md` and `reference/voices.md`; for a character, also `reference/cartoon.md`; for a scripted story, reusable characters, 3D or downloaded assets, `reference/story.md`.
 
 Paths below that start with `scripts/` are relative to this skill's folder: use the absolute path when your shell is elsewhere. The `CLAUDE.md` that `init` writes says to call `npx hyperframes` directly: use `video.py` instead.
 
