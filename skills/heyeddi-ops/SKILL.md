@@ -2,7 +2,7 @@
 name: heyeddi-ops
 description: "Operating documents for a system: threat model with accepted risks, runbook (setup, verify, failure, rotation, rollback, teardown) and blameless incident lessons under .heyeddi/docs/ops/. Use for infrastructure changes, a new hosted service, a leaked secret, a production failure, or a teardown. Not for code audits (engineering-excellence) or merge checks (pre-merge-gate)."
 version: 1.0.0
-product-version: 3.9.0
+product-version: 3.10.0
 author: HeyEddi-com
 ---
 

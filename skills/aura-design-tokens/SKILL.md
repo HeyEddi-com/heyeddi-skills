@@ -2,7 +2,7 @@
 name: aura-design-tokens
 description: "Synchronizes PrimeVue Aura, Quasar, and custom CSS through CSS custom properties. Use for themes, color, surfaces, radii, and dark mode. No Tailwind utility classes and no raw hex in components."
 version: 1.0.1
-product-version: 3.9.0
+product-version: 3.10.0
 author: HeyEddi-com
 ---
 

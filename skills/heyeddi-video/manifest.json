@@ -1,0 +1,21 @@
+{
+  "skill": "heyeddi-video",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "video",
+      "description": "Local HyperFrames work: setup, run a local CLI command, render with loudness normalisation, verify a finished file.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": { "type": "string", "enum": ["setup", "hf", "say", "words", "render", "verify"], "description": "Subcommand" },
+          "project": { "type": "string", "description": "HyperFrames project folder" },
+          "output": { "type": "string", "description": "MP4 path for render" }
+        },
+        "required": ["command"]
+      },
+      "script": "scripts/video.py",
+      "readonly": false
+    }
+  ]
+}
