@@ -240,9 +240,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "setup":
-        for engine in args.voice:
-            install_voice(tools_home(), engine)
-        return setup(args.captions)
+        # Two agents installing into one environment would corrupt it.
+        with one_heavy_job():
+            for engine in args.voice:
+                install_voice(tools_home(), engine)
+            return setup(args.captions)
     if args.command == "say":
         try:
             command, extra = say_command(tools_home(), args.engine, args.jobs.resolve())

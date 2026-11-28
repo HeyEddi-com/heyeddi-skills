@@ -188,3 +188,24 @@ def test_every_line_needs_text_voice_and_output(missing):
     del job[missing]
     with pytest.raises(ValueError, match=missing):
         say.check_jobs("qwen", [job])
+
+
+def test_setup_installs_one_at_a_time_across_agents(tmp_path, monkeypatch):
+    import fcntl
+
+    monkeypatch.setenv("HEYEDDI_VIDEO_HOME", str(tmp_path))
+    held = []
+
+    def probe(*_args):
+        with video.lock_path(tmp_path).open("a") as second:
+            try:
+                fcntl.flock(second, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                held.append(False)
+            except BlockingIOError:
+                held.append(True)
+        return 0
+
+    monkeypatch.setattr(video, "install_voice", probe)
+    monkeypatch.setattr(video, "setup", probe)
+    assert video.main(["setup", "--voice", "pocket"]) == 0
+    assert held == [True, True]
