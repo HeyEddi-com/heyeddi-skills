@@ -121,3 +121,19 @@ def test_word_timings_come_out_as_plain_rows():
 def test_word_timings_explain_how_to_install_when_missing(tmp_path):
     with pytest.raises(FileNotFoundError, match="setup --captions"):
         video.words_command(tmp_path, tmp_path / "a.wav")
+
+
+def test_the_queue_lock_lives_in_the_private_tool_folder(tmp_path):
+    assert video.lock_path(tmp_path) == tmp_path / "heavy.lock"
+
+
+def test_taking_the_queue_never_truncates_what_the_lock_path_points_at(tmp_path, monkeypatch):
+    victim = tmp_path / "victim.txt"
+    victim.write_text("keep me")
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / "heavy.lock").symlink_to(victim)
+    monkeypatch.setenv("HEYEDDI_VIDEO_HOME", str(home))
+    with video.one_heavy_job():
+        pass
+    assert victim.read_text() == "keep me"

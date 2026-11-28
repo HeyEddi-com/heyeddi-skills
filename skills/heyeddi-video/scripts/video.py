@@ -66,10 +66,16 @@ def take_lock(handle, wait=lambda h: fcntl.flock(h, fcntl.LOCK_EX)) -> None:
         wait(handle)
 
 
+def lock_path(home: Path) -> Path:
+    return home / "heavy.lock"
+
+
 @contextlib.contextmanager
 def one_heavy_job():
-    path = Path(tempfile.gettempdir()) / f"heyeddi-video-{os.getuid()}.lock"
-    with path.open("w") as handle:
+    # In the user's own folder, never shared /tmp, and opened without truncating.
+    path = lock_path(tools_home())
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a") as handle:
         take_lock(handle)
         yield
 
