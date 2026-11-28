@@ -2,7 +2,7 @@
 name: quasar-foundation
 description: "Quasar application frames, drawers, mobile gestures, and Capacitor or Tauri shells for Vue 3. Use for headers, footers, navigation, pull-to-refresh, bottom sheets, and Capacitor or Tauri packaging. Not for data tables or CLI."
 version: 1.0.1
-product-version: 3.9.0
+product-version: 3.10.0
 author: HeyEddi-com
 ---
 
